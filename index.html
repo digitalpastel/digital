@@ -354,15 +354,15 @@
             <span id="tab-5-text" data-en="🍯 Page 5: Savings Jar" data-ms="🍯 Muka 5: Tabung Simpanan">🍯 Page 5: Savings Jar</span>
         </button>
         
-        <button onclick="toggleStickerDrawer()" class="ml-auto binder-tab bg-purple-500 hover:bg-purple-600 text-white font-bold px-4 py-2 text-xs md:text-sm flex items-center gap-1.5 shadow-md">
+        <button onclick="toggleStickerDrawer(event)" class="ml-auto binder-tab bg-purple-500 hover:bg-purple-600 text-white font-bold px-4 py-2 text-xs md:text-sm flex items-center gap-1.5 shadow-md">
             <span>🎨</span> <span data-en="Stickers Sheet" data-ms="Helaian Pelekat">Stickers Sheet</span>
         </button>
     </div>
 
-    <div id="sticker-drawer" class="fixed top-0 right-0 h-full w-64 bg-white border-l-4 border-[#63336a] shadow-2xl z-50 transform translate-x-full overflow-y-auto p-5 flex flex-col gap-4">
+    <div id="sticker-drawer" class="fixed top-0 right-0 h-full w-64 bg-white border-l-4 border-[#63336a] shadow-2xl z-50 transform translate-x-full overflow-y-auto p-5 flex flex-col gap-4" onclick="event.stopPropagation()">
         <div class="flex items-center justify-between pb-3 border-b-2 border-dashed border-[#63336a]/20">
             <h3 class="kawaii-title font-extrabold text-lg text-[#63336a] flex items-center gap-1.5">✨ Stickers Box</h3>
-            <button onclick="toggleStickerDrawer()" class="text-[#63336a] hover:text-red-500 text-xl font-bold">×</button>
+            <button onclick="toggleStickerDrawer(event)" class="text-[#63336a] hover:text-red-500 text-xl font-bold">×</button>
         </div>
         <p class="text-xs font-semibold text-purple-700/80 italic leading-relaxed">Click any cute sticker below to add it directly into your current binder layout sheet view!</p>
         
@@ -378,13 +378,13 @@
         </div>
     </div>
 
-    <div id="planner-sheet" class="w-full max-w-5xl rounded-[3rem] planner-container p-5 md:p-8 relative overflow-hidden select-none min-h-[850px] hidden">
+    <div id="planner-sheet" class="w-full max-w-5xl rounded-[3rem] planner-container p-5 md:p-8 relative overflow-hidden select-none min-h-[850px] hidden" onclick="releaseAllStickers()">
         
         <canvas id="drawing-canvas" class="absolute inset-0 z-20 pointer-events-none"></canvas>
         <div class="absolute inset-0 paper-texture rounded-[3rem] pointer-events-none"></div>
         <div id="sticker-board" class="absolute inset-0 z-30 pointer-events-none"></div>
 
-        <div class="flex flex-col md:flex-row justify-between items-center mb-6 relative z-10 gap-4">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-6 relative z-10 gap-4" onclick="event.stopPropagation()">
             <div class="hidden md:flex items-center space-x-2">
                 <svg class="w-16 h-16 text-pink-400" viewBox="0 0 120 120" fill="none" stroke="#63336a" stroke-width="3.5">
                     <path d="M 60 110 C 55 80 40 50 50 40 C 55 35 65 35 70 40" stroke-linecap="round"/>
@@ -445,15 +445,12 @@
         </div>
 
         <div id="page-content-1" class="planner-page grid grid-cols-1 lg:grid-cols-12 gap-6 relative z-10">
-            <div class="lg:col-span-8 flex flex-col">
-                <div id="calendar-days-header" class="grid grid-cols-7 gap-1.5 mb-2.5">
-                    </div>
-
-                <div id="calendar-grid" class="grid grid-cols-7 gap-1.5 flex-grow bg-white border-[4px] border-[#63336a] p-4 rounded-[2.2rem] shadow-inner min-h-[500px]">
-                    </div>
+            <div class="lg:col-span-8 flex flex-col" onclick="event.stopPropagation()">
+                <div id="calendar-days-header" class="grid grid-cols-7 gap-1.5 mb-2.5"></div>
+                <div id="calendar-grid" class="grid grid-cols-7 gap-1.5 flex-grow bg-white border-[4px] border-[#63336a] p-4 rounded-[2.2rem] shadow-inner min-h-[500px]"></div>
             </div>
 
-            <div class="lg:col-span-4 flex flex-col gap-5">
+            <div class="lg:col-span-4 flex flex-col gap-5" onclick="event.stopPropagation()">
                 <div class="bg-white border-[4px] border-[#63336a] p-4 rounded-[2.2rem] shadow-sm flex flex-col relative overflow-hidden min-h-[170px]">
                     <div class="absolute top-2 right-2 text-[#63336a]/20 text-lg">✨</div>
                     <h2 id="notes-title" class="kawaii-title font-bold text-center text-lg border-b-2 border-dashed border-[#63336a]/20 pb-1 mb-2" data-en="NOTES ✧" data-ms="NOTA ✧">NOTES ✧</h2>
@@ -508,7 +505,7 @@
         </div>
 
         <div id="page-content-2" class="planner-page hidden grid grid-cols-1 lg:grid-cols-12 gap-6 relative z-10">
-            <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-4" onclick="event.stopPropagation()">
                 <div class="bg-white border-[4px] border-[#63336a] p-4 rounded-[2rem] shadow-sm flex flex-col min-h-[220px]">
                     <div id="label-mon" class="bg-[#F87171] text-white font-bold py-1 px-4 rounded-full text-xs border-2 border-[#63336a] max-w-max -mt-2 -ml-2 mb-2 shadow-[2px_2px_0px_#63336a]" data-en="MONDAY 🌸" data-ms="ISNIN 🌸">MONDAY 🌸</div>
                     <textarea id="week-day-mon" oninput="saveAllData()" class="ruled-lines w-full flex-grow bg-transparent text-[#63336a] font-bold text-base focus:outline-none resize-none handwritten" data-placeholder-en="Schedule or highlights..." data-placeholder-ms="Jadual atau tumpuan utama..."></textarea>
@@ -538,7 +535,7 @@
                 </div>
             </div>
 
-            <div class="lg:col-span-4 flex flex-col gap-5">
+            <div class="lg:col-span-4 flex flex-col gap-5" onclick="event.stopPropagation()">
                 <div class="bg-white border-[4px] border-[#63336a] p-4 rounded-[2.2rem] shadow-sm flex flex-col relative">
                     <h2 id="weekly-focus-title" class="kawaii-title font-bold text-center text-lg border-b-2 border-dashed border-[#63336a]/20 pb-1.5 mb-3" data-en="WEEKLY FOCUS 🎯" data-ms="FOKUS MINGGUAN 🎯">WEEKLY FOCUS 🎯</h2>
                     <textarea id="weekly-focus-box" oninput="saveAllData()" class="w-full h-24 p-2 bg-[#fffcfd] rounded-xl border border-[#63336a]/20 focus:outline-none focus:border-[#63336a] text-[#63336a] handwritten text-lg font-bold" data-placeholder-en="My key highlight of this week..." data-placeholder-ms="Fokus utama saya minggu ini..."></textarea>
@@ -556,27 +553,22 @@
         </div>
 
         <div id="page-content-3" class="planner-page hidden grid grid-cols-1 lg:grid-cols-12 gap-6 relative z-10">
-            <div class="lg:col-span-8 flex flex-col gap-4">
+            <div class="lg:col-span-8 flex flex-col gap-4" onclick="event.stopPropagation()">
                 <div class="bg-white border-[4px] border-[#63336a] p-4 rounded-[2.2rem] shadow-sm">
-                    <div id="meals-table-header" class="grid grid-cols-4 gap-1.5 mb-2 border-b-2 border-dashed border-[#63336a]/20 pb-2">
-                        </div>
-
-                    <div id="meals-rows-container" class="space-y-3.5">
-                        </div>
+                    <div id="meals-table-header" class="grid grid-cols-4 gap-1.5 mb-2 border-b-2 border-dashed border-[#63336a]/20 pb-2"></div>
+                    <div id="meals-rows-container" class="space-y-3.5"></div>
                 </div>
 
                 <div class="bg-white border-[4px] border-[#63336a] p-4 rounded-[2.2rem] shadow-sm">
                     <h3 id="water-tracker-title" class="kawaii-title font-bold text-base mb-3 text-center" data-en="💦 WATER HYDRATION GOALS (Tap grid to add, click × to remove)" data-ms="💦 SASARAN HIDRASI AIR (Ketik grid untuk tambah, klik × untuk buang)">💦 WATER HYDRATION GOALS (Tap grid to add, click × to remove)</h3>
-                    <div id="water-grid-container" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2">
-                        </div>
+                    <div id="water-grid-container" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2"></div>
                 </div>
             </div>
 
-            <div class="lg:col-span-4 flex flex-col gap-5">
+            <div class="lg:col-span-4 flex flex-col gap-5" onclick="event.stopPropagation()">
                 <div class="bg-white border-[4px] border-[#63336a] p-4 rounded-[2.2rem] shadow-sm flex flex-col relative">
                     <h2 id="grocery-title" class="kawaii-title font-bold text-center text-lg border-b-2 border-dashed border-[#63336a]/20 pb-1.5 mb-3" data-en="GROCERY BAG 🛒" data-ms="BEG RUNCIT 🛒">GROCERY BAG 🛒</h2>
                     <div id="grocery-list-container" class="space-y-2 max-h-[300px] overflow-y-auto pr-1"></div>
-
                     <div class="mt-4 flex gap-2">
                         <input id="new-grocery-input" type="text" class="flex-1 bg-[#fef7fc] border-2 border-[#63336a]/30 rounded-xl px-3 py-1.5 text-sm text-[#63336a] focus:outline-none focus:border-[#63336a]" data-placeholder-en="Add ingredients..." data-placeholder-ms="Tambah bahan memasak...">
                         <button onclick="addGroceryItem()" id="grocery-add-btn" class="bg-[#C084FC] hover:bg-[#a855f7] text-white border-2 border-[#63336a] px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-[2px_2px_0px_#63336a]" data-en="Add" data-ms="Tambah">Add</button>
@@ -586,7 +578,7 @@
         </div>
 
         <div id="page-content-4" class="planner-page hidden grid grid-cols-1 lg:grid-cols-12 gap-6 relative z-10">
-            <div class="lg:col-span-8 flex flex-col gap-4">
+            <div class="lg:col-span-8 flex flex-col gap-4" onclick="event.stopPropagation()">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
                     <div class="bg-gradient-to-r from-emerald-50 to-emerald-100/50 border-[3.5px] border-[#63336a] p-4 rounded-[1.8rem] shadow-sm flex flex-col">
                         <span id="income-card-lbl" class="text-xs font-bold text-emerald-800 uppercase tracking-wide" data-en="Total Income 💵" data-ms="Jumlah Pendapatan 💵">Total Income 💵</span>
@@ -609,12 +601,10 @@
 
                 <div class="bg-white border-[4px] border-[#63336a] p-4 rounded-[2.2rem] shadow-sm flex-grow min-h-[300px] flex flex-col">
                     <h3 id="ledger-title" class="kawaii-title font-bold text-base border-b-2 border-dashed border-[#63336a]/20 pb-2 mb-3" data-en="EXPENSE STATEMENT" data-ms="PENYATA PERBELANJAAN">EXPENSE STATEMENT</h3>
-                    
                     <div class="overflow-x-auto flex-grow">
                         <table class="w-full text-left border-collapse">
                             <thead>
-                                <tr id="budget-th-row" class="border-b-2 border-[#63336a]/20 text-[11px] text-[#63336a] font-bold uppercase tracking-wider">
-                                    </tr>
+                                <tr id="budget-th-row" class="border-b-2 border-[#63336a]/20 text-[11px] text-[#63336a] font-bold uppercase tracking-wider"></tr>
                             </thead>
                             <tbody id="budget-table-body" class="text-sm font-bold text-[#63336a]"></tbody>
                         </table>
@@ -622,16 +612,14 @@
                 </div>
             </div>
 
-            <div class="lg:col-span-4 flex flex-col gap-5">
+            <div class="lg:col-span-4 flex flex-col gap-5" onclick="event.stopPropagation()">
                 <div class="bg-white border-[4px] border-[#63336a] p-5 rounded-[2.2rem] shadow-sm flex flex-col relative">
                     <h2 id="new-expense-title" class="kawaii-title font-bold text-center text-lg border-b-2 border-dashed border-[#63336a]/20 pb-1.5 mb-4" data-en="NEW EXPENSE 🪙" data-ms="REKOD BELANJA 🪙">NEW EXPENSE 🪙</h2>
-                    
                     <div class="space-y-3">
                         <div>
                             <label id="exp-desc-lbl" class="block text-xs font-bold text-[#63336a] mb-1" data-en="DESCRIPTION" data-ms="BUTIRAN">DESCRIPTION</label>
                             <input id="exp-desc" type="text" class="w-full bg-[#fef7fc] border-2 border-[#63336a]/20 rounded-xl px-3 py-1.5 text-sm text-[#63336a] focus:outline-none focus:border-[#63336a]" data-placeholder-en="e.g., Bubble milk tea..." data-placeholder-ms="cth., Teh ais bubble...">
                         </div>
-
                         <div class="grid grid-cols-2 gap-2">
                             <div>
                                 <label id="exp-amt-lbl" class="block text-xs font-bold text-[#63336a] mb-1" data-en="AMOUNT (RM)" data-ms="JUMLAH (RM)">AMOUNT (RM)</label>
@@ -639,20 +627,14 @@
                             </div>
                             <div>
                                 <label id="exp-method-lbl" class="block text-xs font-bold text-[#63336a] mb-1" data-en="METHOD" data-ms="KAEDAH">METHOD</label>
-                                <select id="exp-method" class="w-full bg-[#fef7fc] border-2 border-[#63336a]/20 rounded-xl px-2 py-1.5 text-xs text-[#63336a] focus:outline-none focus:border-[#63336a] cursor-pointer">
-                                    </select>
+                                <select id="exp-method" class="w-full bg-[#fef7fc] border-2 border-[#63336a]/20 rounded-xl px-2 py-1.5 text-xs text-[#63336a] focus:outline-none focus:border-[#63336a] cursor-pointer"></select>
                             </div>
                         </div>
-
                         <div>
                             <label id="exp-cat-lbl" class="block text-xs font-bold text-[#63336a] mb-1" data-en="CATEGORY" data-ms="KATEGORI">CATEGORY</label>
-                            <select id="exp-category" class="w-full bg-[#fef7fc] border-2 border-[#63336a]/20 rounded-xl px-2 py-1.5 text-xs text-[#63336a] focus:outline-none focus:border-[#63336a] cursor-pointer">
-                                </select>
+                            <select id="exp-category" class="w-full bg-[#fef7fc] border-2 border-[#63336a]/20 rounded-xl px-2 py-1.5 text-xs text-[#63336a] focus:outline-none focus:border-[#63336a] cursor-pointer"></select>
                         </div>
-
-                        <button onclick="addExpense()" id="exp-record-btn" class="w-full mt-2 bg-[#C084FC] hover:bg-[#a855f7] text-white border-2 border-[#63336a] py-2.5 rounded-xl text-xs font-bold shadow-[2px_2px_0px_#63336a] transition-all active:scale-95" data-en="Record Transaction" data-ms="Simpan Transaksi">
-                            Record Transaction
-                        </button>
+                        <button onclick="addExpense()" id="exp-record-btn" class="w-full mt-2 bg-[#C084FC] hover:bg-[#a855f7] text-white border-2 border-[#63336a] py-2.5 rounded-xl text-xs font-bold shadow-[2px_2px_0px_#63336a] transition-all active:scale-95" data-en="Record Transaction" data-ms="Simpan Transaksi">Record Transaction</button>
                     </div>
                 </div>
 
@@ -666,7 +648,6 @@
                                 <input type="number" id="budget-limit-input" oninput="calcBudget()" class="w-24 bg-[#fef7fc] border border-[#63336a]/20 rounded-xl px-2 py-0.5 text-xs font-bold text-center" value="800">
                             </div>
                         </div>
-                        
                         <div>
                             <div class="flex justify-between text-[11px] font-bold text-[#63336a] mb-1">
                                 <span id="budget-progress-lbl" data-en="Spent Progress:" data-ms="Perkembangan Belanja:">Spent Progress:</span>
@@ -682,7 +663,7 @@
         </div>
 
         <div id="page-content-5" class="planner-page hidden grid grid-cols-1 lg:grid-cols-12 gap-6 relative z-10">
-            <div class="lg:col-span-7 flex flex-col items-center justify-center p-4">
+            <div class="lg:col-span-7 flex flex-col items-center justify-center p-4" onclick="event.stopPropagation()">
                 <div class="flex flex-col items-center">
                     <div class="w-36 h-6 bg-[#9e623b] border-4 border-[#63336a] rounded-t-2xl relative flex items-center justify-center shadow-sm">
                         <span class="absolute -top-3.5 text-3xl animate-pulse">🎀</span>
@@ -691,8 +672,7 @@
                 </div>
 
                 <div class="w-full max-w-[340px] h-[400px] bg-white/65 border-4 border-[#63336a] rounded-b-[5rem] rounded-t-[2.5rem] p-6 relative shadow-inner overflow-hidden flex flex-col justify-between -mt-1">
-                    <div id="milestone-level-indicators" class="absolute inset-0 pointer-events-none flex flex-col justify-between py-12 px-8">
-                        </div>
+                    <div id="milestone-level-indicators" class="absolute inset-0 pointer-events-none flex flex-col justify-between py-12 px-8"></div>
                     <div id="jar-stickers-layer" class="w-full h-full relative pointer-events-auto"></div>
                 </div>
 
@@ -705,16 +685,13 @@
                 </div>
             </div>
 
-            <div class="lg:col-span-5 flex flex-col gap-5">
+            <div class="lg:col-span-5 flex flex-col gap-5" onclick="event.stopPropagation()">
                 <div class="bg-white border-[4px] border-[#63336a] p-5 rounded-[2.2rem] shadow-sm flex flex-col relative">
                     <div class="flex items-center gap-2 mb-2 pb-2 border-b-2 border-dashed border-[#63336a]/15">
                         <span class="text-2xl">🎨</span>
                         <h2 id="sticker-sheet-title" class="kawaii-title font-extrabold text-lg text-[#63336a]" data-en="Money Love Sticker Sheet" data-ms="Kepingan Pelekat Cinta Wang">Money Love Sticker Sheet</h2>
                     </div>
-
-                    <p id="sticker-sheet-desc" class="text-xs font-bold text-[#63336a]/70 leading-relaxed mb-4 handwritten text-base" data-en="Click/tap a lovely sticker below to stick it into your savings jar! Tap any stuck sticker inside the jar to cash it out or spend it. 🌸" data-ms="Klik/ketik pelekat comel di bawah untuk dimasukkan ke dalam tabung simpanan! Ketik pelekat dalam tabung untuk mengeluarkan semula wang. 🌸">
-                        Click/tap a lovely sticker below to stick it into your savings jar! Tap any stuck sticker inside the jar to cash it out or spend it. 🌸
-                    </p>
+                    <p id="sticker-sheet-desc" class="text-xs font-bold text-[#63336a]/70 leading-relaxed mb-4 handwritten text-base" data-en="Click/tap a lovely sticker below to stick it into your savings jar! Tap any stuck sticker inside the jar to cash it out or spend it. 🌸" data-ms="Klik/ketik pelekat comel di bawah untuk dimasukkan ke dalam tabung simpanan! Ketik pelekat dalam tabung untuk mengeluarkan semula wang. 🌸">Click/tap a lovely sticker below to stick it into your savings jar! Tap any stuck sticker inside the jar to cash it out or spend it. 🌸</p>
 
                     <div class="grid grid-cols-2 gap-3.5 mb-5">
                         <button onclick="spawnJarSticker(1)" class="bg-[#fffbeb] hover:bg-[#fef9c3] border-2 border-amber-300 p-3.5 rounded-2xl flex flex-col items-center justify-center gap-1 active:scale-95 transition-all shadow-[2px_2px_0px_rgba(99,51,106,0.15)] group">
@@ -742,63 +719,53 @@
                             <span class="text-xs font-bold text-yellow-800">RM100</span>
                         </button>
                     </div>
-
-                    <button onclick="clearJar()" id="jar-clear-btn" class="w-full bg-[#fff0f3] hover:bg-[#ffe3e8] border-2 border-rose-300 text-rose-700 font-bold py-3 px-4 rounded-2xl text-xs flex items-center justify-center gap-2 active:scale-95 transition-all shadow-[2px_2px_0px_rgba(244,63,94,0.1)]" data-en="🧼 Empty Savings Jar" data-ms="🧼 Kosongkan Tabung Simpanan">
-                        <span>🧼</span> Empty Savings Jar
-                    </button>
+                    <button onclick="clearJar()" id="jar-clear-btn" class="w-full bg-[#fff0f3] hover:bg-[#ffe3e8] border-2 border-rose-300 text-rose-700 font-bold py-3 px-4 rounded-2xl text-xs flex items-center justify-center gap-2 active:scale-95 transition-all shadow-[2px_2px_0px_rgba(244,63,94,0.1)]"><span>🧼</span> Empty Savings Jar</button>
                 </div>
 
                 <div class="bg-white border-[4px] border-[#63336a] p-4 rounded-[2rem] shadow-sm text-center">
-                    <p id="cozy-quote-text" class="text-xs font-bold text-pink-600 italic" data-en="✨ 'Take tiny, beautiful steps every single day.'" data-ms="✨ 'Ambil langkah kecil yang indah setiap hari.'">
-                        ✨ "Take tiny, beautiful steps every single day."
-                    </p>
+                    <p id="cozy-quote-text" class="text-xs font-bold text-pink-600 italic">✨ "Take tiny, beautiful steps every single day."</p>
                 </div>
             </div>
         </div>
 
-        <div class="mt-8 pt-4 border-t-2 border-dashed border-[#63336a]/20 flex flex-wrap justify-between items-center text-[11px] text-[#63336a] font-bold z-10 relative">
+        <div class="mt-6 w-full relative z-10" onclick="event.stopPropagation()">
+            <div class="w-full min-h-[110px] bg-white/40 border-4 border-dashed border-[#63336a]/30 rounded-[2rem] p-4 flex flex-col justify-start relative transition-colors duration-200 hover:bg-white/60">
+                <div class="text-[11px] font-extrabold text-[#63336a]/60 uppercase tracking-widest flex items-center gap-1.5 select-none mb-1">
+                    <span>📝</span> <span data-en="Sticky Notes Layer Zone (Drop stickers here!)" data-ms="Zon Lapisan Nota Pelekat (Letak pelekat di sini!)">Sticky Notes Layer Zone (Drop stickers here!)</span>
+                </div>
+                <textarea oninput="saveAllData()" id="bottom-sticky-text-input" class="w-full bg-transparent border-none text-[#63336a] focus:outline-none resize-none text-base font-bold handwritten placeholder-purple-400/50" rows="2" data-placeholder-en="Type layout thoughts here or drop a custom cute sticker from the side sheet container anytime..." data-placeholder-ms="Taip idea susun atur di sini atau letakkan pelekat comel daripada helaian sebelah..."></textarea>
+            </div>
+        </div>
+
+        <div class="mt-6 pt-4 border-t-2 border-dashed border-[#63336a]/20 flex flex-wrap justify-between items-center text-[11px] text-[#63336a] font-bold z-10 relative" onclick="event.stopPropagation()">
             <span></span>
-            <span id="footer-save-tip" class="text-right" data-en="🧁 Designed with smooth touch gestures for digital book layout. Items automatically save." data-ms="🧁 Direka dengan gerak isyarat sentuhan lancar untuk susun atur buku digital. Item disimpan automatik.">
-                🧁 Designed with smooth touch gestures for digital book layout. Items automatically save.
-            </span>
+            <span id="footer-save-tip" class="text-right" data-en="🧁 Designed with smooth touch gestures for digital book layout. Items automatically save." data-ms="🧁 Direka dengan gerak isyarat sentuhan lancar untuk susun atur buku digital. Item disimpan automatik.">🧁 Designed with smooth touch gestures for digital book layout. Items automatically save.</span>
         </div>
     </div>
 
     <div id="day-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
         <div class="bg-white border-4 border-[#63336a] rounded-[2.5rem] p-6 max-w-sm w-full mx-4 shadow-[6px_6px_0px_#63336a] transform scale-95 transition-transform duration-300 relative">
-            <button onclick="closeDayModal()" class="absolute top-4 right-4 text-gray-400 hover:text-pink-500 text-xl transition-colors">
-                <i class="fa-solid fa-circle-xmark"></i>
-            </button>
+            <button onclick="closeDayModal()" class="absolute top-4 right-4 text-gray-400 hover:text-pink-500 text-xl transition-colors"><i class="fa-solid fa-circle-xmark"></i></button>
             <h3 id="modal-heading-title" class="kawaii-title text-2xl font-bold text-center mb-1" data-en="Add Cozy Schedule" data-ms="Tambah Jadual Selesa">Add Cozy Schedule</h3>
             <p id="modal-date-label" class="text-center text-pink-500 font-bold mb-4 handwritten text-xl">Monday, January 1st</p>
-            
             <textarea id="modal-day-text" class="w-full h-32 p-3 bg-[#fdf6fa] border-2 border-[#63336a]/30 rounded-2xl focus:outline-none focus:border-[#63336a] text-[#63336a] handwritten text-xl font-bold"></textarea>
-            
             <div class="mt-4 flex gap-2">
-                <button onclick="saveDayModal()" id="modal-save-btn" class="flex-1 bg-pink-400 hover:bg-pink-500 text-white border-2 border-[#63336a] font-bold py-2.5 px-4 rounded-xl shadow-[2px_2px_0px_#63336a] transition-all active:scale-95 text-sm" data-en="Save Note ✨" data-ms="Simpan Nota ✨">
-                    Save Note ✨
-                </button>
-                <button onclick="closeDayModal()" id="modal-cancel-btn" class="bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-600 font-bold py-2 px-4 rounded-xl transition-all text-sm" data-en="Cancel" data-ms="Batal">
-                    Cancel
-                </button>
+                <button onclick="saveDayModal()" id="modal-save-btn" class="flex-1 bg-pink-400 hover:bg-pink-500 text-white border-2 border-[#63336a] font-bold py-2.5 px-4 rounded-xl shadow-[2px_2px_0px_#63336a] transition-all active:scale-95 text-sm" data-en="Save Note ✨" data-ms="Simpan Nota ✨">Save Note ✨</button>
+                <button onclick="closeDayModal()" id="modal-cancel-btn" class="bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-600 font-bold py-2 px-4 rounded-xl transition-all text-sm" data-en="Cancel" data-ms="Batal">Cancel</button>
             </div>
         </div>
     </div>
 
     <div id="recovery-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
         <div class="bg-white border-4 border-[#63336a] rounded-[2.5rem] p-6 max-w-sm w-full mx-4 shadow-[6px_6px_0px_#63336a] transform scale-95 transition-transform duration-300 relative">
-            <button onclick="closeRecoveryModal()" class="absolute top-4 right-4 text-gray-400 hover:text-pink-500 text-xl transition-colors">
-                <i class="fa-solid fa-circle-xmark"></i>
-            </button>
+            <button onclick="closeRecoveryModal()" class="absolute top-4 right-4 text-gray-400 hover:text-pink-500 text-xl transition-colors"><i class="fa-solid fa-circle-xmark"></i></button>
             <h3 id="recovery-modal-title" class="kawaii-title text-2xl font-bold text-center mb-2" data-en="🎀 Owner Recovery" data-ms="🎀 Pemulihan Pemilik">🎀 Owner Recovery</h3>
             <div class="bg-rose-50 p-4 rounded-2xl border-2 border-rose-100 text-rose-950 text-xs font-bold space-y-2 leading-relaxed mb-4">
                 <p id="recovery-msg-text" data-en="Forgot details? No worries! We can provide access to security logs." data-ms="Lupa butiran? Jangan risau! Kami menyediakan log keselamatan akses rasmi.">Forgot details? No worries! We can provide access to security logs.</p>
                 <div id="recovery-credentials-zone" class="bg-white p-2 border border-rose-200 rounded-xl space-y-1 select-all font-mono text-center"></div>
                 <p id="recovery-passcode-note" class="text-rose-700/80 italic" data-en="Alternatively, use the temporary security passcode COZY2026 in the login password field with any username to enter." data-ms="Sebagai alternatif, gunakan kod laluan kecemasan COZY2026 pada kotak kata laluan bersama sebarang ID pengguna.">Alternatively, use the temporary security passcode <span class="bg-pink-200 px-1.5 py-0.5 rounded text-pink-900 font-bold">COZY2026</span> in the login password field with any username to enter.</p>
             </div>
-            <button onclick="closeRecoveryModal()" id="recovery-close-btn" class="w-full bg-rose-400 hover:bg-rose-500 text-white font-bold py-2 px-4 rounded-xl shadow-md transition-all active:scale-95 text-sm" data-en="Got it, thank you!" data-ms="Faham, terima kasih!">
-                Got it, thank you!
-            </button>
+            <button onclick="closeRecoveryModal()" id="recovery-close-btn" class="w-full bg-rose-400 hover:bg-rose-500 text-white font-bold py-2 px-4 rounded-xl shadow-md transition-all active:scale-95 text-sm" data-en="Got it, thank you!" data-ms="Faham, terima kasih!">Got it, thank you!</button>
         </div>
     </div>
 
@@ -806,9 +773,9 @@
         // CORE PLATFORM STATE MODEL
         let plannerState = {
             activePage: 1,
-            currentMonth: 5, // Default to June (index 5)
+            currentMonth: 5,
             currentYear: 2026,
-            currentLanguage: 'en', // default language state 'en' or 'ms'
+            currentLanguage: 'en',
             currentUser: null,
             stylusEnabled: false,
             activeColor: '#f48fa1',
@@ -852,6 +819,7 @@
                 { id: 3, desc: "Kawaii keychains 🦄", amount: 25.00, method: "Online Transfer", category: "Treats ✨" }
             ],
             savingStickers: [],
+            pageStickyNotes: { 1: "", 2: "", 3: "", 4: "", 5: "" },
             stickers_1: [], stickers_2: [], stickers_3: [], stickers_4: [], stickers_5: []
         };
 
@@ -942,6 +910,7 @@
         const modalDateLabel = document.getElementById('modal-date-label');
         const modalDayText = document.getElementById('modal-day-text');
         const stickerBoard = document.getElementById('sticker-board');
+        const bottomStickyInput = document.getElementById('bottom-sticky-text-input');
 
         let activeEditingDayKey = null;
         let authMode = 'login';
@@ -961,8 +930,6 @@
             }
 
             loadPlannerFromStorage();
-            
-            // Sync current language layout elements text content rendering
             applyLanguageDOMElements();
 
             if (selectMonth) selectMonth.value = plannerState.currentMonth;
@@ -980,6 +947,14 @@
             scanBtn.addEventListener('mouseup', stopFingerprintScan);
             scanBtn.addEventListener('mouseleave', stopFingerprintScan);
             scanBtn.addEventListener('touchend', stopFingerprintScan);
+
+            // Close sticker drawer instantly when user taps background body frame wrapper outside
+            document.body.addEventListener('click', function() {
+                const drawer = document.getElementById('sticker-drawer');
+                if (drawer && !drawer.classList.contains('translate-x-full')) {
+                    drawer.classList.add('translate-x-full');
+                }
+            });
 
             if (selectMonth) {
                 selectMonth.addEventListener('change', (e) => {
@@ -1017,14 +992,22 @@
             window.addEventListener('resize', handleCanvasResize);
         };
 
-        // NAVIGATION DRAWER CONTROLLER
-        function toggleStickerDrawer() {
+        // NAVIGATION STICKER DRAWER CONTROLLER
+        function toggleStickerDrawer(event) {
+            if (event) event.stopPropagation();
             const drawer = document.getElementById('sticker-drawer');
             if (drawer.classList.contains('translate-x-full')) {
                 drawer.classList.remove('translate-x-full');
             } else {
                 drawer.classList.add('translate-x-full');
             }
+        }
+
+        // DE-SELECT AND RELEASE BOUNDING BOXES FROM STICKERS
+        function releaseAllStickers() {
+            document.querySelectorAll('.sticker').forEach(st => {
+                st.classList.remove('sticker-active');
+            });
         }
 
         // MULTI-LANGUAGE TRANSLATION CONTROLLER ENGINE
@@ -1045,17 +1028,14 @@
         function applyLanguageDOMElements() {
             const lang = plannerState.currentLanguage;
             
-            // Translate tags containing structural key parameters attributes
             document.querySelectorAll('[data-en]').forEach(el => {
                 el.innerText = el.getAttribute(`data-${lang}`);
             });
             
-            // Translate explicit target placeholders safely inside loop arrays
             document.querySelectorAll('[data-placeholder-en]').forEach(el => {
                 el.setAttribute('placeholder', el.getAttribute(`data-placeholder-${lang}`));
             });
 
-            // Re-render select option list structural loops arrays matches values
             if (selectMonth) {
                 const activeVal = selectMonth.value;
                 selectMonth.innerHTML = '';
@@ -1068,7 +1048,6 @@
                 selectMonth.value = activeVal || plannerState.currentMonth;
             }
 
-            // Meal page header columns alignment mapping updates
             const mealHead = document.getElementById('meals-table-header');
             if (mealHead) {
                 mealHead.innerHTML = '';
@@ -1080,7 +1059,6 @@
                 });
             }
 
-            // Ledger titles alignments structural items
             const budgetTh = document.getElementById('budget-th-row');
             if (budgetTh) {
                 budgetTh.innerHTML = '';
@@ -1092,7 +1070,6 @@
                 });
             }
 
-            // Options elements fields matching types
             if (expMethod) {
                 expMethod.innerHTML = `
                     <option value="Cash">${translations[lang].expMethods[0]}</option>
@@ -1111,7 +1088,6 @@
                 });
             }
 
-            // Glass Jar milestone markup values
             const milestonesBox = document.getElementById('milestone-level-indicators');
             if (milestonesBox) {
                 milestonesBox.innerHTML = `
@@ -1266,7 +1242,7 @@
                         <span class="text-4xl">🧬</span>
                         <h3 class="kawaii-title text-2xl font-bold mt-2 mb-1">${promptTitle}</h3>
                         <p class="text-xs font-semibold text-rose-500 mb-4">${promptSubtitle}</p>
-                        <input id="prompt-biometric-name" type="text" placeholder="E.g., Princess Kitty" class="w-full bg-pink-50/50 border-2 border-pink-100 rounded-xl px-3 py-2 text-sm text-pink-900 font-semibold focus:outline-none focus:border-pink-300 text-center mb-4">
+                        <input id="prompt-biometric-name" type="text" placeholder="E.g., Princess Kitty" class="w-full bg-pink-50/50 border-2 border-pink-100/80 rounded-xl px-3 py-2 text-sm text-pink-900 font-semibold focus:outline-none focus:border-pink-300 text-center mb-4">
                         <button onclick="saveBiometricSignUp()" class="w-full bg-rose-400 hover:bg-rose-500 text-white font-bold py-2.5 rounded-xl shadow-[2px_2px_0px_#63336a] transition-all active:scale-95 text-sm">
                             ${promptBtn}
                         </button>
@@ -1405,6 +1381,10 @@
             
             document.getElementById('planner-main-title').innerText = lang === 'en' ? titlesEn[pageNum] : titlesMs[pageNum];
             
+            if (bottomStickyInput) {
+                bottomStickyInput.value = (plannerState.pageStickyNotes && plannerState.pageStickyNotes[pageNum]) ? plannerState.pageStickyNotes[pageNum] : "";
+            }
+
             renderStickers();
             loadCanvasSnapshot(pageNum);
             saveAllData();
@@ -1418,7 +1398,7 @@
             return '#fffbed';
         }
 
-        // AMENDMENT FOR DRAWING SURFACE
+        // SURFACE STYLUS ENGINE
         function setupCanvasDrawing() {
             const brushSlider = document.getElementById('brush-size-slider');
             if (brushSlider) {
@@ -1495,6 +1475,7 @@
             saveAllData();
         }
 
+        // TOOL DRAW SELECTORS
         function selectDrawingTool(tool) {
             plannerState.activeTool = tool;
             const drawBtn = document.getElementById('tool-draw-btn');
@@ -1637,7 +1618,6 @@
             if (selectMonth) selectMonth.value = month;
             if (selectYear) selectYear.value = year;
 
-            // Generate header short names structure row dynamically
             const headerBox = document.getElementById('calendar-days-header');
             if (headerBox) {
                 headerBox.innerHTML = '';
@@ -1683,7 +1663,8 @@
                     </div>
                     <div class="text-[10px] text-[#63336a] font-bold truncate mt-1 leading-tight max-w-full handwritten">${excerpt}</div>
                 `;
-                cell.onclick = () => {
+                cell.onclick = (e) => {
+                    e.stopPropagation(); // Avoid clearing state from parent sheet containers
                     if (plannerState.stylusEnabled) return;
                     openDayModal(dateKey, dayNumber);
                 };
@@ -1725,7 +1706,7 @@
             closeDayModal();
         }
 
-        // SIDEBAR ACTIONS
+        // SIDEBAR RENDERS
         function renderSidebars() {
             if (notesContent) notesContent.value = plannerState.notes || '';
             if (goal1Input) goal1Input.value = plannerState.goals[0] || '';
@@ -1781,7 +1762,7 @@
             saveAllData();
         }
 
-        // PAGE 2: WEEKLY PLANNER LOAD
+        // PAGE 2: WEEKLY ENGINE
         function renderWeeklyPage() {
             ['mon', 'tue', 'wed', 'thu', 'fri', 'weekend'].forEach(d => {
                 const el = document.getElementById(`week-day-${d}`);
@@ -1835,7 +1816,7 @@
             saveAllData();
         }
 
-        // PAGE 3: MEAL PLANNER LOAD
+        // PAGE 3: MEALS PREPARATION
         function renderMealPage() {
             const lang = plannerState.currentLanguage;
             const container = document.getElementById('meals-rows-container');
@@ -1864,7 +1845,6 @@
                 });
             }
 
-            // Hydration grid loading items links
             const waterGrid = document.getElementById('water-grid-container');
             if (waterGrid) {
                 waterGrid.innerHTML = '';
@@ -1953,7 +1933,7 @@
             saveAllData();
         }
 
-        // PAGE 4: BUDGET PLANNER ENGINE
+        // PAGE 4: BUDGET CONTROL
         function calcBudget() {
             const income = parseFloat(budgetIncomeInput?.value) || 0;
             const limit = parseFloat(budgetLimitInput?.value) || 0;
@@ -1994,7 +1974,6 @@
                     ? '<span class="bg-blue-100 text-blue-900 text-[10px] px-2 py-0.5 rounded-full border border-blue-300">' + (plannerState.currentLanguage === 'en' ? 'Online 📱' : 'Atas Talian 📱') + '</span>'
                     : '<span class="bg-amber-100 text-amber-900 text-[10px] px-2 py-0.5 rounded-full border border-amber-300">' + (plannerState.currentLanguage === 'en' ? 'Cash 💵' : 'Tunai 💵') + '</span>';
 
-                // Category local name tracker matches mapping indices
                 const categoryNamesList = ["Food 🍧", "Transport 🚌", "Shopping 🛍️", "Grocery 🥕", "Treats ✨"];
                 const mappedIdx = categoryNamesList.indexOf(exp.category);
                 const displayCatName = mappedIdx !== -1 ? translations[plannerState.currentLanguage].expCategories[mappedIdx] : exp.category;
@@ -2030,7 +2009,7 @@
             calcBudget(); saveAllData();
         }
 
-        // PAGE 5: COZY SAVINGS TRACKER ENGINE
+        // PAGE 5: COZY SAVINGS JAR
         function renderSavingsTracker() {
             if (!jarStickersLayer) return;
             jarStickersLayer.innerHTML = '';
@@ -2077,18 +2056,18 @@
             renderSavingsTracker(); saveAllData();
         }
 
-        // DECORATIVE PLANNER STICKERS FROM NAVIGATION DRAWER
+        // DECORATIVE PLANNER STICKERS SPAWNING CONTROLS
         function spawnSticker(type) {
             if (plannerState.stylusEnabled) return;
             const dict = { bunny: "🐰", rainbow: "🌈", flower: "🌷", star: "⭐", heart: "💖", cloud: "☁️", bear: "🧸", cat: "🐱" };
-            const newSticker = { id: Date.now() + Math.random(), type: type, emoji: dict[type], x: 150 + Math.random() * 100, y: 150 + Math.random() * 100 };
+            const newSticker = { id: Date.now() + Math.random(), type: type, emoji: dict[type], x: 250 + Math.random() * 100, y: 720 + Math.random() * 50 };
             
             const key = `stickers_${plannerState.activePage}`;
             if (!plannerState[key]) plannerState[key] = [];
             plannerState[key].push(newSticker);
             renderSingleSticker(newSticker); 
             saveAllData();
-            popCozyAlert(null, true, "Added sticker to current page! ✨");
+            popCozyAlert(null, true, "Placed sticker inside view layer panel! ✨");
         }
 
         function renderStickers() {
@@ -2107,16 +2086,26 @@
             let startX = 0, startY = 0;
             let currentX = stickerObj.x, currentY = stickerObj.y;
             
+            // Allow focus and click borders cleanly inside layer bounds
+            element.addEventListener('click', function(e) {
+                e.stopPropagation();
+                document.querySelectorAll('.sticker').forEach(st => st.classList.remove('sticker-active'));
+                element.classList.add('sticker-active');
+            });
+
             element.addEventListener('mousedown', dragStart);
             element.addEventListener('touchstart', dragStart, { passive: false });
 
             function dragStart(e) {
                 if (plannerState.stylusEnabled) return;
+                e.stopPropagation();
                 document.querySelectorAll('.sticker').forEach(st => st.classList.remove('sticker-active'));
                 element.classList.add('sticker-active');
+                
                 const clientX = e.touches ? e.touches[0].clientX : e.clientX;
                 const clientY = e.touches ? e.touches[0].clientY : e.clientY;
                 startX = clientX - currentX; startY = clientY - currentY;
+                
                 document.addEventListener('mousemove', dragging);
                 document.addEventListener('mouseup', dragEnd);
                 document.addEventListener('touchmove', dragging, { passive: false });
@@ -2141,19 +2130,25 @@
         }
 
         function deleteSticker(id, event) {
-            event.stopPropagation();
+            if (event) event.stopPropagation();
             const key = `stickers_${plannerState.activePage}`;
             plannerState[key] = plannerState[key].filter(s => s.id !== id);
             document.getElementById(`sticker-${id}`)?.remove();
             saveAllData();
         }
 
+        // GLOBAL LOCAL STORAGE DATA SYNCHRONIZATION
         function saveAllData() {
             if (notesContent) plannerState.notes = notesContent.value;
             if (goal1Input && goal2Input && goal3Input) plannerState.goals = [goal1Input.value, goal2Input.value, goal3Input.value];
             if (priority1Input && priority2Input && priority3Input) plannerState.priorities = [priority1Input.value, priority2Input.value, priority3Input.value];
             if (weeklyFocusBox) plannerState.weeklyFocus = weeklyFocusBox.value;
             
+            if (bottomStickyInput) {
+                if (!plannerState.pageStickyNotes) plannerState.pageStickyNotes = {};
+                plannerState.pageStickyNotes[plannerState.activePage] = bottomStickyInput.value;
+            }
+
             const monEl = document.getElementById('week-day-mon');
             const tueEl = document.getElementById('week-day-tue');
             const wedEl = document.getElementById('week-day-wed');
@@ -2182,7 +2177,7 @@
                 try {
                     plannerState = { ...plannerState, ...JSON.parse(data) };
                 } catch(e) {
-                    console.error("Local recovery error, rebuilding...", e);
+                    console.error("Local recovery reset fault ditected:", e);
                 }
             }
         }
