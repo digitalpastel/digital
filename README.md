@@ -1,1 +1,2663 @@
-# digital
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Sweet Planner - Cozy digital binder with stylus drawing</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for Hand-Drawn Kawaii Aesthetic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Patrick+Hand&family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: #f7e6f3;
+            background-image: 
+                radial-gradient(#e6cce2 2px, transparent 2px), 
+                radial-gradient(#e6cce2 2px, #f7e6f3 2px);
+            background-size: 32px 32px;
+            background-position: 0 0, 16px 16px;
+        }
+
+        /* Cover Page Background matching IMG_20260626_104236.jpg */
+        .cover-background {
+            background: linear-gradient(135deg, #ffd3e8 0%, #d2f1fc 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cover-background::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0.15;
+            background-image: linear-gradient(45deg, #ffffff 25%, transparent 25%), 
+                              linear-gradient(-45deg, #ffffff 25%, transparent 25%), 
+                              linear-gradient(45deg, transparent 75%, #ffffff 75%), 
+                              linear-gradient(-45deg, transparent 75%, #ffffff 75%);
+            background-size: 40px 40px;
+            background-position: 0 0, 0 20px, 20px -20px, -20px 0px;
+        }
+
+        /* Stitching Border Effect */
+        .stitch-border {
+            border: 3px dashed rgba(255, 255, 255, 0.8);
+            border-radius: 2.5rem;
+            box-shadow: inset 0 0 0 6px rgba(255, 255, 255, 0.3);
+        }
+
+        .kawaii-title {
+            font-family: 'Fredoka', sans-serif;
+            color: #581c3f;
+            text-shadow: 2px 2px 0px #fff;
+        }
+
+        .handwritten {
+            font-family: 'Patrick Hand', cursive;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #fff3fa;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #f4b6dc;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #e29cc7;
+        }
+
+        .planner-container {
+            border: 4px solid #63336a;
+            box-shadow: 0 16px 0px rgba(99, 51, 106, 0.15);
+            background-color: #fef7fc;
+            background-image: radial-gradient(#63336a 0.5px, transparent 0.5px);
+            background-size: 24px 24px;
+        }
+
+        .ruled-lines {
+            background-image: linear-gradient(#f1d4eb 1px, transparent 1px);
+            background-size: 100% 2rem;
+            line-height: 2rem;
+        }
+
+        .sticker {
+            position: absolute;
+            cursor: move;
+            user-select: none;
+            touch-action: none;
+            transition: transform 0.15s ease-out;
+            z-index: 40;
+        }
+        .sticker:hover {
+            transform: scale(1.15) rotate(3deg);
+        }
+        .sticker-active {
+            outline: 3px dashed #63336a;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(1.1);
+        }
+
+        .sticker-delete-btn {
+            display: none;
+            position: absolute;
+            top: -12px;
+            right: -12px;
+            background: #ff5c8a;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            font-size: 12px;
+            line-height: 24px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            border: 2px solid white;
+            z-index: 50;
+        }
+        .sticker-active .sticker-delete-btn {
+            display: block;
+        }
+        
+        .paper-texture {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)'/%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+
+        .scallop-banner {
+            background-color: #fff;
+            border: 3.5px solid #63336a;
+            border-radius: 1.5rem;
+            position: relative;
+        }
+
+        .handdrawn-input {
+            border-bottom: 2px dashed #d1afcf;
+            background-color: transparent;
+            color: #63336a;
+            font-family: 'Patrick Hand', cursive;
+        }
+        .handdrawn-input:focus {
+            outline: none;
+            border-bottom-color: #63336a;
+        }
+
+        .binder-tab {
+            position: relative;
+            z-index: 10;
+            border: 3.5px solid #63336a;
+            border-bottom: none;
+            border-radius: 1rem 1rem 0 0;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 3px -3px 0px rgba(99, 51, 106, 0.1);
+        }
+        .binder-tab.active {
+            z-index: 30;
+            background-color: #fef7fc !important;
+            padding-top: 0.75rem;
+            padding-bottom: 0.5rem;
+            transform: translateY(4px);
+        }
+        .binder-tab:not(.active):hover {
+            transform: translateY(-2px);
+        }
+
+        /* Scanner Pulse effect */
+        .scanner-ring {
+            animation: ringPulse 2s infinite ease-out;
+        }
+        @keyframes ringPulse {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 0.4; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+
+        /* Color swatch circles styling */
+        .color-bubble {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.15s ease;
+            border: 2px solid #fff;
+            box-shadow: 0 0 0 2px #63336a33;
+        }
+        .color-bubble.active {
+            box-shadow: 0 0 0 3px #63336a;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen py-4 px-3 flex flex-col items-center justify-start relative overflow-x-hidden">
+
+    <!-- COZY STATUS MESSAGE / INSTANT ALERTS -->
+    <div id="cozy-alert" class="fixed top-6 bg-white border-4 border-[#63336a] text-[#63336a] px-6 py-3.5 rounded-full shadow-[5px_5px_0px_#63336a] z-50 text-sm font-bold flex items-center gap-3 transform -translate-y-32 transition-all duration-300">
+        <span id="cozy-alert-emoji">🌸</span>
+        <span id="cozy-alert-text">All set!</span>
+    </div>
+
+    <!-- COVER PAGE PORTAL SCREEN MATCHING IMG_20260626_104236.jpg -->
+    <div id="portal-cover-screen" class="fixed inset-0 z-50 cover-background flex items-center justify-center p-4 transition-all duration-500">
+        <div class="w-full max-w-md bg-transparent h-full max-h-[850px] p-6 flex flex-col justify-between stitch-border relative bg-opacity-10">
+            
+            <!-- Blossom Header Emblem -->
+            <div class="flex flex-col items-center mt-6">
+                <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center border-4 border-pink-300 shadow-md">
+                    <svg class="w-12 h-12 text-pink-400" viewBox="0 0 100 100" fill="currentColor">
+                        <path d="M50,15 C40,5 25,12 33,26 C20,20 10,35 23,45 C10,51 15,68 28,62 C20,75 35,83 45,70 C51,83 68,78 62,65 C75,73 83,58 70,48 C83,42 78,25 65,31 C73,18 58,10 48,23 C48,23 50,15 50,15 Z" />
+                        <circle cx="50" cy="48" r="8" class="text-yellow-300" />
+                    </svg>
+                </div>
+                
+                <h1 class="kawaii-title text-4xl font-black mt-4 text-center tracking-wide">My Sweet Planner</h1>
+                <p class="text-sm font-semibold text-rose-800 tracking-wide mt-1 italic">Your secure cozy digital diary 🔒</p>
+            </div>
+
+            <!-- Login / Sign up Card matching IMG_20260626_104236.jpg layout -->
+            <div class="bg-white border-2 border-pink-100 rounded-[2.5rem] p-6 shadow-[0_8px_30px_rgb(255,192,203,0.3)] relative mx-2">
+                <!-- Ribbon Badge -->
+                <div class="text-center font-bold text-rose-900 mb-5 flex items-center justify-center gap-1.5 text-base">
+                    <span>🎀</span> <span id="form-card-title">Sign In to Owner File</span>
+                </div>
+
+                <!-- Custom Pink Heart Tab Badge on side -->
+                <div class="absolute right-[-14px] top-1/3 w-12 h-10 bg-pink-300 rounded-l-none rounded-r-2xl border-2 border-l-0 border-white flex items-center justify-center shadow-md">
+                    <span class="text-rose-600 animate-pulse text-base">💖</span>
+                </div>
+
+                <!-- Inputs Form Container -->
+                <div class="space-y-4">
+                    <!-- Name Input (For registration step, hidden in general login) -->
+                    <div id="signup-name-field" class="hidden">
+                        <input id="input-full-name" type="text" placeholder="Your Sweet Name" class="w-full bg-[#fff4f8] border-2 border-pink-100 focus:border-pink-300 rounded-2xl px-4 py-3 text-sm text-pink-900 font-semibold focus:outline-none placeholder-pink-300/80">
+                    </div>
+
+                    <div>
+                        <input id="input-username" type="text" placeholder="Username / ID" class="w-full bg-[#fff4f8] border-2 border-pink-100 focus:border-pink-300 rounded-2xl px-4 py-3 text-sm text-pink-900 font-semibold focus:outline-none placeholder-pink-300/80">
+                    </div>
+                    <div>
+                        <input id="input-password" type="password" placeholder="Cozy Password" class="w-full bg-[#fff4f8] border-2 border-pink-100 focus:border-pink-300 rounded-2xl px-4 py-3 text-sm text-pink-900 font-semibold focus:outline-none placeholder-pink-300/80">
+                    </div>
+                </div>
+
+                <button onclick="attemptFormSubmit()" class="w-full mt-5 bg-rose-400 hover:bg-rose-500 text-white font-bold py-3.5 rounded-2xl shadow-md active:scale-98 transition-all text-sm flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-lock-open text-xs"></i> <span id="submit-btn-text">Unlock Binder</span>
+                </button>
+
+                <!-- Footer Links -->
+                <div class="mt-4 flex justify-between text-xs font-bold px-1 text-rose-500">
+                    <button onclick="toggleAuthMode()" id="auth-toggle-link" class="hover:underline text-rose-600/80">New? Create Profile</button>
+                    <button onclick="triggerForgotPassword()" class="hover:underline text-amber-700/80">Forgot details?</button>
+                </div>
+            </div>
+
+            <!-- Biometric Fingerprint Section matching IMG_20260626_104236.jpg -->
+            <div class="flex flex-col items-center mb-6">
+                <span id="fingerprint-guide-text" class="text-xs font-bold text-indigo-900/80 mb-2">Or press and hold fingerprint scanner to login</span>
+                
+                <!-- Circular interactive scan button -->
+                <div id="fingerprint-scan-btn" class="w-20 h-20 rounded-full bg-white border-4 border-pink-300 flex items-center justify-center cursor-pointer relative shadow-md select-none touch-none transform transition-transform active:scale-95">
+                    
+                    <!-- Scanner pulsing ring -->
+                    <div id="scanner-ring" class="absolute inset-[-6px] rounded-full border-2 border-pink-400 scanner-ring pointer-events-none opacity-0"></div>
+                    
+                    <!-- Circular progress ring -->
+                    <svg class="absolute inset-0 w-full h-full -rotate-90 pointer-events-none" viewBox="0 0 80 80">
+                        <circle cx="40" cy="40" r="34" stroke="rgba(244,143,177,0.2)" stroke-width="4" fill="none" />
+                        <circle id="scan-progress-bar" cx="40" cy="40" r="34" stroke="#ec4899" stroke-width="4" fill="none" stroke-dasharray="213.6" stroke-dashoffset="213.6" />
+                    </svg>
+
+                    <!-- Paw print representation inside matching blue prints in photo -->
+                    <div class="text-sky-500 text-2xl flex flex-col items-center gap-0.5 justify-center">
+                        <i class="fa-solid fa-paw transform rotate-12"></i>
+                    </div>
+                </div>
+            </div>
+
+            <p class="text-[11px] font-bold text-center text-rose-500/80 pb-3">Designed with love & security 🌸</p>
+        </div>
+    </div>
+
+    <!-- GLOBAL CONTROLS TOP BAR (Inspired by IMG_20260626_104359.jpg) -->
+    <div id="global-action-bar" class="w-full max-w-5xl mb-3 bg-white border-4 border-[#63336a] rounded-[2rem] p-3 shadow-[4px_4px_0px_#63336a] flex flex-wrap gap-3 items-center justify-between z-20 hidden">
+        <div class="flex items-center gap-3">
+            <!-- Language Selector (Globe Icon) -->
+            <button class="bg-[#e0f2fe] hover:bg-[#bae6fd] text-[#0369a1] font-bold px-4 py-2 rounded-xl border-2 border-[#63336a] text-sm flex items-center gap-1.5 transition-all shadow-[2px_2px_0px_#63336a]">
+                <i class="fa-solid fa-globe"></i> EN
+            </button>
+
+            <!-- Stylus On / Off Button -->
+            <button id="stylus-toggle-btn" onclick="toggleStylusMode()" class="bg-[#38b6ff] hover:bg-[#009bf5] text-white font-bold px-5 py-2 rounded-xl border-2 border-[#63336a] text-sm flex items-center gap-2 transition-all shadow-[2px_2px_0px_#63336a]">
+                <i class="fa-solid fa-pen-fancy"></i> <span id="stylus-toggle-text">Stylus On</span>
+            </button>
+        </div>
+
+        <!-- Personalization badge -->
+        <div class="hidden sm:flex items-center gap-2 bg-[#fef5fc] px-4 py-1.5 rounded-2xl border-2 border-[#63336a]">
+            <span class="text-base">🌸</span>
+            <span id="user-binder-welcome" class="font-extrabold text-[#63336a] text-sm tracking-wide uppercase">Cozy Planner</span>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <!-- Lock Binder Button -->
+            <button onclick="lockSystemAndReturnToCover()" class="bg-[#ffbd59] hover:bg-[#e09a25] text-white font-bold px-5 py-2 rounded-xl border-2 border-[#63336a] text-sm flex items-center gap-2 transition-all shadow-[2px_2px_0px_#63336a]">
+                <i class="fa-solid fa-lock"></i> Lock Binder
+            </button>
+            <span class="text-[#63336a] text-xl px-1 cursor-pointer hover:scale-110 transition-transform"><i class="fa-solid fa-volume-high"></i></span>
+        </div>
+    </div>
+
+    <!-- STYLUS DRAWING TOOLBAR CARD -->
+    <div id="stylus-drawing-card" class="w-full max-w-5xl mb-4 bg-white border-4 border-[#ffde59] rounded-[2.2rem] p-4 shadow-[4px_4px_0px_rgba(255,222,89,0.3)] flex flex-wrap gap-5 items-center justify-between z-20 hidden transition-all duration-300">
+        
+        <!-- Pen colors selector -->
+        <div class="flex items-center gap-3 bg-[#fdfaf3] px-3.5 py-2 rounded-2xl border-2 border-[#63336a]/20">
+            <span class="font-bold text-[#63336a] text-sm flex items-center gap-1">🎨 Pen Crayon:</span>
+            <div class="flex items-center gap-2">
+                <!-- Color 1: Pink matching photo -->
+                <div onclick="selectDrawingColor('#f48fa1', this)" class="color-bubble active" style="background-color: #f48fa1;" title="Sweet Pink"></div>
+                <!-- Color 2: Light Blue matching photo -->
+                <div onclick="selectDrawingColor('#38b6ff', this)" class="color-bubble" style="background-color: #38b6ff;" title="Light Blue"></div>
+                <!-- Color 3: Yellow/Gold matching photo -->
+                <div onclick="selectDrawingColor('#ffde59', this)" class="color-bubble" style="background-color: #ffde59;" title="Gold Yellow"></div>
+                <!-- Color 4: Dark Grey matching photo -->
+                <div onclick="selectDrawingColor('#31353d', this)" class="color-bubble" style="background-color: #31353d;" title="Dark Grey"></div>
+            </div>
+        </div>
+
+        <!-- Thickness Size Slider (Range 1% to 100%) -->
+        <div class="flex items-center gap-3 bg-[#fdfaf3] px-4 py-2 rounded-2xl border-2 border-[#63336a]/20 flex-1 min-w-[200px]">
+            <span class="font-bold text-[#63336a] text-sm shrink-0">Size:</span>
+            <input id="brush-size-slider" oninput="changeBrushSize(this.value)" type="range" min="1" max="100" value="5" class="w-full h-2 bg-sky-100 rounded-lg appearance-none cursor-pointer accent-[#38b6ff]">
+            <span id="brush-size-label" class="font-bold text-[#63336a] text-sm min-w-[35px] text-right">5%</span>
+        </div>
+
+        <!-- Draw / Eraser Tool select options -->
+        <div class="flex items-center gap-2 bg-[#fdfaf3] p-1 rounded-2xl border-2 border-[#63336a]/20">
+            <button id="tool-draw-btn" onclick="selectDrawingTool('draw')" class="bg-[#38b6ff] text-white font-bold px-4 py-1.5 rounded-xl border border-[#63336a]/30 text-xs flex items-center gap-1.5 transition-all">
+                ✏️ Draw
+            </button>
+            <button id="tool-erase-btn" onclick="selectDrawingTool('erase')" class="bg-transparent hover:bg-pink-50 text-[#63336a] font-bold px-4 py-1.5 rounded-xl border border-[#63336a]/30 text-xs flex items-center gap-1.5 transition-all">
+                🧽 Eraser
+            </button>
+        </div>
+
+        <!-- Undo & Redo boxes -->
+        <div class="flex items-center gap-2 bg-[#fdfaf3] px-3.5 py-1.5 rounded-2xl border-2 border-[#63336a]/20">
+            <button onclick="triggerUndo()" class="hover:bg-gray-100 text-[#63336a] font-bold py-1.5 px-3.5 rounded-xl text-xs flex flex-col items-center justify-center transition-all">
+                <span class="text-base">↩️</span>
+                <span>Undo</span>
+            </button>
+            <button onclick="triggerRedo()" class="hover:bg-gray-100 text-[#63336a] font-bold py-1.5 px-3.5 rounded-xl text-xs flex flex-col items-center justify-center transition-all">
+                <span class="text-base">↪️</span>
+                <span>Redo</span>
+            </button>
+        </div>
+
+    </div>
+
+    <!-- Tab navigation buttons -->
+    <div id="main-tabs-navigation" class="w-full max-w-5xl flex flex-wrap gap-1 px-4 z-10 -mb-1 hidden">
+        <button onclick="switchPage(1)" id="tab-1" class="binder-tab active bg-[#fef7fc] text-[#63336a] font-bold px-4 py-2 text-xs md:text-sm flex items-center gap-1.5">
+            <span>🌸</span> Page 1: Monthly
+        </button>
+        <button onclick="switchPage(2)" id="tab-2" class="binder-tab bg-[#fff2f9] text-[#63336a]/80 font-bold px-4 py-2 text-xs md:text-sm flex items-center gap-1.5">
+            <span>⭐</span> Page 2: Weekly
+        </button>
+        <button onclick="switchPage(3)" id="tab-3" class="binder-tab bg-[#f3f9ff] text-[#63336a]/80 font-bold px-4 py-2 text-xs md:text-sm flex items-center gap-1.5">
+            <span>🧁</span> Page 3: Meals
+        </button>
+        <button onclick="switchPage(4)" id="tab-4" class="binder-tab bg-[#f2fff6] text-[#63336a]/80 font-bold px-4 py-2 text-xs md:text-sm flex items-center gap-1.5">
+            <span>💰</span> Page 4: Budget (RM)
+        </button>
+        <button onclick="switchPage(5)" id="tab-5" class="binder-tab bg-[#fffbed] text-[#63336a]/80 font-bold px-4 py-2 text-xs md:text-sm flex items-center gap-1.5">
+            <span>🍯</span> Page 5: Savings Jar
+        </button>
+    </div>
+
+    <!-- MAIN BINDER CONTAINER CANVAS -->
+    <div id="planner-sheet" class="w-full max-w-5xl rounded-[3rem] planner-container p-5 md:p-8 relative overflow-hidden select-none min-h-[850px] hidden">
+        
+        <!-- Interactive Drawing Canvas Overlay -->
+        <canvas id="drawing-canvas" class="absolute inset-0 z-20 pointer-events-none"></canvas>
+
+        <!-- Subtle paper noise overlay -->
+        <div class="absolute inset-0 paper-texture rounded-[3rem] pointer-events-none"></div>
+
+        <!-- STICKER BOARD CONTAINER LAYER -->
+        <div id="sticker-board" class="absolute inset-0 z-30 pointer-events-none"></div>
+
+        <!-- HEADER BANNER & DECORATIVE ILLUSTRATIONS -->
+        <div class="flex flex-col md:flex-row justify-between items-center mb-6 relative z-10 gap-4">
+            
+            <!-- Left doodle bouquet reference -->
+            <div class="hidden md:flex items-center space-x-2">
+                <svg class="w-16 h-16 text-pink-400" viewBox="0 0 120 120" fill="none" stroke="#63336a" stroke-width="3.5">
+                    <path d="M 60 110 C 55 80 40 50 50 40 C 55 35 65 35 70 40" stroke-linecap="round"/>
+                    <path d="M 50 40 C 42 28 48 16 60 16 C 72 16 78 28 70 40" fill="#fca5a5" stroke-linejoin="round"/>
+                    <path d="M 40 70 C 20 75 30 90 45 80" fill="#cbd5e1" stroke-linecap="round"/>
+                    <ellipse cx="60" cy="16" rx="5" ry="5" fill="#fde047" stroke="none"/>
+                </svg>
+            </div>
+
+            <!-- Central Title & Scalloped Month Selector Container -->
+            <div class="flex flex-col items-center flex-1 text-center">
+                <div class="flex items-center gap-3">
+                    <span class="text-3xl animate-bounce">✨</span>
+                    <h1 id="planner-main-title" class="kawaii-title text-3xl md:text-4xl font-extrabold tracking-widest uppercase select-none">
+                        MONTHLY PLANNER
+                    </h1>
+                    <span class="text-3xl animate-bounce">✨</span>
+                </div>
+                
+                <!-- Scalloped Header Box -->
+                <div class="mt-3 w-full max-w-md scallop-banner px-5 py-2 shadow-sm flex items-center justify-around border-[4px] border-[#63336a]">
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold text-[#63336a] text-xs tracking-wider uppercase">MONTH:</span>
+                        <select id="select-month" class="handwritten text-2xl text-pink-500 font-bold bg-transparent border-b-2 border-dashed border-[#63336a]/30 focus:outline-none cursor-pointer appearance-none px-1">
+                            <option value="0">January</option>
+                            <option value="1">February</option>
+                            <option value="2">March</option>
+                            <option value="3">April</option>
+                            <option value="4">May</option>
+                            <option value="5">June</option>
+                            <option value="6">July</option>
+                            <option value="7">August</option>
+                            <option value="8">September</option>
+                            <option value="9">October</option>
+                            <option value="10">November</option>
+                            <option value="11">December</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold text-[#63336a] text-xs tracking-wider uppercase">YEAR:</span>
+                        <select id="select-year" class="handwritten text-2xl text-pink-500 font-bold bg-transparent border-b-2 border-dashed border-[#63336a]/30 focus:outline-none cursor-pointer appearance-none px-1">
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right side doodles: Sweet bunny, clouds, and rainbow -->
+            <div class="hidden md:flex items-center space-x-3">
+                <svg class="w-24 h-16" viewBox="0 0 100 70">
+                    <path d="M 15 55 A 35 35 0 0 1 85 55" fill="none" stroke="#fca5a5" stroke-width="5.5" stroke-linecap="round"/>
+                    <path d="M 23 55 A 27 27 0 0 1 77 55" fill="none" stroke="#fef08a" stroke-width="5.5" stroke-linecap="round"/>
+                    <path d="M 31 55 A 19 19 0 0 1 69 55" fill="none" stroke="#a7f3d0" stroke-width="5.5" stroke-linecap="round"/>
+                    <path d="M 10 55 C 5 50, 20 40, 25 50 C 30 50, 30 58, 20 58 Z" fill="#fff" stroke="#63336a" stroke-width="2"/>
+                    <path d="M 80 55 C 75 50, 90 40, 95 50 C 100 50, 100 58, 90 58 Z" fill="#fff" stroke="#63336a" stroke-width="2"/>
+                </svg>
+                <svg class="w-16 h-16" viewBox="0 0 100 100">
+                    <ellipse cx="38" cy="28" rx="8" ry="18" fill="#fff" stroke="#63336a" stroke-width="2.5"/>
+                    <ellipse cx="38" cy="28" rx="4" ry="11" fill="#fecdd3"/>
+                    <ellipse cx="62" cy="28" rx="8" ry="18" fill="#fff" stroke="#63336a" stroke-width="2.5"/>
+                    <ellipse cx="62" cy="28" rx="4" ry="11" fill="#fecdd3"/>
+                    <circle cx="50" cy="62" r="24" fill="#fff" stroke="#63336a" stroke-width="2.5"/>
+                    <circle cx="42" cy="58" r="2.5" fill="#63336a"/>
+                    <circle cx="58" cy="58" r="2.5" fill="#63336a"/>
+                    <circle cx="36" cy="64" r="3.5" fill="#fca5a5" opacity="0.8"/>
+                    <circle cx="64" cy="64" r="3.5" fill="#fca5a5" opacity="0.8"/>
+                    <path d="M 47 65 Q 50 68 53 65" stroke="#63336a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- ================= PAGE 1: MONTHLY PLANNER CANVAS ================= -->
+        <div id="page-content-1" class="planner-page grid grid-cols-1 lg:grid-cols-12 gap-6 relative z-10">
+            <div class="lg:col-span-8 flex flex-col">
+                <div class="grid grid-cols-7 gap-1.5 mb-2.5">
+                    <div class="bg-[#F87171] text-white text-center py-2 px-1 rounded-full text-[10px] md:text-xs font-bold shadow-[2px_2px_0px_#63336a] border-[2.5px] border-[#63336a] tracking-wider uppercase">MON</div>
+                    <div class="bg-[#C084FC] text-white text-center py-2 px-1 rounded-full text-[10px] md:text-xs font-bold shadow-[2px_2px_0px_#63336a] border-[2.5px] border-[#63336a] tracking-wider uppercase">TUE</div>
+                    <div class="bg-[#60A5FA] text-white text-center py-2 px-1 rounded-full text-[10px] md:text-xs font-bold shadow-[2px_2px_0px_#63336a] border-[2.5px] border-[#63336a] tracking-wider uppercase">WED</div>
+                    <div class="bg-[#34D399] text-[#1b4c39] text-center py-2 px-1 rounded-full text-[10px] md:text-xs font-bold shadow-[2px_2px_0px_#63336a] border-[2.5px] border-[#63336a] tracking-wider uppercase">THU</div>
+                    <div class="bg-[#C084FC] text-white text-center py-2 px-1 rounded-full text-[10px] md:text-xs font-bold shadow-[2px_2px_0px_#63336a] border-[2.5px] border-[#63336a] tracking-wider uppercase">FRI</div>
+                    <div class="bg-[#F87171] text-white text-center py-2 px-1 rounded-full text-[10px] md:text-xs font-bold shadow-[2px_2px_0px_#63336a] border-[2.5px] border-[#63336a] tracking-wider uppercase">SAT</div>
+                    <div class="bg-[#F87171] text-white text-center py-2 px-1 rounded-full text-[10px] md:text-xs font-bold shadow-[2px_2px_0px_#63336a] border-[2.5px] border-[#63336a] tracking-wider uppercase">SUN</div>
+                </div>
+
+                <div id="calendar-grid" class="grid grid-cols-7 gap-1.5 flex-grow bg-white border-[4px] border-[#63336a] p-4 rounded-[2.2rem] shadow-inner min-h-[500px]">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+
+            <!-- Page 1 Sidebars -->
+            <div class="lg:col-span-4 flex flex-col gap-5">
+                <!-- NOTES SECTION -->
+                <div class="bg-white border-[4px] border-[#63336a] p-4 rounded-[2.2rem] shadow-sm flex flex-col relative overflow-hidden min-h-[170px]">
+                    <div class="absolute top-2 right-2 text-[#63336a]/20 text-lg">✨</div>
+                    <h2 class="kawaii-title font-bold text-center text-lg border-b-2 border-dashed border-[#63336a]/20 pb-1 mb-2">NOTES ✧</h2>
+                    <textarea id="notes-content" oninput="saveAllData()" class="ruled-lines w-full h-32 bg-transparent text-[#63336a] font-semibold text-base focus:outline-none resize-none handwritten" placeholder="Write cozy thoughts or lovely reminders..."></textarea>
+                </div>
+
+                <!-- GOALS SECTION -->
+                <div class="bg-white border-[4px] border-[#63336a] p-4 rounded-[2.2rem] shadow-sm flex flex-col relative">
+                    <h2 class="kawaii-title font-bold text-center text-lg border-b-2 border-dashed border-[#63336a]/20 pb-1.5 mb-3">MONTHLY GOALS</h2>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-2">
+                            <span class="text-pink-400 text-sm filter drop-shadow">💖</span>
+                            <input type="text" id="goal-1" oninput="saveAllData()" class="w-full handdrawn-input text-lg font-bold" placeholder="My first lovely milestone...">
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-pink-400 text-sm filter drop-shadow">💖</span>
+                            <input type="text" id="goal-2" oninput="saveAllData()" class="w-full handdrawn-input text-lg font-bold" placeholder="Something new to try...">
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-pink-400 text-sm filter drop-shadow">💖</span>
+                            <input type="text" id="goal-3" oninput="saveAllData()" class="w-full handdrawn-input text-lg font-bold" placeholder="A cozy wellness habit...">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TO-DO LIST MODULE -->
+                <div class="bg-white border-[4px] border-[#63336a] p-4 rounded-[2.2rem] shadow-sm flex flex-col relative">
+                    <h2 class="kawaii-title font-bold text-center text-lg border-b-2 border-dashed border-[#63336a]/20 pb-1.5 mb-3">TO-DO LIST ★</h2>
+                    <div id="todo-list-container" class="space-y-2 max-h-[160px] overflow-y-auto pr-1">
+                        <!-- Rendered by JS -->
+                    </div>
+                    <div class="mt-3 flex gap-2">
+                        <input id="new-todo-input" type="text" placeholder="Add cute task..." class="flex-1 bg-[#fef7fc] border-2 border-[#63336a]/30 rounded-xl px-3 py-1.5 text-sm text-[#63336a] focus:outline-none focus:border-[#63336a]">
+                        <button onclick="addTodoItem()" class="bg-[#C084FC] hover:bg-[#a855f7] text-white border-2 border-[#63336a] px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-[2px_2px_0px_#63336a]">Add</button>
+                    </div>
+                </div>
+
+                <!-- PRIORITIES SECTION -->
+                <div class="bg-white border-[4px] border-[#63336a] p-4 rounded-[2.2rem] shadow-sm flex flex-col relative">
+                    <h2 class="kawaii-title font-bold text-center text-lg border-b-2 border-dashed border-[#63336a]/20 pb-1.5 mb-3">PRIORITIES</h2>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-2">
+                            <span class="w-3.5 h-3.5 rounded-full bg-pink-300 border border-[#63336a]/40 shrink-0"></span>
+                            <input type="text" id="priority-1" oninput="saveAllData()" class="w-full handdrawn-input text-lg font-bold" placeholder="High priority cozy task">
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3.5 h-3.5 rounded-full bg-purple-300 border border-[#63336a]/40 shrink-0"></span>
+                            <input type="text" id="priority-2" oninput="saveAllData()" class="w-full handdrawn-input text-lg font-bold" placeholder="Another big focus...">
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3.5 h-3.5 rounded-full bg-emerald-200 border border-[#63336a]/40 shrink-0"></span>
+                            <input type="text" id="priority-3" oninput="saveAllData()" class="w-full handdrawn-input text-lg font-bold" placeholder="Keep this in mind">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= PAGE 2: WEEKLY PLANNER CANVAS ================= -->
+        <div id="page-content-2" class="planner-page hidden grid grid-cols-1 lg:grid-cols-12 gap-6 relative z-10">
+            <!-- Mon - Sun Grid -->
+            <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Monday Block -->
+                <div class="bg-white border-[4px] border-[#63336a] p-4 rounded-[2rem] shadow-sm flex flex-col min-h-[220px]">
+                    <div class="bg-[#F87171] text-white font-bold py-1 px-4 rounded-full text-xs border-2 border-[#63336a] max-w-max -mt-2 -ml-2 mb-2 shadow-[2px_2px_0px_#63336a]">MONDAY 🌸</div>
+                    <textarea id="week-day-mon" oninput="saveAllData()" class="ruled-lines w-full flex-grow bg-transparent text-[#63336a] font-bold text-base focus:outline-none resize-none handwritten" placeholder="Schedule or highlights..."></textarea>
+                </div>
+                <!-- Tuesday Block -->
+                <div class="bg-white border-[4px] border-[#63336a] p-4 rounded-[2rem] shadow-sm flex flex-col min-h-[220px]">
+                    <div class="bg-[#C084FC] text-white font-bold py-1 px-4 rounded-full text-xs border-2 border-[#63336a] max-w-max -mt-2 -ml-2 mb-2 shadow-[2px_2px_0px_#63336a]">TUESDAY 🍇</div>
+                    <textarea id="week-day-tue" oninput="saveAllData()" class="ruled-lines w-full flex-grow bg-transparent text-[#63336a] font-bold text-base focus:outline-none resize-none handwritten" placeholder="Schedule or highlights..."></textarea>
+                </div>
+                <!-- Wednesday Block -->
+                <div class="bg-white border-[4px] border-[#63336a] p-4 rounded-[2rem] shadow-sm flex flex-col min-h-[220px]">
+                    <div class="bg-[#60A5FA] text-white font-bold py-1 px-4 rounded-full text-xs border-2 border-[#63336a] max-w-max -mt-2 -ml-2 mb-2 shadow-[2px_2px_0px_#63336a]">WEDNESDAY 🐳</div>
+                    <textarea id="week-day-wed" oninput="saveAllData()" class="ruled-lines w-full flex-grow bg-transparent text-[#63336a] font-bold text-base focus:outline-none resize-none handwritten" placeholder="Schedule or highlights..."></textarea>
+                </div>
+                <!-- Thursday Block -->
+                <div class="bg-white border-[4px] border-[#63336a] p-4 rounded-[2rem] shadow-sm flex flex-col min-h-[220px]">
+                    <div class="bg-[#34D399] text-[#1b4c39] font-bold py-1 px-4 rounded-full text-xs border-2 border-[#63336a] max-w-max -mt-2 -ml-2 mb-2 shadow-[2px_2px_0px_#63336a]">THURSDAY 🍏</div>
+                    <textarea id="week-day-thu" oninput="saveAllData()" class="ruled-lines w-full flex-grow bg-transparent text-[#63336a] font-bold text-base focus:outline-none resize-none handwritten" placeholder="Schedule or highlights..."></textarea>
+                </div>
+                <!-- Friday Block -->
+                <div class="bg-white border-[4px] border-[#63336a] p-4 rounded-[2rem] shadow-sm flex flex-col min-h-[220px]">
+                    <div class="bg-[#C084FC] text-white font-bold py-1 px-4 rounded-full text-xs border-2 border-[#63336a] max-w-max -mt-2 -ml-2 mb-2 shadow-[2px_2px_0px_#63336a]">FRIDAY 🍒</div>
+                    <textarea id="week-day-fri" oninput="saveAllData()" class="ruled-lines w-full flex-grow bg-transparent text-[#63336a] font-bold text-base focus:outline-none resize-none handwritten" placeholder="Schedule or highlights..."></textarea>
+                </div>
+                <!-- Weekend Saturday & Sunday dual-block -->
+                <div class="bg-white border-[4px] border-[#63336a] p-4 rounded-[2rem] shadow-sm flex flex-col min-h-[220px]">
+                    <div class="flex gap-2 -mt-2 -ml-2 mb-2">
+                        <span class="bg-[#F87171] text-white font-bold py-1 px-4 rounded-full text-xs border-2 border-[#63336a] shadow-[2px_2px_0px_#63336a]">SAT 🍦</span>
+                        <span class="bg-[#F87171] text-white font-bold py-1 px-4 rounded-full text-xs border-2 border-[#63336a] shadow-[2px_2px_0px_#63336a]">SUN 🎈</span>
+                    </div>
+                    <textarea id="week-day-weekend" oninput="saveAllData()" class="ruled-lines w-full flex-grow bg-transparent text-[#63336a] font-bold text-base focus:outline-none resize-none handwritten" placeholder="Cozy weekend notes..."></textarea>
+                </div>
+            </div>
+
+            <!-- Page 2 Sidebars -->
+            <div class="lg:col-span-4 flex flex-col gap-5">
+                <!-- WEEKLY FOCUS -->
+                <div class="bg-white border-[4px] border-[#63336a] p-4 rounded-[2.2rem] shadow-sm flex flex-col relative">
+                    <h2 class="kawaii-title font-bold text-center text-lg border-b-2 border-dashed border-[#63336a]/20 pb-1.5 mb-3">WEEKLY FOCUS 🎯</h2>
+                    <textarea id="weekly-focus-box" oninput="saveAllData()" class="w-full h-24 p-2 bg-[#fffcfd] rounded-xl border border-[#63336a]/20 focus:outline-none focus:border-[#63336a] text-[#63336a] handwritten text-lg font-bold" placeholder="My key highlight of this week..."></textarea>
+                </div>
+
+                <!-- HABIT TRACKER -->
+                <div class="bg-white border-[4px] border-[#63336a] p-4 rounded-[2.2rem] shadow-sm flex flex-col relative">
+                    <h2 class="kawaii-title font-bold text-center text-lg border-b-2 border-dashed border-[#63336a]/20 pb-1.5 mb-3">HABIT TRACKER</h2>
+                    
+                    <div id="habit-list-container" class="space-y-4">
+                        <!-- Habit Rows -->
+                    </div>
+                    
+                    <div class="mt-4 pt-3 border-t-2 border-dashed border-[#63336a]/10 flex gap-2">
+                        <input id="new-habit-input" type="text" placeholder="New habit track..." class="flex-1 bg-[#fef7fc] border-2 border-[#63336a]/30 rounded-xl px-2.5 py-1.5 text-xs text-[#63336a] focus:outline-none focus:border-[#63336a]">
+                        <button onclick="addHabit()" class="bg-[#34D399] hover:bg-[#10b981] text-[#1b4c39] border-2 border-[#63336a] px-3 py-1 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-[2px_2px_0px_#63336a]">Track</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= PAGE 3: MEAL PLANNER CANVAS ================= -->
+        <div id="page-content-3" class="planner-page hidden grid grid-cols-1 lg:grid-cols-12 gap-6 relative z-10">
+            <div class="lg:col-span-8 flex flex-col gap-4">
+                <div class="bg-white border-[4px] border-[#63336a] p-4 rounded-[2.2rem] shadow-sm">
+                    <div class="grid grid-cols-4 gap-1.5 mb-2 border-b-2 border-dashed border-[#63336a]/20 pb-2">
+                        <div class="text-xs font-bold text-[#63336a] uppercase tracking-wider pl-1">DAY</div>
+                        <div class="text-xs font-bold text-[#63336a] uppercase tracking-wider">BREAKFAST 🥞</div>
+                        <div class="text-xs font-bold text-[#63336a] uppercase tracking-wider">LUNCH 🥪</div>
+                        <div class="text-xs font-bold text-[#63336a] uppercase tracking-wider">DINNER 🍲</div>
+                    </div>
+
+                    <!-- Meal Days Rows -->
+                    <div class="space-y-3.5">
+                        <!-- Monday -->
+                        <div class="grid grid-cols-4 gap-1.5 items-center">
+                            <span class="bg-[#F87171] text-white text-center py-1 rounded-xl text-[10px] md:text-xs font-bold border-2 border-[#63336a] shadow-[1px_1px_0px_#63336a]">MON</span>
+                            <input id="meal-mon-b" oninput="saveAllData()" type="text" class="handdrawn-input text-base font-bold px-1" placeholder="Egg toast...">
+                            <input id="meal-mon-l" oninput="saveAllData()" type="text" class="handdrawn-input text-base font-bold px-1" placeholder="Chicken rice...">
+                            <input id="meal-mon-d" oninput="saveAllData()" type="text" class="handdrawn-input text-base font-bold px-1" placeholder="Salad...">
+                        </div>
+                        <!-- Tuesday -->
+                        <div class="grid grid-cols-4 gap-1.5 items-center">
+                            <span class="bg-[#C084FC] text-white text-center py-1 rounded-xl text-[10px] md:text-xs font-bold border-2 border-[#63336a] shadow-[1px_1px_0px_#63336a]">TUE</span>
+                            <input id="meal-tue-b" oninput="saveAllData()" type="text" class="handdrawn-input text-base font-bold px-1" placeholder="Oatmeal...">
+                            <input id="meal-tue-l" oninput="saveAllData()" type="text" class="handdrawn-input text-base font-bold px-1" placeholder="Pasta...">
+                            <input id="meal-tue-d" oninput="saveAllData()" type="text" class="handdrawn-input text-base font-bold px-1" placeholder="Baked fish...">
+                        </div>
+                        <!-- Wednesday -->
+                        <div class="grid grid-cols-4 gap-1.5 items-center">
+                            <span class="bg-[#60A5FA] text-white text-center py-1 rounded-xl text-[10px] md:text-xs font-bold border-2 border-[#63336a] shadow-[1px_1px_0px_#63336a]">WED</span>
+                            <input id="meal-wed-b" oninput="saveAllData()" type="text" class="handdrawn-input text-base font-bold px-1" placeholder="Pancakes...">
+                            <input id="meal-wed-l" oninput="saveAllData()" type="text" class="handdrawn-input text-base font-bold px-1" placeholder="Wrap...">
+                            <input id="meal-wed-d" oninput="saveAllData()" type="text" class="handdrawn-input text-base font-bold px-1" placeholder="Soup combo...">
+                        </div>
+                        <!-- Thursday -->
+                        <div class="grid grid-cols-4 gap-1.5 items-center">
+                            <span class="bg-[#34D399] text-[#1b4c39] text-center py-1 rounded-xl text-[10px] md:text-xs font-bold border-2 border-[#63336a] shadow-[1px_1px_0px_#63336a]">THU</span>
+                            <input id="meal-thu-b" oninput="saveAllData()" type="text" class="handdrawn-input text-base font-bold px-1" placeholder="Smoothie...">
+                            <input id="meal-thu-l" oninput="saveAllData()" type="text" class="handdrawn-input text-base font-bold px-1" placeholder="Beef fried...">
+                            <input id="meal-thu-d" oninput="saveAllData()" type="text" class="handdrawn-input text-base font-bold px-1" placeholder="Noodles...">
+                        </div>
+                        <!-- Friday -->
+                        <div class="grid grid-cols-4 gap-1.5 items-center">
+                            <span class="bg-[#C084FC] text-white text-center py-1 rounded-xl text-[10px] md:text-xs font-bold border-2 border-[#63336a] shadow-[1px_1px_0px_#63336a]">FRI</span>
+                            <input id="meal-fri-b" oninput="saveAllData()" type="text" class="handdrawn-input text-base font-bold px-1" placeholder="Cereal bowl...">
+                            <input id="meal-fri-l" oninput="saveAllData()" type="text" class="handdrawn-input text-base font-bold px-1" placeholder="Tacos...">
+                            <input id="meal-fri-d" oninput="saveAllData()" type="text" class="handdrawn-input text-base font-bold px-1" placeholder="Pizza slice...">
+                        </div>
+                        <!-- Saturday -->
+                        <div class="grid grid-cols-4 gap-1.5 items-center">
+                            <span class="bg-[#F87171] text-white text-center py-1 rounded-xl text-[10px] md:text-xs font-bold border-2 border-[#63336a] shadow-[1px_1px_0px_#63336a]">SAT</span>
+                            <input id="meal-sat-b" oninput="saveAllData()" type="text" class="handdrawn-input text-base font-bold px-1" placeholder="Waffles...">
+                            <input id="meal-sat-l" oninput="saveAllData()" type="text" class="handdrawn-input text-base font-bold px-1" placeholder="Sub sandwich...">
+                            <input id="meal-sat-d" oninput="saveAllData()" type="text" class="handdrawn-input text-base font-bold px-1" placeholder="Hotpot...">
+                        </div>
+                        <!-- Sunday -->
+                        <div class="grid grid-cols-4 gap-1.5 items-center">
+                            <span class="bg-[#F87171] text-white text-center py-1 rounded-xl text-[10px] md:text-xs font-bold border-2 border-[#63336a] shadow-[1px_1px_0px_#63336a]">SUN</span>
+                            <input id="meal-sun-b" oninput="saveAllData()" type="text" class="handdrawn-input text-base font-bold px-1" placeholder="Fruit bowl...">
+                            <input id="meal-sun-l" oninput="saveAllData()" type="text" class="handdrawn-input text-base font-bold px-1" placeholder="Fried rice...">
+                            <input id="meal-sun-d" oninput="saveAllData()" type="text" class="handdrawn-input text-base font-bold px-1" placeholder="Family dinner...">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WATER TRACKER (Tap to add, red cross below to remove) -->
+                <div class="bg-white border-[4px] border-[#63336a] p-4 rounded-[2.2rem] shadow-sm">
+                    <h3 class="kawaii-title font-bold text-base mb-3 text-center">💦 WATER HYDRATION GOALS (Tap grid to add, click × to remove)</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2">
+                        <!-- MON -->
+                        <div class="bg-[#fef5fa] border-2 border-pink-100/50 p-2 rounded-2xl text-center flex flex-col items-center justify-between relative min-h-[110px]">
+                            <div class="text-[11px] font-bold text-pink-600 uppercase">MON</div>
+                            <div id="water-mon" onclick="addWater('mon')" class="text-xl cursor-pointer hover:scale-110 transition-transform my-1 flex flex-wrap justify-center items-center gap-0.5 min-h-[40px] select-none" title="Tap to add drop"></div>
+                            <button onclick="removeWater('mon', event)" class="bg-red-100 hover:bg-red-200 text-red-600 border border-red-300 rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-extrabold transition-all" title="Remove drop">×</button>
+                        </div>
+                        <!-- TUE -->
+                        <div class="bg-[#fef5fa] border-2 border-pink-100/50 p-2 rounded-2xl text-center flex flex-col items-center justify-between relative min-h-[110px]">
+                            <div class="text-[11px] font-bold text-pink-600 uppercase">TUE</div>
+                            <div id="water-tue" onclick="addWater('tue')" class="text-xl cursor-pointer hover:scale-110 transition-transform my-1 flex flex-wrap justify-center items-center gap-0.5 min-h-[40px] select-none" title="Tap to add drop"></div>
+                            <button onclick="removeWater('tue', event)" class="bg-red-100 hover:bg-red-200 text-red-600 border border-red-300 rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-extrabold transition-all" title="Remove drop">×</button>
+                        </div>
+                        <!-- WED -->
+                        <div class="bg-[#fef5fa] border-2 border-pink-100/50 p-2 rounded-2xl text-center flex flex-col items-center justify-between relative min-h-[110px]">
+                            <div class="text-[11px] font-bold text-pink-600 uppercase">WED</div>
+                            <div id="water-wed" onclick="addWater('wed')" class="text-xl cursor-pointer hover:scale-110 transition-transform my-1 flex flex-wrap justify-center items-center gap-0.5 min-h-[40px] select-none" title="Tap to add drop"></div>
+                            <button onclick="removeWater('wed', event)" class="bg-red-100 hover:bg-red-200 text-red-600 border border-red-300 rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-extrabold transition-all" title="Remove drop">×</button>
+                        </div>
+                        <!-- THU -->
+                        <div class="bg-[#fef5fa] border-2 border-pink-100/50 p-2 rounded-2xl text-center flex flex-col items-center justify-between relative min-h-[110px]">
+                            <div class="text-[11px] font-bold text-pink-600 uppercase">THU</div>
+                            <div id="water-thu" onclick="addWater('thu')" class="text-xl cursor-pointer hover:scale-110 transition-transform my-1 flex flex-wrap justify-center items-center gap-0.5 min-h-[40px] select-none" title="Tap to add drop"></div>
+                            <button onclick="removeWater('thu', event)" class="bg-red-100 hover:bg-red-200 text-red-600 border border-red-300 rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-extrabold transition-all" title="Remove drop">×</button>
+                        </div>
+                        <!-- FRI -->
+                        <div class="bg-[#fef5fa] border-2 border-pink-100/50 p-2 rounded-2xl text-center flex flex-col items-center justify-between relative min-h-[110px]">
+                            <div class="text-[11px] font-bold text-pink-600 uppercase">FRI</div>
+                            <div id="water-fri" onclick="addWater('fri')" class="text-xl cursor-pointer hover:scale-110 transition-transform my-1 flex flex-wrap justify-center items-center gap-0.5 min-h-[40px] select-none" title="Tap to add drop"></div>
+                            <button onclick="removeWater('fri', event)" class="bg-red-100 hover:bg-red-200 text-red-600 border border-red-300 rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-extrabold transition-all" title="Remove drop">×</button>
+                        </div>
+                        <!-- SAT -->
+                        <div class="bg-[#fef5fa] border-2 border-pink-100/50 p-2 rounded-2xl text-center flex flex-col items-center justify-between relative min-h-[110px]">
+                            <div class="text-[11px] font-bold text-pink-600 uppercase">SAT</div>
+                            <div id="water-sat" onclick="addWater('sat')" class="text-xl cursor-pointer hover:scale-110 transition-transform my-1 flex flex-wrap justify-center items-center gap-0.5 min-h-[40px] select-none" title="Tap to add drop"></div>
+                            <button onclick="removeWater('sat', event)" class="bg-red-100 hover:bg-red-200 text-red-600 border border-red-300 rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-extrabold transition-all" title="Remove drop">×</button>
+                        </div>
+                        <!-- SUN -->
+                        <div class="bg-[#fef5fa] border-2 border-pink-100/50 p-2 rounded-2xl text-center flex flex-col items-center justify-between relative min-h-[110px]">
+                            <div class="text-[11px] font-bold text-pink-600 uppercase">SUN</div>
+                            <div id="water-sun" onclick="addWater('sun')" class="text-xl cursor-pointer hover:scale-110 transition-transform my-1 flex flex-wrap justify-center items-center gap-0.5 min-h-[40px] select-none" title="Tap to add drop"></div>
+                            <button onclick="removeWater('sun', event)" class="bg-red-100 hover:bg-red-200 text-red-600 border border-red-300 rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-extrabold transition-all" title="Remove drop">×</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 3 Sidebars -->
+            <div class="lg:col-span-4 flex flex-col gap-5">
+                <!-- GROCERY CHECKLIST -->
+                <div class="bg-white border-[4px] border-[#63336a] p-4 rounded-[2.2rem] shadow-sm flex flex-col relative">
+                    <h2 class="kawaii-title font-bold text-center text-lg border-b-2 border-dashed border-[#63336a]/20 pb-1.5 mb-3">GROCERY BAG 🛒</h2>
+                    <div id="grocery-list-container" class="space-y-2 max-h-[300px] overflow-y-auto pr-1">
+                        <!-- Loaded through script -->
+                    </div>
+
+                    <div class="mt-4 flex gap-2">
+                        <input id="new-grocery-input" type="text" placeholder="Add ingredients..." class="flex-1 bg-[#fef7fc] border-2 border-[#63336a]/30 rounded-xl px-3 py-1.5 text-sm text-[#63336a] focus:outline-none focus:border-[#63336a]">
+                        <button onclick="addGroceryItem()" class="bg-[#C084FC] hover:bg-[#a855f7] text-white border-2 border-[#63336a] px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-[2px_2px_0px_#63336a]">Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= PAGE 4: BUDGET TRACKER CANVAS ================= -->
+        <div id="page-content-4" class="planner-page hidden grid grid-cols-1 lg:grid-cols-12 gap-6 relative z-10">
+            <div class="lg:col-span-8 flex flex-col gap-4">
+                <!-- Smart Balance Sheet cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+                    <div class="bg-gradient-to-r from-emerald-50 to-emerald-100/50 border-[3.5px] border-[#63336a] p-4 rounded-[1.8rem] shadow-sm flex flex-col">
+                        <span class="text-xs font-bold text-emerald-800 uppercase tracking-wide">Total Income 💵</span>
+                        <div class="flex items-center gap-1.5 mt-1.5">
+                            <span class="text-base text-emerald-800 font-bold">RM</span>
+                            <input type="number" id="budget-income-input" oninput="calcBudget()" class="bg-transparent border-b border-[#63336a]/30 text-emerald-900 font-extrabold text-2xl w-full focus:outline-none" value="2500">
+                        </div>
+                    </div>
+
+                    <div class="bg-gradient-to-r from-rose-50 to-rose-100/50 border-[3.5px] border-[#63336a] p-4 rounded-[1.8rem] shadow-sm flex flex-col">
+                        <span class="text-xs font-bold text-rose-800 uppercase tracking-wide">Total Spent 💸</span>
+                        <span class="text-2xl font-extrabold text-rose-900 mt-1.5"><span class="text-base">RM</span> <span id="budget-spent-val">0.00</span></span>
+                    </div>
+
+                    <div class="bg-gradient-to-r from-purple-50 to-purple-100/50 border-[3.5px] border-[#63336a] p-4 rounded-[1.8rem] shadow-sm flex flex-col">
+                        <span class="text-xs font-bold text-purple-800 uppercase tracking-wide">Remaining Balance 🌸</span>
+                        <span id="budget-balance-badge" class="text-2xl font-extrabold text-purple-900 mt-1.5"><span class="text-base">RM</span> <span id="budget-balance-val">2500.00</span></span>
+                    </div>
+                </div>
+
+                <!-- Ledger Expenses Table -->
+                <div class="bg-white border-[4px] border-[#63336a] p-4 rounded-[2.2rem] shadow-sm flex-grow min-h-[300px] flex flex-col">
+                    <h3 class="kawaii-title font-bold text-base border-b-2 border-dashed border-[#63336a]/20 pb-2 mb-3">EXPENSE STATEMENT</h3>
+                    
+                    <div class="overflow-x-auto flex-grow">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b-2 border-[#63336a]/20 text-[11px] text-[#63336a] font-bold uppercase tracking-wider">
+                                    <th class="pb-2 pl-1">Item Description</th>
+                                    <th class="pb-2">Category</th>
+                                    <th class="pb-2">Method</th>
+                                    <th class="pb-2 text-right">Amount</th>
+                                    <th class="pb-2 text-right pr-2">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="budget-table-body" class="text-sm font-bold text-[#63336a]">
+                                <!-- Transactions drawn dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 4 Sidebars -->
+            <div class="lg:col-span-4 flex flex-col gap-5">
+                <!-- ADD EXPENSE FORM -->
+                <div class="bg-white border-[4px] border-[#63336a] p-5 rounded-[2.2rem] shadow-sm flex flex-col relative">
+                    <h2 class="kawaii-title font-bold text-center text-lg border-b-2 border-dashed border-[#63336a]/20 pb-1.5 mb-4">NEW EXPENSE 🪙</h2>
+                    
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-bold text-[#63336a] mb-1">DESCRIPTION</label>
+                            <input id="exp-desc" type="text" placeholder="e.g., Bubble milk tea..." class="w-full bg-[#fef7fc] border-2 border-[#63336a]/20 rounded-xl px-3 py-1.5 text-sm text-[#63336a] focus:outline-none focus:border-[#63336a]">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-xs font-bold text-[#63336a] mb-1">AMOUNT (RM)</label>
+                                <input id="exp-amount" type="number" step="0.01" placeholder="0.00" class="w-full bg-[#fef7fc] border-2 border-[#63336a]/20 rounded-xl px-3 py-1.5 text-sm text-[#63336a] focus:outline-none focus:border-[#63336a]">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-[#63336a] mb-1">METHOD</label>
+                                <select id="exp-method" class="w-full bg-[#fef7fc] border-2 border-[#63336a]/20 rounded-xl px-2 py-1.5 text-xs text-[#63336a] focus:outline-none focus:border-[#63336a] cursor-pointer">
+                                    <option value="Cash">Cash 💵</option>
+                                    <option value="Online Transfer">Online Transfer 📱</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-[#63336a] mb-1">CATEGORY</label>
+                            <select id="exp-category" class="w-full bg-[#fef7fc] border-2 border-[#63336a]/20 rounded-xl px-2 py-1.5 text-xs text-[#63336a] focus:outline-none focus:border-[#63336a] cursor-pointer">
+                                <option value="Food 🍧">Food 🍧</option>
+                                <option value="Transport 🚌">Transport 🚌</option>
+                                <option value="Shopping 🛍️">Shopping 🛍️</option>
+                                <option value="Grocery 🥕">Grocery 🥕</option>
+                                <option value="Treats ✨">Treats ✨</option>
+                            </select>
+                        </div>
+
+                        <button onclick="addExpense()" class="w-full mt-2 bg-[#C084FC] hover:bg-[#a855f7] text-white border-2 border-[#63336a] py-2.5 rounded-xl text-xs font-bold shadow-[2px_2px_0px_#63336a] transition-all active:scale-95">
+                            Record Transaction
+                        </button>
+                    </div>
+                </div>
+
+                <!-- EXPENDITURE GOALS -->
+                <div class="bg-white border-[4px] border-[#63336a] p-4 rounded-[2.2rem] shadow-sm flex flex-col relative">
+                    <h2 class="kawaii-title font-bold text-center text-lg border-b-2 border-dashed border-[#63336a]/20 pb-1.5 mb-3.5">MONTHLY BUDGET LIMIT</h2>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-[#63336a]">LIMIT:</span>
+                            <div class="flex items-center gap-1">
+                                <span class="text-xs text-[#63336a] font-bold">RM</span>
+                                <input type="number" id="budget-limit-input" oninput="calcBudget()" class="w-24 bg-[#fef7fc] border border-[#63336a]/20 rounded-xl px-2 py-0.5 text-xs font-bold text-center" value="800">
+                            </div>
+                        </div>
+                        
+                        <!-- Progress Bar -->
+                        <div>
+                            <div class="flex justify-between text-[11px] font-bold text-[#63336a] mb-1">
+                                <span>Spent Progress:</span>
+                                <span id="budget-percent-lbl">0%</span>
+                            </div>
+                            <div class="w-full bg-pink-100 rounded-full h-4 border-2 border-[#63336a]/50 overflow-hidden">
+                                <div id="budget-progress-bar" class="bg-pink-400 h-full transition-all duration-300" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= PAGE 5: SAVINGS JAR TRACKER CANVAS ================= -->
+        <!-- Designed matching references IMG_20260626_102402.jpg & IMG_20260626_102337.jpg -->
+        <div id="page-content-5" class="planner-page hidden grid grid-cols-1 lg:grid-cols-12 gap-6 relative z-10">
+            <!-- Left Side: Interactive Jar and Money display -->
+            <div class="lg:col-span-7 flex flex-col items-center justify-center p-4">
+                
+                <!-- Lid Representation -->
+                <div class="flex flex-col items-center">
+                    <div class="w-36 h-6 bg-[#9e623b] border-4 border-[#63336a] rounded-t-2xl relative flex items-center justify-center shadow-sm">
+                        <span class="absolute -top-3.5 text-3xl animate-pulse">🎀</span>
+                    </div>
+                    <div class="w-24 h-4 bg-[#f8e6f2] border-x-4 border-b-4 border-[#63336a] z-10"></div>
+                </div>
+
+                <!-- Savings Glass Jar Wrapper -->
+                <div class="w-full max-w-[340px] h-[400px] bg-white/65 border-4 border-[#63336a] rounded-b-[5rem] rounded-t-[2.5rem] p-6 relative shadow-inner overflow-hidden flex flex-col justify-between -mt-1">
+                    
+                    <!-- Milestone Level Indicators -->
+                    <div class="absolute inset-0 pointer-events-none flex flex-col justify-between py-12 px-8">
+                        <div class="border-b-2 border-dashed border-[#63336a]/15 flex justify-between items-center pb-1">
+                            <span class="text-xs font-bold text-[#63336a]/50 bg-white/70 px-1 rounded-md">-- Full ✨</span>
+                        </div>
+                        <div class="border-b-2 border-dashed border-[#63336a]/15 flex justify-between items-center pb-1">
+                            <span class="text-xs font-bold text-[#63336a]/50 bg-white/70 px-1 rounded-md">-- Half 🍯</span>
+                        </div>
+                        <div class="border-b-2 border-dashed border-[#63336a]/15 flex justify-between items-center pb-1">
+                            <span class="text-xs font-bold text-[#63336a]/50 bg-white/70 px-1 rounded-md">-- Cute Start 🌱</span>
+                        </div>
+                    </div>
+
+                    <!-- Money Sticker Container Grid Layer -->
+                    <div id="jar-stickers-layer" class="w-full h-full relative pointer-events-auto">
+                        <!-- Placed money stickers spawn here -->
+                    </div>
+                </div>
+
+                <!-- Total Coins Saved Pill Badge Container -->
+                <div class="mt-6 flex flex-col items-center">
+                    <span class="text-sm font-bold text-[#63336a]/80 mb-2 tracking-wide">Total Coins Saved:</span>
+                    <div class="bg-[#fff9db] border-4 border-[#63336a] px-8 py-3 rounded-full shadow-[4px_4px_0px_#63336a] flex items-center gap-3 active:scale-95 transition-transform cursor-pointer">
+                        <span class="text-3xl">🪙</span>
+                        <span class="handwritten text-3xl font-extrabold text-[#63336a] tracking-wider">RM<span id="jar-total-value">0.00</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Money Love Sticker Sheet Controls -->
+            <div class="lg:col-span-5 flex flex-col gap-5">
+                
+                <div class="bg-white border-[4px] border-[#63336a] p-5 rounded-[2.2rem] shadow-sm flex flex-col relative">
+                    <div class="flex items-center gap-2 mb-2 pb-2 border-b-2 border-dashed border-[#63336a]/15">
+                        <span class="text-2xl">🎨</span>
+                        <h2 class="kawaii-title font-extrabold text-lg text-[#63336a]">Money Love Sticker Sheet</h2>
+                    </div>
+
+                    <p class="text-xs font-bold text-[#63336a]/70 leading-relaxed mb-4 handwritten text-base">
+                        Click/tap a lovely sticker below to stick it into your savings jar! Tap any stuck sticker inside the jar to cash it out or spend it. 🌸
+                    </p>
+
+                    <!-- Interactive Coin Sticker Buttons Grid matching IMG_20260626_102337.jpg -->
+                    <div class="grid grid-cols-2 gap-3.5 mb-5">
+                        <!-- RM1 -->
+                        <button onclick="spawnJarSticker(1)" class="bg-[#fffbeb] hover:bg-[#fef9c3] border-2 border-amber-300 hover:border-amber-400 p-3.5 rounded-2xl flex flex-col items-center justify-center gap-1 active:scale-95 transition-all shadow-[2px_2px_0px_rgba(99,51,106,0.15)] group">
+                            <span class="text-2xl group-hover:scale-125 transition-transform duration-200">💖</span>
+                            <span class="text-xs font-bold text-amber-800">RM1</span>
+                        </button>
+                        <!-- RM5 -->
+                        <button onclick="spawnJarSticker(5)" class="bg-[#fff0f6] hover:bg-[#ffe3ec] border-2 border-pink-300 hover:border-pink-400 p-3.5 rounded-2xl flex flex-col items-center justify-center gap-1 active:scale-95 transition-all shadow-[2px_2px_0px_rgba(99,51,106,0.15)] group">
+                            <span class="text-2xl group-hover:scale-125 transition-transform duration-200">🌸</span>
+                            <span class="text-xs font-bold text-pink-700">RM5</span>
+                        </button>
+                        <!-- RM10 -->
+                        <button onclick="spawnJarSticker(10)" class="bg-[#f0f9ff] hover:bg-[#e0f2fe] border-2 border-sky-300 hover:border-sky-400 p-3.5 rounded-2xl flex flex-col items-center justify-center gap-1 active:scale-95 transition-all shadow-[2px_2px_0px_rgba(99,51,106,0.15)] group">
+                            <span class="text-2xl group-hover:scale-125 transition-transform duration-200">⭐</span>
+                            <span class="text-xs font-bold text-sky-700">RM10</span>
+                        </button>
+                        <!-- RM20 -->
+                        <button onclick="spawnJarSticker(20)" class="bg-[#f0fdf4] hover:bg-[#dcfce7] border-2 border-emerald-300 hover:border-emerald-400 p-3.5 rounded-2xl flex flex-col items-center justify-center gap-1 active:scale-95 transition-all shadow-[2px_2px_0px_rgba(99,51,106,0.15)] group">
+                            <span class="text-2xl group-hover:scale-125 transition-transform duration-200">🍀</span>
+                            <span class="text-xs font-bold text-emerald-700">RM20</span>
+                        </button>
+                        <!-- RM50 -->
+                        <button onclick="spawnJarSticker(50)" class="bg-[#faf5ff] hover:bg-[#f3e8ff] border-2 border-purple-300 hover:border-purple-400 p-3.5 rounded-2xl flex flex-col items-center justify-center gap-1 active:scale-95 transition-all shadow-[2px_2px_0px_rgba(99,51,106,0.15)] group">
+                            <span class="text-2xl group-hover:scale-125 transition-transform duration-200">🎀</span>
+                            <span class="text-xs font-bold text-purple-700">RM50</span>
+                        </button>
+                        <!-- RM100 -->
+                        <button onclick="spawnJarSticker(100)" class="bg-[#fffbeb] hover:bg-[#fef3c7] border-2 border-yellow-300 hover:border-yellow-400 p-3.5 rounded-2xl flex flex-col items-center justify-center gap-1 active:scale-95 transition-all shadow-[2px_2px_0px_rgba(99,51,106,0.15)] group">
+                            <span class="text-2xl group-hover:scale-125 transition-transform duration-200">👑</span>
+                            <span class="text-xs font-bold text-yellow-800">RM100</span>
+                        </button>
+                    </div>
+
+                    <!-- Reset Options -->
+                    <button onclick="clearJar()" class="w-full bg-[#fff0f3] hover:bg-[#ffe3e8] border-2 border-rose-300 text-rose-700 font-bold py-3 px-4 rounded-2xl text-xs flex items-center justify-center gap-2 active:scale-95 transition-all shadow-[2px_2px_0px_rgba(244,63,94,0.1)]">
+                        <span>🧼</span> Empty Savings Jar
+                    </button>
+                </div>
+
+                <!-- Cute Quote box -->
+                <div class="bg-white border-[4px] border-[#63336a] p-4 rounded-[2rem] shadow-sm text-center">
+                    <p class="text-xs font-bold text-pink-600 italic">
+                        ✨ "Take tiny, beautiful steps every single day."
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- DECORATIVE FOOTER -->
+        <div class="mt-8 pt-4 border-t-2 border-dashed border-[#63336a]/20 flex flex-wrap justify-between items-center text-[11px] text-[#63336a] font-bold z-10 relative">
+            <span></span>
+            <span class="text-right">
+                🧁 Designed with smooth touch gestures for digital book layout. Items automatically save.
+            </span>
+        </div>
+    </div>
+
+    <!-- DAILY SCHEDULING ENTRY MODAL (Page 1) -->
+    <div id="day-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white border-4 border-[#63336a] rounded-[2.5rem] p-6 max-w-sm w-full mx-4 shadow-[6px_6px_0px_#63336a] transform scale-95 transition-transform duration-300 relative">
+            <button onclick="closeDayModal()" class="absolute top-4 right-4 text-gray-400 hover:text-pink-500 text-xl transition-colors">
+                <i class="fa-solid fa-circle-xmark"></i>
+            </button>
+            <h3 class="kawaii-title text-2xl font-bold text-center mb-1">Add Cozy Schedule</h3>
+            <p id="modal-date-label" class="text-center text-pink-500 font-bold mb-4 handwritten text-xl">Monday, January 1st</p>
+            
+            <textarea id="modal-day-text" class="w-full h-32 p-3 bg-[#fdf6fa] border-2 border-[#63336a]/30 rounded-2xl focus:outline-none focus:border-[#63336a] text-[#63336a] handwritten text-xl font-bold" placeholder="Write event, memo, or cute memory..."></textarea>
+            
+            <div class="mt-4 flex gap-2">
+                <button onclick="saveDayModal()" class="flex-1 bg-pink-400 hover:bg-pink-500 text-white border-2 border-[#63336a] font-bold py-2.5 px-4 rounded-xl shadow-[2px_2px_0px_#63336a] transition-all active:scale-95 text-sm">
+                    Save Note ✨
+                </button>
+                <button onclick="closeDayModal()" class="bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-600 font-bold py-2 px-4 rounded-xl transition-all text-sm">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RECOVERY DISPLAY SECURE SYSTEM DIALOG -->
+    <div id="recovery-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white border-4 border-[#63336a] rounded-[2.5rem] p-6 max-w-sm w-full mx-4 shadow-[6px_6px_0px_#63336a] transform scale-95 transition-transform duration-300 relative">
+            <button onclick="closeRecoveryModal()" class="absolute top-4 right-4 text-gray-400 hover:text-pink-500 text-xl transition-colors">
+                <i class="fa-solid fa-circle-xmark"></i>
+            </button>
+            <h3 class="kawaii-title text-2xl font-bold text-center mb-2">🎀 Owner Recovery</h3>
+            <div class="bg-rose-50 p-4 rounded-2xl border-2 border-rose-100 text-rose-950 text-xs font-bold space-y-2 leading-relaxed mb-4">
+                <p>Forgot details? No worries! We can provide access to security logs.</p>
+                <div id="recovery-credentials-zone" class="bg-white p-2 border border-rose-200 rounded-xl space-y-1 select-all font-mono text-center">
+                    <!-- Loaded dynamically -->
+                </div>
+                <p class="text-rose-700/80 italic">Alternatively, use the temporary security passcode <span class="bg-pink-200 px-1.5 py-0.5 rounded text-pink-900 font-bold">COZY2026</span> in the login password field with any username to enter.</p>
+            </div>
+            <button onclick="closeRecoveryModal()" class="w-full bg-rose-400 hover:bg-rose-500 text-white font-bold py-2 px-4 rounded-xl shadow-md transition-all active:scale-95 text-sm">
+                Got it, thank you!
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // CORE PLATFORM STATE MODEL
+        let plannerState = {
+            activePage: 1,
+            currentMonth: 0, 
+            currentYear: 2026,
+            currentUser: null, // Holds object { username, name } when logged in
+            
+            // Stylus Modes
+            stylusEnabled: false,
+            activeColor: '#f48fa1',
+            activeSize: 5, // Mapping directly to pixel thickness and displayed as percentage (1% to 100%)
+            activeTool: 'draw', // 'draw' or 'erase'
+
+            // Drawing Canvas Snapshots (base64 string representing state per page)
+            canvasSnapshots: {
+                1: null,
+                2: null,
+                3: null,
+                4: null,
+                5: null
+            },
+
+            // Page 1 Data
+            dayNotes: {}, 
+            notes: "",
+            goals: ["", "", ""],
+            todos: [
+                { id: 1, text: "Finish designing cute layouts 🌸", done: true },
+                { id: 2, text: "Spawn weekly planner stickers 🐰", done: false },
+                { id: 3, text: "Organize my monthly balance sheets 🍒", done: false }
+            ],
+            priorities: ["", "", ""],
+
+            // Page 2 Data
+            weekNotes: {
+                mon: "",
+                tue: "",
+                wed: "",
+                thu: "",
+                fri: "",
+                weekend: ""
+            },
+            weeklyFocus: "",
+            habits: [
+                { id: 1, name: "Read Books 📖", days: [false, false, false, false, false, false, false] },
+                { id: 2, name: "Water Plants 🌱", days: [false, false, false, false, false, false, false] }
+            ],
+
+            // Page 3 Data
+            meals: {
+                "mon-b": "", "mon-l": "", "mon-d": "",
+                "tue-b": "", "tue-l": "", "tue-d": "",
+                "wed-b": "", "wed-l": "", "wed-d": "",
+                "thu-b": "", "thu-l": "", "thu-d": "",
+                "fri-b": "", "fri-l": "", "fri-d": "",
+                "sat-b": "", "sat-l": "", "sat-d": "",
+                "sun-b": "", "sun-l": "", "sun-d": ""
+            },
+            water: {
+                mon: 3, tue: 2, wed: 4, thu: 5, fri: 2, sat: 1, sun: 0
+            },
+            groceries: [
+                { id: 1, text: "Sweet strawberries 🍓", done: false },
+                { id: 2, text: "Unsweetened milk 🥛", done: false }
+            ],
+
+            // Page 4 Data
+            budgetIncome: 2500,
+            budgetLimit: 800,
+            expenses: [
+                { id: 1, desc: "Ramen Dinner 🍜", amount: 18.50, method: "Cash", category: "Food 🍧" },
+                { id: 2, desc: "Bus card reload 🚌", amount: 50.00, method: "Online Transfer", category: "Transport 🚌" },
+                { id: 3, desc: "Kawaii keychains 🦄", amount: 25.00, method: "Online Transfer", category: "Treats ✨" }
+            ],
+
+            // Page 5 Data: Saving Jar Stickers
+            savingStickers: [],
+
+            // Sticker boards state separated per page
+            stickers_1: [],
+            stickers_2: [],
+            stickers_3: [],
+            stickers_4: [],
+            stickers_5: []
+        };
+
+        // Canvas Undo/Redo Stacks per page (not stored in JSON stringified states to keep LocalStorage lightweight)
+        let pageUndoStacks = { 1: [], 2: [], 3: [], 4: [], 5: [] };
+        let pageRedoStacks = { 1: [], 2: [], 3: [], 4: [], 5: [] };
+
+        // DOM CACHE
+        const selectMonth = document.getElementById('select-month');
+        const selectYear = document.getElementById('select-year');
+        const displayMonthName = document.getElementById('display-month-name');
+        const displayYearVal = document.getElementById('display-year-val');
+        const calendarGrid = document.getElementById('calendar-grid');
+        
+        // Page 1 Elements
+        const notesContent = document.getElementById('notes-content');
+        const goal1Input = document.getElementById('goal-1');
+        const goal2Input = document.getElementById('goal-2');
+        const goal3Input = document.getElementById('goal-3');
+        const todoContainer = document.getElementById('todo-list-container');
+        const todoInput = document.getElementById('new-todo-input');
+        const priority1Input = document.getElementById('priority-1');
+        const priority2Input = document.getElementById('priority-2');
+        const priority3Input = document.getElementById('priority-3');
+        
+        // Page 2 Elements
+        const weeklyFocusBox = document.getElementById('weekly-focus-box');
+        const habitContainer = document.getElementById('habit-list-container');
+        const habitInput = document.getElementById('new-habit-input');
+
+        // Page 3 Elements
+        const groceryContainer = document.getElementById('grocery-list-container');
+        const groceryInput = document.getElementById('new-grocery-input');
+
+        // Page 4 Elements
+        const budgetIncomeInput = document.getElementById('budget-income-input');
+        const budgetLimitInput = document.getElementById('budget-limit-input');
+        const tableBody = document.getElementById('budget-table-body');
+        const totalSpentLbl = document.getElementById('budget-spent-val');
+        const balanceLbl = document.getElementById('budget-balance-val');
+        const balanceBadge = document.getElementById('budget-balance-badge');
+        const percentLbl = document.getElementById('budget-percent-lbl');
+        const progressBar = document.getElementById('budget-progress-bar');
+        const expDesc = document.getElementById('exp-desc');
+        const expAmount = document.getElementById('exp-amount');
+        const expMethod = document.getElementById('exp-method');
+        const expCategory = document.getElementById('exp-category');
+
+        // Page 5 Elements
+        const jarStickersLayer = document.getElementById('jar-stickers-layer');
+        const jarTotalVal = document.getElementById('jar-total-value');
+
+        const dayModal = document.getElementById('day-modal');
+        const modalDateLabel = document.getElementById('modal-date-label');
+        const modalDayText = document.getElementById('modal-day-text');
+        const stickerBoard = document.getElementById('sticker-board');
+
+        let activeEditingDayKey = null;
+
+        // AUTHENTICATION STATE & LOGIC
+        let authMode = 'login'; // 'login' or 'signup'
+        let defaultProfile = { username: 'cozy', password: '123', name: 'Cozy Owner', hasFingerprint: true };
+        let currentScanProgress = 0;
+        let isScanning = false;
+        let scanTimer = null;
+
+        // Canvas Drawing Variables
+        const drawingCanvas = document.getElementById('drawing-canvas');
+        const ctx = drawingCanvas.getContext('2d');
+        let isDrawing = false;
+        let lastX = 0;
+        let lastY = 0;
+
+        window.onload = function() {
+            // Setup default credentials if not existing
+            if (!localStorage.getItem('kawaii_planner_profiles')) {
+                localStorage.setItem('kawaii_planner_profiles', JSON.stringify([defaultProfile]));
+            }
+
+            loadPlannerFromStorage();
+            
+            if (selectMonth) selectMonth.value = plannerState.currentMonth;
+            if (selectYear) selectYear.value = plannerState.currentYear;
+            
+            // Check if user is already authenticated in this session
+            if (plannerState.currentUser) {
+                unlockBinderSuccessfully(plannerState.currentUser);
+            } else {
+                // Keep locked and show cover page
+                document.getElementById('portal-cover-screen').classList.remove('hidden');
+            }
+
+            // Fingerprint Scan hold listeners matching IMG_20260626_104236.jpg
+            const scanBtn = document.getElementById('fingerprint-scan-btn');
+            scanBtn.addEventListener('mousedown', startFingerprintScan);
+            scanBtn.addEventListener('touchstart', startFingerprintScan, { passive: false });
+            
+            scanBtn.addEventListener('mouseup', stopFingerprintScan);
+            scanBtn.addEventListener('mouseleave', stopFingerprintScan);
+            scanBtn.addEventListener('touchend', stopFingerprintScan);
+
+            // Listeners
+            if (selectMonth) {
+                selectMonth.addEventListener('change', (e) => {
+                    plannerState.currentMonth = parseInt(e.target.value);
+                    renderCalendar();
+                    saveAllData();
+                });
+            }
+
+            if (selectYear) {
+                selectYear.addEventListener('change', (e) => {
+                    if (e.target.value) {
+                        plannerState.currentYear = parseInt(e.target.value);
+                        renderCalendar();
+                        saveAllData();
+                    }
+                });
+            }
+
+            if (todoInput) {
+                todoInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') addTodoItem();
+                });
+            }
+
+            if (habitInput) {
+                habitInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') addHabit();
+                });
+            }
+
+            if (groceryInput) {
+                groceryInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') addGroceryItem();
+                });
+            }
+
+            // Initialize drawing canvas dimension and mouse/stylus listeners
+            setupCanvasDrawing();
+            window.addEventListener('resize', handleCanvasResize);
+        };
+
+        // CUSTOM ALERTS REPLACING SYSTEM POPUPS
+        function popCozyAlert(msg, isSuccess = true) {
+            const alertBox = document.getElementById('cozy-alert');
+            const emojiSpan = document.getElementById('cozy-alert-emoji');
+            const textSpan = document.getElementById('cozy-alert-text');
+
+            emojiSpan.innerText = isSuccess ? '🌸' : '⚠️';
+            textSpan.innerText = msg;
+
+            alertBox.classList.remove('-translate-y-32');
+            alertBox.classList.add('translate-y-0');
+
+            setTimeout(() => {
+                alertBox.classList.remove('translate-y-0');
+                alertBox.classList.add('-translate-y-32');
+            }, 3000);
+        }
+
+        // COVER SECURITY ENGINE
+        function toggleAuthMode() {
+            const labelTitle = document.getElementById('form-card-title');
+            const nameField = document.getElementById('signup-name-field');
+            const submitBtnText = document.getElementById('submit-btn-text');
+            const authLink = document.getElementById('auth-toggle-link');
+            const guideText = document.getElementById('fingerprint-guide-text');
+
+            if (authMode === 'login') {
+                authMode = 'signup';
+                labelTitle.innerText = "Create New Owner Profile";
+                nameField.classList.remove('hidden');
+                submitBtnText.innerText = "Register Profile & Exit";
+                authLink.innerText = "Back to Sign In";
+                guideText.innerText = "Or hold biometric scanner to register fingerprint";
+            } else {
+                authMode = 'login';
+                labelTitle.innerText = "Sign In to Owner File";
+                nameField.classList.add('hidden');
+                submitBtnText.innerText = "Unlock Binder";
+                authLink.innerText = "New? Create Profile";
+                guideText.innerText = "Or press and hold fingerprint scanner to login";
+            }
+        }
+
+        function attemptFormSubmit() {
+            const userIn = document.getElementById('input-username').value.trim();
+            const passIn = document.getElementById('input-password').value;
+            const profiles = JSON.parse(localStorage.getItem('kawaii_planner_profiles') || "[]");
+
+            if (!userIn || !passIn) {
+                popCozyAlert("Please fill in both Username & Password! ✨", false);
+                return;
+            }
+
+            if (authMode === 'login') {
+                // Check direct bypass code
+                if (passIn === 'COZY2026') {
+                    const tempOwner = { username: userIn, name: 'Cozy Guest' };
+                    unlockBinderSuccessfully(tempOwner);
+                    return;
+                }
+
+                // Normal Login
+                const matched = profiles.find(p => p.username.toLowerCase() === userIn.toLowerCase() && p.password === passIn);
+                if (matched) {
+                    unlockBinderSuccessfully(matched);
+                } else {
+                    popCozyAlert("Invalid credentials! Try passcode 'COZY2026' or tap 'Forgot Details'", false);
+                }
+            } else {
+                // Profile Registration
+                const nameIn = document.getElementById('input-full-name').value.trim() || 'Cozy Companion';
+                
+                // Duplicate check
+                if (profiles.some(p => p.username.toLowerCase() === userIn.toLowerCase())) {
+                    popCozyAlert("This username is already taken! 🧁", false);
+                    return;
+                }
+
+                const newProfile = {
+                    username: userIn,
+                    password: passIn,
+                    name: nameIn,
+                    hasFingerprint: false
+                };
+
+                profiles.push(newProfile);
+                localStorage.setItem('kawaii_planner_profiles', JSON.stringify(profiles));
+                popCozyAlert("Profile created successfully! Sign in to unlock! ✨", true);
+                
+                toggleAuthMode();
+            }
+        }
+
+        // BIOMETRIC SIMULATION SCANNING
+        function startFingerprintScan(e) {
+            e.preventDefault();
+            isScanning = true;
+            currentScanProgress = 0;
+            document.getElementById('scanner-ring').classList.remove('opacity-0');
+            
+            scanTimer = setInterval(() => {
+                if (!isScanning) return;
+                currentScanProgress += 5;
+                
+                // Update SVG progress indicator ring
+                const progressCircle = document.getElementById('scan-progress-bar');
+                const offsetValue = 213.6 - (213.6 * (currentScanProgress / 100));
+                progressCircle.style.strokeDashoffset = offsetValue;
+
+                if (currentScanProgress >= 100) {
+                    clearInterval(scanTimer);
+                    finalizeBiometricAction();
+                }
+            }, 80);
+        }
+
+        function stopFingerprintScan() {
+            isScanning = false;
+            clearInterval(scanTimer);
+            document.getElementById('scanner-ring').classList.add('opacity-0');
+            document.getElementById('scan-progress-bar').style.strokeDashoffset = 213.6;
+        }
+
+        function finalizeBiometricAction() {
+            stopFingerprintScan();
+            const profiles = JSON.parse(localStorage.getItem('kawaii_planner_profiles') || "[]");
+
+            if (authMode === 'login') {
+                // Biometric Login: Sign in the first user that has registered biometrics
+                const matchedUser = profiles.find(p => p.hasFingerprint === true);
+                if (matchedUser) {
+                    unlockBinderSuccessfully(matchedUser);
+                } else {
+                    popCozyAlert("No fingerprint registered! Please sign up or register credentials first.", false);
+                }
+            } else {
+                // Biometric Sign Up: Prompts user for ONLY their name
+                const modalWrapper = document.createElement('div');
+                modalWrapper.id = "biometric-name-prompt";
+                modalWrapper.className = "fixed inset-0 bg-black/40 backdrop-blur-sm z-[60] flex items-center justify-center p-4";
+                modalWrapper.innerHTML = `
+                    <div class="bg-white border-4 border-[#63336a] rounded-[2.5rem] p-6 max-w-sm w-full shadow-[6px_6px_0px_#63336a] text-center transform scale-100 transition-all">
+                        <span class="text-4xl">🧬</span>
+                        <h3 class="kawaii-title text-2xl font-bold mt-2 mb-1">Fingerprint Confirmed!</h3>
+                        <p class="text-xs font-semibold text-rose-500 mb-4">Please type your Name only to finalize registration.</p>
+                        
+                        <input id="prompt-biometric-name" type="text" placeholder="E.g., Princess Kitty" class="w-full bg-pink-50/50 border-2 border-pink-100 rounded-xl px-3 py-2 text-sm text-pink-900 font-semibold focus:outline-none focus:border-pink-300 text-center mb-4">
+                        
+                        <button onclick="saveBiometricSignUp()" class="w-full bg-rose-400 hover:bg-rose-500 text-white font-bold py-2.5 rounded-xl shadow-[2px_2px_0px_#63336a] transition-all active:scale-95 text-sm">
+                            Create Profile 🌸
+                        </button>
+                    </div>
+                `;
+                document.body.appendChild(modalWrapper);
+            }
+        }
+
+        function saveBiometricSignUp() {
+            const nameIn = document.getElementById('prompt-biometric-name').value.trim() || 'Cozy Scanner User';
+            const profiles = JSON.parse(localStorage.getItem('kawaii_planner_profiles') || "[]");
+
+            // Generate automatic credentials
+            const cleanUser = nameIn.toLowerCase().replace(/[^a-z0-9]/g, '') || 'owner';
+            const randomID = Math.floor(Math.random() * 900) + 100;
+            const automaticUsername = `${cleanUser}${randomID}`;
+            const automaticPassword = `pass${randomID}`;
+
+            const newBiometricUser = {
+                username: automaticUsername,
+                password: automaticPassword,
+                name: nameIn,
+                hasFingerprint: true
+            };
+
+            profiles.push(newBiometricUser);
+            localStorage.setItem('kawaii_planner_profiles', JSON.stringify(profiles));
+
+            const promptEl = document.getElementById('biometric-name-prompt');
+            if (promptEl) promptEl.remove();
+
+            // Notify credentials
+            const detailsZone = document.getElementById('recovery-credentials-zone');
+            detailsZone.innerHTML = `
+                <div><strong>Registered Name:</strong> ${nameIn}</div>
+                <div><strong>Auto-ID/User:</strong> ${automaticUsername}</div>
+                <div><strong>Auto-Password:</strong> ${automaticPassword}</div>
+            `;
+            
+            document.getElementById('recovery-modal').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('recovery-modal').classList.remove('opacity-0');
+                document.getElementById('recovery-modal').querySelector('div').classList.remove('scale-95');
+            }, 50);
+
+            popCozyAlert("Fingerprint added successfully! Here are your credentials.", true);
+            if (authMode === 'signup') toggleAuthMode();
+        }
+
+        function unlockBinderSuccessfully(userObj) {
+            plannerState.currentUser = userObj;
+            saveAllData();
+
+            // Personalize Welcome Header Banner
+            document.getElementById('user-binder-welcome').innerText = `${userObj.name}'s Binder`;
+
+            // Fade Cover Page out
+            const cover = document.getElementById('portal-cover-screen');
+            cover.classList.add('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                cover.classList.add('hidden');
+            }, 500);
+
+            // Display main app canvases
+            document.getElementById('global-action-bar').classList.remove('hidden');
+            document.getElementById('main-tabs-navigation').classList.remove('hidden');
+            document.getElementById('planner-sheet').classList.remove('hidden');
+
+            // Sync stylus UI state
+            updateStylusUI();
+
+            // Initial view drawing
+            renderCalendar();
+            renderSidebars();
+            renderWeeklyPage();
+            renderMealPage();
+            calcBudget();
+            renderSavingsTracker();
+            switchPage(plannerState.activePage || 1);
+            
+            popCozyAlert(`Welcome back, ${userObj.name}! 🌸`, true);
+        }
+
+        function lockSystemAndReturnToCover() {
+            plannerState.currentUser = null;
+            saveAllData();
+
+            // Fade cover back in
+            const cover = document.getElementById('portal-cover-screen');
+            cover.classList.remove('hidden');
+            setTimeout(() => {
+                cover.classList.remove('opacity-0', 'pointer-events-none');
+            }, 50);
+
+            // Hide app canvases
+            document.getElementById('global-action-bar').classList.add('hidden');
+            document.getElementById('stylus-drawing-card').classList.add('hidden');
+            document.getElementById('main-tabs-navigation').classList.add('hidden');
+            document.getElementById('planner-sheet').classList.add('hidden');
+            
+            popCozyAlert("Binder locked securely!", true);
+        }
+
+        function triggerForgotPassword() {
+            const profiles = JSON.parse(localStorage.getItem('kawaii_planner_profiles') || "[]");
+            const detailsZone = document.getElementById('recovery-credentials-zone');
+
+            if (profiles.length === 0) {
+                detailsZone.innerHTML = `<div>No accounts found! Standard Bypass: cozy / 123</div>`;
+            } else {
+                let htmlLogs = '';
+                profiles.forEach(p => {
+                    htmlLogs += `<div class="border-b border-rose-100 pb-1 mb-1">
+                        <strong>User:</strong> ${p.username} | <strong>Pass:</strong> ${p.password} (${p.name})
+                    </div>`;
+                });
+                detailsZone.innerHTML = htmlLogs;
+            }
+
+            const modal = document.getElementById('recovery-modal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modal.querySelector('div').classList.remove('scale-95');
+            }, 50);
+        }
+
+        function closeRecoveryModal() {
+            const modal = document.getElementById('recovery-modal');
+            modal.classList.add('opacity-0');
+            modal.querySelector('div').classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // Tab routing switcher
+        function switchPage(pageNum) {
+            // Save the drawing on current page before switching
+            saveCanvasSnapshot(plannerState.activePage);
+
+            plannerState.activePage = pageNum;
+            
+            // Manage UI tabs
+            for (let i = 1; i <= 5; i++) {
+                const tab = document.getElementById(`tab-${i}`);
+                const section = document.getElementById(`page-content-${i}`);
+                if (i === pageNum) {
+                    if (tab) {
+                        tab.classList.add('active');
+                        tab.style.backgroundColor = getPageBgColor(i);
+                    }
+                    if (section) section.classList.remove('hidden');
+                } else {
+                    if (tab) {
+                        tab.classList.remove('active');
+                        tab.style.backgroundColor = '';
+                    }
+                    if (section) section.classList.add('hidden');
+                }
+            }
+
+            // Adjust Header Title
+            const titles = {
+                1: "MONTHLY PLANNER",
+                2: "WEEKLY JOURNAL",
+                3: "COZY MEAL PREP",
+                4: "COZY BUDGET (RM)",
+                5: "COZY SAVINGS JAR"
+            };
+            document.getElementById('planner-main-title').innerText = titles[pageNum];
+            
+            // Redraw stickers and reload canvas drawings of the target page
+            renderStickers();
+            loadCanvasSnapshot(pageNum);
+            saveAllData();
+        }
+
+        function getPageBgColor(pageNum) {
+            if (pageNum === 1) return '#fef7fc';
+            if (pageNum === 2) return '#fff2f9';
+            if (pageNum === 3) return '#f3f9ff';
+            if (pageNum === 4) return '#f2fff6';
+            return '#fffbed';
+        }
+
+        // ================= STYLUS & DRAWING ENGINE CORE IMPLEMENTATION =================
+        function setupCanvasDrawing() {
+            // Size mapping directly to percentage label
+            const brushSlider = document.getElementById('brush-size-slider');
+            if (brushSlider) {
+                brushSlider.value = plannerState.activeSize;
+                document.getElementById('brush-size-label').innerText = `${plannerState.activeSize}%`;
+            }
+
+            // Stylus drawing pointer event listeners to capture pens, touch, and mouse seamlessly
+            drawingCanvas.addEventListener('pointerdown', startDrawingAction);
+            drawingCanvas.addEventListener('pointermove', drawAction);
+            drawingCanvas.addEventListener('pointerup', stopDrawingAction);
+            drawingCanvas.addEventListener('pointerout', stopDrawingAction);
+        }
+
+        function handleCanvasResize() {
+            if (drawingCanvas.width <= 0 || drawingCanvas.height <= 0) {
+                const sheet = document.getElementById('planner-sheet');
+                if (sheet) {
+                    const width = sheet.clientWidth || sheet.offsetWidth || 1012;
+                    const height = sheet.clientHeight || sheet.offsetHeight || 850;
+                    drawingCanvas.width = width;
+                    drawingCanvas.height = height;
+                }
+                return;
+            }
+
+            // Save active drawings temporarily
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = drawingCanvas.width;
+            tempCanvas.height = drawingCanvas.height;
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCtx.drawImage(drawingCanvas, 0, 0);
+
+            // Resize matching coordinates bounds of the parent planner sheet container
+            const sheet = document.getElementById('planner-sheet');
+            if (sheet) {
+                const width = sheet.clientWidth || sheet.offsetWidth || 1012;
+                const height = sheet.clientHeight || sheet.offsetHeight || 850;
+                drawingCanvas.width = width;
+                drawingCanvas.height = height;
+            }
+
+            // Redraw active drawings on resized bounds
+            ctx.drawImage(tempCanvas, 0, 0, drawingCanvas.width, drawingCanvas.height);
+        }
+
+        function toggleStylusMode() {
+            plannerState.stylusEnabled = !plannerState.stylusEnabled;
+            updateStylusUI();
+            saveAllData();
+        }
+
+        function updateStylusUI() {
+            const btn = document.getElementById('stylus-toggle-btn');
+            const txt = document.getElementById('stylus-toggle-text');
+            const toolbar = document.getElementById('stylus-drawing-card');
+
+            if (plannerState.stylusEnabled) {
+                btn.className = "bg-[#38b6ff] hover:bg-[#009bf5] text-white font-bold px-5 py-2 rounded-xl border-2 border-[#63336a] text-sm flex items-center gap-2 transition-all shadow-[2px_2px_0px_#63336a]";
+                txt.innerText = "Stylus On";
+                toolbar.classList.remove('hidden');
+                drawingCanvas.classList.remove('pointer-events-none');
+                drawingCanvas.classList.add('cursor-crosshair');
+                popCozyAlert("Stylus Enabled! Draw directly onto your planner canvas! ✏️", true);
+            } else {
+                btn.className = "bg-gray-200 hover:bg-gray-300 text-gray-600 font-bold px-5 py-2 rounded-xl border-2 border-gray-400 text-sm flex items-center gap-2 transition-all shadow-[2px_2px_0px_gray]";
+                txt.innerText = "Stylus Off";
+                toolbar.classList.add('hidden');
+                drawingCanvas.classList.add('pointer-events-none');
+                drawingCanvas.classList.remove('cursor-crosshair');
+            }
+        }
+
+        function selectDrawingColor(hex, el) {
+            plannerState.activeColor = hex;
+            document.querySelectorAll('.color-bubble').forEach(b => b.classList.remove('active'));
+            if (el) el.classList.add('active');
+            
+            // Switch back to drawing tool if eraser was enabled
+            selectDrawingTool('draw');
+            saveAllData();
+        }
+
+        // Slider mapping updates percentage size dynamically
+        function changeBrushSize(val) {
+            plannerState.activeSize = parseInt(val);
+            document.getElementById('brush-size-label').innerText = `${val}%`;
+            saveAllData();
+        }
+
+        function selectDrawingTool(tool) {
+            plannerState.activeTool = tool;
+            const drawBtn = document.getElementById('tool-draw-btn');
+            const eraseBtn = document.getElementById('tool-erase-btn');
+
+            if (tool === 'draw') {
+                drawBtn.className = "bg-[#38b6ff] text-white font-bold px-4 py-1.5 rounded-xl border border-[#63336a]/30 text-xs flex items-center gap-1.5 transition-all";
+                eraseBtn.className = "bg-transparent hover:bg-pink-50 text-[#63336a] font-bold px-4 py-1.5 rounded-xl border border-[#63336a]/30 text-xs flex items-center gap-1.5 transition-all";
+            } else {
+                eraseBtn.className = "bg-[#38b6ff] text-white font-bold px-4 py-1.5 rounded-xl border border-[#63336a]/30 text-xs flex items-center gap-1.5 transition-all";
+                drawBtn.className = "bg-transparent hover:bg-pink-50 text-[#63336a] font-bold px-4 py-1.5 rounded-xl border border-[#63336a]/30 text-xs flex items-center gap-1.5 transition-all";
+            }
+            saveAllData();
+        }
+
+        // Drawing Action Triggers
+        function startDrawingAction(e) {
+            if (!plannerState.stylusEnabled) return;
+            isDrawing = true;
+            
+            const rect = drawingCanvas.getBoundingClientRect();
+            // Map event position relative to canvas wrapper
+            lastX = e.clientX - rect.left;
+            lastY = e.clientY - rect.top;
+
+            // Push state snapshot to Undo stack before stroke starts
+            saveUndoState(plannerState.activePage);
+        }
+
+        function drawAction(e) {
+            if (!isDrawing || !plannerState.stylusEnabled) return;
+            
+            const rect = drawingCanvas.getBoundingClientRect();
+            const currentX = e.clientX - rect.left;
+            const currentY = e.clientY - rect.top;
+
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(currentX, currentY);
+
+            if (plannerState.activeTool === 'erase') {
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.lineWidth = plannerState.activeSize; // Dynamic eraser sizing matching image
+            } else {
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.strokeStyle = plannerState.activeColor;
+                ctx.lineWidth = plannerState.activeSize;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+            }
+
+            ctx.stroke();
+
+            lastX = currentX;
+            lastY = currentY;
+        }
+
+        function stopDrawingAction() {
+            if (isDrawing) {
+                isDrawing = false;
+                // Save current canvas state to persistent engine
+                saveCanvasSnapshot(plannerState.activePage);
+            }
+        }
+
+        // ================= MULTI-PAGE UNDO REDO HISTORY STACKS =================
+        function saveUndoState(pageIndex) {
+            // Save state as image data URL and push to history
+            const dataUrl = drawingCanvas.toDataURL();
+            pageUndoStacks[pageIndex].push(dataUrl);
+            
+            // Clear redo stack on new action
+            pageRedoStacks[pageIndex] = [];
+
+            // Prevent history overload by clipping history stacks at 20 states
+            if (pageUndoStacks[pageIndex].length > 20) {
+                pageUndoStacks[pageIndex].shift();
+            }
+        }
+
+        function triggerUndo() {
+            const pageIndex = plannerState.activePage;
+            if (pageUndoStacks[pageIndex].length === 0) {
+                popCozyAlert("Nothing to undo! 🎨", false);
+                return;
+            }
+
+            // Save current active state to Redo stack before restoring
+            const currentState = drawingCanvas.toDataURL();
+            pageRedoStacks[pageIndex].push(currentState);
+
+            const previousState = pageUndoStacks[pageIndex].pop();
+            restoreCanvasFromDataUrl(previousState);
+        }
+
+        function triggerRedo() {
+            const pageIndex = plannerState.activePage;
+            if (pageRedoStacks[pageIndex].length === 0) {
+                popCozyAlert("Nothing to redo! 🎨", false);
+                return;
+            }
+
+            const currentState = drawingCanvas.toDataURL();
+            pageUndoStacks[pageIndex].push(currentState);
+
+            const nextState = pageRedoStacks[pageIndex].pop();
+            restoreCanvasFromDataUrl(nextState);
+        }
+
+        function restoreCanvasFromDataUrl(dataUrl) {
+            const img = new Image();
+            img.onload = function() {
+                ctx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.drawImage(img, 0, 0);
+                saveCanvasSnapshot(plannerState.activePage);
+            };
+            img.src = dataUrl;
+        }
+
+        // ================= DRAWING STORAGE PERSISTENCE OPERATIONS =================
+        function saveCanvasSnapshot(pageIndex) {
+            if (!plannerState.canvasSnapshots) {
+                plannerState.canvasSnapshots = {};
+            }
+            if (drawingCanvas.width <= 0 || drawingCanvas.height <= 0) {
+                return; // Guard against overwriting existing snapshots with blank/null when dimensions are uninitialized
+            }
+            // Check if there are active drawings to store
+            const isCanvasBlank = checkCanvasIsBlank();
+            plannerState.canvasSnapshots[pageIndex] = isCanvasBlank ? null : drawingCanvas.toDataURL();
+            saveAllData();
+        }
+
+        function loadCanvasSnapshot(pageIndex) {
+            const sheet = document.getElementById('planner-sheet');
+            if (sheet) {
+                const width = sheet.clientWidth || sheet.offsetWidth || 1012;
+                const height = sheet.clientHeight || sheet.offsetHeight || 850;
+                if (width > 0 && height > 0) {
+                    drawingCanvas.width = width;
+                    drawingCanvas.height = height;
+                }
+            }
+
+            ctx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+
+            if (plannerState.canvasSnapshots && plannerState.canvasSnapshots[pageIndex]) {
+                const img = new Image();
+                img.onload = function() {
+                    ctx.globalCompositeOperation = 'source-over';
+                    ctx.drawImage(img, 0, 0);
+                };
+                img.src = plannerState.canvasSnapshots[pageIndex];
+            }
+        }
+
+        function checkCanvasIsBlank() {
+            if (drawingCanvas.width <= 0 || drawingCanvas.height <= 0) {
+                return true;
+            }
+            try {
+                const buffer = new Uint32Array(ctx.getImageData(0, 0, drawingCanvas.width, drawingCanvas.height).data.buffer);
+                return !buffer.some(color => color !== 0);
+            } catch (e) {
+                console.warn("Could not check if canvas is blank:", e);
+                return true;
+            }
+        }
+
+        // ================= PAGE 1: MONTHLY CALENDAR DRAW ENGINE =================
+        function renderCalendar() {
+            if (!calendarGrid) return;
+            calendarGrid.innerHTML = '';
+            
+            const monthNames = [
+                "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            ];
+            
+            const month = plannerState.currentMonth;
+            const year = plannerState.currentYear;
+
+            if (displayMonthName) displayMonthName.innerText = monthNames[month];
+            if (displayYearVal) displayYearVal.innerText = year;
+            if (selectMonth) selectMonth.value = month;
+            if (selectYear) selectYear.value = year;
+
+            const firstDayIndex = (new Date(year, month, 1).getDay() + 6) % 7; 
+            const totalDays = new Date(year, month + 1, 0).getDate();
+            const totalDaysPrev = new Date(year, month, 0).getDate();
+
+            // Pre-Month Padding
+            for (let i = firstDayIndex - 1; i >= 0; i--) {
+                const dayNum = totalDaysPrev - i;
+                const cell = createCalendarDayCell(dayNum, true);
+                calendarGrid.appendChild(cell);
+            }
+
+            // Active Month Days
+            for (let day = 1; day <= totalDays; day++) {
+                const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const hasNotes = !!plannerState.dayNotes[dateKey];
+                const noteExcerpt = hasNotes ? plannerState.dayNotes[dateKey] : '';
+                
+                const cell = createCalendarDayCell(day, false, dateKey, noteExcerpt);
+                calendarGrid.appendChild(cell);
+            }
+
+            // Post-Month Padding
+            const totalCellsSoFar = firstDayIndex + totalDays;
+            const remaining = (7 - (totalCellsSoFar % 7)) % 7;
+            for (let i = 1; i <= remaining; i++) {
+                const cell = createCalendarDayCell(i, true);
+                calendarGrid.appendChild(cell);
+            }
+        }
+
+        function createCalendarDayCell(dayNumber, isInactive, dateKey = null, excerpt = '') {
+            const cell = document.createElement('div');
+            
+            if (isInactive) {
+                cell.className = "bg-gray-100/30 border border-pink-100 text-gray-300 rounded-2xl p-1 h-20 flex flex-col justify-between select-none opacity-40";
+                cell.innerHTML = `<span class="text-xs font-bold handwritten ml-1">${dayNumber}</span>`;
+            } else {
+                cell.className = "bg-pink-50/25 border-2 border-pink-100/80 hover:border-[#63336a] hover:bg-pink-100/20 rounded-2xl p-1.5 h-20 flex flex-col justify-between cursor-pointer transition-all duration-200 select-none overflow-hidden group relative";
+                
+                let extraArt = '';
+                if (dayNumber % 7 === 1) extraArt = '⭐';
+                else if (dayNumber % 7 === 3) extraArt = '🌸';
+                else if (dayNumber === 11) extraArt = '🍃';
+                else if (dayNumber === 21) extraArt = '🐰';
+
+                cell.innerHTML = `
+                    <div class="flex justify-between items-center z-10">
+                        <span class="text-xs font-bold text-pink-500 bg-pink-100/50 rounded-full w-5 h-5 flex items-center justify-center">${dayNumber}</span>
+                        <span class="text-[10px] opacity-75 transform group-hover:scale-125 transition-transform">${extraArt}</span>
+                    </div>
+                    <div class="text-[10px] text-[#63336a] font-bold truncate mt-1 leading-tight max-w-full handwritten">
+                        ${excerpt}
+                    </div>
+                `;
+                cell.onclick = () => {
+                    // Clicking days is only allowed when stylus isn't active
+                    if (plannerState.stylusEnabled) return;
+                    openDayModal(dateKey, dayNumber);
+                };
+            }
+            return cell;
+        }
+
+        // Day Note Modal logic
+        function openDayModal(dateKey, dayNumber) {
+            activeEditingDayKey = dateKey;
+            
+            const monthNames = [
+                "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            ];
+            const dateObj = new Date(plannerState.currentYear, plannerState.currentMonth, dayNumber);
+            const weekday = dateObj.toLocaleDateString('en-US', { weekday: 'long' });
+            
+            if (modalDateLabel) modalDateLabel.innerText = `${weekday}, ${monthNames[plannerState.currentMonth]} ${dayNumber}`;
+            if (modalDayText) modalDayText.value = plannerState.dayNotes[dateKey] || '';
+            
+            if (dayModal) {
+                dayModal.classList.remove('hidden');
+                setTimeout(() => {
+                    dayModal.classList.remove('opacity-0');
+                    dayModal.querySelector('div').classList.remove('scale-95');
+                }, 50);
+            }
+        }
+
+        function closeDayModal() {
+            if (dayModal) {
+                dayModal.classList.add('opacity-0');
+                dayModal.querySelector('div').classList.add('scale-95');
+                setTimeout(() => {
+                    dayModal.classList.add('hidden');
+                }, 300);
+            }
+            activeEditingDayKey = null;
+        }
+
+        // Saving calendar notes
+        function saveDayModal() {
+            if (activeEditingDayKey) {
+                const text = modalDayText.value.trim();
+                if (text) {
+                    plannerState.dayNotes[activeEditingDayKey] = text;
+                } else {
+                    delete plannerState.dayNotes[activeEditingDayKey];
+                }
+                renderCalendar();
+                saveAllData();
+            }
+            closeDayModal();
+        }
+
+        // ================= GENERAL SIDEBAR & SUB-ELEMENT LOADING =================
+        function renderSidebars() {
+            if (notesContent) notesContent.value = plannerState.notes || '';
+            if (goal1Input) goal1Input.value = plannerState.goals[0] || '';
+            if (goal2Input) goal2Input.value = plannerState.goals[1] || '';
+            if (goal3Input) goal3Input.value = plannerState.goals[2] || '';
+            
+            if (priority1Input) priority1Input.value = plannerState.priorities[0] || '';
+            if (priority2Input) priority2Input.value = plannerState.priorities[1] || '';
+            if (priority3Input) priority3Input.value = plannerState.priorities[2] || '';
+
+            renderTodoList();
+        }
+
+        function renderTodoList() {
+            if (!todoContainer) return;
+            todoContainer.innerHTML = '';
+            plannerState.todos.forEach((todo) => {
+                const div = document.createElement('div');
+                div.className = "flex items-center justify-between gap-2 group";
+                
+                div.innerHTML = `
+                    <div class="flex items-center gap-2 flex-1">
+                        <button onclick="toggleTodo(${todo.id})" class="focus:outline-none shrink-0">
+                            ${todo.done 
+                                ? '<span class="inline-block w-5 h-5 rounded-md bg-purple-400 border-2 border-[#63336a] text-white flex items-center justify-center text-[9px] font-extrabold shadow-[1px_1px_0px_#63336a]"><i class="fa-solid fa-check"></i></span>'
+                                : '<span class="inline-block w-5 h-5 rounded-md border-2 border-[#63336a]/40 bg-white hover:border-[#63336a] transition-colors"></span>'
+                            }
+                        </button>
+                        <span class="handwritten text-lg text-[#63336a] font-bold break-all flex-1 ${todo.done ? 'line-through opacity-50' : ''}">
+                            ${todo.text}
+                        </span>
+                    </div>
+                    <button onclick="deleteTodo(${todo.id})" class="text-pink-300 hover:text-pink-600 transition-colors opacity-0 group-hover:opacity-100 text-sm">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                `;
+                todoContainer.appendChild(div);
+            });
+        }
+
+        function addTodoItem() {
+            if (!todoInput) return;
+            const val = todoInput.value.trim();
+            if (val) {
+                plannerState.todos.push({ id: Date.now(), text: val, done: false });
+                todoInput.value = '';
+                renderTodoList();
+                saveAllData();
+            }
+        }
+
+        function toggleTodo(id) {
+            plannerState.todos = plannerState.todos.map(todo => 
+                todo.id === id ? { ...todo, done: !todo.done } : todo
+            );
+            renderTodoList();
+            saveAllData();
+        }
+
+        function deleteTodo(id) {
+            plannerState.todos = plannerState.todos.filter(todo => todo.id !== id);
+            renderTodoList();
+            saveAllData();
+        }
+
+        // ================= PAGE 2: WEEKLY PLANNER LOAD =================
+        function renderWeeklyPage() {
+            const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'weekend'];
+            days.forEach(day => {
+                const el = document.getElementById(`week-day-${day}`);
+                if (el) el.value = plannerState.weekNotes[day] || '';
+            });
+            
+            if (weeklyFocusBox) weeklyFocusBox.value = plannerState.weeklyFocus || '';
+            
+            renderHabitList();
+        }
+
+        function renderHabitList() {
+            if (!habitContainer) return;
+            habitContainer.innerHTML = '';
+            plannerState.habits.forEach((habit) => {
+                const habitDiv = document.createElement('div');
+                habitDiv.className = "flex flex-col gap-1 border-b border-[#63336a]/10 pb-2 group";
+
+                let dayBubbles = '';
+                const weekChars = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+                for (let d = 0; d < 7; d++) {
+                    const isChecked = habit.days[d];
+                    const activeStyle = isChecked 
+                        ? 'bg-pink-400 text-white border-2 border-[#63336a]' 
+                        : 'bg-white border border-[#63336a]/30 hover:border-[#63336a]';
+                    dayBubbles += `
+                        <button onclick="toggleHabitDay(${habit.id}, ${d})" class="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold transition-all ${activeStyle}">
+                            ${weekChars[d]}
+                        </button>
+                    `;
+                }
+
+                habitDiv.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <span class="handwritten text-lg text-[#63336a] font-bold">${habit.name}</span>
+                        <button onclick="deleteHabit(${habit.id})" class="text-pink-300 hover:text-pink-600 text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                    <div class="flex gap-1.5 justify-between">
+                        ${dayBubbles}
+                    </div>
+                `;
+                habitContainer.appendChild(habitDiv);
+            });
+        }
+
+        function addHabit() {
+            if (!habitInput) return;
+            const val = habitInput.value.trim();
+            if (val) {
+                plannerState.habits.push({
+                    id: Date.now(),
+                    name: val,
+                    days: [false, false, false, false, false, false, false]
+                });
+                habitInput.value = '';
+                renderHabitList();
+                saveAllData();
+            }
+        }
+
+        function toggleHabitDay(id, dayIndex) {
+            plannerState.habits = plannerState.habits.map(h => {
+                if (h.id === id) {
+                    const updatedDays = [...h.days];
+                    updatedDays[dayIndex] = !updatedDays[dayIndex];
+                    return { ...h, days: updatedDays };
+                }
+                return h;
+            });
+            renderHabitList();
+            saveAllData();
+        }
+
+        function deleteHabit(id) {
+            plannerState.habits = plannerState.habits.filter(h => h.id !== id);
+            renderHabitList();
+            saveAllData();
+        }
+
+        // ================= PAGE 3: MEAL PLANNER LOAD =================
+        function renderMealPage() {
+            const mealKeys = [
+                "mon-b", "mon-l", "mon-d",
+                "tue-b", "tue-l", "tue-d",
+                "wed-b", "wed-l", "wed-d",
+                "thu-b", "thu-l", "thu-d",
+                "fri-b", "fri-l", "fri-d",
+                "sat-b", "sat-l", "sat-d",
+                "sun-b", "sun-l", "sun-d"
+            ];
+            mealKeys.forEach(k => {
+                const el = document.getElementById(`meal-${k}`);
+                if (el) el.value = plannerState.meals[k] || '';
+            });
+
+            // Water intake glasses sync
+            const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+            days.forEach(d => {
+                renderWaterRow(d);
+            });
+
+            renderGroceryList();
+        }
+
+        function renderWaterRow(day) {
+            const count = plannerState.water[day] || 0;
+            let htmlStr = '';
+            for (let i = 1; i <= 8; i++) {
+                if (i <= count) {
+                    htmlStr += '<span class="filter drop-shadow-sm select-none text-base">💧</span>';
+                } else {
+                    htmlStr += '<span class="opacity-20 select-none text-base">⚪</span>';
+                }
+            }
+            const container = document.getElementById(`water-${day}`);
+            if (container) {
+                container.innerHTML = htmlStr;
+            }
+        }
+
+        function addWater(day) {
+            if (plannerState.stylusEnabled) return; // Ignore input when drawing
+            let current = plannerState.water[day] || 0;
+            if (current < 8) {
+                plannerState.water[day] = current + 1;
+                renderWaterRow(day);
+                saveAllData();
+            }
+        }
+
+        function removeWater(day, event) {
+            if (event) {
+                event.stopPropagation(); // Stop click from propagating and triggering addWater
+            }
+            if (plannerState.stylusEnabled) return;
+            let current = plannerState.water[day] || 0;
+            if (current > 0) {
+                plannerState.water[day] = current - 1;
+                renderWaterRow(day);
+                saveAllData();
+            }
+        }
+
+        function renderGroceryList() {
+            if (!groceryContainer) return;
+            groceryContainer.innerHTML = '';
+            plannerState.groceries.forEach((grocery) => {
+                const div = document.createElement('div');
+                div.className = "flex items-center justify-between gap-2 group";
+                
+                div.innerHTML = `
+                    <div class="flex items-center gap-2 flex-1">
+                        <button onclick="toggleGrocery(${grocery.id})" class="focus:outline-none shrink-0">
+                            ${grocery.done 
+                                ? '<span class="inline-block w-5 h-5 rounded-md bg-emerald-400 border-2 border-[#63336a] text-[#1b4c39] flex items-center justify-center text-[9px] font-extrabold shadow-[1px_1px_0px_#63336a]"><i class="fa-solid fa-check"></i></span>'
+                                : '<span class="inline-block w-5 h-5 rounded-md border-2 border-[#63336a]/40 bg-white hover:border-[#63336a] transition-colors"></span>'
+                            }
+                        </button>
+                        <span class="handwritten text-lg text-[#63336a] font-bold break-all flex-1 ${grocery.done ? 'line-through opacity-50' : ''}">
+                            ${grocery.text}
+                        </span>
+                    </div>
+                    <button onclick="deleteGrocery(${grocery.id})" class="text-pink-300 hover:text-pink-600 transition-colors opacity-0 group-hover:opacity-100 text-sm">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                `;
+                groceryContainer.appendChild(div);
+            });
+        }
+
+        function addGroceryItem() {
+            if (!groceryInput) return;
+            const val = groceryInput.value.trim();
+            if (val) {
+                plannerState.groceries.push({ id: Date.now(), text: val, done: false });
+                groceryInput.value = '';
+                renderGroceryList();
+                saveAllData();
+            }
+        }
+
+        function toggleGrocery(id) {
+            plannerState.groceries = plannerState.groceries.map(g => 
+                g.id === id ? { ...g, done: !g.done } : g
+            );
+            renderGroceryList();
+            saveAllData();
+        }
+
+        function deleteGrocery(id) {
+            plannerState.groceries = plannerState.groceries.filter(g => g.id !== id);
+            renderGroceryList();
+            saveAllData();
+        }
+
+        // ================= PAGE 4: BUDGET PLANNER ENGINE =================
+        function calcBudget() {
+            const income = parseFloat(budgetIncomeInput?.value) || 0;
+            const limit = parseFloat(budgetLimitInput?.value) || 0;
+            
+            plannerState.budgetIncome = income;
+            plannerState.budgetLimit = limit;
+
+            let spent = 0;
+            plannerState.expenses.forEach(exp => {
+                spent += parseFloat(exp.amount) || 0;
+            });
+
+            const balance = income - spent;
+            
+            if (totalSpentLbl) totalSpentLbl.innerText = spent.toFixed(2);
+            if (balanceLbl) balanceLbl.innerText = balance.toFixed(2);
+
+            if (balanceBadge) {
+                if (balance < 0) {
+                    balanceBadge.className = "bg-rose-100 text-rose-900 border-2 border-rose-400 p-2 rounded-2xl flex items-center gap-1.5 mt-1.5";
+                } else {
+                    balanceBadge.className = "bg-purple-50 text-purple-900 border-2 border-purple-200 p-2 rounded-2xl flex items-center gap-1.5 mt-1.5";
+                }
+            }
+
+            const percentage = limit > 0 ? Math.min((spent / limit) * 100, 100) : 0;
+            if (percentLbl) percentLbl.innerText = `${Math.round(percentage)}%`;
+            if (progressBar) {
+                progressBar.style.width = `${percentage}%`;
+                if (percentage >= 90) {
+                    progressBar.className = "bg-red-400 h-full transition-all duration-300";
+                } else if (percentage >= 70) {
+                    progressBar.className = "bg-yellow-400 h-full transition-all duration-300";
+                } else {
+                    progressBar.className = "bg-pink-400 h-full transition-all duration-300";
+                }
+            }
+
+            renderExpensesLedger();
+        }
+
+        function renderExpensesLedger() {
+            if (!tableBody) return;
+            tableBody.innerHTML = '';
+            
+            if (plannerState.expenses.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="py-6 text-center text-gray-400 handwritten text-lg">No expenses recorded yet 🌸</td>
+                    </tr>
+                `;
+                return;
+            }
+
+            plannerState.expenses.forEach(exp => {
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-[#63336a]/10 hover:bg-pink-50/20";
+                
+                const methodBadge = exp.method === 'Cash' 
+                    ? '<span class="bg-amber-100 text-amber-900 text-[10px] px-2 py-0.5 rounded-full border border-amber-300">Cash 💵</span>'
+                    : '<span class="bg-blue-100 text-blue-900 text-[10px] px-2 py-0.5 rounded-full border border-blue-300">Online 📱</span>';
+
+                tr.innerHTML = `
+                    <td class="py-2.5 pl-1 text-[#63336a] handwritten text-base">${exp.desc}</td>
+                    <td class="py-2.5 text-xs text-purple-600 font-bold">${exp.category}</td>
+                    <td class="py-2.5">${methodBadge}</td>
+                    <td class="py-2.5 text-right text-[#63336a]">RM ${parseFloat(exp.amount).toFixed(2)}</td>
+                    <td class="py-2.5 text-right pr-2">
+                        <button onclick="deleteExpense(${exp.id})" class="text-rose-400 hover:text-rose-600 transition-colors text-xs">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        function addExpense() {
+            if (!expDesc || !expAmount) return;
+            const desc = expDesc.value.trim();
+            const amountVal = parseFloat(expAmount.value) || 0;
+            const method = expMethod ? expMethod.value : 'Cash';
+            const category = expCategory ? expCategory.value : 'Food 🍧';
+
+            if (desc && amountVal > 0) {
+                plannerState.expenses.push({
+                    id: Date.now(),
+                    desc: desc,
+                    amount: amountVal,
+                    method: method,
+                    category: category
+                });
+
+                expDesc.value = '';
+                expAmount.value = '';
+                
+                calcBudget();
+                saveAllData();
+            }
+        }
+
+        function deleteExpense(id) {
+            plannerState.expenses = plannerState.expenses.filter(exp => exp.id !== id);
+            calcBudget();
+            saveAllData();
+        }
+
+        // ================= PAGE 5: COZY SAVINGS TRACKER ENGINE =================
+        function renderSavingsTracker() {
+            if (!jarStickersLayer) return;
+            jarStickersLayer.innerHTML = '';
+            
+            if (!plannerState.savingStickers) {
+                plannerState.savingStickers = [];
+            }
+
+            let totalValue = 0;
+
+            plannerState.savingStickers.forEach((st) => {
+                totalValue += st.value;
+
+                const badge = document.createElement('div');
+                badge.className = `absolute px-3 py-1.5 rounded-full border-2 border-[#63336a] text-xs font-bold shadow-md cursor-pointer flex items-center gap-1 active:scale-90 transition-transform select-none ${st.bgClass} ${st.textClass}`;
+                badge.style.left = `${st.x}%`;
+                badge.style.top = `${st.y}%`;
+                badge.style.transform = `rotate(${st.rotate}deg)`;
+                badge.setAttribute('title', 'Tap to cash out! 🌸');
+
+                badge.innerHTML = `<span>${st.emoji}</span> <span>RM${st.value}</span>`;
+                
+                badge.onclick = (e) => {
+                    e.stopPropagation();
+                    if (plannerState.stylusEnabled) return;
+                    removeJarSticker(st.id);
+                };
+
+                jarStickersLayer.appendChild(badge);
+            });
+
+            if (jarTotalVal) jarTotalVal.innerText = totalValue.toFixed(2);
+        }
+
+        function spawnJarSticker(value) {
+            if (plannerState.stylusEnabled) return;
+            if (!plannerState.savingStickers) {
+                plannerState.savingStickers = [];
+            }
+
+            const emojis = {
+                1: "💖",
+                5: "🌸",
+                10: "⭐",
+                20: "🍀",
+                50: "🎀",
+                100: "👑"
+            };
+
+            const styles = {
+                1: { bg: 'bg-[#fffbeb]', text: 'text-amber-800' },
+                5: { bg: 'bg-[#fff0f6]', text: 'text-pink-700' },
+                10: { bg: 'bg-[#f0f9ff]', text: 'text-sky-700' },
+                20: { bg: 'bg-[#f0fdf4]', text: 'text-emerald-700' },
+                50: { bg: 'bg-[#faf5ff]', text: 'text-purple-700' },
+                100: { bg: 'bg-[#fffbeb]', text: 'text-yellow-800' }
+            };
+
+            const randomX = Math.floor(Math.random() * 55) + 12; 
+            const randomY = Math.floor(Math.random() * 60) + 18; 
+            const randomRotation = Math.floor(Math.random() * 50) - 25; 
+
+            const newSt = {
+                id: Date.now() + Math.random(),
+                value: value,
+                emoji: emojis[value] || "🪙",
+                bgClass: styles[value]?.bg || 'bg-white',
+                textClass: styles[value]?.text || 'text-gray-800',
+                x: randomX,
+                y: randomY,
+                rotate: randomRotation
+            };
+
+            plannerState.savingStickers.push(newSt);
+            renderSavingsTracker();
+            saveAllData();
+        }
+
+        function removeJarSticker(id) {
+            plannerState.savingStickers = plannerState.savingStickers.filter(st => st.id !== id);
+            renderSavingsTracker();
+            saveAllData();
+        }
+
+        function clearJar() {
+            plannerState.savingStickers = [];
+            renderSavingsTracker();
+            saveAllData();
+        }
+
+        // ================= GENERAL STICKERS & CANVAS GESTURES =================
+        function spawnSticker(type) {
+            if (plannerState.stylusEnabled) return;
+            const id = Date.now();
+            
+            const stickersDict = {
+                bunny: "🐰",
+                rainbow: "🌈",
+                flower: "🌷",
+                star: "⭐",
+                heart: "💖",
+                cloud: "☁️"
+            };
+
+            const newSticker = {
+                id: id,
+                type: type,
+                emoji: stickersDict[type],
+                x: 100 + Math.random() * 100, 
+                y: 120 + Math.random() * 100
+            };
+
+            const currentBoardKey = `stickers_${plannerState.activePage}`;
+            if (!plannerState[currentBoardKey]) {
+                plannerState[currentBoardKey] = [];
+            }
+            plannerState[currentBoardKey].push(newSticker);
+            
+            renderSingleSticker(newSticker);
+            saveAllData();
+        }
+
+        function renderStickers() {
+            if (!stickerBoard) return;
+            stickerBoard.innerHTML = '';
+            const currentBoardKey = `stickers_${plannerState.activePage}`;
+            const stickersList = plannerState[currentBoardKey] || [];
+            
+            stickersList.forEach((stickerObj) => {
+                renderSingleSticker(stickerObj);
+            });
+        }
+
+        function renderSingleSticker(stickerObj) {
+            const element = document.createElement('div');
+            element.id = `sticker-${stickerObj.id}`;
+            element.className = "sticker absolute text-4xl select-none pointer-events-auto z-40 p-2 touch-none";
+            element.style.left = `${stickerObj.x}px`;
+            element.style.top = `${stickerObj.y}px`;
+            
+            element.innerHTML = `
+                ${stickerObj.emoji}
+                <div class="sticker-delete-btn" onclick="deleteSticker(${stickerObj.id}, event)">
+                    <i class="fa-solid fa-xmark"></i>
+                </div>
+            `;
+
+            let startX = 0, startY = 0;
+            let currentX = stickerObj.x;
+            let currentY = stickerObj.y;
+            
+            element.addEventListener('mousedown', dragStart);
+            element.addEventListener('touchstart', dragStart, { passive: false });
+
+            function dragStart(e) {
+                if (plannerState.stylusEnabled) return; // Ignore drag triggers when drawing
+                if (e.target.closest('.sticker-delete-btn')) return;
+
+                document.querySelectorAll('.sticker').forEach(st => st.classList.remove('sticker-active'));
+                element.classList.add('sticker-active');
+
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+                startX = clientX - currentX;
+                startY = clientY - currentY;
+
+                document.addEventListener('mousemove', dragging);
+                document.addEventListener('mouseup', dragEnd);
+                document.addEventListener('touchmove', dragging, { passive: false });
+                document.addEventListener('touchend', dragEnd);
+            }
+
+            function dragging(e) {
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+                currentX = clientX - startX;
+                currentY = clientY - startY;
+
+                const parent = document.getElementById('planner-sheet');
+                if (parent) {
+                    const maxW = parent.clientWidth - 50;
+                    const maxH = parent.clientHeight - 50;
+                    
+                    if (currentX < 0) currentX = 0;
+                    if (currentY < 0) currentY = 0;
+                    if (currentX > maxW) currentX = maxW;
+                    if (currentY > maxH) currentY = maxH;
+                }
+
+                element.style.left = `${currentX}px`;
+                element.style.top = `${currentY}px`;
+            }
+
+            function dragEnd() {
+                document.removeEventListener('mousemove', dragging);
+                document.removeEventListener('mouseup', dragEnd);
+                document.removeEventListener('touchmove', dragging);
+                document.removeEventListener('touchend', dragEnd);
+                
+                const currentBoardKey = `stickers_${plannerState.activePage}`;
+                plannerState[currentBoardKey] = plannerState[currentBoardKey].map(st => {
+                    if (st.id === stickerObj.id) {
+                        return { ...st, x: currentX, y: currentY };
+                    }
+                    return st;
+                });
+                saveAllData();
+            }
+
+            stickerBoard.appendChild(element);
+        }
+
+        document.addEventListener('mousedown', (e) => {
+            if (!e.target.closest('.sticker')) {
+                document.querySelectorAll('.sticker').forEach(st => st.classList.remove('sticker-active'));
+            }
+        });
+
+        function deleteSticker(id, event) {
+            event.stopPropagation();
+            const currentBoardKey = `stickers_${plannerState.activePage}`;
+            plannerState[currentBoardKey] = plannerState[currentBoardKey].filter(st => st.id !== id);
+            const element = document.getElementById(`sticker-${id}`);
+            if (element) element.remove();
+            saveAllData();
+        }
+
+        // ================= COZY AUTO-SAVE DATABASE PERSISTENCE =================
+        function saveAllData() {
+            if (!plannerState.savingStickers) {
+                plannerState.savingStickers = [];
+            }
+            if (notesContent) plannerState.notes = notesContent.value;
+            if (goal1Input && goal2Input && goal3Input) {
+                plannerState.goals = [
+                    goal1Input.value,
+                    goal2Input.value,
+                    goal3Input.value
+                ];
+            }
+            if (priority1Input && priority2Input && priority3Input) {
+                plannerState.priorities = [
+                    priority1Input.value,
+                    priority2Input.value,
+                    priority3Input.value
+                ];
+            }
+
+            if (weeklyFocusBox) plannerState.weeklyFocus = weeklyFocusBox.value;
+            
+            const monEl = document.getElementById('week-day-mon');
+            const tueEl = document.getElementById('week-day-tue');
+            const wedEl = document.getElementById('week-day-wed');
+            const thuEl = document.getElementById('week-day-thu');
+            const friEl = document.getElementById('week-day-fri');
+            const weekendEl = document.getElementById('week-day-weekend');
+
+            plannerState.weekNotes = {
+                mon: monEl ? monEl.value : "",
+                tue: tueEl ? tueEl.value : "",
+                wed: wedEl ? wedEl.value : "",
+                thu: thuEl ? thuEl.value : "",
+                fri: friEl ? friEl.value : "",
+                weekend: weekendEl ? weekendEl.value : ""
+            };
+
+            const mealKeys = [
+                "mon-b", "mon-l", "mon-d",
+                "tue-b", "tue-l", "tue-d",
+                "wed-b", "wed-l", "wed-d",
+                "thu-b", "thu-l", "thu-d",
+                "fri-b", "fri-l", "fri-d",
+                "sat-b", "sat-l", "sat-d",
+                "sun-b", "sun-l", "sun-d"
+            ];
+            mealKeys.forEach(k => {
+                const el = document.getElementById(`meal-${k}`);
+                if (el) plannerState.meals[k] = el.value;
+            });
+
+            // Write updated state structures to Local Storage
+            localStorage.setItem('kawaii_digital_binder_state_2026', JSON.stringify(plannerState));
+        }
+
+        function loadPlannerFromStorage() {
+            const data = localStorage.getItem('kawaii_digital_binder_state_2026');
+            if (data) {
+                try {
+                    const parsed = JSON.parse(data);
+                    plannerState = { ...plannerState, ...parsed };
+                    if (!plannerState.savingStickers) {
+                        plannerState.savingStickers = [];
+                    }
+                    if (!plannerState.canvasSnapshots) {
+                        plannerState.canvasSnapshots = { 1: null, 2: null, 3: null, 4: null, 5: null };
+                    }
+                } catch(e) {
+                    console.error("Local recovery error, rebuilding...", e);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
