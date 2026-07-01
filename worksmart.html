@@ -1,0 +1,1653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productivity Planner - Premium Cloud Edition</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for premium serif and modern sans-serif typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for high-quality planner icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0b0c10;
+        }
+        .serif-title {
+            font-family: 'Cinzel', serif;
+        }
+        /* Custom scrollbar to keep layout extremely clean */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111318;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c5a850;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #e5c060;
+        }
+        /* Premium subtle metallic glow */
+        .gold-glow {
+            box-shadow: 0 0 15px rgba(197, 168, 80, 0.15);
+        }
+        .gold-border-focus:focus {
+            outline: none;
+            border-color: #c5a850;
+            box-shadow: 0 0 10px rgba(197, 168, 80, 0.3);
+        }
+    </style>
+</head>
+<body class="text-neutral-100 min-h-screen flex flex-col justify-between">
+
+    <!-- Top Decorative Line -->
+    <div class="h-1.5 w-full bg-gradient-to-r from-yellow-700 via-[#c5a850] to-yellow-700"></div>
+
+    <!-- MAIN APP CONTAINER -->
+    <main class="flex-grow flex flex-col items-center justify-center p-4 sm:p-6 md:p-8">
+
+        <!-- ================= AUTHENTICATION VIEW ================= -->
+        <div id="authContainer" class="w-full max-w-md bg-neutral-900 border border-[#c5a850]/30 rounded-2xl p-6 sm:p-8 gold-glow transition-all duration-300">
+            <!-- Language Switcher in Login Screen -->
+            <div class="flex justify-end mb-2">
+                <div class="flex items-center gap-1 bg-neutral-950 border border-neutral-800 p-1 rounded-xl">
+                    <button onclick="switchLanguage('en')" id="auth-lang-en" class="px-2 py-0.5 rounded text-[10px] font-bold transition-all bg-[#c5a850] text-neutral-950">EN</button>
+                    <button onclick="switchLanguage('ms')" id="auth-lang-ms" class="px-2 py-0.5 rounded text-[10px] font-bold transition-all text-neutral-400 hover:text-white">BM</button>
+                </div>
+            </div>
+
+            <div class="text-center mb-6">
+                <h1 class="serif-title text-2xl sm:text-3xl font-bold tracking-wider text-amber-100" data-i18n="app_title">PRODUCTIVITY PLANNER</h1>
+                <p class="text-xs text-neutral-400 mt-1" data-i18n="app_subtitle">Sleek Digital Organization System (2026 - 2028)</p>
+            </div>
+
+            <!-- TAB SWITCHER (SIGN IN / SIGN UP) -->
+            <div class="flex border-b border-neutral-800 mb-6" id="authTabs">
+                <button onclick="switchAuthTab('signin')" id="tab-signin" class="w-1/2 pb-3 text-center border-b-2 border-[#c5a850] text-[#c5a850] font-semibold transition-all" data-i18n="signin_tab">Sign In</button>
+                <button onclick="switchAuthTab('signup')" id="tab-signup" class="w-1/2 pb-3 text-center border-b-2 border-transparent text-neutral-400 hover:text-neutral-200 transition-all" data-i18n="signup_tab">Sign Up</button>
+            </div>
+
+            <!-- SIGN IN FORM -->
+            <form id="signInForm" onsubmit="handleSignIn(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium uppercase tracking-wider text-neutral-300 mb-1.5" data-i18n="username_lbl">Username</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-500">
+                            <i class="fa-solid fa-user text-xs"></i>
+                        </span>
+                        <input type="text" id="signInUsername" required class="w-full bg-neutral-950 border border-neutral-800 rounded-lg py-2 pl-9 pr-4 text-sm text-white placeholder-neutral-600 gold-border-focus transition-all" data-i18n-placeholder="username_placeholder" placeholder="Enter username">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium uppercase tracking-wider text-neutral-300 mb-1.5" data-i18n="password_lbl">Password</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-500">
+                            <i class="fa-solid fa-lock text-xs"></i>
+                        </span>
+                        <input type="password" id="signInPassword" required class="w-full bg-neutral-950 border border-neutral-800 rounded-lg py-2 pl-9 pr-4 text-sm text-white placeholder-neutral-600 gold-border-focus transition-all" data-i18n-placeholder="password_placeholder" placeholder="Enter password">
+                    </div>
+                </div>
+                
+                <button type="submit" class="w-full bg-gradient-to-r from-amber-600 to-[#c5a850] hover:from-amber-500 hover:to-amber-400 text-neutral-950 font-bold py-2.5 rounded-lg text-sm transition-all shadow-md hover:shadow-[#c5a850]/20 flex items-center justify-center gap-1.5">
+                    <span data-i18n="btn_access">ACCESS PLANNER</span> <i class="fa-solid fa-arrow-right-to-bracket ml-1"></i>
+                </button>
+            </form>
+
+            <!-- SIGN UP FORM (HIDDEN BY DEFAULT) -->
+            <form id="signUpForm" onsubmit="handleSignUp(event)" class="space-y-4 hidden">
+                <div>
+                    <label class="block text-xs font-medium uppercase tracking-wider text-neutral-300 mb-1.5" data-i18n="username_lbl">Choose Username</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-500">
+                            <i class="fa-solid fa-user text-xs"></i>
+                        </span>
+                        <input type="text" id="signUpUsername" required class="w-full bg-neutral-950 border border-neutral-800 rounded-lg py-2 pl-9 pr-4 text-sm text-white placeholder-neutral-600 gold-border-focus transition-all" data-i18n-placeholder="username_signup_placeholder" placeholder="Create username">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium uppercase tracking-wider text-neutral-300 mb-1.5" data-i18n="password_lbl">Set Password</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-500">
+                            <i class="fa-solid fa-lock text-xs"></i>
+                        </span>
+                        <input type="password" id="signUpPassword" required class="w-full bg-neutral-950 border border-neutral-800 rounded-lg py-2 pl-9 pr-4 text-sm text-white placeholder-neutral-600 gold-border-focus transition-all" data-i18n-placeholder="password_signup_placeholder" placeholder="Create strong password">
+                    </div>
+                </div>
+                
+                <button type="submit" class="w-full bg-gradient-to-r from-amber-600 to-[#c5a850] hover:from-amber-500 hover:to-amber-400 text-neutral-950 font-bold py-2.5 rounded-lg text-sm transition-all shadow-md flex items-center justify-center gap-1.5">
+                    <span data-i18n="btn_create">CREATE ACCOUNT</span> <i class="fa-solid fa-user-plus ml-1"></i>
+                </button>
+            </form>
+
+            <!-- RECOVERY / FORGOT CREDENTIALS AREA -->
+            <div class="mt-6 pt-4 border-t border-neutral-800 text-center">
+                <button onclick="toggleRecoverySection()" class="text-xs text-neutral-400 hover:text-[#c5a850] underline transition-all" data-i18n="forgot_creds">
+                    Forgot username or password?
+                </button>
+                
+                <!-- Hidden Recovery Panel -->
+                <div id="recoveryPanel" class="mt-4 p-4 bg-neutral-950 border border-amber-500/20 rounded-xl hidden text-left space-y-3">
+                    <p class="text-xs text-neutral-300 leading-relaxed">
+                        <span class="text-[#c5a850] font-semibold"><i class="fa-solid fa-key mr-1"></i>Emergency Bypass System:</span> 
+                        <span data-i18n="emergency_bypass">Use the auto-generated temporary code below to log in instantly.</span>
+                    </p>
+                    
+                    <!-- Code Display -->
+                    <div class="flex items-center justify-between bg-neutral-900 border border-neutral-800 px-3 py-2 rounded-lg">
+                        <span class="text-xs font-mono text-neutral-400" data-i18n="temp_code">Temporary Code:</span>
+                        <span id="tempCodeDisplay" class="font-mono text-base font-bold text-[#c5a850] tracking-widest">---</span>
+                        <button onclick="regenerateTempCode()" class="text-neutral-400 hover:text-white" title="Generate New Code">
+                            <i class="fa-solid fa-rotate-right text-xs"></i>
+                        </button>
+                    </div>
+
+                    <!-- Input verification -->
+                    <div class="space-y-2">
+                        <input type="text" id="recoveryCodeInput" class="w-full bg-neutral-900 border border-neutral-800 rounded-lg py-1.5 px-3 text-xs text-center text-white placeholder-neutral-600 font-mono tracking-widest" placeholder="Type temporary code">
+                        <button onclick="verifyRecoveryCode()" class="w-full bg-neutral-800 hover:bg-[#c5a850] hover:text-neutral-950 text-neutral-300 font-bold py-1.5 rounded-lg text-xs transition-all uppercase tracking-wider" data-i18n="verify_enter">
+                            Verify & Enter
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= MAIN APP / DASHBOARD VIEW (HIDDEN BY DEFAULT) ================= -->
+        <div id="appContainer" class="w-full max-w-7xl bg-neutral-900/60 border border-[#c5a850]/20 rounded-2xl gold-glow transition-all duration-300 hidden flex flex-col overflow-hidden">
+            
+            <!-- Dashboard Header -->
+            <header class="bg-neutral-950 p-4 sm:p-6 border-b border-[#c5a850]/20 flex flex-col lg:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <div>
+                        <h1 class="serif-title text-xl sm:text-2xl font-bold tracking-wider text-amber-100 flex items-center gap-2">
+                            <span data-i18n="app_title">PRODUCTIVITY PLANNER</span> <span class="text-xs bg-[#c5a850]/20 text-[#c5a850] border border-[#c5a850]/30 py-0.5 px-2 rounded-full font-sans tracking-normal" data-i18n="cloud_system">CLOUD SYSTEM</span>
+                        </h1>
+                        <p class="text-xs text-neutral-400"><span data-i18n="active_planner">Active Planner:</span> <span id="currentUserLabel" class="text-[#c5a850] font-semibold">Guest</span></p>
+                    </div>
+                </div>
+
+                <!-- Main Tabs Navigation -->
+                <nav class="flex flex-wrap gap-1.5 bg-neutral-900 p-1 rounded-xl border border-neutral-800" id="mainNavigation">
+                    <button onclick="switchPlannerTab('today')" id="btn-tab-today" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#c5a850] text-neutral-950 transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-calendar-day"></i> <span data-i18n="tab_today">Today</span>
+                    </button>
+                    <button onclick="switchPlannerTab('weekly')" id="btn-tab-weekly" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800 transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-calendar-week"></i> <span data-i18n="tab_weekly">Weekly Overview</span>
+                    </button>
+                    <button onclick="switchPlannerTab('habits')" id="btn-tab-habits" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800 transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-check"></i> <span data-i18n="tab_habits">Habit Tracker</span>
+                    </button>
+                    <button onclick="switchPlannerTab('routine')" id="btn-tab-routine" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800 transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-clock"></i> <span data-i18n="tab_routine">Routines & Lists</span>
+                    </button>
+                </nav>
+
+                <!-- Language Selector + Logout / Cloud Status Controls -->
+                <div class="flex items-center gap-2 flex-wrap">
+                    <!-- Workspace Language Switcher -->
+                    <div class="flex items-center gap-1 bg-neutral-900 border border-neutral-800 p-1 rounded-xl mr-1">
+                        <button onclick="switchLanguage('en')" id="app-lang-en" class="px-2 py-1 rounded text-[10px] font-bold transition-all bg-[#c5a850] text-neutral-950">EN</button>
+                        <button onclick="switchLanguage('ms')" id="app-lang-ms" class="px-2 py-1 rounded text-[10px] font-bold transition-all text-neutral-400 hover:text-white">BM</button>
+                    </div>
+
+                    <div id="cloudStatusIndicator" class="text-xs text-neutral-400 flex items-center gap-1.5 mr-2 bg-neutral-900/80 px-2.5 py-1 rounded-lg border border-neutral-800">
+                        <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" id="statusDot"></span>
+                        <span id="statusText" data-i18n="status_connected">Cloud Connected</span>
+                    </div>
+                    <button onclick="triggerCloudSave()" class="bg-[#c5a850] hover:bg-amber-400 text-neutral-950 text-xs font-bold py-1.5 px-3 rounded-lg transition-all flex items-center gap-1 shadow-md">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> <span data-i18n="btn_save">Save Progress</span>
+                    </button>
+                    <button onclick="handleSignOut()" class="bg-neutral-900 hover:bg-red-950/40 text-neutral-400 hover:text-red-400 border border-neutral-800 hover:border-red-900/50 text-xs font-semibold py-1.5 px-3 rounded-lg transition-all">
+                        <i class="fa-solid fa-right-from-bracket"></i> <span data-i18n="btn_logout">Logout</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- DYNAMIC CALENDAR SELECTOR BAR (2026 - 2028 Support) -->
+            <div class="bg-neutral-950/80 border-b border-neutral-800/80 px-4 sm:px-6 py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div class="flex items-center gap-2">
+                    <button onclick="adjustActiveDate(-1)" class="w-8 h-8 rounded-lg bg-neutral-900 border border-neutral-800 hover:border-[#c5a850] text-[#c5a850] flex items-center justify-center transition-all">
+                        <i class="fa-solid fa-chevron-left text-xs"></i>
+                    </button>
+                    
+                    <div class="flex items-center gap-1.5 bg-neutral-900 border border-neutral-800 px-3 py-1 rounded-xl">
+                        <i class="fa-solid fa-calendar text-[#c5a850] text-xs"></i>
+                        <input type="date" id="mainDatePicker" min="2026-01-01" max="2028-12-31" onchange="handleDatePickerChange(this.value)" class="bg-transparent border-none text-xs text-white font-mono focus:ring-0 focus:outline-none cursor-pointer">
+                    </div>
+
+                    <button onclick="adjustActiveDate(1)" class="w-8 h-8 rounded-lg bg-neutral-900 border border-neutral-800 hover:border-[#c5a850] text-[#c5a850] flex items-center justify-center transition-all">
+                        <i class="fa-solid fa-chevron-right text-xs"></i>
+                    </button>
+                </div>
+
+                <div class="text-xs text-neutral-400 bg-neutral-900/40 px-3 py-1 rounded-lg border border-neutral-800/60 font-mono">
+                    <span data-i18n="selected_week">Selected Week:</span> <span id="activeWeekLabel" class="text-amber-100 font-semibold">-</span>
+                </div>
+            </div>
+
+            <!-- Main Content Grid -->
+            <div class="p-4 sm:p-6 overflow-y-auto max-h-[70vh]">
+                
+                <!-- ================= TODAY'S PLANNER TAB ================= -->
+                <section id="planner-today" class="space-y-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                        
+                        <!-- Left Panel: Today's Schedule (8:00 AM - 10:00 PM) -->
+                        <div class="lg:col-span-6 bg-neutral-950/75 border border-neutral-800 rounded-2xl p-4 sm:p-5">
+                            <div class="flex justify-between items-center mb-4 border-b border-neutral-800 pb-3 flex-wrap gap-2">
+                                <h2 class="serif-title text-base font-bold text-amber-100 flex items-center gap-2">
+                                    <i class="fa-solid fa-business-time text-[#c5a850]"></i> <span data-i18n="todays_schedule">TODAY'S SCHEDULE</span>
+                                </h2>
+                                <button onclick="addNewScheduleRow()" class="text-xs bg-[#c5a850]/10 border border-[#c5a850]/20 text-[#c5a850] px-2.5 py-1 rounded-lg hover:bg-[#c5a850]/20 transition-all flex items-center gap-1">
+                                    <i class="fa-solid fa-plus text-[10px]"></i> <span data-i18n="btn_slot">Slot</span>
+                                </button>
+                            </div>
+
+                            <p class="text-[10px] text-neutral-400 mb-3" data-i18n="schedule_tip"><i class="fa-solid fa-circle-info mr-1"></i> Tip: Click the icon badge next to any time block to cycle through 💼 Work, 🌱 Personal, 🌙 Evening, or ◯ Neutral.</p>
+
+                            <!-- Interactive Schedule Blocks -->
+                            <div class="space-y-2 max-h-[600px] overflow-y-auto pr-1" id="scheduleBlocksContainer">
+                                <!-- Generated Dynamically with Editable Time and Details -->
+                            </div>
+                        </div>
+
+                        <!-- Right Panel: Priorities, Goals, Focus & ADHD Brain Dump -->
+                        <div class="lg:col-span-6 space-y-6">
+                            
+                            <!-- Priorities & Goals Card -->
+                            <div class="bg-neutral-950/75 border border-neutral-800 rounded-2xl p-4 sm:p-5">
+                                <h2 class="serif-title text-base font-bold text-amber-100 flex items-center gap-2 mb-4 border-b border-neutral-800 pb-2">
+                                    <i class="fa-solid fa-list-check text-[#c5a850]"></i> <span data-i18n="priorities_goals">PRIORITIES & GOALS</span>
+                                </h2>
+                                
+                                <div class="space-y-3">
+                                    <!-- Goal Field -->
+                                    <div>
+                                        <label class="block text-xs uppercase tracking-wider text-neutral-400 mb-1" data-i18n="ultimate_goal_lbl">Today's Ultimate Goal</label>
+                                        <input type="text" id="todayUltimateGoal" oninput="markAsUnsaved()" class="w-full bg-neutral-900 border border-neutral-800 rounded-lg py-1.5 px-3 text-sm text-white focus:border-[#c5a850] outline-none" data-i18n-placeholder="ultimate_goal_placeholder" placeholder="e.g. Complete high-fidelity client presentation">
+                                    </div>
+
+                                    <!-- Priority List -->
+                                    <div class="space-y-2 mt-3">
+                                        <label class="block text-xs uppercase tracking-wider text-neutral-400" data-i18n="core_priorities_lbl">Core Priorities</label>
+                                        <div id="prioritiesContainer" class="space-y-2">
+                                            <!-- Dynamically generated list of priorities -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ADHD-Inspired Brain Dump & Self Care -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-neutral-950/75 border border-neutral-800 rounded-2xl p-4">
+                                    <h3 class="serif-title text-xs font-bold text-amber-100 flex items-center gap-1.5 mb-2.5">
+                                        <i class="fa-solid fa-brain text-[#c5a850]"></i> <span data-i18n="brain_dump_lbl">BRAIN DUMP (IMG_20260630_193628.jpg)</span>
+                                    </h3>
+                                    <textarea id="brainDumpArea" oninput="markAsUnsaved()" class="w-full h-32 bg-neutral-900 border border-neutral-800 rounded-xl p-2.5 text-xs text-white placeholder-neutral-600 focus:border-[#c5a850] outline-none resize-none leading-relaxed" data-i18n-placeholder="brain_dump_placeholder" placeholder="Get everything out here... random ideas, lingering thoughts, clutter."></textarea>
+                                </div>
+
+                                <div class="bg-neutral-950/75 border border-neutral-800 rounded-2xl p-4">
+                                    <h3 class="serif-title text-xs font-bold text-amber-100 flex items-center gap-1.5 mb-2.5">
+                                        <i class="fa-solid fa-heart-pulse text-[#c5a850]"></i> <span data-i18n="self_care_lbl">SELF CARE & FOCUS</span>
+                                    </h3>
+                                    <div class="space-y-2" id="selfCareContainer">
+                                        <!-- Dynamically generated checkboxes -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Focus & Win Section -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-neutral-950/75 border border-neutral-800 rounded-2xl p-4">
+                                    <label class="block text-xs uppercase tracking-wider text-neutral-400 mb-1 font-semibold" data-i18n="focus_day_lbl">Focus of the Day</label>
+                                    <input type="text" id="focusOfDay" oninput="markAsUnsaved()" class="w-full bg-neutral-900 border border-neutral-800 rounded-lg py-1.5 px-3 text-xs text-white focus:border-[#c5a850] outline-none" data-i18n-placeholder="focus_day_placeholder" placeholder="Deep work, client alignment, etc.">
+                                </div>
+                                <div class="bg-neutral-950/75 border border-neutral-800 rounded-2xl p-4">
+                                    <label class="block text-xs uppercase tracking-wider text-neutral-400 mb-1 font-semibold" data-i18n="biggest_win_lbl">Biggest Today's Win</label>
+                                    <input type="text" id="biggestWin" oninput="markAsUnsaved()" class="w-full bg-neutral-900 border border-neutral-800 rounded-lg py-1.5 px-3 text-xs text-white focus:border-[#c5a850] outline-none" data-i18n-placeholder="biggest_win_placeholder" placeholder="Key tasks completed!">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================= WEEKLY PLANNER TAB ================= -->
+                <section id="planner-weekly" class="space-y-6 hidden">
+                    <div class="bg-neutral-950/75 border border-neutral-800 rounded-2xl p-4 sm:p-6">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-2">
+                            <div>
+                                <h2 class="serif-title text-lg font-bold text-amber-100 flex items-center gap-2">
+                                    <i class="fa-solid fa-calendar-week text-[#c5a850]"></i> <span data-i18n="weekly_planner_title">WEEKLY PLANNER (2026 - 2028)</span>
+                                </h2>
+                                <p class="text-xs text-neutral-400" data-i18n="weekly_planner_sub">Strategize work, personal tasks, and notes across your entire week</p>
+                            </div>
+                        </div>
+
+                        <!-- Weekly Grid -->
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse min-w-[700px]">
+                                <thead>
+                                    <tr class="border-b border-neutral-800 text-xs font-semibold uppercase text-neutral-400 bg-neutral-900/60">
+                                        <th class="py-3 px-4 w-[120px]" data-i18n="col_day">Day</th>
+                                        <th class="py-3 px-4" data-i18n="col_work">Work Priorities</th>
+                                        <th class="py-3 px-4" data-i18n="col_personal">Personal / Wellness</th>
+                                        <th class="py-3 px-4" data-i18n="col_notes">Weekly Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-neutral-800/60" id="weeklyTableBody">
+                                    <!-- Populated dynamically via Javascript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================= HABIT TRACKER TAB ================= -->
+                <section id="planner-habits" class="space-y-6 hidden">
+                    <div class="bg-neutral-950/75 border border-neutral-800 rounded-2xl p-4 sm:p-6">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-2">
+                            <div>
+                                <h2 class="serif-title text-lg font-bold text-amber-100 flex items-center gap-2">
+                                    <i class="fa-solid fa-heart text-[#c5a850]"></i> <span data-i18n="habit_tracker_title">HABIT TRACKER</span>
+                                </h2>
+                                <p class="text-xs text-neutral-400" data-i18n="habit_tracker_sub">Consistency breeds mastery. Tick off daily routines.</p>
+                            </div>
+                            <!-- Add Habit Button -->
+                            <button onclick="addNewHabit()" class="bg-[#c5a850] hover:bg-amber-400 text-neutral-950 text-xs font-bold px-3 py-1.5 rounded-lg transition-all flex items-center gap-1 shadow">
+                                <i class="fa-solid fa-plus"></i> <span data-i18n="btn_add_habit">Add New Habit</span>
+                            </button>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse min-w-[600px]">
+                                <thead>
+                                    <tr class="border-b border-neutral-800 text-xs font-semibold uppercase text-neutral-400 bg-neutral-900/40">
+                                        <th class="py-3 px-4" data-i18n="col_habit_name">Habit Name</th>
+                                        <th class="py-3 px-2 text-center w-12" id="habit-hdr-m">M</th>
+                                        <th class="py-3 px-2 text-center w-12" id="habit-hdr-t">T</th>
+                                        <th class="py-3 px-2 text-center w-12" id="habit-hdr-w">W</th>
+                                        <th class="py-3 px-2 text-center w-12" id="habit-hdr-th">T</th>
+                                        <th class="py-3 px-2 text-center w-12" id="habit-hdr-f">F</th>
+                                        <th class="py-3 px-2 text-center w-12" id="habit-hdr-s">S</th>
+                                        <th class="py-3 px-2 text-center w-12" id="habit-hdr-su">S</th>
+                                        <th class="py-3 px-4 text-center w-16" data-i18n="col_action">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-neutral-800" id="habitsTableBody">
+                                    <!-- Populated dynamically via Javascript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================= ROUTINES & PRIORITIES TAB ================= -->
+                <section id="planner-routine" class="space-y-6 hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        
+                        <!-- Must get done today -->
+                        <div class="bg-neutral-950/75 border border-neutral-800 rounded-2xl p-4 sm:p-5 flex flex-col justify-between">
+                            <div>
+                                <h3 class="serif-title text-sm font-bold text-amber-100 flex items-center gap-2 mb-3 pb-2 border-b border-neutral-800">
+                                    <i class="fa-solid fa-triangle-exclamation text-[#c5a850]"></i> <span data-i18n="must_get_done">MUST GET DONE TODAY</span>
+                                </h3>
+                                <ul id="mustGetDoneList" class="space-y-2 mb-4">
+                                    <!-- Dynamic elements -->
+                                </ul>
+                            </div>
+                            <div class="flex gap-2">
+                                <input type="text" id="mustGetDoneInput" class="w-full bg-neutral-900 border border-neutral-800 rounded-lg py-1 px-2.5 text-xs text-white placeholder-neutral-600 focus:border-[#c5a850] outline-none" data-i18n-placeholder="must_get_done_placeholder" placeholder="Add essential task...">
+                                <button onclick="addRoutineItem('mustGetDone')" class="bg-[#c5a850] hover:bg-amber-400 text-neutral-950 px-3 py-1 rounded-lg text-xs font-bold transition-all"><i class="fa-solid fa-plus"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- If I have time -->
+                        <div class="bg-neutral-950/75 border border-neutral-800 rounded-2xl p-4 sm:p-5 flex flex-col justify-between">
+                            <div>
+                                <h3 class="serif-title text-sm font-bold text-amber-100 flex items-center gap-2 mb-3 pb-2 border-b border-neutral-800">
+                                    <i class="fa-solid fa-hourglass-half text-[#c5a850]"></i> <span data-i18n="if_have_time">IF I HAVE TIME</span>
+                                </h3>
+                                <ul id="ifHaveTimeList" class="space-y-2 mb-4">
+                                    <!-- Dynamic elements -->
+                                </ul>
+                            </div>
+                            <div class="flex gap-2">
+                                <input type="text" id="ifHaveTimeInput" class="w-full bg-neutral-900 border border-neutral-800 rounded-lg py-1 px-2.5 text-xs text-white placeholder-neutral-600 focus:border-[#c5a850] outline-none" data-i18n-placeholder="if_have_time_placeholder" placeholder="Add dynamic task...">
+                                <button onclick="addRoutineItem('ifHaveTime')" class="bg-[#c5a850] hover:bg-amber-400 text-neutral-950 px-3 py-1 rounded-lg text-xs font-bold transition-all"><i class="fa-solid fa-plus"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- If can wait -->
+                        <div class="bg-neutral-950/75 border border-neutral-800 rounded-2xl p-4 sm:p-5 flex flex-col justify-between">
+                            <div>
+                                <h3 class="serif-title text-sm font-bold text-amber-100 flex items-center gap-2 mb-3 pb-2 border-b border-neutral-800">
+                                    <i class="fa-solid fa-calendar-days text-[#c5a850]"></i> <span data-i18n="if_can_wait">IF CAN WAIT</span>
+                                </h3>
+                                <ul id="ifCanWaitList" class="space-y-2 mb-4">
+                                    <!-- Dynamic elements -->
+                                </ul>
+                            </div>
+                            <div class="flex gap-2">
+                                <input type="text" id="ifCanWaitInput" class="w-full bg-neutral-900 border border-neutral-800 rounded-lg py-1 px-2.5 text-xs text-white placeholder-neutral-600 focus:border-[#c5a850] outline-none" data-i18n-placeholder="if_can_wait_placeholder" placeholder="Add secondary task...">
+                                <button onclick="addRoutineItem('ifCanWait')" class="bg-[#c5a850] hover:bg-amber-400 text-neutral-950 px-3 py-1 rounded-lg text-xs font-bold transition-all"><i class="fa-solid fa-plus"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- Call / Email / Texts -->
+                        <div class="bg-neutral-950/75 border border-neutral-800 rounded-2xl p-4 sm:p-5 flex flex-col justify-between lg:col-span-2">
+                            <div>
+                                <h3 class="serif-title text-sm font-bold text-amber-100 flex items-center gap-2 mb-3 pb-2 border-b border-neutral-800">
+                                    <i class="fa-solid fa-phone-volume text-[#c5a850]"></i> <span data-i18n="comms">CALLS, EMAILS & TEXTS</span>
+                                </h3>
+                                <ul id="commsList" class="space-y-2 mb-4">
+                                    <!-- Dynamic elements -->
+                                </ul>
+                            </div>
+                            <div class="flex gap-2">
+                                <input type="text" id="commsInput" class="w-full bg-neutral-900 border border-neutral-800 rounded-lg py-1.5 px-3 text-xs text-white placeholder-neutral-600 focus:border-[#c5a850] outline-none" data-i18n-placeholder="comms_placeholder" placeholder="e.g. Email PM Draft, Reply to HR...">
+                                <button onclick="addRoutineItem('comms')" class="bg-[#c5a850] hover:bg-amber-400 text-neutral-950 px-4 py-1.5 rounded-lg text-xs font-bold transition-all"><i class="fa-solid fa-plus"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- Mini To-Do with Checkbox list -->
+                        <div class="bg-neutral-950/75 border border-neutral-800 rounded-2xl p-4 sm:p-5 flex flex-col justify-between">
+                            <div>
+                                <h3 class="serif-title text-sm font-bold text-amber-100 flex items-center gap-2 mb-3 pb-2 border-b border-neutral-800">
+                                    <i class="fa-solid fa-clipboard-list-check text-[#c5a850]"></i> <span data-i18n="quick_checklist">QUICK CHECKLIST</span>
+                                </h3>
+                                <ul id="quickChecklist" class="space-y-2 mb-4">
+                                    <!-- Dynamic items -->
+                                </ul>
+                            </div>
+                            <div class="flex gap-2">
+                                <input type="text" id="quickCheckInput" class="w-full bg-neutral-900 border border-neutral-800 rounded-lg py-1.5 px-3 text-xs text-white placeholder-neutral-600 focus:border-[#c5a850] outline-none" data-i18n-placeholder="quick_checklist_placeholder" placeholder="Quick checklist item...">
+                                <button onclick="addRoutineItem('quickCheck')" class="bg-[#c5a850] hover:bg-amber-400 text-neutral-950 px-4 py-1.5 rounded-lg text-xs font-bold transition-all"><i class="fa-solid fa-plus"></i></button>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- Dashboard Footer -->
+            <footer class="bg-neutral-950/80 border-t border-neutral-800 p-4 flex flex-col sm:flex-row justify-between items-center text-xs text-neutral-400 gap-2">
+                <div class="flex items-center gap-2">
+                    <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span data-i18n="footer_active">All-in-One Cloud Workstation Activated</span>
+                </div>
+                <div>
+                    <span class="text-neutral-500 font-sans text-xs" data-i18n="footer_brand">Productivity Planner Platform</span>
+                </div>
+            </footer>
+        </div>
+
+    </main>
+
+    <!-- Custom Notification/Message Box Area -->
+    <div id="toastNotification" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="bg-neutral-900 border border-[#c5a850] text-amber-100 px-4 py-3 rounded-xl shadow-lg flex items-center gap-2 text-sm">
+            <i id="toastIcon" class="fa-solid fa-circle-info text-[#c5a850]"></i>
+            <span id="toastMessage">Welcome back!</span>
+        </div>
+    </div>
+
+    <!-- Bottom premium bar info -->
+    <div class="bg-neutral-950 py-3 text-center text-xs text-neutral-500 border-t border-neutral-900">
+        &copy; 2026 Productivity Planner. Built with Precision & Excellence.
+    </div>
+
+    <!-- FIREBASE CLIENT MODULES -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global context and keys
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'productivity-planner-allinone';
+        
+        let firebaseConfig = {};
+        if (typeof __firebase_config !== 'undefined') {
+            try {
+                firebaseConfig = JSON.parse(__firebase_config);
+            } catch (e) {
+                console.error("Failed to parse firebase config, using sandbox placeholders.", e);
+            }
+        }
+
+        let app, db, auth;
+        let isCloudActive = false;
+
+        // Initialize Firebase if configuration parameters exist
+        if (firebaseConfig && firebaseConfig.apiKey) {
+            try {
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+                isCloudActive = true;
+            } catch (e) {
+                console.error("Firebase startup error. Local database fallback loaded.", e);
+            }
+        }
+
+        let currentLanguage = localStorage.getItem('prod_planner_language') || 'en';
+
+        const translations = {
+            en: {
+                app_title: "PRODUCTIVITY PLANNER",
+                app_subtitle: "Sleek Digital Organization System (2026 - 2028)",
+                signin_tab: "Sign In",
+                signup_tab: "Sign Up",
+                username_lbl: "Username",
+                username_placeholder: "Enter username",
+                username_signup_placeholder: "Create username",
+                password_lbl: "Password",
+                password_placeholder: "Enter password",
+                password_signup_placeholder: "Create strong password",
+                btn_access: "ACCESS PLANNER",
+                btn_create: "CREATE ACCOUNT",
+                forgot_creds: "Forgot username or password?",
+                emergency_bypass: "Use the auto-generated temporary code below to log in instantly.",
+                temp_code: "Temporary Code:",
+                verify_enter: "Verify & Enter",
+                active_planner: "Active Planner:",
+                cloud_system: "CLOUD SYSTEM",
+                status_connected: "Cloud Connected",
+                status_connecting: "Connecting to Cloud...",
+                status_secure: "Cloud Core Secure",
+                status_error: "Cloud Error / Offline",
+                status_offline: "Offline Fallback",
+                status_unsaved: "Unsaved Changes Exist",
+                status_saved: "Cloud Saved Successfully",
+                status_local: "Saved Locally (No Cloud Config)",
+                btn_save: "Save Progress",
+                btn_logout: "Logout",
+                selected_week: "Selected Week:",
+                tab_today: "Today",
+                tab_weekly: "Weekly Overview",
+                tab_habits: "Habit Tracker",
+                tab_routine: "Routines & Lists",
+                todays_schedule: "TODAY'S SCHEDULE",
+                schedule_tip: "Tip: Click the icon badge next to any time block to cycle through 💼 Work, 🌱 Personal, 🌙 Evening, or ◯ Neutral.",
+                btn_slot: "Slot",
+                priorities_goals: "PRIORITIES & GOALS",
+                ultimate_goal_lbl: "Today's Ultimate Goal",
+                ultimate_goal_placeholder: "e.g. Complete high-fidelity client presentation",
+                core_priorities_lbl: "Core Priorities",
+                priority_placeholder: "Add custom core priority...",
+                brain_dump_lbl: "BRAIN DUMP (IMG_20260630_193628.jpg)",
+                brain_dump_placeholder: "Get everything out here... random ideas, lingering thoughts, clutter.",
+                self_care_lbl: "SELF CARE & FOCUS",
+                focus_day_lbl: "Focus of the Day",
+                focus_day_placeholder: "Deep work, client alignment, etc.",
+                biggest_win_lbl: "Biggest Today's Win",
+                biggest_win_placeholder: "Key tasks completed!",
+                weekly_planner_title: "WEEKLY PLANNER (2026 - 2028)",
+                weekly_planner_sub: "Strategize work, personal tasks, and notes across your entire week",
+                col_day: "Day",
+                col_work: "Work Priorities",
+                col_personal: "Personal / Wellness",
+                col_notes: "Weekly Notes",
+                notes_placeholder: "Add weekly notes...",
+                habit_tracker_title: "HABIT TRACKER",
+                habit_tracker_sub: "Consistency breeds mastery. Tick off daily routines.",
+                btn_add_habit: "Add New Habit",
+                col_habit_name: "Habit Name",
+                col_action: "Action",
+                must_get_done: "MUST GET DONE TODAY",
+                must_get_done_placeholder: "Add essential task...",
+                if_have_time: "IF I HAVE TIME",
+                if_have_time_placeholder: "Add dynamic task...",
+                if_can_wait: "IF CAN WAIT",
+                if_can_wait_placeholder: "Add secondary task...",
+                comms: "CALLS, EMAILS & TEXTS",
+                comms_placeholder: "e.g. Email PM Draft, Reply to HR...",
+                quick_checklist: "QUICK CHECKLIST",
+                quick_checklist_placeholder: "Quick checklist item...",
+                footer_active: "All-in-One Cloud Workstation Activated",
+                footer_brand: "Productivity Planner Platform",
+                welcome_back: "Welcome back!",
+                save_toast: "Progress Saved to Cloud ☁️",
+                save_local_toast: "Saved progress locally.",
+                logout_toast: "Logged out safely.",
+                habit_m: "M", habit_t: "T", habit_w: "W", habit_th: "T", habit_f: "F", habit_s: "S", habit_su: "S"
+            },
+            ms: {
+                app_title: "PERANCANG PRODUKTIVITI",
+                app_subtitle: "Sistem Pengurusan Digital Pintar (2026 - 2028)",
+                signin_tab: "Log Masuk",
+                signup_tab: "Daftar Akaun",
+                username_lbl: "Nama Pengguna",
+                username_placeholder: "Masukkan nama pengguna",
+                username_signup_placeholder: "Cipta nama pengguna",
+                password_lbl: "Kata Laluan",
+                password_placeholder: "Masukkan kata laluan",
+                password_signup_placeholder: "Cipta kata laluan yang kuat",
+                btn_access: "AKSES PERANCANG",
+                btn_create: "CIPTA AKAUN",
+                forgot_creds: "Lupa nama pengguna atau kata laluan?",
+                emergency_bypass: "Gunakan kod sementara yang dijana secara automatik di bawah untuk log masuk serta-merta.",
+                temp_code: "Kod Sementara:",
+                verify_enter: "Sahkan & Masuk",
+                active_planner: "Perancang Aktif:",
+                cloud_system: "SISTEM AWAN",
+                status_connected: "Awan Bersambung",
+                status_connecting: "Menghubungkan ke Awan...",
+                status_secure: "Awan Selamat & Stabil",
+                status_error: "Ralat Awan / Luar Talian",
+                status_offline: "Sandaran Luar Talian",
+                status_unsaved: "Ada Perubahan Belum Disimpan",
+                status_saved: "Berjaya Disimpan ke Awan",
+                status_local: "Disimpan secara Setempat (Tiada Konfig Awan)",
+                btn_save: "Simpan Kemajuan",
+                btn_logout: "Log Keluar",
+                selected_week: "Minggu Terpilih:",
+                tab_today: "Hari Ini",
+                tab_weekly: "Ringkasan Mingguan",
+                tab_habits: "Penjejak Tabiat",
+                tab_routine: "Rutin & Senarai",
+                todays_schedule: "JADUAL HARI INI",
+                schedule_tip: "Petua: Klik lencana ikon di sebelah mana-mana blok waktu untuk bertukar antara 💼 Kerja, 🌱 Peribadi, 🌙 Malam, atau ◯ Neutral.",
+                btn_slot: "Slot",
+                priorities_goals: "KEUTAMAAN & MATLAMAT",
+                ultimate_goal_lbl: "Matlamat Utama Hari Ini",
+                ultimate_goal_placeholder: "cth. Selesaikan pembentangan pelanggan berimpak tinggi",
+                core_priorities_lbl: "Keutamaan Teras",
+                priority_placeholder: "Tambah keutamaan teras tersuai...",
+                brain_dump_lbl: "RUANG LUAHAN MINDA (IMG_20260630_193628.jpg)",
+                brain_dump_placeholder: "Keluarkan segala-galanya di sini... idea rawak, peringatan, kekusutan fikiran.",
+                self_care_lbl: "PENJAGAAN DIRI & FOKUS",
+                focus_day_lbl: "Fokus Hari Ini",
+                focus_day_placeholder: "Kerja mendalam, penyelarasan pelanggan, dll.",
+                biggest_win_lbl: "Kejayaan Terbesar Hari Ini",
+                biggest_win_placeholder: "Tugasan utama berjaya diselesaikan!",
+                weekly_planner_title: "PERANCANG MINGGUAN (2026 - 2028)",
+                weekly_planner_sub: "Rancang strategi kerja, tugasan peribadi dan nota sepanjang minggu anda",
+                col_day: "Hari",
+                col_work: "Keutamaan Kerja",
+                col_personal: "Peribadi / Kesejahteraan",
+                col_notes: "Nota Mingguan",
+                notes_placeholder: "Tambah nota mingguan...",
+                habit_tracker_title: "PENJEJAK TABIAT",
+                habit_tracker_sub: "Konsistensi melahirkan penguasaan. Tanda rutin harian anda.",
+                btn_add_habit: "Tambah Tabiat Baru",
+                col_habit_name: "Nama Tabiat",
+                col_action: "Tindakan",
+                must_get_done: "WAJIB DISIAPKAN HARI INI",
+                must_get_done_placeholder: "Tambah tugasan penting...",
+                if_have_time: "JIKA ADA MASA",
+                if_have_time_placeholder: "Tambah tugasan dinamik...",
+                if_can_wait: "JIKA BOLEH TUNGGU",
+                if_can_wait_placeholder: "Tambah tugasan sekunder...",
+                comms: "PANGGILAN, EMEL & MESEJ",
+                comms_placeholder: "cth. Emel draf projek, balas mesej HR...",
+                quick_checklist: "SENARAI SEMAK SEGERA",
+                quick_checklist_placeholder: "Tambah senarai semak segera...",
+                footer_active: "Stesen Kerja Awan All-in-One Diaktifkan",
+                footer_brand: "Platform Perancang Produktiviti",
+                welcome_back: "Selamat kembali!",
+                save_toast: "Kemajuan Disimpan ke Awan ☁️",
+                save_local_toast: "Kemajuan disimpan secara setempat.",
+                logout_toast: "Berjaya log keluar dengan selamat.",
+                habit_m: "I", habit_t: "S", habit_w: "R", habit_th: "K", habit_f: "J", habit_s: "S", habit_su: "A"
+            }
+        };
+
+        const daysOfWeekEN = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+        const daysOfWeekMS = ["ISN", "SEL", "RAB", "KHA", "JUM", "SAB", "AHAD"];
+
+        // ================= GLOBAL PLANNER STATE =================
+        let currentAuthTab = 'signin';
+        let currentPlannerTab = 'today';
+        let currentTempCode = '';
+        let currentUser = localStorage.getItem('prod_planner_current_user') || null;
+        let activeDate = localStorage.getItem('prod_planner_active_date') || '2026-06-30';
+        let hasUnsavedChanges = false;
+
+        // Structured storage for date records
+        let currentDayData = {};
+        let currentWeekData = {};
+
+        const defaultScheduleTimes = [
+            "08:00 AM", "09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM",
+            "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM",
+            "06:00 PM", "07:00 PM", "08:00 PM", "09:00 PM", "10:00 PM"
+        ];
+
+        const defaultHabits = [
+            "Wake Up On Time", "Drink Water", "Morning Stretch", 
+            "Take Vitamins", "Read 10 Minutes", "Deep Work (1 Hr)"
+        ];
+
+        const defaultSelfCare = [
+            "Drink Water", "Stretch Body", "Screen Break", "Healthy Lunch"
+        ];
+
+        // Connect global callbacks to module context
+        window.switchAuthTab = switchAuthTab;
+        window.handleSignUp = handleSignUp;
+        window.handleSignIn = handleSignIn;
+        window.toggleRecoverySection = toggleRecoverySection;
+        window.regenerateTempCode = regenerateTempCode;
+        window.verifyRecoveryCode = verifyRecoveryCode;
+        window.switchPlannerTab = switchPlannerTab;
+        window.adjustActiveDate = adjustActiveDate;
+        window.handleDatePickerChange = handleDatePickerChange;
+        window.updateScheduleTime = updateScheduleTime;
+        window.updateScheduleActivity = updateScheduleActivity;
+        window.toggleScheduleCategory = toggleScheduleCategory;
+        window.addNewScheduleRow = addNewScheduleRow;
+        window.deleteScheduleRow = deleteScheduleRow;
+        window.addNewPriority = addNewPriority;
+        window.togglePriority = togglePriority;
+        window.editPriorityText = editPriorityText;
+        window.deletePriority = deletePriority;
+        window.toggleSelfCare = toggleSelfCare;
+        window.updateWeeklyField = updateWeeklyField;
+        window.addNewHabit = addNewHabit;
+        window.updateHabitName = updateHabitName;
+        window.toggleHabitDay = toggleHabitDay;
+        window.deleteHabit = deleteHabit;
+        window.addRoutineItem = addRoutineItem;
+        window.toggleRoutineItem = toggleRoutineItem;
+        window.editRoutineText = editRoutineText;
+        window.deleteRoutineItem = deleteRoutineItem;
+        window.triggerCloudSave = triggerCloudSave;
+        window.handleSignOut = handleSignOut;
+        window.markAsUnsaved = markAsUnsaved;
+        window.switchLanguage = switchLanguage;
+
+        function applyTranslations() {
+            const lang = currentLanguage;
+            
+            // Set all data-i18n items
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    el.innerText = translations[lang][key];
+                }
+            });
+
+            // Set placeholders
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (translations[lang] && translations[lang][key]) {
+                    el.setAttribute('placeholder', translations[lang][key]);
+                }
+            });
+
+            // Update custom habit headers
+            document.getElementById('habit-hdr-m').innerText = translations[lang].habit_m;
+            document.getElementById('habit-hdr-t').innerText = translations[lang].habit_t;
+            document.getElementById('habit-hdr-w').innerText = translations[lang].habit_w;
+            document.getElementById('habit-hdr-th').innerText = translations[lang].habit_th;
+            document.getElementById('habit-hdr-f').innerText = translations[lang].habit_f;
+            document.getElementById('habit-hdr-s').innerText = translations[lang].habit_s;
+            document.getElementById('habit-hdr-su').innerText = translations[lang].habit_su;
+
+            // Update language switcher active buttons
+            updateLanguageButtonStyles();
+        }
+
+        function switchLanguage(lang) {
+            currentLanguage = lang;
+            localStorage.setItem('prod_planner_language', lang);
+            applyTranslations();
+            renderCurrentWorkspace();
+        }
+
+        function updateLanguageButtonStyles() {
+            const isEn = currentLanguage === 'en';
+            
+            // Auth language button style update
+            const authEn = document.getElementById('auth-lang-en');
+            const authMs = document.getElementById('auth-lang-ms');
+            const appEn = document.getElementById('app-lang-en');
+            const appMs = document.getElementById('app-lang-ms');
+
+            if (isEn) {
+                if (authEn) authEn.className = "px-2 py-0.5 rounded text-[10px] font-bold transition-all bg-[#c5a850] text-neutral-950";
+                if (authMs) authMs.className = "px-2 py-0.5 rounded text-[10px] font-bold transition-all text-neutral-400 hover:text-white";
+                if (appEn) appEn.className = "px-2 py-1 rounded text-[10px] font-bold transition-all bg-[#c5a850] text-neutral-950";
+                if (appMs) appMs.className = "px-2 py-1 rounded text-[10px] font-bold transition-all text-neutral-400 hover:text-white";
+            } else {
+                if (authEn) authEn.className = "px-2 py-0.5 rounded text-[10px] font-bold transition-all text-neutral-400 hover:text-white";
+                if (authMs) authMs.className = "px-2 py-0.5 rounded text-[10px] font-bold transition-all bg-[#c5a850] text-neutral-950";
+                if (appEn) appEn.className = "px-2 py-1 rounded text-[10px] font-bold transition-all text-neutral-400 hover:text-white";
+                if (appMs) appMs.className = "px-2 py-1 rounded text-[10px] font-bold transition-all bg-[#c5a850] text-neutral-950";
+            }
+        }
+
+        // ================= AUTHENTICATION ACTIONS =================
+        async function runFirebaseSetup() {
+            if (!isCloudActive) {
+                updateCloudIndicator(false, translations[currentLanguage].status_offline);
+                return;
+            }
+            try {
+                updateCloudIndicator(false, translations[currentLanguage].status_connecting);
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+                updateCloudIndicator(true, translations[currentLanguage].status_secure);
+            } catch (err) {
+                console.error("Auth initialization failed", err);
+                updateCloudIndicator(false, translations[currentLanguage].status_error);
+            }
+        }
+
+        function switchAuthTab(tab) {
+            currentAuthTab = tab;
+            const tabSignIn = document.getElementById('tab-signin');
+            const tabSignUp = document.getElementById('tab-signup');
+            const formSignIn = document.getElementById('signInForm');
+            const formSignUp = document.getElementById('signUpForm');
+
+            if (tab === 'signin') {
+                tabSignIn.className = "w-1/2 pb-3 text-center border-b-2 border-[#c5a850] text-[#c5a850] font-semibold transition-all";
+                tabSignUp.className = "w-1/2 pb-3 text-center border-b-2 border-transparent text-neutral-400 hover:text-neutral-200 transition-all";
+                formSignIn.classList.remove('hidden');
+                formSignUp.classList.add('hidden');
+            } else {
+                tabSignUp.className = "w-1/2 pb-3 text-center border-b-2 border-[#c5a850] text-[#c5a850] font-semibold transition-all";
+                tabSignIn.className = "w-1/2 pb-3 text-center border-b-2 border-transparent text-neutral-400 hover:text-neutral-200 transition-all";
+                formSignUp.classList.remove('hidden');
+                formSignIn.classList.add('hidden');
+            }
+        }
+
+        async function handleSignUp(e) {
+            e.preventDefault();
+            const username = document.getElementById('signUpUsername').value.trim();
+            const password = document.getElementById('signUpPassword').value;
+
+            if (!username || !password) {
+                showToast(currentLanguage === 'ms' ? "Sila isi semua ruangan pendaftaran." : "Please fill all signup fields.", "fa-triangle-exclamation");
+                return;
+            }
+
+            try {
+                if (isCloudActive) {
+                    const userDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'users', username.toLowerCase());
+                    const userSnap = await getDoc(userDocRef);
+                    if (userSnap.exists()) {
+                        showToast(currentLanguage === 'ms' ? "Nama pengguna telah wujud. Cuba log masuk!" : "Username already exists. Try signing in!", "fa-triangle-exclamation");
+                        return;
+                    }
+                    
+                    // Store credentials in public data registry securely
+                    await setDoc(userDocRef, {
+                        username: username,
+                        password: password,
+                        registeredAt: new Date().toISOString()
+                    });
+                } else {
+                    // Fallback local memory
+                    let userDB = JSON.parse(localStorage.getItem('fallback_users')) || [];
+                    if (userDB.some(u => u.username.toLowerCase() === username.toLowerCase())) {
+                        showToast(currentLanguage === 'ms' ? "Nama pengguna telah digunakan secara setempat." : "Username already exists locally.", "fa-triangle-exclamation");
+                        return;
+                    }
+                    userDB.push({ username, password });
+                    localStorage.setItem('fallback_users', JSON.stringify(userDB));
+                }
+
+                showToast(currentLanguage === 'ms' ? "Akaun berjaya dicipta! Log masuk..." : "Account created! Logging you in...", "fa-circle-check");
+                setTimeout(() => {
+                    loginUser(username);
+                }, 800);
+            } catch (err) {
+                console.error("Sign up failure", err);
+                showToast(currentLanguage === 'ms' ? "Ralat pendaftaran pada Awan." : "Registration error on the Cloud.", "fa-triangle-exclamation");
+            }
+        }
+
+        async function handleSignIn(e) {
+            e.preventDefault();
+            const username = document.getElementById('signInUsername').value.trim();
+            const password = document.getElementById('signInPassword').value;
+
+            try {
+                let success = false;
+                if (isCloudActive) {
+                    const userDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'users', username.toLowerCase());
+                    const userSnap = await getDoc(userDocRef);
+                    if (userSnap.exists() && userSnap.data().password === password) {
+                        success = true;
+                    }
+                } else {
+                    let userDB = JSON.parse(localStorage.getItem('fallback_users')) || [];
+                    const found = userDB.find(u => u.username.toLowerCase() === username.toLowerCase() && u.password === password);
+                    if (found) success = true;
+                }
+
+                if (success) {
+                    showToast(currentLanguage === 'ms' ? "Log masuk berjaya disahkan!" : "Login verified!", "fa-circle-check");
+                    loginUser(username);
+                } else {
+                    showToast(currentLanguage === 'ms' ? "Kelayakan tidak sah. Cuba pintasan kod kecemasan." : "Invalid credentials. Try emergency code bypass.", "fa-triangle-exclamation");
+                }
+            } catch (err) {
+                console.error(err);
+                showToast(currentLanguage === 'ms' ? "Ralat log masuk pada sistem Awan." : "Login error on Cloud system.", "fa-triangle-exclamation");
+            }
+        }
+
+        function toggleRecoverySection() {
+            const panel = document.getElementById('recoveryPanel');
+            panel.classList.toggle('hidden');
+            if (!panel.classList.contains('hidden')) {
+                regenerateTempCode();
+            }
+        }
+
+        function regenerateTempCode() {
+            currentTempCode = Math.floor(100000 + Math.random() * 900000).toString();
+            document.getElementById('tempCodeDisplay').innerText = currentTempCode;
+        }
+
+        function verifyRecoveryCode() {
+            const codeInput = document.getElementById('recoveryCodeInput').value.trim();
+            if (codeInput === currentTempCode) {
+                showToast(currentLanguage === 'ms' ? "Kod Pintasan Disahkan!" : "Bypass Code Verified!", "fa-circle-check");
+                loginUser("EmergencyGuest");
+            } else {
+                showToast(currentLanguage === 'ms' ? "Kod kecemasan tidak sah. Cuba lagi." : "Invalid emergency code. Try again.", "fa-triangle-exclamation");
+            }
+        }
+
+        function loginUser(username) {
+            currentUser = username;
+            localStorage.setItem('prod_planner_current_user', username);
+
+            document.getElementById('authContainer').classList.add('hidden');
+            document.getElementById('appContainer').classList.remove('hidden');
+            document.getElementById('currentUserLabel').innerText = username;
+
+            // Trigger sync sequence
+            initializeDate(activeDate);
+        }
+
+        async function handleSignOut() {
+            if (hasUnsavedChanges) {
+                showToast(currentLanguage === 'ms' ? "Menyimpan perubahan secara automatik sebelum log keluar..." : "Saving pending changes automatically before logging out...", "fa-cloud-arrow-up");
+                await triggerCloudSave();
+            }
+            currentUser = null;
+            localStorage.removeItem('prod_planner_current_user');
+            document.getElementById('authContainer').classList.remove('hidden');
+            document.getElementById('appContainer').classList.add('hidden');
+            showToast(translations[currentLanguage].logout_toast, "fa-circle-info");
+        }
+
+        // ================= DATE OPERATIONS (2026 - 2028) =================
+        function initializeDate(dateString) {
+            let date = new Date(dateString);
+            if (isNaN(date.getTime())) {
+                date = new Date('2026-06-30');
+            }
+            if (date.getFullYear() < 2026) {
+                dateString = '2026-01-01';
+            } else if (date.getFullYear() > 2028) {
+                dateString = '2028-12-31';
+            }
+
+            activeDate = dateString;
+            localStorage.setItem('prod_planner_active_date', activeDate);
+            document.getElementById('mainDatePicker').value = activeDate;
+
+            // Calculate active week ID
+            const weekId = getWeekIdentifier(new Date(activeDate));
+            document.getElementById('activeWeekLabel').innerText = weekId;
+
+            // Reload planner workspace
+            loadPlannerData();
+        }
+
+        function adjustActiveDate(days) {
+            let currentDate = new Date(activeDate);
+            currentDate.setDate(currentDate.getDate() + days);
+            
+            // Boundary checks
+            if (currentDate.getFullYear() < 2026) {
+                showToast(currentLanguage === 'ms' ? "Julat perancang bermula pada 2026-01-01" : "Planner range starts at 2026-01-01", "fa-triangle-exclamation");
+                return;
+            }
+            if (currentDate.getFullYear() > 2028) {
+                showToast(currentLanguage === 'ms' ? "Julat perancang berakhir pada 2028-12-31" : "Planner range ends at 2028-12-31", "fa-triangle-exclamation");
+                return;
+            }
+
+            const formatted = currentDate.toISOString().split('T')[0];
+            initializeDate(formatted);
+        }
+
+        function handleDatePickerChange(val) {
+            if (!val) return;
+            initializeDate(val);
+        }
+
+        // Returns string format e.g. "2026-W26" based on ISO Weeks
+        function getWeekIdentifier(date) {
+            const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+            const dayNum = d.getUTCDay() || 7;
+            d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+            const yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+            const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+            return `${d.getUTCFullYear()}-W${weekNo.toString().padStart(2, '0')}`;
+        }
+
+        // ================= CLOUD AND LOCAL RETRIEVAL =================
+        async function loadPlannerData() {
+            if (!currentUser) return;
+
+            updateCloudIndicator(false, currentLanguage === 'ms' ? "Menyelaras Data Perancang..." : "Syncing Planner Data...");
+
+            const weekId = getWeekIdentifier(new Date(activeDate));
+
+            // Setup temporary placeholders initially
+            currentDayData = getNewDayDefault();
+            currentWeekData = getNewWeekDefault();
+
+            if (isCloudActive) {
+                try {
+                    const dayDocRef = doc(db, 'artifacts', appId, 'users', currentUser, 'days', activeDate);
+                    const weekDocRef = doc(db, 'artifacts', appId, 'users', currentUser, 'weeks', weekId);
+
+                    const [daySnap, weekSnap] = await Promise.all([
+                        getDoc(dayDocRef),
+                        getDoc(weekDocRef)
+                    ]);
+
+                    if (daySnap.exists()) {
+                        currentDayData = daySnap.data();
+                    } else {
+                        // Check local backup first to avoid blank sheets
+                        const localBackup = localStorage.getItem(`bkp_${currentUser}_day_${activeDate}`);
+                        if (localBackup) {
+                            currentDayData = JSON.parse(localBackup);
+                        }
+                    }
+
+                    if (weekSnap.exists()) {
+                        currentWeekData = weekSnap.data();
+                    } else {
+                        const localBackupWeek = localStorage.getItem(`bkp_${currentUser}_week_${weekId}`);
+                        if (localBackupWeek) {
+                            currentWeekData = JSON.parse(localBackupWeek);
+                        }
+                    }
+
+                    updateCloudIndicator(true, currentLanguage === 'ms' ? "Awan Diselaraskan" : "Cloud Synced");
+                } catch (err) {
+                    console.error("Cloud retrieval failed, falling back to local memory storage.", err);
+                    updateCloudIndicator(false, translations[currentLanguage].status_offline);
+                    loadLocalFallback(weekId);
+                }
+            } else {
+                loadLocalFallback(weekId);
+            }
+
+            // Sync fields onto the DOM
+            renderCurrentWorkspace();
+            hasUnsavedChanges = false;
+        }
+
+        function loadLocalFallback(weekId) {
+            const dayKey = `bkp_${currentUser}_day_${activeDate}`;
+            const weekKey = `bkp_${currentUser}_week_${weekId}`;
+
+            const savedDay = localStorage.getItem(dayKey);
+            const savedWeek = localStorage.getItem(weekKey);
+
+            if (savedDay) currentDayData = JSON.parse(savedDay);
+            if (savedWeek) currentWeekData = JSON.parse(savedWeek);
+        }
+
+        function getNewDayDefault() {
+            return {
+                ultimateGoal: currentLanguage === 'ms' ? "Mengekalkan tabiat teras dan menyelesaikan keutamaan utama harian." : "Sustaining core habits and completing high-level priorities.",
+                focus: currentLanguage === 'ms' ? "Fokus produktiviti" : "Focused productivity",
+                win: currentLanguage === 'ms' ? "Tindakan proaktif yang berkesan" : "Action-oriented execution",
+                brainDump: currentLanguage === 'ms' ? "Luahkan segala idea, nota dan tugasan rawak di sini..." : "Get ideas, reminders, and lists out here...",
+                priorities: [
+                    { text: currentLanguage === 'ms' ? "Mengatur ulasan pelanggan & templat projek" : "Organize client reviews & project templates", checked: false },
+                    { text: currentLanguage === 'ms' ? "Amalkan aktiviti berjalan santai di waktu pagi" : "Practice routine morning walk", checked: true }
+                ],
+                selfCare: defaultSelfCare.map(name => ({ name, checked: false })),
+                schedule: defaultScheduleTimes.map(time => ({
+                    time: time,
+                    activity: "",
+                    category: time.includes("AM") ? "WORK" : "WELLNESS"
+                }))
+            };
+        }
+
+        function getNewWeekDefault() {
+            const daysArr = currentLanguage === 'ms' ? daysOfWeekMS : daysOfWeekEN;
+            return {
+                habits: defaultHabits.map(name => ({
+                    name,
+                    monday: false, tuesday: false, wednesday: false, thursday: false, friday: false, saturday: false, sunday: false
+                })),
+                weeklyOverview: daysArr.map(day => ({
+                    day,
+                    work: "",
+                    personal: "",
+                    notes: ""
+                })),
+                routines: {
+                    mustGetDone: [
+                        { text: currentLanguage === 'ms' ? "Hantar pindaan perancang produktiviti" : "Submit planner revisions", checked: false }
+                    ],
+                    ifHaveTime: [],
+                    ifCanWait: [],
+                    comms: [],
+                    quickCheck: []
+                }
+            };
+        }
+
+        // ================= CLOUD AND LOCAL STORAGE WRITES =================
+        async function triggerCloudSave() {
+            if (!currentUser) return;
+            
+            updateCloudIndicator(false, currentLanguage === 'ms' ? "Menyimpan ke Awan..." : "Saving to Cloud...");
+
+            // Capture current interactive state values on screen
+            currentDayData.ultimateGoal = document.getElementById('todayUltimateGoal').value;
+            currentDayData.brainDump = document.getElementById('brainDumpArea').value;
+            currentDayData.focus = document.getElementById('focusOfDay').value;
+            currentDayData.win = document.getElementById('biggestWin').value;
+
+            const weekId = getWeekIdentifier(new Date(activeDate));
+
+            // Write backups into standard localStorage first
+            localStorage.setItem(`bkp_${currentUser}_day_${activeDate}`, JSON.stringify(currentDayData));
+            localStorage.setItem(`bkp_${currentUser}_week_${weekId}`, JSON.stringify(currentWeekData));
+
+            if (isCloudActive) {
+                try {
+                    const dayDocRef = doc(db, 'artifacts', appId, 'users', currentUser, 'days', activeDate);
+                    const weekDocRef = doc(db, 'artifacts', appId, 'users', currentUser, 'weeks', weekId);
+
+                    await Promise.all([
+                        setDoc(dayDocRef, currentDayData),
+                        setDoc(weekDocRef, currentWeekData)
+                    ]);
+
+                    updateCloudIndicator(true, translations[currentLanguage].status_saved);
+                    showToast(translations[currentLanguage].save_toast, "fa-circle-check");
+                    hasUnsavedChanges = false;
+                } catch (err) {
+                    console.error("Cloud saving failed", err);
+                    updateCloudIndicator(false, translations[currentLanguage].status_offline);
+                    showToast(currentLanguage === 'ms' ? "Gagal menyimpan ke awan. Disimpan di peranti tempatan." : "Failed to save to cloud. Saved locally instead.", "fa-triangle-exclamation");
+                }
+            } else {
+                updateCloudIndicator(false, translations[currentLanguage].status_local);
+                showToast(translations[currentLanguage].save_local_toast, "fa-circle-check");
+                hasUnsavedChanges = false;
+            }
+        }
+
+        function markAsUnsaved() {
+            if (!hasUnsavedChanges) {
+                hasUnsavedChanges = true;
+                updateCloudIndicator(false, translations[currentLanguage].status_unsaved);
+            }
+        }
+
+        function updateCloudIndicator(synchronized, label) {
+            const dot = document.getElementById('statusDot');
+            const txt = document.getElementById('statusText');
+            if (synchronized) {
+                dot.className = "inline-block w-2.5 h-2.5 rounded-full bg-emerald-500";
+            } else {
+                dot.className = "inline-block w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse";
+            }
+            txt.innerText = label;
+        }
+
+        // ================= RENDERING AND DOM MANIPULATION =================
+        function renderCurrentWorkspace() {
+            document.getElementById('todayUltimateGoal').value = currentDayData.ultimateGoal || "";
+            document.getElementById('brainDumpArea').value = currentDayData.brainDump || "";
+            document.getElementById('focusOfDay').value = currentDayData.focus || "";
+            document.getElementById('biggestWin').value = currentDayData.win || "";
+
+            renderSchedule();
+            renderPriorities();
+            renderSelfCare();
+            renderWeeklyOverview();
+            renderHabits();
+            renderRoutines();
+        }
+
+        // ================= TODAY'S SCHEDULE (INTERACTIVE ICON BADGES) =================
+        function renderSchedule() {
+            const container = document.getElementById('scheduleBlocksContainer');
+            container.innerHTML = '';
+
+            const items = currentDayData.schedule || [];
+            items.forEach((item, index) => {
+                let hourStyleClass = "border-l-4 border-neutral-800 bg-neutral-900/30";
+                let iconHtml = '<i class="fa-regular fa-circle text-neutral-500"></i>';
+                
+                // Switch styling and premium colors dynamically depending on the selected category
+                if (item.category === 'WORK') {
+                    hourStyleClass = "border-l-4 border-amber-500 bg-amber-950/10";
+                    iconHtml = '<i class="fa-solid fa-briefcase text-[#c5a850]" title="Work Slot"></i>';
+                } else if (item.category === 'PERSONAL') {
+                    hourStyleClass = "border-l-4 border-emerald-500 bg-emerald-950/10";
+                    iconHtml = '<i class="fa-solid fa-leaf text-emerald-500" title="Personal / Health Slot"></i>';
+                } else if (item.category === 'EVENING') {
+                    hourStyleClass = "border-l-4 border-indigo-500 bg-indigo-950/10";
+                    iconHtml = '<i class="fa-solid fa-moon text-indigo-400" title="Evening / Wind down Slot"></i>';
+                }
+
+                container.innerHTML += `
+                    <div class="flex items-center gap-2 p-2 rounded-xl ${hourStyleClass} hover:bg-neutral-800/40 transition-all">
+                        
+                        <!-- Interactive Switch Badge: Cycles between 💼, 🌱, 🌙, and ◯ neutral -->
+                        <button onclick="toggleScheduleCategory(${index})" title="Cycle Icon: Work / Personal / Evening / None" class="w-9 h-9 rounded-xl bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 hover:border-[#c5a850] flex items-center justify-center transition-all shrink-0">
+                            ${iconHtml}
+                        </button>
+
+                        <!-- Editable Time Column -->
+                        <div class="w-24">
+                            <input type="text" value="${item.time || ''}" 
+                                onchange="updateScheduleTime(${index}, this.value)"
+                                class="bg-neutral-900/60 border border-neutral-800 focus:border-[#c5a850] text-xs font-mono font-semibold text-[#c5a850] rounded px-1.5 py-1 w-full text-center focus:outline-none transition-all">
+                        </div>
+                        
+                        <!-- Activity Column -->
+                        <div class="flex-grow">
+                            <input type="text" value="${item.activity || ''}" 
+                                onchange="updateScheduleActivity(${index}, this.value)"
+                                class="w-full bg-transparent border-b border-transparent hover:border-neutral-800 focus:border-[#c5a850] text-sm text-neutral-200 focus:text-white outline-none py-1 transition-all"
+                                placeholder="${currentLanguage === 'ms' ? 'Tambah butiran jadual...' : 'Add schedule item details...'}">
+                        </div>
+
+                        <!-- Categorization and Deletion Toggles -->
+                        <div class="flex items-center gap-1">
+                            <button onclick="deleteScheduleRow(${index})" title="Remove Slot" class="text-[10px] text-neutral-500 hover:text-red-400 px-1.5 py-1 bg-neutral-900/80 rounded border border-neutral-800">
+                                <i class="fa-regular fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function updateScheduleTime(index, value) {
+            currentDayData.schedule[index].time = value;
+            markAsUnsaved();
+        }
+
+        function updateScheduleActivity(index, value) {
+            currentDayData.schedule[index].activity = value;
+            markAsUnsaved();
+        }
+
+        function toggleScheduleCategory(index) {
+            const categories = ['DEFAULT', 'WORK', 'PERSONAL', 'EVENING'];
+            const current = currentDayData.schedule[index].category || 'DEFAULT';
+            let nextIndex = (categories.indexOf(current) + 1) % categories.length;
+            currentDayData.schedule[index].category = categories[nextIndex];
+            
+            markAsUnsaved();
+            renderSchedule();
+        }
+
+        function addNewScheduleRow() {
+            if (!currentDayData.schedule) currentDayData.schedule = [];
+            currentDayData.schedule.push({
+                time: "12:00 PM",
+                activity: "",
+                category: "DEFAULT"
+            });
+            markAsUnsaved();
+            renderSchedule();
+        }
+
+        function deleteScheduleRow(index) {
+            currentDayData.schedule.splice(index, 1);
+            markAsUnsaved();
+            renderSchedule();
+        }
+
+        // ================= PRIORITIES & GOALS =================
+        function renderPriorities() {
+            const container = document.getElementById('prioritiesContainer');
+            container.innerHTML = '';
+
+            const items = currentDayData.priorities || [];
+            items.forEach((item, index) => {
+                const isChecked = item.checked;
+                const icon = isChecked ? "fa-solid fa-circle-check text-[#c5a850]" : "fa-regular fa-circle text-neutral-600 hover:text-[#c5a850]";
+                const checkStyle = isChecked ? "line-through text-neutral-500" : "text-neutral-200";
+
+                container.innerHTML += `
+                    <div class="flex items-center justify-between gap-2 bg-neutral-900/60 p-2.5 rounded-xl border border-neutral-800">
+                        <div class="flex items-center gap-2.5 flex-grow">
+                            <button onclick="togglePriority(${index})">
+                                <i class="${icon} text-sm"></i>
+                            </button>
+                            <input type="text" value="${item.text}" 
+                                onchange="editPriorityText(${index}, this.value)"
+                                class="bg-transparent border-none text-xs focus:ring-0 outline-none w-full ${checkStyle}">
+                        </div>
+                        <button onclick="deletePriority(${index})" class="text-neutral-600 hover:text-red-400 transition-all px-1">
+                            <i class="fa-regular fa-trash-can text-xs"></i>
+                        </button>
+                    </div>
+                `;
+            });
+
+            // Entry Field Row
+            container.innerHTML += `
+                <div class="flex gap-2 mt-2">
+                    <input type="text" id="newPriorityInput" class="w-full bg-neutral-900 border border-neutral-800 rounded-lg py-1.5 px-3 text-xs text-white placeholder-neutral-600 focus:border-[#c5a850] outline-none" placeholder="${translations[currentLanguage].priority_placeholder}">
+                    <button onclick="addNewPriority()" class="bg-[#c5a850] hover:bg-amber-400 text-neutral-950 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all"><i class="fa-solid fa-plus"></i></button>
+                </div>
+            `;
+        }
+
+        function togglePriority(index) {
+            currentDayData.priorities[index].checked = !currentDayData.priorities[index].checked;
+            markAsUnsaved();
+            renderPriorities();
+        }
+
+        function editPriorityText(index, value) {
+            currentDayData.priorities[index].text = value;
+            markAsUnsaved();
+        }
+
+        function addNewPriority() {
+            const input = document.getElementById('newPriorityInput');
+            const val = input.value.trim();
+            if (!val) return;
+            if (!currentDayData.priorities) currentDayData.priorities = [];
+            currentDayData.priorities.push({ text: val, checked: false });
+            input.value = '';
+            markAsUnsaved();
+            renderPriorities();
+        }
+
+        function deletePriority(index) {
+            currentDayData.priorities.splice(index, 1);
+            markAsUnsaved();
+            renderPriorities();
+        }
+
+        function renderSelfCare() {
+            const container = document.getElementById('selfCareContainer');
+            container.innerHTML = '';
+
+            const items = currentDayData.selfCare || [];
+            items.forEach((item, index) => {
+                const icon = item.checked ? "fa-solid fa-circle-check text-[#c5a850]" : "fa-regular fa-circle text-neutral-600 hover:text-[#c5a850]";
+                const checkStyle = item.checked ? "text-neutral-500 line-through" : "text-neutral-300";
+
+                container.innerHTML += `
+                    <div class="flex items-center gap-2.5 bg-neutral-900/40 p-2 rounded-xl border border-neutral-800/60">
+                        <button onclick="toggleSelfCare(${index})">
+                            <i class="${icon} text-sm"></i>
+                        </button>
+                        <span class="text-xs ${checkStyle}">${item.name}</span>
+                    </div>
+                `;
+            });
+        }
+
+        function toggleSelfCare(index) {
+            currentDayData.selfCare[index].checked = !currentDayData.selfCare[index].checked;
+            markAsUnsaved();
+            renderSelfCare();
+        }
+
+        // ================= WEEKLY PLANNER =================
+        function renderWeeklyOverview() {
+            const tbody = document.getElementById('weeklyTableBody');
+            tbody.innerHTML = '';
+
+            const days = currentWeekData.weeklyOverview || [];
+            days.forEach((item, index) => {
+                // Ensure proper localized day name gets loaded
+                const localizedDay = currentLanguage === 'ms' ? daysOfWeekMS[index] : daysOfWeekEN[index];
+                tbody.innerHTML += `
+                    <tr class="hover:bg-neutral-800/20 transition-all">
+                        <td class="py-4 px-4 font-bold text-amber-100 text-xs tracking-wider border-r border-neutral-800 font-mono">${localizedDay}</td>
+                        <td class="py-2 px-4 border-r border-neutral-800">
+                            <input type="text" value="${item.work || ''}" 
+                                onchange="updateWeeklyField(${index}, 'work', this.value)"
+                                class="w-full bg-transparent border-b border-transparent hover:border-neutral-800 focus:border-[#c5a850] text-xs text-neutral-300 focus:text-white outline-none py-1 transition-all">
+                        </td>
+                        <td class="py-2 px-4 border-r border-neutral-800">
+                            <input type="text" value="${item.personal || ''}" 
+                                onchange="updateWeeklyField(${index}, 'personal', this.value)"
+                                class="w-full bg-transparent border-b border-transparent hover:border-neutral-800 focus:border-[#c5a850] text-xs text-neutral-300 focus:text-white outline-none py-1 transition-all">
+                        </td>
+                        <td class="py-2 px-4">
+                            <input type="text" value="${item.notes || ''}" 
+                                onchange="updateWeeklyField(${index}, 'notes', this.value)"
+                                class="w-full bg-transparent border-b border-transparent hover:border-neutral-800 focus:border-[#c5a850] text-xs text-neutral-400 focus:text-white outline-none py-1 transition-all" 
+                                placeholder="${translations[currentLanguage].notes_placeholder}">
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function updateWeeklyField(index, key, value) {
+            currentWeekData.weeklyOverview[index][key] = value;
+            markAsUnsaved();
+        }
+
+        // ================= HABIT TRACKER =================
+        function renderHabits() {
+            const tbody = document.getElementById('habitsTableBody');
+            tbody.innerHTML = '';
+
+            const list = currentWeekData.habits || [];
+            list.forEach((habit, habitIndex) => {
+                tbody.innerHTML += `
+                    <tr class="hover:bg-neutral-800/10 transition-all">
+                        <td class="py-3 px-4 text-xs font-semibold text-neutral-300">
+                            <input type="text" value="${habit.name}" 
+                                onchange="updateHabitName(${habitIndex}, this.value)"
+                                class="bg-transparent border-b border-transparent hover:border-neutral-800 focus:border-[#c5a850] text-xs text-neutral-300 focus:text-white outline-none w-full">
+                        </td>
+                        <td class="py-3 px-2 text-center">${renderHabitCheckbox(habitIndex, 'monday', habit.monday)}</td>
+                        <td class="py-3 px-2 text-center">${renderHabitCheckbox(habitIndex, 'tuesday', habit.tuesday)}</td>
+                        <td class="py-3 px-2 text-center">${renderHabitCheckbox(habitIndex, 'wednesday', habit.wednesday)}</td>
+                        <td class="py-3 px-2 text-center">${renderHabitCheckbox(habitIndex, 'thursday', habit.thursday)}</td>
+                        <td class="py-3 px-2 text-center">${renderHabitCheckbox(habitIndex, 'friday', habit.friday)}</td>
+                        <td class="py-3 px-2 text-center">${renderHabitCheckbox(habitIndex, 'saturday', habit.saturday)}</td>
+                        <td class="py-3 px-2 text-center">${renderHabitCheckbox(habitIndex, 'sunday', habit.sunday)}</td>
+                        <td class="py-3 px-4 text-center">
+                            <button onclick="deleteHabit(${habitIndex})" class="text-neutral-600 hover:text-red-400 transition-all">
+                                <i class="fa-regular fa-trash-can text-xs"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function renderHabitCheckbox(habitIndex, day, val) {
+            const icon = val ? "fa-solid fa-circle-check text-[#c5a850]" : "fa-regular fa-circle text-neutral-700 hover:text-[#c5a850]";
+            return `
+                <button onclick="toggleHabitDay(${habitIndex}, '${day}')">
+                    <i class="${icon} text-sm"></i>
+                </button>
+            `;
+        }
+
+        function toggleHabitDay(habitIndex, day) {
+            currentWeekData.habits[habitIndex][day] = !currentWeekData.habits[habitIndex][day];
+            markAsUnsaved();
+            renderHabits();
+        }
+
+        // Update habits state
+        function updateHabitName(habitIndex, value) {
+            currentWeekData.habits[habitIndex].name = value;
+            markAsUnsaved();
+        }
+
+        function addNewHabit() {
+            if (!currentWeekData.habits) currentWeekData.habits = [];
+            currentWeekData.habits.push({
+                name: currentLanguage === 'ms' ? "Item Tabiat Baru" : "New Habit Item",
+                monday: false, tuesday: false, wednesday: false, thursday: false, friday: false, saturday: false, sunday: false
+            });
+            markAsUnsaved();
+            renderHabits();
+        }
+
+        function deleteHabit(habitIndex) {
+            currentWeekData.habits.splice(habitIndex, 1);
+            markAsUnsaved();
+            renderHabits();
+        }
+
+        // ================= ROUTINES AND CATEGORIZED CHECKLISTS =================
+        function renderRoutines() {
+            renderRoutineColumn('mustGetDone', 'mustGetDoneList');
+            renderRoutineColumn('ifHaveTime', 'ifHaveTimeList');
+            renderRoutineColumn('ifCanWait', 'ifCanWaitList');
+            renderRoutineColumn('comms', 'commsList');
+            renderRoutineColumn('quickCheck', 'quickChecklist');
+        }
+
+        function renderRoutineColumn(dataKey, domId) {
+            const listEl = document.getElementById(domId);
+            listEl.innerHTML = '';
+
+            const items = currentWeekData.routines[dataKey] || [];
+            items.forEach((item, index) => {
+                const icon = item.checked ? "fa-solid fa-circle-check text-[#c5a850]" : "fa-regular fa-circle text-neutral-600 hover:text-[#c5a850]";
+                const checkStyle = item.checked ? "line-through text-neutral-500" : "text-neutral-300";
+
+                listEl.innerHTML += `
+                    <li class="flex items-center justify-between gap-2 bg-neutral-900/50 p-2 rounded-xl border border-neutral-800/80 hover:border-neutral-700 transition-all">
+                        <div class="flex items-center gap-2 flex-grow">
+                            <button onclick="toggleRoutineItem('${dataKey}', ${index})">
+                                <i class="${icon} text-xs"></i>
+                            </button>
+                            <input type="text" value="${item.text}" 
+                                onchange="editRoutineText('${dataKey}', ${index}, this.value)"
+                                class="bg-transparent border-none text-xs w-full ${checkStyle} focus:outline-none">
+                        </div>
+                        <button onclick="deleteRoutineItem('${dataKey}', ${index})" class="text-neutral-600 hover:text-red-400 transition-all px-1">
+                            <i class="fa-regular fa-trash-can text-[10px]"></i>
+                        </button>
+                    </li>
+                `;
+            });
+        }
+
+        function toggleRoutineItem(dataKey, index) {
+            currentWeekData.routines[dataKey][index].checked = !currentWeekData.routines[dataKey][index].checked;
+            markAsUnsaved();
+            renderRoutines();
+        }
+
+        function editRoutineText(dataKey, index, value) {
+            currentWeekData.routines[dataKey][index].text = value;
+            markAsUnsaved();
+        }
+
+        function deleteRoutineItem(dataKey, index) {
+            currentWeekData.routines[dataKey].splice(index, 1);
+            markAsUnsaved();
+            renderRoutines();
+        }
+
+        function addRoutineItem(dataKey) {
+            const inputEl = document.getElementById(`${dataKey}Input`);
+            const value = inputEl.value.trim();
+            if (!value) return;
+
+            if (!currentWeekData.routines[dataKey]) {
+                currentWeekData.routines[dataKey] = [];
+            }
+
+            currentWeekData.routines[dataKey].push({ text: value, checked: false });
+            inputEl.value = '';
+            markAsUnsaved();
+            renderRoutines();
+        }
+
+        // ================= NAVIGATION AND TAB TRANSITIONS =================
+        function switchPlannerTab(tab) {
+            currentPlannerTab = tab;
+            
+            document.getElementById('planner-today').classList.add('hidden');
+            document.getElementById('planner-weekly').classList.add('hidden');
+            document.getElementById('planner-habits').classList.add('hidden');
+            document.getElementById('planner-routine').classList.add('hidden');
+
+            document.getElementById(`planner-${tab}`).classList.remove('hidden');
+
+            const navButtons = document.querySelectorAll('#mainNavigation button');
+            navButtons.forEach(btn => {
+                btn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800 transition-all flex items-center gap-1.5";
+            });
+
+            const activeBtn = document.getElementById(`btn-tab-${tab}`);
+            if (activeBtn) {
+                activeBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#c5a850] text-neutral-950 transition-all flex items-center gap-1.5";
+            }
+        }
+
+        function showToast(message, iconClass = "fa-circle-info") {
+            const toast = document.getElementById('toastNotification');
+            const icon = document.getElementById('toastIcon');
+            const msgSpan = document.getElementById('toastMessage');
+
+            icon.className = `fa-solid ${iconClass} text-[#c5a850]`;
+            msgSpan.innerText = message;
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+                toast.classList.remove('translate-y-0', 'opacity-100');
+            }, 3000);
+        }
+
+        // Initial setup and load hook
+        window.onload = async function() {
+            // Apply language setup
+            applyTranslations();
+            
+            await runFirebaseSetup();
+
+            // Auto-detect saved session
+            if (currentUser) {
+                document.getElementById('authContainer').classList.add('hidden');
+                document.getElementById('appContainer').classList.remove('hidden');
+                document.getElementById('currentUserLabel').innerText = currentUser;
+                initializeDate(activeDate);
+            } else {
+                switchAuthTab('signin');
+            }
+        };
+    </script>
+</body>
+</html>
