@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bijak Kidz Malaysia - Preschool Learning App</title>
+    <!-- Tailwind CSS for modern fluid styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Fredoka & Inter for playfulness and readability -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght=300..700&family=Inter:wght=300;400;600;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti for fun reward celebrations -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- Firebase Compat SDKs for robust cross-device registration lock -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <style>
+        body {
+            font-family: 'Fredoka', 'Inter', sans-serif;
+            background: radial-gradient(circle, #fef9c3 0%, #f0fdf4 100%);
+            touch-action: manipulation;
+        }
+        .bubble-btn {
+            box-shadow: 0 8px 0 #15803d;
+            transition: all 0.1s ease;
+        }
+        .bubble-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 4px 0 #15803d;
+        }
+        .bubble-btn-red {
+            box-shadow: 0 8px 0 #b91c1c;
+            transition: all 0.1s ease;
+        }
+        .bubble-btn-red:active {
+            transform: translateY(4px);
+            box-shadow: 0 4px 0 #b91c1c;
+        }
+        .bubble-btn-blue {
+            box-shadow: 0 8px 0 #1d4ed8;
+            transition: all 0.1s ease;
+        }
+        .bubble-btn-blue:active {
+            transform: translateY(4px);
+            box-shadow: 0 4px 0 #1d4ed8;
+        }
+        .bubble-btn-orange {
+            box-shadow: 0 8px 0 #c2410c;
+            transition: all 0.1s ease;
+        }
+        .bubble-btn-orange:active {
+            transform: translateY(4px);
+            box-shadow: 0 4px 0 #c2410c;
+        }
+        .module-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .module-card:hover {
+            transform: translateY(-5px) scale(1.02);
+        }
+        .arnab-bounce {
+            animation: bounce-slow 2.5s infinite;
+        }
+        @keyframes bounce-slow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+        /* Custom scrollbars for mobile screens */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between overflow-x-hidden select-none">
+
+    <!-- Sound Controls and Mascot greeting -->
+    <header class="w-full max-w-6xl mx-auto px-4 py-3 flex justify-between items-center z-10 hidden">
+        <div class="flex items-center space-x-3 cursor-pointer" onclick="goHome()">
+            <div class="bg-yellow-400 p-2 rounded-2xl shadow-md border-2 border-white animate-pulse">
+                <span class="text-3xl">🐰</span>
+            </div>
+            <div>
+                <h1 class="text-2xl md:text-3xl font-extrabold text-green-700 tracking-wide">BIJAK KIDZ</h1>
+                <p class="text-xs md:text-sm text-green-600 font-bold">Malaysia Preschool Fun!</p>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-2">
+            <!-- Speech Guide toggle -->
+            <button onclick="toggleVoice()" id="voiceBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold p-3 rounded-2xl shadow-md flex items-center space-x-1 transition duration-150">
+                <i class="fas fa-volume-up text-lg"></i>
+                <span class="text-xs hidden md:inline">Voice: ON</span>
+            </button>
+            <div id="starCount" class="bg-amber-400 border-2 border-amber-500 text-amber-900 font-bold px-4 py-2 rounded-2xl shadow-md flex items-center space-x-1 animate-bounce">
+                <span>⭐</span>
+                <span id="starVal" class="text-xl">0</span>
+            </div>
+            <!-- Logout / Unregister Account -->
+            <button onclick="deactivateApp()" id="logoutBtn" class="bg-rose-100 hover:bg-rose-200 border-2 border-rose-300 text-rose-800 font-bold p-3 rounded-2xl shadow-md flex items-center justify-center transition" title="Tukar Peranti atau Nama">
+                <i class="fas fa-sign-out-alt text-lg"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-grow w-full max-w-5xl mx-auto px-4 py-4 flex flex-col justify-center items-center">
+        
+        <!-- ================= ACTIVATION SCREEN ================= -->
+        <div id="activationScreen" class="w-full max-w-xl mx-auto flex flex-col items-center justify-center space-y-6">
+            <div class="bg-white rounded-3xl p-6 md:p-8 shadow-xl border-4 border-yellow-300 w-full text-center space-y-6 relative overflow-hidden">
+                <!-- Decorative shapes -->
+                <div class="absolute -top-10 -left-10 text-6xl opacity-10 animate-pulse">⭐</div>
+                <div class="absolute -bottom-10 -right-10 text-6xl opacity-10 animate-pulse">🎨</div>
+
+                <!-- Header Mascot -->
+                <div class="flex flex-col items-center space-y-3">
+                    <div class="w-24 h-24 bg-pink-100 rounded-full border-4 border-yellow-400 flex items-center justify-center relative overflow-hidden shadow-lg arnab-bounce">
+                        <span class="text-5xl">🐰</span>
+                    </div>
+                    <h2 class="text-3xl font-extrabold text-green-700 tracking-wide">AKTIFKAN BIJAK KIDZ</h2>
+                    <p class="text-slate-500 font-bold text-sm">Selamat Belajar Bersama Robi si Arnab!</p>
+                </div>
+
+                <!-- Form Block -->
+                <div class="space-y-4 text-left">
+                    <div>
+                        <label class="block text-green-700 font-extrabold text-sm mb-1">
+                            <i class="fas fa-key"></i> KOD PEMBELIAN (PURCHASE CODE)
+                        </label>
+                        <input type="text" id="inputCode" class="w-full text-center text-xl font-black p-3.5 border-4 border-emerald-100 rounded-2xl focus:border-emerald-400 focus:outline-none uppercase bg-emerald-50 text-emerald-800 placeholder-emerald-300 font-mono" placeholder="BIJAK____">
+                    </div>
+
+                    <div>
+                        <label class="block text-blue-700 font-extrabold text-sm mb-1">
+                            <i class="fas fa-child"></i> NAMA ANAK ANDA (CHILD'S NAME)
+                        </label>
+                        <input type="text" id="inputChildName" class="w-full text-center text-xl font-extrabold p-3.5 border-4 border-blue-100 rounded-2xl focus:border-blue-400 focus:outline-none bg-blue-50 text-blue-800 placeholder-blue-300" placeholder="Masukkan nama panggilan anak">
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="pt-2">
+                    <button onclick="activateApp()" id="btnActivate" class="w-full bubble-btn-orange bg-orange-500 hover:bg-orange-600 text-white text-xl font-extrabold py-4 px-6 rounded-2xl shadow-md flex justify-center items-center space-x-2 transition duration-150 transform hover:scale-105 active:scale-95">
+                        <span>MULA BELAJAR JOM! 🚀</span>
+                    </button>
+                </div>
+
+                <!-- Info Alert -->
+                <div class="bg-amber-50 rounded-2xl p-4 border border-amber-200 flex items-start space-x-2 text-left">
+                    <span class="text-2xl mt-0.5">ℹ️</span>
+                    <p class="text-xs text-amber-900 font-medium leading-relaxed">
+                        <strong>PENTING:</strong> Sila gunakan kod pembelian anda yang sah. Setiap kod pembelian (seperti format <strong>BIJAK____</strong>) hanya boleh didaftarkan dan diaktifkan untuk <strong>satu (1) peranti sahaja</strong>.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= HOME SCREEN ================= -->
+        <div id="homeScreen" class="w-full flex flex-col items-center justify-center space-y-6 hidden">
+            
+            <!-- Character Speech & Mascot banner -->
+            <div class="flex flex-col md:flex-row items-center justify-center bg-white rounded-3xl p-6 shadow-xl border-4 border-yellow-300 w-full max-w-4xl space-y-4 md:space-y-0 md:space-x-6 relative">
+                <div class="relative flex-shrink-0 arnab-bounce">
+                    <!-- Robi si Arnab Custom Avatar using Emojis/CSS -->
+                    <div class="w-24 h-24 bg-pink-100 rounded-full border-4 border-white flex items-center justify-center relative overflow-hidden shadow-lg">
+                        <span class="text-5xl z-10 animate-pulse">🐰</span> <!-- Rabbit representation (Arnab) -->
+                    </div>
+                    <span class="absolute -bottom-2 -right-2 bg-emerald-500 text-white text-xs font-bold px-2 py-1 rounded-full border-2 border-white">ROBI</span>
+                </div>
+                <div class="text-center md:text-left">
+                    <h2 id="robiWelcome" class="text-2xl font-bold text-gray-800">"Selamat Datang! Saya Robi si Arnab!"</h2>
+                    <p class="text-gray-600 text-lg mt-1">Mari kita melompat, bermain dan belajar bersama-sama! Ada 50 soalan setiap modul! Pilih satu modul di bawah!</p>
+                    <button onclick="speakMalaysianIntro()" class="mt-2 text-sm bg-yellow-100 hover:bg-yellow-200 text-yellow-800 font-bold py-1.5 px-3 rounded-lg border border-yellow-300 transition flex items-center space-x-1 mx-auto md:mx-0">
+                        <i class="fas fa-play-circle"></i> <span>Dengar Suara Robi</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 6 Module cards Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 w-full max-w-4xl">
+                
+                <!-- Module 1: Bahasa Melayu -->
+                <div onclick="startModule(1)" class="module-card cursor-pointer bg-red-100 hover:bg-red-200 border-4 border-red-400 rounded-3xl p-4 md:p-6 text-center flex flex-col items-center justify-between shadow-lg relative overflow-hidden">
+                    <div class="absolute top-2 right-2 bg-red-400 text-white text-xs font-bold px-2 py-1 rounded-full">BM</div>
+                    <span class="text-5xl md:text-6xl my-2">🗣️</span>
+                    <h3 class="text-lg md:text-xl font-extrabold text-red-800 leading-tight">Suku Kata</h3>
+                    <p class="text-xs text-red-600 font-semibold mt-1">Mari eja perkataan!</p>
+                    <div class="mt-3 bg-red-50 text-red-600 text-xs font-extrabold px-3 py-1 rounded-full border border-red-200">50 SOALAN</div>
+                    <div class="mt-2 bg-red-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-inner">MAIN JOM</div>
+                </div>
+
+                <!-- Module 2: English Phonics -->
+                <div onclick="startModule(2)" class="module-card cursor-pointer bg-blue-100 hover:bg-blue-200 border-4 border-blue-400 rounded-3xl p-4 md:p-6 text-center flex flex-col items-center justify-between shadow-lg relative overflow-hidden">
+                    <div class="absolute top-2 right-2 bg-blue-400 text-white text-xs font-bold px-2 py-1 rounded-full">EN</div>
+                    <span class="text-5xl md:text-6xl my-2">🦁</span>
+                    <h3 class="text-lg md:text-xl font-extrabold text-blue-800 leading-tight">Animal Pals</h3>
+                    <p class="text-xs text-blue-600 font-semibold mt-1">Spell animal names!</p>
+                    <div class="mt-3 bg-blue-50 text-blue-600 text-xs font-extrabold px-3 py-1 rounded-full border border-blue-200">50 SOALAN</div>
+                    <div class="mt-2 bg-blue-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-inner">PLAY NOW</div>
+                </div>
+
+                <!-- Module 3: Matematik Awal -->
+                <div onclick="startModule(3)" class="module-card cursor-pointer bg-yellow-100 hover:bg-yellow-200 border-4 border-yellow-400 rounded-3xl p-4 md:p-6 text-center flex flex-col items-center justify-between shadow-lg relative overflow-hidden">
+                    <div class="absolute top-2 right-2 bg-yellow-400 text-white text-xs font-bold px-2 py-1 rounded-full">MT</div>
+                    <span class="text-5xl md:text-6xl my-2">🍉</span>
+                    <h3 class="text-lg md:text-xl font-extrabold text-yellow-800 leading-tight">Jom Kira</h3>
+                    <p class="text-xs text-yellow-600 font-semibold mt-1">Count tropical fruits!</p>
+                    <div class="mt-3 bg-yellow-50 text-yellow-600 text-xs font-extrabold px-3 py-1 rounded-full border border-yellow-200">50 SOALAN</div>
+                    <div class="mt-2 bg-yellow-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-inner">KIRA JOM</div>
+                </div>
+
+                <!-- Module 4: Sains Awal -->
+                <div onclick="startModule(4)" class="module-card cursor-pointer bg-green-100 hover:bg-green-200 border-4 border-green-400 rounded-3xl p-4 md:p-6 text-center flex flex-col items-center justify-between shadow-lg relative overflow-hidden">
+                    <div class="absolute top-2 right-2 bg-green-400 text-white text-xs font-bold px-2 py-1 rounded-full">SN</div>
+                    <span class="text-5xl md:text-6xl my-2">🌱</span>
+                    <h3 class="text-lg md:text-xl font-extrabold text-green-800 leading-tight">Sains Kidz</h3>
+                    <p class="text-xs text-green-600 font-semibold mt-1">Living & Non-living!</p>
+                    <div class="mt-3 bg-green-50 text-green-600 text-xs font-extrabold px-3 py-1 rounded-full border border-green-200">50 SOALAN</div>
+                    <div class="mt-2 bg-green-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-inner">TEROKA</div>
+                </div>
+
+                <!-- Module 5: Negaraku (Malaysia) -->
+                <div onclick="startModule(5)" class="module-card cursor-pointer bg-purple-100 hover:bg-purple-200 border-4 border-purple-400 rounded-3xl p-4 md:p-6 text-center flex flex-col items-center justify-between shadow-lg relative overflow-hidden">
+                    <div class="absolute top-2 right-2 bg-purple-400 text-white text-xs font-bold px-2 py-1 rounded-full">MY</div>
+                    <span class="text-5xl md:text-6xl my-2">🇲🇾</span>
+                    <h3 class="text-lg md:text-xl font-extrabold text-purple-800 leading-tight">Malaysia Ku</h3>
+                    <p class="text-xs text-purple-600 font-semibold mt-1">Our beautiful symbols!</p>
+                    <div class="mt-3 bg-purple-50 text-purple-600 text-xs font-extrabold px-3 py-1 rounded-full border border-purple-200">50 SOALAN</div>
+                    <div class="mt-2 bg-purple-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-inner">SAYA SAYANG</div>
+                </div>
+
+                <!-- Module 6: Pendidikan Moral -->
+                <div onclick="startModule(6)" class="module-card cursor-pointer bg-pink-100 hover:bg-pink-200 border-4 border-pink-400 rounded-3xl p-4 md:p-6 text-center flex flex-col items-center justify-between shadow-lg relative overflow-hidden">
+                    <div class="absolute top-2 right-2 bg-pink-400 text-white text-xs font-bold px-2 py-1 rounded-full">PM</div>
+                    <span class="text-5xl md:text-6xl my-2">🤝</span>
+                    <h3 class="text-lg md:text-xl font-extrabold text-pink-800 leading-tight">Amalan Baik</h3>
+                    <p class="text-xs text-pink-600 font-semibold mt-1">Values & Kindness!</p>
+                    <div class="mt-3 bg-pink-50 text-pink-600 text-xs font-extrabold px-3 py-1 rounded-full border border-pink-200">50 SOALAN</div>
+                    <div class="mt-2 bg-pink-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-inner">AMALKAN</div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- PLAY ZONE (Shared dynamically by modules) -->
+        <div id="playZone" class="w-full max-w-4xl hidden bg-white rounded-3xl p-4 md:p-8 shadow-2xl border-4 border-green-400 relative flex flex-col items-center space-y-6">
+            
+            <!-- Module Title / Header inside Play Zone -->
+            <div class="w-full flex justify-between items-center border-b-2 border-dashed border-gray-200 pb-4">
+                <button onclick="goHome()" class="bg-rose-500 hover:bg-rose-600 text-white font-bold px-4 py-2 rounded-2xl shadow-md transition flex items-center space-x-2">
+                    <i class="fas fa-home"></i> <span class="hidden sm:inline">Keluar (Exit)</span>
+                </button>
+                <div class="text-center">
+                    <h2 id="moduleTitle" class="text-xl md:text-2xl font-black text-green-700">Module Title</h2>
+                    <span id="moduleSubtitle" class="text-xs md:text-sm text-gray-500 font-semibold">Subtitle</span>
+                </div>
+                <div class="text-right">
+                    <div class="bg-slate-100 px-3 py-1.5 rounded-full text-xs md:text-sm font-bold text-slate-700">
+                        Soalan: <span id="currentQuestionNum">1</span>/50
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress bar -->
+            <div class="w-full bg-slate-100 rounded-full h-4 overflow-hidden border border-slate-200">
+                <div id="progressBar" class="bg-gradient-to-r from-emerald-400 to-green-600 h-full w-0 transition-all duration-300"></div>
+            </div>
+
+            <!-- GAME AREA (Changes based on active module) -->
+            <div id="gameContent" class="w-full flex flex-col items-center justify-center min-h-[300px]">
+                <!-- Dynamic module code is generated/mounted here -->
+            </div>
+
+            <!-- Interaction Control Strip: Generate Question Button -->
+            <div class="w-full flex flex-col sm:flex-row justify-center items-center gap-3 pt-2">
+                <button onclick="generateRandomQuestion()" class="bubble-btn-orange bg-orange-500 hover:bg-orange-600 text-white text-lg font-extrabold px-6 py-3 rounded-2xl shadow-md flex items-center space-x-2 transition duration-150 transform hover:scale-105">
+                    <span>🎲</span>
+                    <span>Jana Soalan Baru (Generate)</span>
+                </button>
+            </div>
+
+            <!-- Mascot Guide Banner inside games -->
+            <div class="w-full bg-amber-50 rounded-2xl p-3 border border-amber-200 flex items-center space-x-3 mt-4">
+                <span class="text-3xl animate-bounce">🐰</span>
+                <div class="text-xs md:text-sm text-amber-900 font-medium">
+                    <strong class="text-amber-800">Tip Robi:</strong> <span id="robiTip">Dengar perkataan dengan teliti kemudian selesaikan cabaran!</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= REWARD MODAL / SUCCESS POPUP ================= -->
+        <div id="rewardModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+            <div class="bg-white rounded-3xl border-8 border-yellow-400 p-8 max-w-md w-full text-center space-y-6 shadow-2xl transform scale-95 transition-all duration-300 relative overflow-hidden">
+                <!-- Sparkle background designs -->
+                <div class="absolute -top-10 -left-10 text-6xl opacity-20">⭐</div>
+                <div class="absolute -bottom-10 -right-10 text-6xl opacity-20">🎉</div>
+                
+                <h2 class="text-4xl font-black text-amber-600 tracking-wide animate-pulse">TAHNIAH! 🎉</h2>
+                <div class="text-7xl my-4">🏆</div>
+                <p id="rewardMessage" class="text-xl text-gray-700 font-bold">Hebatnya! Anda dapat 3 Bintang!</p>
+                
+                <div class="flex justify-center space-x-2 text-4xl py-2">
+                    <span class="star-anim animate-bounce" style="animation-delay: 0.1s">⭐</span>
+                    <span class="star-anim animate-bounce" style="animation-delay: 0.3s">⭐</span>
+                    <span class="star-anim animate-bounce" style="animation-delay: 0.5s">⭐</span>
+                </div>
+
+                <div class="space-y-2">
+                    <button onclick="playAgain()" class="w-full bubble-btn bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold py-4 px-6 rounded-2xl text-lg tracking-wider">
+                        MAIN LAGI! (Play Again)
+                    </button>
+                    <button onclick="goHome()" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-800 font-extrabold py-3 px-6 rounded-2xl text-sm transition">
+                        KE MENU UTAMA (Main Menu)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer credits with updated Copyright -->
+    <footer class="w-full py-4 text-center text-xs md:text-sm text-gray-500 font-semibold border-t border-dashed border-gray-300/60 bg-white/40 mt-6">
+        <p>👨‍🏫 Direka Khas untuk Kurikulum Prasekolah Kebangsaan (KSPK) Malaysia.</p>
+        <p class="mt-1">Dihasilkan dengan ❤️ penuh kasih sayang untuk kanak-kanak bijak.</p>
+        <p class="mt-1 text-slate-400 font-bold">2026 © BrandWorkz Co.</p>
+    </footer>
+
+    <!-- Audio Synth Support / Speech Engine -->
+    <script>
+        // Use standard Web Audio API to synthesize friendly toy/arcade sound effects without external file lag!
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let voiceOn = true;
+
+        function playSound(type) {
+            if (!voiceOn) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (type === 'correct') {
+                    // Cheerful retro chime
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.3);
+                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.3);
+                } else if (type === 'wrong') {
+                    // Sad retro slip
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(250, audioCtx.currentTime);
+                    osc.frequency.linearRampToValueAtTime(100, audioCtx.currentTime + 0.4);
+                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.4);
+                } else if (type === 'click') {
+                    // Bubble pop
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(1200, audioCtx.currentTime + 0.05);
+                    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.1);
+                } else if (type === 'win') {
+                    // Double fanfare pitch climb
+                    const now = audioCtx.currentTime;
+                    const notes = [440, 554, 659, 880];
+                    notes.forEach((freq, idx) => {
+                        const o = audioCtx.createOscillator();
+                        const g = audioCtx.createGain();
+                        o.connect(g);
+                        g.connect(audioCtx.destination);
+                        o.type = 'sine';
+                        o.frequency.setValueAtTime(freq, now + idx * 0.1);
+                        g.gain.setValueAtTime(0.1, now + idx * 0.1);
+                        g.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.1 + 0.25);
+                        o.start(now + idx * 0.1);
+                        o.stop(now + idx * 0.1 + 0.25);
+                    });
+                }
+            } catch (e) {
+                console.log("Audio contexts not loaded yet: ", e);
+            }
+        }
+
+        // Speak texts utilizing browser's native text-to-speech
+        function speak(text, lang = 'ms-MY') {
+            if (!voiceOn) return;
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // Stop anything else speaking
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = lang;
+                utterance.pitch = 1.35; // Cute kid friendly higher pitch
+                utterance.rate = 0.85;  // Slow, clear pronunciation
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function toggleVoice() {
+            voiceOn = !voiceOn;
+            const btn = document.getElementById('voiceBtn');
+            if (voiceOn) {
+                btn.className = "bg-blue-500 hover:bg-blue-600 text-white font-bold p-3 rounded-2xl shadow-md flex items-center space-x-1 transition duration-150";
+                btn.innerHTML = `<i class="fas fa-volume-up text-lg"></i> <span class="text-xs hidden md:inline">Voice: ON</span>`;
+                speak("Suara dibuka!", "ms-MY");
+            } else {
+                btn.className = "bg-rose-500 hover:bg-rose-600 text-white font-bold p-3 rounded-2xl shadow-md flex items-center space-x-1 transition duration-150";
+                btn.innerHTML = `<i class="fas fa-volume-mute text-lg"></i> <span class="text-xs hidden md:inline">Voice: OFF</span>`;
+            }
+        }
+
+        function speakMalaysianIntro() {
+            playSound('click');
+            const childName = localStorage.getItem('bj_child_name') || 'kawan-kawan';
+            speak(`Hai ${childName}! Saya Robi si arnab. Jom belajar bersama-sama hari ini!`, "ms-MY");
+        }
+    </script>
+
+    <script>
+        // State variables
+        let currentModule = 0;
+        let currentQuestionIdx = 0;
+        let totalStars = 0;
+        let activeQuestions = []; // Holds the 50 dynamically generated questions of the active module
+
+        // 50 Suku Kata Words Database
+        const SUKU_KATA_50 = [
+            { w: "BOLA", s1: "BO", s2: "LA", img: "⚽", opts: ["LA", "TA", "KU", "DA"] },
+            { w: "KUCING", s1: "KU", s2: "CING", img: "🐱", opts: ["LING", "RA", "CING", "DA"] },
+            { w: "BUKU", s1: "BU", s2: "KU", img: "📖", opts: ["KU", "GA", "SA", "TU"] },
+            { w: "KASUT", s1: "KA", s2: "SUT", img: "👟", opts: ["SUT", "BUT", "LAT", "PAT"] },
+            { w: "LORI", s1: "LO", s2: "RI", img: "🚛", opts: ["RI", "LI", "DI", "MA"] },
+            { w: "MATA", s1: "MA", s2: "TA", img: "👁️", opts: ["TA", "RA", "NA", "PA"] },
+            { w: "GIGI", s1: "GI", s2: "GI", img: "🦷", opts: ["GI", "RI", "KI", "SI"] },
+            { w: "BAJU", s1: "BA", s2: "JU", img: "👕", opts: ["JU", "TU", "DU", "RU"] },
+            { w: "TOPI", s1: "TO", s2: "PI", img: "🧢", opts: ["PI", "LI", "RI", "SI"] },
+            { w: "SUDU", s1: "SU", s2: "DU", img: "🥄", opts: ["DU", "KU", "MU", "RU"] },
+            { w: "MEJA", s1: "ME", s2: "JA", img: "🪑", opts: ["JA", "LA", "MA", "TA"] },
+            { w: "ROTI", s1: "RO", s2: "TI", img: "🍞", opts: ["TI", "KI", "PI", "LI"] },
+            { w: "SAYA", s1: "SA", s2: "YA", img: "🙋", opts: ["YA", "MA", "TA", "NA"] },
+            { w: "KERA", s1: "KE", s2: "RA", img: "🐒", opts: ["RA", "LA", "SA", "TA"] },
+            { w: "PADI", s1: "PA", s2: "DI", img: "🌾", opts: ["DI", "LI", "RI", "TI"] },
+            { w: "CILI", s1: "CI", s2: "LI", img: "🌶️", opts: ["LI", "RI", "TI", "KI"] },
+            { w: "DADU", s1: "DA", s2: "DU", img: "🎲", opts: ["DU", "KU", "RU", "SU"] },
+            { w: "GAJAH", s1: "GA", s2: "JAH", img: "🐘", opts: ["JAH", "LAH", "MAH", "TAH"] },
+            { w: "NANAS", s1: "NA", s2: "NAS", img: "🍍", opts: ["NAS", "LAS", "TAS", "MAS"] },
+            { w: "PAKU", s1: "PA", s2: "KU", img: "🔨", opts: ["KU", "GA", "SA", "RU"] },
+            { w: "SUSU", s1: "SU", s2: "SU", img: "🥛", opts: ["SU", "KU", "MU", "NU"] },
+            { w: "TALI", s1: "TA", s2: "LI", img: "🧵", opts: ["LI", "RI", "KI", "SI"] },
+            { w: "SAWI", s1: "SA", s2: "WI", img: "🥬", opts: ["WI", "RI", "TI", "LI"] },
+            { w: "LACI", s1: "LA", s2: "CI", img: "🗄️", opts: ["CI", "RI", "TI", "KI"] },
+            { w: "MADU", s1: "MA", s2: "DU", img: "🍯", opts: ["DU", "KU", "RU", "LU"] },
+            { w: "KUDA", s1: "KU", s2: "DA", img: "🐎", opts: ["DA", "TA", "RA", "LA"] },
+            { w: "JARI", s1: "JA", s2: "RI", img: "☝️", opts: ["RI", "LI", "TI", "KI"] },
+            { w: "KAYU", s1: "KA", s2: "YU", img: "🪵", opts: ["YU", "LU", "RU", "TU"] },
+            { w: "BUMI", s1: "BU", s2: "MI", img: "🌍", opts: ["MI", "LI", "RI", "TI"] },
+            { w: "RAJA", s1: "RA", s2: "JA", img: "👑", opts: ["JA", "MA", "TA", "LA"] },
+            { w: "SATU", s1: "SA", s2: "TU", img: "1️⃣", opts: ["TU", "DU", "RU", "LU"] },
+            { w: "KUKU", s1: "KU", s2: "KU", img: "💅", opts: ["KU", "MU", "DU", "RU"] },
+            { w: "PASU", s1: "PA", s2: "SU", img: "🏺", opts: ["SU", "KU", "RU", "TU"] },
+            { w: "DURI", s1: "DU", s2: "RI", img: "🌵", opts: ["RI", "LI", "TI", "KI"] },
+            { w: "NASI", s1: "NA", s2: "SI", img: "🍚", opts: ["SI", "RI", "LI", "TI"] },
+            { w: "NENEK", s1: "NE", s2: "NEK", img: "👵", opts: ["NEK", "LEK", "TEK", "MEK"] },
+            { w: "UBAT", s1: "U", s2: "BAT", img: "💊", opts: ["BAT", "LAT", "PAT", "RAT"] },
+            { w: "BOTOL", s1: "BO", s2: "TOL", img: "🍾", opts: ["TOL", "LOL", "ROL", "DOL"] },
+            { w: "AYAM", s1: "A", s2: "YAM", img: "🐔", opts: ["YAM", "LAM", "TAM", "MAM"] },
+            { w: "ITIK", s1: "I", s2: "TIK", img: "🦆", opts: ["TIK", "LIK", "RIK", "SIK"] },
+            { w: "BUNGA", s1: "BUN", s2: "GA", img: "🌸", opts: ["GA", "TA", "MA", "RA"] },
+            { w: "KURA", s1: "KU", s2: "RA", img: "🐢", opts: ["RA", "LA", "SA", "TA"] },
+            { w: "SIPUT", s1: "SI", s2: "PUT", img: "🐌", opts: ["PUT", "LUT", "RUT", "KUT"] },
+            { w: "BECA", s1: "BE", s2: "CA", img: "🚲", opts: ["CA", "TA", "RA", "LA"] },
+            { w: "PINTU", s1: "PIN", s2: "TU", img: "🚪", opts: ["TU", "DU", "RU", "LU"] },
+            { w: "LALU", s1: "LA", s2: "LU", img: "🚶", opts: ["LU", "RU", "TU", "MU"] },
+            { w: "SENA", s1: "SE", s2: "NA", img: "🌳", opts: ["NA", "TA", "MA", "LA"] },
+            { w: "BETA", s1: "BE", s2: "TA", img: "🤴", opts: ["TA", "RA", "NA", "PA"] },
+            { w: "CITA", s1: "CI", s2: "TA", img: "💭", opts: ["TA", "RA", "LA", "MA"] },
+            { w: "KATA", s1: "KA", s2: "TA", img: "💬", opts: ["TA", "RA", "LA", "PA"] }
+        ];
+
+        const PHONICS_50 = [
+            { w: "LION", p: "L_ON", img: "🦁", corr: "I", opts: ["A", "E", "I", "O"] },
+            { w: "MONKEY", p: "MONK_Y", img: "🐒", corr: "E", opts: ["E", "A", "O", "U"] },
+            { w: "TIGER", p: "TIG_R", img: "🐯", corr: "E", opts: ["I", "A", "O", "E"] },
+            { w: "RABBIT", p: "RABB_T", img: "🐰", corr: "I", opts: ["A", "E", "I", "U"] },
+            { w: "DOG", p: "D_G", img: "🐶", corr: "O", opts: ["A", "E", "O", "U"] },
+            { w: "CAT", p: "C_T", img: "🐱", corr: "A", opts: ["A", "E", "I", "O"] },
+            { w: "FISH", p: "F_SH", img: "🐟", corr: "I", opts: ["A", "I", "O", "U"] },
+            { w: "BIRD", p: "B_RD", img: "🐦", corr: "I", opts: ["A", "E", "I", "Y"] },
+            { w: "FROG", p: "FR_G", img: "🐸", corr: "O", opts: ["A", "E", "O", "U"] },
+            { w: "PIG", p: "P_G", img: "🐷", corr: "I", opts: ["A", "E", "I", "O"] },
+            { w: "COW", p: "C_W", img: "🐮", corr: "O", opts: ["A", "E", "O", "U"] },
+            { w: "SHEEP", p: "SH_EP", img: "🐑", corr: "E", opts: ["A", "E", "I", "O"] },
+            { w: "HORSE", p: "H_RSE", img: "🐴", corr: "O", opts: ["A", "E", "O", "I"] },
+            { w: "DUCK", p: "D_CK", img: "🦆", corr: "U", opts: ["A", "E", "I", "U"] },
+            { w: "BEAR", p: "B_AR", img: "🐻", corr: "E", opts: ["A", "E", "I", "O"] },
+            { w: "PANDA", p: "P_NDA", img: "🐼", corr: "A", opts: ["A", "E", "O", "U"] },
+            { w: "KOALA", p: "KO_LA", img: "🐨", corr: "A", opts: ["A", "E", "O", "U"] },
+            { w: "SNAKE", p: "SN_KE", img: "🐍", corr: "A", opts: ["A", "E", "I", "O"] },
+            { w: "CRAB", p: "CR_B", img: "🦀", corr: "A", opts: ["A", "E", "I", "O"] },
+            { w: "SHARK", p: "SH_RK", img: "🦈", corr: "A", opts: ["A", "E", "O", "U"] },
+            { w: "WHALE", p: "WH_LE", img: "🐋", corr: "A", opts: ["A", "E", "I", "O"] },
+            { w: "OWL", p: "_WL", img: "🦉", corr: "O", opts: ["A", "E", "O", "U"] },
+            { w: "BEE", p: "B_E", img: "🐝", corr: "E", opts: ["A", "E", "I", "O"] },
+            { w: "ANT", p: "_NT", img: "🐜", corr: "A", opts: ["A", "E", "I", "O"] },
+            { w: "DEER", p: "D_ER", img: "🦌", corr: "E", opts: ["A", "E", "I", "O"] },
+            { w: "GOAT", p: "G_AT", img: "🐐", corr: "O", opts: ["A", "E", "O", "I"] },
+            { w: "MOUSE", p: "MO_SE", img: "🐭", corr: "U", opts: ["A", "E", "O", "U"] },
+            { w: "FOX", p: "F_X", img: "🦊", corr: "O", opts: ["A", "E", "O", "I"] },
+            { w: "WOLF", p: "W_LF", img: "🐺", corr: "O", opts: ["A", "E", "O", "U"] },
+            { w: "ZEBRA", p: "ZEB_A", img: "🦓", corr: "R", opts: ["R", "L", "T", "S"] },
+            { w: "CHICK", p: "CH_CK", img: "🐥", corr: "I", opts: ["A", "E", "I", "O"] },
+            { w: "SWAN", p: "SW_N", img: "🦢", corr: "A", opts: ["A", "E", "I", "O"] },
+            { w: "BAT", p: "B_T", img: "🦇", corr: "A", opts: ["A", "E", "I", "O"] },
+            { w: "SPIDER", p: "SPID_R", img: "🕷️", corr: "E", opts: ["A", "E", "I", "O"] },
+            { w: "FLY", p: "FL_", img: "🪰", corr: "Y", opts: ["Y", "I", "E", "A"] },
+            { w: "BUG", p: "B_G", img: "🪲", corr: "U", opts: ["A", "E", "I", "U"] },
+            { w: "SNAIL", p: "SN_IL", img: "🐌", corr: "A", opts: ["A", "E", "I", "O"] },
+            { w: "TURTLE", p: "T_RTLE", img: "🐢", corr: "U", opts: ["A", "E", "I", "U"] },
+            { w: "WORM", p: "W_RM", img: "🪱", corr: "O", opts: ["A", "E", "O", "U"] },
+            { w: "EAGLE", p: "E_GLE", img: "🦅", corr: "A", opts: ["A", "E", "I", "O"] },
+            { w: "SEAL", p: "S_AL", img: "🦭", corr: "E", opts: ["A", "E", "I", "O"] },
+            { w: "LION", p: "LI_N", img: "🦁", corr: "O", opts: ["A", "E", "I", "O"] },
+            { w: "TIGER", p: "TI_ER", img: "🐯", corr: "G", opts: ["G", "C", "K", "T"] },
+            { w: "ZEBRA", p: "Z_BRA", img: "🦓", corr: "E", opts: ["A", "E", "I", "O"] },
+            { w: "MONKEY", p: "M_NKEY", img: "🐒", corr: "O", opts: ["A", "E", "O", "U"] },
+            { w: "RABBIT", p: "R_BBIT", img: "🐰", corr: "A", opts: ["A", "E", "I", "O"] },
+            { w: "PANDA", p: "PA_DA", img: "🐼", corr: "N", opts: ["M", "N", "L", "R"] },
+            { w: "DONKEY", p: "DONK_Y", img: "🫏", corr: "E", opts: ["A", "E", "I", "O"] },
+            { w: "CAMEL", p: "C_MEL", img: "🐪", corr: "A", opts: ["A", "E", "I", "O"] },
+            { w: "HIPPO", p: "H_PPO", img: "🦛", corr: "I", opts: ["A", "E", "I", "O"] }
+        ];
+
+        const SCIENCE_50 = [
+            { name: "Pokok Bunga Raya 🌺", type: "LIVING", img: "🌺", hint: "Pokok bunga raya ialah benda hidup!" },
+            { name: "Kereta Proton Saga 🚗", type: "NON-LIVING", img: "🚗", hint: "Kereta ialah benda bukan hidup!" },
+            { name: "Kupu-Kupu Cantik 🦋", type: "LIVING", img: "🦋", hint: "Kupu kupu ialah benda hidup!" },
+            { name: "Kucing Robi 🐱", type: "LIVING", img: "🐱", hint: "Kucing ialah benda hidup!" },
+            { name: "Rumah Kampung 🏠", type: "NON-LIVING", img: "🏠", hint: "Rumah ialah benda bukan hidup!" },
+            { name: "Buku Bijak Kidz 📖", type: "NON-LIVING", img: "📖", hint: "Buku ialah benda bukan hidup!" },
+            { name: "Kasut Sekolah 👟", type: "NON-LIVING", img: "👟", hint: "Kasut ialah benda bukan hidup!" },
+            { name: "Burung Kakaktua 🐦", type: "LIVING", img: "🐦", hint: "Burung ialah benda hidup!" },
+            { name: "Batu Sungai 🪨", type: "NON-LIVING", img: "🪨", hint: "Batu ialah benda bukan hidup!" },
+            { name: "Meja Kayu 🪑", type: "NON-LIVING", img: "🪑", hint: "Meja ialah benda bukan hidup!" },
+            { name: "Cacing Tanah 🪱", type: "LIVING", img: "🪱", hint: "Cacing tanah ialah benda hidup!" },
+            { name: "Semut Hitam 🐜", type: "LIVING", img: "🐜", hint: "Semut ialah benda hidup!" },
+            { name: "Gajah Malaya 🐘", type: "LIVING", img: "🐘", hint: "Gajah ialah benda hidup!" },
+            { name: "Pokok Kelapa 🌴", type: "LIVING", img: "🌴", hint: "Pokok kelapa ialah benda hidup!" },
+            { name: "Ikan Emas 🐟", type: "LIVING", img: "🐟", hint: "Ikan ialah benda hidup!" },
+            { name: "Katak Hijau 🐸", type: "LIVING", img: "🐸", hint: "Katak ialah benda hidup!" },
+            { name: "Siput Kebun 🐌", type: "LIVING", img: "🐌", hint: "Siput ialah benda hidup!" },
+            { name: "Ketam Pantai 🦀", type: "LIVING", img: "🦀", hint: "Ketam ialah benda hidup!" },
+            { name: "Ayam Kampung 🐔", type: "LIVING", img: "🐔", hint: "Ayam ialah benda hidup!" },
+            { name: "Itik Berenang 🦆", type: "LIVING", img: "🦆", hint: "Itik ialah benda hidup!" },
+            { name: "Kambing Beb 🐐", type: "LIVING", img: "🐐", hint: "Kambing ialah benda hidup!" },
+            { name: "Lembu Susu 🐄", type: "LIVING", img: "🐄", hint: "Lembu ialah benda hidup!" },
+            { name: "Kuda Lari 🐎", type: "LIVING", img: "🐎", hint: "Kuda ialah benda hidup!" },
+            { name: "Ular Sawah 🐍", type: "LIVING", img: "🐍", hint: "Ular ialah benda hidup!" },
+            { name: "Belon Udara 🎈", type: "NON-LIVING", img: "🎈", hint: "Belon ialah benda bukan hidup!" },
+            { name: "Awan Putih ☁️", type: "NON-LIVING", img: "☁️", hint: "Awan ialah benda bukan hidup!" },
+            { name: "Telefon Pintar 📱", type: "NON-LIVING", img: "📱", hint: "Telefon ialah benda bukan hidup!" },
+            { name: "Komputer Riba 💻", type: "NON-LIVING", img: "💻", hint: "Komputer ialah benda bukan hidup!" },
+            { name: "Pensel Warna ✏️", type: "NON-LIVING", img: "✏️", hint: "Pensel ialah benda bukan hidup!" },
+            { name: "Botol Air 🍾", type: "NON-LIVING", img: "🍾", hint: "Botol air ialah benda bukan hidup!" },
+            { name: "Baju Melayu 👕", type: "NON-LIVING", img: "👕", hint: "Baju ialah benda bukan hidup!" },
+            { name: "Beg Sekolah 🎒", type: "NON-LIVING", img: "🎒", hint: "Beg sekolah ialah benda bukan hidup!" },
+            { name: "Topi Robi 🧢", type: "NON-LIVING", img: "🧢", hint: "Topi ialah benda bukan hidup!" },
+            { name: "Basikal Merah 🚲", type: "NON-LIVING", img: "🚲", hint: "Basikal ialah benda bukan hidup!" },
+            { name: "Jam Dinding ⏰", type: "NON-LIVING", img: "⏰", hint: "Jam ialah benda bukan hidup!" },
+            { name: "Lampu Meja 💡", type: "NON-LIVING", img: "💡", hint: "Lampu ialah benda bukan hidup!" },
+            { name: "Sudu Besi 🥄", type: "NON-LIVING", img: "🥄", hint: "Sudu ialah benda bukan hidup!" },
+            { name: "Pinggan Makan 🍽️", type: "NON-LIVING", img: "🍽️", hint: "Pinggan ialah benda bukan hidup!" },
+            { name: "Cawan Kopi ☕", type: "NON-LIVING", img: "☕", hint: "Cawan ialah benda bukan hidup!" },
+            { name: "Bantal Empuk 🛌", type: "NON-LIVING", img: "🛌", hint: "Bantal ialah benda bukan hidup!" },
+            { name: "Pintu Kayu 🚪", type: "NON-LIVING", img: "🚪", hint: "Pintu ialah benda bukan hidup!" },
+            { name: "Dinding Batu 🧱", type: "NON-LIVING", img: "🧱", hint: "Dinding ialah benda bukan hidup!" },
+            { name: "Kerusi Plastik 🪑", type: "NON-LIVING", img: "🪑", hint: "Kerusi ialah benda bukan hidup!" },
+            { name: "Payung Hujan 🌂", type: "NON-LIVING", img: "🌂", hint: "Payung ialah benda bukan hidup!" },
+            { name: "Kereta Sorong 🛒", type: "NON-LIVING", img: "🛒", hint: "Kereta sorong ialah benda bukan hidup!" },
+            { name: "Kunci Besi 🔑", type: "NON-LIVING", img: "🔑", hint: "Kunci ialah benda bukan hidup!" },
+            { name: "Sikat Rambut 🪮", type: "NON-LIVING", img: "🪮", hint: "Sikat ialah benda bukan hidup!" },
+            { name: "Tayar Kereta 🛞", type: "NON-LIVING", img: "🛞", hint: "Tayar ialah benda bukan hidup!" },
+            { name: "Duit Syiling 🪙", type: "NON-LIVING", img: "🪙", hint: "Duit syiling ialah benda bukan hidup!" },
+            { name: "Kipas Siling 🌀", type: "NON-LIVING", img: "🌀", hint: "Kipas ialah benda bukan hidup!" }
+        ];
+
+        const NEGARAKU_50 = [
+            { name: "Jalur Gemilang", img: "🇲🇾", opts: ["Jalur Gemilang", "Bunga Raya", "Harimau", "KLCC"], corr: "Jalur Gemilang", hint: "Bendera Malaysia bernama Jalur Gemilang!" },
+            { name: "Bunga Raya", img: "🌺", opts: ["Bunga Rose", "Bunga Raya", "Bunga Melur", "Bunga Orkid"], corr: "Bunga Raya", hint: "Bunga kebangsaan kita ialah Bunga Raya!" },
+            { name: "Menara Berkembar Petronas (KLCC)", img: "🏢🏢", opts: ["Menara KL", "KLCC Twin Towers", "Muzium Negara", "Tugu Negara"], corr: "KLCC Twin Towers", hint: "Menara berkembar Petronas!" },
+            { name: "Harimau Malaya", img: "🐯", opts: ["Kucing", "Singa", "Harimau Malaya", "Gajah"], corr: "Harimau Malaya", hint: "Harimau Malaya simbol keberanian negara!" },
+            { name: "Wau Bulan", img: "🪁", opts: ["Wau Bulan", "Helikopter", "Burung", "Kapal Terbang"], corr: "Wau Bulan", hint: "Wau Bulan permainan tradisional Malaysia!" },
+            { name: "Orang Utan", img: "🦧", opts: ["Monyet", "Orang Utan", "Kucing", "Beruang"], corr: "Orang Utan", hint: "Orang Utan khazanah berharga di Sabah dan Sarawak!" },
+            { name: "Gunung Kinabalu", img: "🏔️", opts: ["Gunung Kinabalu", "Bukit Fraser", "Batu Caves", "Bukit Bendera"], corr: "Gunung Kinabalu", hint: "Gunung tertinggi di Malaysia, Gunung Kinabalu!" },
+            { name: "Jambatan Pulau Pinang", img: "🌉", opts: ["Jambatan Pulau Pinang", "KLCC", "Menara KL", "Istana Negara"], corr: "Jambatan Pulau Pinang", hint: "Jambatan Pulau Pinang yang indah!" },
+            { name: "Nasi Lemak", img: "🍛", opts: ["Sari", "Nasi Lemak", "Burger", "Pizza"], corr: "Nasi Lemak", hint: "Makanan kegemaran rakyat Malaysia, Nasi Lemak!" },
+            { name: "Durian", img: "🍈", opts: ["Nanas", "Betik", "Durian", "Pisang"], corr: "Durian", hint: "Raja Buah di Malaysia, Durian!" },
+            { name: "Menara KL", img: "🗼", opts: ["Menara KL", "KLCC", "Muzium Negara", "Tugu Negara"], corr: "Menara KL", hint: "Menara Kuala Lumpur yang tinggi!" },
+            { name: "Sate", img: "🍢", opts: ["Sate", "Roti Canai", "Nasi Lemak", "Laksa"], corr: "Sate", hint: "Sate yang dicicah dengan kuah kacang!" },
+            { name: "Roti Canai", img: "🫓", opts: ["Pizza", "Sate", "Roti Canai", "Donut"], corr: "Roti Canai", hint: "Roti Canai makanan sarapan pagi yang sedap!" },
+            { name: "Teh Tarik", img: "☕", opts: ["Teh Tarik", "Kopi Hitam", "Susu Lembu", "Air Sirap"], corr: "Teh Tarik", hint: "Minuman kegemaran kita, Teh Tarik!" },
+            { name: "Ketupat", img: "🍙", opts: ["Sushi", "Ketupat", "Karipap", "Donut"], corr: "Ketupat", hint: "Ketupat dimakan ketika menyambut Hari Raya!" },
+            { name: "Basikal", img: "🚲", opts: ["Kereta", "Motosikal", "Basikal", "Bas"], corr: "Basikal", hint: "Basikal untuk bersiar-siar di taman!" },
+            { name: "Masjid Negara", img: "🕌", opts: ["Masjid Negara", "Muzium Negara", "Tugu Negara", "Istana Negara"], corr: "Masjid Negara", hint: "Masjid Negara tempat ibadah yang indah!" },
+            { name: "Muzium Negara", img: "🏛️", opts: ["KLCC", "Muzium Negara", "Tugu Negara", "Istana Negara"], corr: "Muzium Negara", hint: "Muzium Negara menyimpan sejarah kita!" },
+            { name: "Tugu Negara", img: "👥", opts: ["KLCC", "Muzium Negara", "Tugu Negara", "Istana Negara"], corr: "Tugu Negara", hint: "Tugu Negara menghargai jasa wira tanah air!" },
+            { name: "Istana Negara", img: "🏰", opts: ["KLCC", "Muzium Negara", "Istana Negara", "Tugu Negara"], corr: "Istana Negara", hint: "Istana Negara tempat persemayaman Yang di-Pertuan Agong!" },
+            { name: "Orang Asli", img: "🏹", opts: ["Orang Asli", "Askar", "Polis", "Doktor"], corr: "Orang Asli", hint: "Masyarakat Orang Asli yang mahir berburu!" },
+            { name: "Wau Kucing", img: "🪁", opts: ["Wau Bulan", "Wau Kucing", "Layang-layang", "Kapal"], corr: "Wau Kucing", hint: "Wau Kucing adalah warisan tradisional!" },
+            { name: "Gamelan", img: "🪘", opts: ["Gamelan", "Gitar", "Piano", "Biola"], corr: "Gamelan", hint: "Alat muzik tradisional Gamelan!" },
+            { name: "Tarian Singa", img: "🦁", opts: ["Tarian Singa", "Tarian Kipas", "Tarian India", "Tarian Melayu"], corr: "Tarian Singa", hint: "Tarian Singa ditarikan semasa Tahun Baru Cina!" },
+            { name: "Tarian Kipas", img: "🪭", opts: ["Tarian Singa", "Tarian Kipas", "Tarian India", "Tarian Melayu"], corr: "Tarian Kipas", hint: "Tarian Kipas ditarikan dengan anggun!" },
+            { name: "Tarian Bharatanatyam", img: "💃", opts: ["Tarian Singa", "Tarian Bharatanatyam", "Tarian Kipas", "Tarian Melayu"], corr: "Tarian Bharatanatyam", hint: "Tarian klasik India yang berwarna-warni!" },
+            { name: "Ketupat Palas", img: "🍙", opts: ["Ketupat Palas", "Sushi", "Roti", "Kek"], corr: "Ketupat Palas", hint: "Ketupat Palas diperbuat daripada pulut!" },
+            { name: "Kuih Lapis", img: "🍰", opts: ["Kuih Lapis", "Donut", "Biskut", "Roti"], corr: "Kuih Lapis", hint: "Kuih Lapis tradisional yang manis dan berwarna-warni!" },
+            { name: "Karipap", img: "🥟", opts: ["Karipap", "Samosa", "Donut", "Muffin"], corr: "Karipap", hint: "Karipap inti kentang kegemaran ramai!" },
+            { name: "Manggis", img: "🟣", opts: ["Manggis", "Rambutan", "Durian", "Betik"], corr: "Manggis", hint: "Buah Manggis yang manis berwarna ungu!" },
+            { name: "Rambutan", img: "🔴", opts: ["Manggis", "Rambutan", "Durian", "Betik"], corr: "Rambutan", hint: "Buah Rambutan mempunyai bulu yang unik!" },
+            { name: "Betik", img: "🧡", opts: ["Manggis", "Rambutan", "Betik", "Durian"], corr: "Betik", hint: "Buah Betik mengandungi vitamin C!" },
+            { name: "Kelapa Muda", img: "🥥", opts: ["Kelapa Muda", "Manggis", "Rambutan", "Durian"], corr: "Kelapa Muda", hint: "Minum air Kelapa Muda sangat menyegarkan!" },
+            { name: "Nanas Sarawak", img: "🍍", opts: ["Nanas Sarawak", "Manggis", "Rambutan", "Durian"], corr: "Nanas Sarawak", hint: "Nanas Sarawak yang manis dan berair!" },
+            { name: "Pisang Emas", img: "🍌", opts: ["Pisang Emas", "Manggis", "Rambutan", "Durian"], corr: "Pisang Emas", hint: "Pisang Emas dibawa berlayar!" },
+            { name: "Bunga Melur", img: "🌼", opts: ["Bunga Raya", "Bunga Melur", "Bunga Matahari", "Bunga Rose"], corr: "Bunga Melur", hint: "Bunga Melur yang wangi!" },
+            { name: "Bunga Matahari", img: "🌻", opts: ["Bunga Raya", "Bunga Melur", "Bunga Matahari", "Bunga Rose"], corr: "Bunga Matahari", hint: "Bunga Matahari berwarna kuning terang!" },
+            { name: "Ringgit Malaysia", img: "💵", opts: ["Ringgit Malaysia", "Dolar", "Yen", "Euro"], corr: "Ringgit Malaysia", hint: "Mata wang kita ialah Ringgit Malaysia!" },
+            { name: "Congkak", img: "🪵", opts: ["Congkak", "Gasing", "Wau", "Dam"], corr: "Congkak", hint: "Main Congkak menggunakan guli di dalam lubang kayu!" },
+            { name: "Gasing", img: "🌀", opts: ["Congkak", "Gasing", "Wau", "Dam"], corr: "Gasing", hint: "Gasing berputar laju di atas lantai!" },
+            { name: "Dam Tradisional", img: "🏁", opts: ["Congkak", "Gasing", "Wau", "Dam Tradisional"], corr: "Dam Tradisional", hint: "Permainan Dam melatih minda kita!" },
+            { name: "Perodua Myvi", img: "🚗", opts: ["Perodua Myvi", "Lori", "Bas", "Kereta Api"], corr: "Perodua Myvi", hint: "Kereta Myvi buatan Malaysia!" },
+            { name: "Proton Saga", img: "🚗", opts: ["Proton Saga", "Lori", "Bas", "Kereta Api"], corr: "Proton Saga", hint: "Proton Saga kereta nasional pertama!" },
+            { name: "Baju Melayu", img: "👕", opts: ["Baju Melayu", "Cheongsam", "Sari", "Dhoti"], corr: "Baju Melayu", hint: "Baju Melayu dipakai semasa Hari Raya!" },
+            { name: "Cheongsam", img: "👗", opts: ["Baju Melayu", "Cheongsam", "Sari", "Dhoti"], corr: "Cheongsam", hint: "Cheongsam dipakai semasa Tahun Baru Cina!" },
+            { name: "Sari", img: "🧣", opts: ["Baju Melayu", "Cheongsam", "Sari", "Dhoti"], corr: "Sari", hint: "Sari pakaian tradisional wanita India!" },
+            { name: "Sabah & Sarawak", img: "🗺️", opts: ["Semenanjung", "Sabah & Sarawak", "Kuala Lumpur", "Pulau Pinang"], corr: "Sabah & Sarawak", hint: "Negeri indah di kepulauan Borneo!" },
+            { name: "Gunung Jerai", img: "⛰️", opts: ["Gunung Jerai", "Gunung Kinabalu", "Bukit Fraser", "Bukit Bendera"], corr: "Gunung Jerai", hint: "Gunung Jerai berada di negeri Kedah!" },
+            { name: "Langkawi", img: "🏝️", opts: ["Langkawi", "KLCC", "Muzium Negara", "Tugu Negara"], corr: "Langkawi", hint: "Pulau Langkawi yang penuh legenda!" },
+            { name: "Burung Kenyalang", img: "🦅", opts: ["Burung Kenyalang", "Burung Kakaktua", "Burung Merpati", "Burung helang"], corr: "Burung Kenyalang", hint: "Burung Kenyalang kebanggaan negeri Sarawak!" }
+        ];
+
+        const MORAL_50 = [
+            { s: "Ali nampak sampah di atas lantai. Apakah tindakan mulia Ali?", img: "🗑️", h: "Kutip dan buang sampah ke dalam tong sampah!", o: [{ t: "Kutip & buang dalam tong sampah", c: true, e: "✅" }, { t: "Biar saja sampah itu di situ", c: false, e: "❌" }] },
+            { s: "Siti mahu bermain mainan yang sama dengan Raju. Apakah cara yang sopan?", img: "🧸", h: "Berkongsi mainan bersama-sama!", o: [{ t: "Kongsi mainan bersama-sama", c: true, e: "🤝" }, { t: "Rampas mainan daripada Raju", c: false, e: "😢" }] },
+            { s: "Abang tidak sengaja terpijak kaki adik. Apakah yang perlu abang katakan?", img: "🙏", h: "Minta maaf dengan ikhlas!", o: [{ t: "Minta maaf dengan ikhlas", c: true, e: "❤️" }, { t: "Marah semula kepada adik", c: false, e: "😠" }] },
+            { s: "Amin nampak Cikgu Lim membawa banyak buku yang berat. Amin patut...", img: "📚", h: "Tolong cikgu bawa buku!", o: [{ t: "Tolong bawakan buku cikgu", c: true, e: "🥰" }, { t: "Lari pergi main dengan kawan", c: false, e: "🏃" }] },
+            { s: "Abu mahu membeli makanan di kantin sekolah. Abu patut...", img: "🍛", h: "Beratur dengan tertib!", o: [{ t: "Beratur dengan sabar", c: true, e: "🚶" }, { t: "Potong barisan orang lain", c: false, e: "😡" }] },
+            { s: "Selepas bangun tidur, Lina perlu...", img: "🛏️", h: "Kemas katil sendiri!", o: [{ t: "Kemas katil dengan kemas", c: true, e: "✨" }, { t: "Biar ibu kemaskan katil", c: false, e: "💤" }] },
+            { s: "Raju melihat air mengalir dari paip yang tidak ditutup. Raju patut...", img: "🚰", h: "Tutup paip air dengan rapat!", o: [{ t: "Tutup paip air dengan segera", c: true, e: "💧" }, { t: "Biar sahaja air membazir", c: false, e: "🌊" }] },
+            { s: "Liman berjumpa dengan orang tua yang ingin melintas jalan. Liman patut...", img: "👵", h: "Bantu orang tua melintas dengan selamat!", o: [{ t: "Bantu melintas dengan selamat", c: true, e: "❤️" }, { t: "Pura-pura tidak nampak", c: false, e: "🫣" }] },
+            { s: "Sarah menerima hadiah hari lahir daripada datuk. Sarah perlu ucap...", img: "🎁", h: "Ucapkan terima kasih!", o: [{ t: "Ucap terima kasih dengan senyuman", c: true, e: "😊" }, { t: "Ambil hadiah dan terus lari", c: false, e: "😠" }] },
+            { s: "Danial tolong ibu membasuh pinggan selepas makan. Ini adalah amalan...", img: "🍽️", h: "Membantu keluarga di rumah!", o: [{ t: "Membantu ibu di dapur", c: true, e: "🌟" }, { t: "Tinggalkan pinggan atas meja", c: false, e: "👎" }] },
+            { s: "Mei Mei bercakap dengan guru. Mei Mei patut...", img: "🗣️", h: "Bercakap dengan sopan!", o: [{ t: "Bercakap dengan sopan & lembut", c: true, e: "🌸" }, { t: "Menjerit dengan kuat", c: false, e: "🔊" }] },
+            { s: "Selepas membaca buku di perpustakaan, Adi patut...", img: "📚", h: "Simpan buku di tempat asal!", o: [{ t: "Simpan buku di rak asal", c: true, e: "📂" }, { t: "Sepahkan buku atas lantai", c: false, e: "🥀" }] },
+            { s: "Bala mahu keluar rumah bermain. Bala patut...", img: "🚪", h: "Minta izin ibu bapa!", o: [{ t: "Minta izin ibu bapa dahulu", c: true, e: "👋" }, { t: "Keluar tanpa beritahu sesiapa", c: false, e: "🏃‍♂️" }] },
+            { s: "Adik sedang menangis kerana terjatuh. Kakak patut...", img: "😭", h: "Pujuk dan bantu adik bangun!", o: [{ t: "Pujuk & bantu adik bangun", c: true, e: "🫂" }, { t: "Ketawakan adik yang jatuh", c: false, e: "😆" }] },
+            { s: "Apabila guru masuk ke dalam kelas, semua murid patut...", img: "👨‍🏫", h: "Berdiri dan beri salam!", o: [{ t: "Berdiri & ucap Selamat Pagi", c: true, e: "🙇‍♂️" }, { t: "Terus bising & bermain", c: false, e: "🤪" }] },
+            { s: "Chong makan pisang dan mahu membuang kulitnya. Chong patut...", img: "🍌", h: "Buang dalam tong sampah!", o: [{ t: "Buang dalam tong sampah", c: true, e: "🗑️" }, { t: "Buang merata-rata di jalan", c: false, e: "⚠️" }] },
+            { s: "Siti melihat haiwan terbiar kelaparan. Siti patut...", img: "🐈", h: "Beri haiwan makan dengan belas kasihan!", o: [{ t: "Beri makan dengan kasih sayang", c: true, e: "🍖" }, { t: "Baling batu pada haiwan itu", c: false, e: "🪨" }] },
+            { s: "Mainan di rumah berselerak selepas bermain. Kita patut...", img: "🧸", h: "Kemas mainan semula!", o: [{ t: "Simpan mainan dalam kotak", c: true, e: "📦" }, { t: "Biar bilik berselerak", c: false, e: "❌" }] },
+            { s: "Kawan tidak sengaja menjatuhkan bekas pensel anda. Anda patut...", img: "✏️", h: "Memaafkan kesalahan kawan!", o: [{ t: "Maafkan kawan & kutip bersama", c: true, e: "💖" }, { t: "Marah & tolak kawan itu", c: false, e: "😡" }] },
+            { s: "Apabila menyanyi lagu Negaraku, kita patut...", img: "🇲🇾", h: "Berdiri tegak menghormati bendera!", o: [{ t: "Berdiri tegak & menyanyi bangga", c: true, e: "🫡" }, { t: "Bercakap-cakap dengan kawan", c: false, e: "🤫" }] },
+            { s: "Ibu sedang memasak di dapur. Anak yang baik patut...", img: "🍳", h: "Tolong ibu dengan kerja mudah!", o: [{ t: "Bantu ibu membasuh sayur", c: true, e: "🥬" }, { t: "Menyepahkan barang di dapur", c: false, e: "🌀" }] },
+            { s: "Bapa sedang membasuh kereta. Kita boleh...", img: "🧽", h: "Bantu bapa membasuh kereta!", o: [{ t: "Tolong bapa lap cermin kereta", c: true, e: "🧼" }, { t: "Main air sehingga membazir", c: false, e: "💦" }] },
+            { s: "Duit baki belanja sekolah ada lebihan. Kita patut...", img: "🪙", h: "Simpan dalam tabung!", o: [{ t: "Simpan dalam tabung simpanan", c: true, e: "🐖" }, { t: "Habiskan beli gula-gula", c: false, e: "🍬" }] },
+            { s: "Kita ingin batuk atau bersin. Kita patut...", img: "🤧", h: "Tutup mulut dengan sapu tangan!", o: [{ t: "Tutup mulut dengan tisu", c: true, e: "🤧" }, { t: "Bersin terus ke arah kawan", c: false, e: "😷" }] },
+            { s: "Kawan meminta pertolongan untuk memahami latihan. Anda patut...", img: "📝", h: "Ajar kawan dengan gembira!", o: [{ t: "Ajar kawan dengan ikhlas", c: true, e: "💡" }, { t: "Kedekut ilmu & tidak mahu ajar", c: false, e: "🤐" }] },
+            { s: "Melihat tumbuhan di halaman rumah kering. Kita patut...", img: "🪴", h: "Siram pokok bunga!", o: [{ t: "Siram pokok bunga setiap hari", c: true, e: "💦" }, { t: "Petik bunga & rosakkan pokok", c: false, e: "🥀" }] },
+            { s: "Mendengar pesanan daripada ibu bapa. Kita patut...", img: "👂", h: "Dengar dengan teliti & patuh!", o: [{ t: "Dengar & patuh pesanan", c: true, e: "👍" }, { t: "Pura-pura tidak dengar", c: false, e: "🙉" }] },
+            { s: "Menggunakan bilik air di sekolah. Kita patut...", img: "🚽", h: "Pam tandas selepas diguna!", o: [{ t: "Pam tandas sehingga bersih", c: true, e: "🧼" }, { t: "Biar tandas berbau busuk", c: false, e: "🤢" }] },
+            { s: "Mengambil makanan di rumah orang lain. Kita patut...", img: "🍇", h: "Minta keizinan tuan rumah!", o: [{ t: "Minta izin dengan sopan", c: true, e: "🙏" }, { t: "Ambil makan tanpa bertanya", c: false, e: "🫣" }] },
+            { s: "Menjumpai dompet terjatuh di kawasan sekolah. Anda patut...", img: "👛", h: "Serahkan kepada guru!", o: [{ t: "Serah kepada guru atau pengawas", c: true, e: "👮" }, { t: "Ambil duit di dalamnya", c: false, e: "🤫" }] },
+            { s: "Kawan menyambut perayaan kaum mereka. Kita patut...", img: "🎉", h: "Ucap selamat & hormat kaum lain!", o: [{ t: "Ucap Selamat Hari Raya/Tahun Baru", c: true, e: "🤝" }, { t: "Ejek cara mereka berpakaian", c: false, e: "😢" }] },
+            { s: "Bermain permainan video terlalu lama. Ini adalah...", img: "🎮", h: "Sikap membazir masa!", o: [{ t: "Hadkan masa bermain & belajar", c: true, e: "⏰" }, { t: "Main sepanjang hari tanpa henti", c: false, e: "🤪" }] },
+            { s: "Mahu meminjam pensel warna kawan. Anda patut...", img: "🖍️", h: "Tanya dahulu dengan sopan!", o: [{ t: "Tanya 'Boleh saya pinjam?'", c: true, e: "🌸" }, { t: "Ambil terus dari kotak pensel", c: false, e: "🥿" }] },
+            { s: "Bilik tidur berhabuk dan kotor. Kita patut...", img: "🧹", h: "Tolong sapu dan bersihkan bilik!", o: [{ t: "Sapu & bersihkan bersama keluarga", c: true, e: "✨" }, { t: "Tunggu ibu yang bersihkan", c: false, e: "💤" }] },
+            { s: "Melihat guru membawa barangan berat di luar kelas. Anda patut...", img: "📦", h: "Bantu guru angkat barang!", o: [{ t: "Bantu angkat barang guru", c: true, e: "💪" }, { t: "Lari bersembunyi di tandas", c: false, e: "🏃" }] },
+            { s: "Bercakap bohong kepada ibu bapa adalah...", img: "🤥", h: "Amalan tidak jujur!", o: [{ t: "Sentiasa bercakap jujur & benar", c: true, e: "😇" }, { t: "Bercakap bohong untuk selamat", c: false, e: "👿" }] },
+            { s: "Adik mahu membaca buku bersama. Anda patut...", img: "📖", h: "Membaca bersama adik dengan gembira!", o: [{ t: "Kongsi buku & baca bersama", c: true, e: "🧒" }, { t: "Rampas buku & halau adik", c: false, e: "😭" }] },
+            { s: "Apabila berbuat salah kepada kawan, anda patut...", img: "🤝", h: "Segera minta maaf!", o: [{ t: "Ucap maaf dengan ikhlas", c: true, e: "❤️" }, { t: "Pura-pura tidak bersalah", c: false, e: "🙄" }] },
+            { s: "Adik mahu bermain buaian di taman permainan. Anda patut...", img: "🛝", h: "Gilir-gilir bermain dengan adil!", o: [{ t: "Beri adik main dahulu dengan adil", c: true, e: "🎠" }, { t: "Monopoli buaian sepanjang hari", c: false, e: "😡" }] },
+            { s: "Menghormati bendera Jalur Gemilang. Kita patut...", img: "🇲🇾", h: "Simpan bendera di tempat bersih!", o: [{ t: "Simpan & kibarkan dengan bangga", c: true, e: "🫡" }, { t: "Pijak & biarkan di atas tanah", c: false, e: "❌" }] },
+            { s: "Menziarahi kawan yang sakit di hospital. Anda patut...", img: "🏥", h: "Doakan kesembuhan & beri semangat!", o: [{ t: "Bawa buah tangan & beri semangat", c: true, e: "🍎" }, { t: "Bising & mengganggu pesakit lain", c: false, e: "🤫" }] },
+            { s: "Makan makanan berkhasiat seperti sayur-sayuran. Ini adalah...", img: "🥦", h: "Menjaga kesihatan diri!", o: [{ t: "Makan sayur untuk sihat & kuat", c: true, e: "💪" }, { t: "Hanya makan gula-gula & jajan", c: false, e: "🍭" }] },
+            { s: "Menggosok gigi sekurang-kurangnya dua kali sehari. Ini...", img: "🪥", h: "Menjaga kebersihan mulut!", o: [{ t: "Gosok gigi pagi & malam sebelum tidur", c: true, e: "🦷" }, { t: "Tidak pernah gosok gigi", c: false, e: "🤢" }] },
+            { s: "Membantu nenek melintas jalan yang sibuk. Ini adalah...", img: "👵", h: "Nilai murni yang terpuji!", o: [{ t: "Pegang tangan nenek & jalan perlahan", c: true, e: "🚶‍♀️" }, { t: "Tolak nenek & jalan laju", c: false, e: "❌" }] },
+            { s: "Menyimpan duit syiling di dalam tabung buluh. Ini...", img: "🎋", h: "Amalan berjimat cermat!", o: [{ t: "Menabung setiap hari untuk masa depan", c: true, e: "🪙" }, { t: "Pecahkan tabung untuk beli mainan mahal", c: false, e: "💔" }] },
+            { s: "Mengucapkan salam perkenalan kepada jiran baru. Ini...", img: "🏡", h: "Merapatkan hubungan kejiranan!", o: [{ t: "Sapa jiran dengan senyuman mesra", c: true, e: "👋" }, { t: "Jeling jiran & kunci pintu rapat", c: false, e: "🚪" }] },
+            { s: "Tolong bapa menyapu daun kering di halaman. Ini...", img: "🧹", h: "Membantu meringankan beban bapa!", o: [{ t: "Kumpul daun kering & buang", c: true, e: "🍂" }, { t: "Sepahkan lagi daun kering tersebut", c: false, e: "💨" }] },
+            { s: "Belajar bersungguh-sungguh sebelum peperiksaan. This is...", img: "📝", h: "Sikap bertanggungjawab sebagai murid!", o: [{ t: "Ulang kaji pelajaran dengan tekun", c: true, e: "✍️" }, { t: "Menonton televisyen sehingga larut malam", c: false, e: "📺" }] },
+            { s: "Mengucapkan terima kasih selepas dibantu. Ini...", img: "🙏", h: "Menghargai bantuan orang lain!", o: [{ t: "Ucapkan terima kasih seikhlas hati", c: true, e: "💖" }, { t: "Diam sahaja & terus berjalan pergi", c: false, e: "🙄" }] },
+            { s: "Mendengar syarahan guru dengan tenang di kelas. Ini...", img: "👩‍🏫", h: "Menghormati guru yang mengajar!", o: [{ t: "Fokus & catat nota penting", c: true, e: "✏️" }, { t: "Tidur di atas meja dengan nyenyak", c: false, e: "💤" }] }
+        ];
+
+        // Global dataset configurations
+        const MODULE_CONFIGS = {
+            1: {
+                title: "Mari Belajar Suku Kata!",
+                subtitle: "Bahasa Melayu - Cantumkan suku kata yang betul!",
+                tip: "Sebut nama gambar di atas, kemudian pilih suku kata kedua yang tepat!"
+            },
+            2: {
+                title: "Animal Pals Phonics!",
+                subtitle: "English - Fill in the missing animal letters!",
+                tip: "Look at the cute animal! Tap the letter that makes its name perfect!"
+            },
+            3: {
+                title: "Jom Kira Buah-buahan!",
+                subtitle: "Matematik Awal - Kira dan pilih jawapan!",
+                tip: "Kira jumlah buah-buahan tropika Malaysia yang lazat ini!"
+            },
+            4: {
+                title: "Benda Hidup & Bukan Hidup",
+                subtitle: "Sains Awal - Kelaskan benda di sekeliling kita!",
+                tip: "Benda hidup memerlukan makan & air! Benda bukan hidup tidak bernafas!"
+            },
+            5: {
+                title: "Kenali Malaysia Tercinta!",
+                subtitle: "Negaraku - Kenali identiti negara kita!",
+                tip: "Ini adalah simbol penting Malaysia. Pilih nama yang tepat!"
+            },
+            6: {
+                title: "Pendidikan Moral & Nilai Murni",
+                subtitle: "Amalan Baik - Sifat yang disayangi semua!",
+                tip: "Mari bantu kawan-kawan! Pilih kelakuan yang baik dan bertanggungjawab!"
+            }
+        };
+
+        function buildQuestionsForModule(modNum) {
+            let list = [];
+
+            if (modNum === 1) {
+                // Suku kata generator: copies the 50 distinct words
+                list = SUKU_KATA_50.map(item => ({
+                    word: item.w,
+                    syllable1: item.s1,
+                    image: item.img,
+                    correctSyllable: item.s2,
+                    options: item.opts,
+                    soundHint: item.w
+                }));
+            } else if (modNum === 2) {
+                // English Phonics generator: copies the 50 animals
+                list = PHONICS_50.map(item => ({
+                    word: item.w,
+                    missingPattern: item.p,
+                    image: item.img,
+                    correctLetter: item.corr,
+                    options: item.opts,
+                    soundHint: item.w
+                }));
+            } else if (modNum === 3) {
+                // Matematik Jom Kira Generator (Generates 50 unique tropical fruits count items)
+                const fruits = [
+                    { n: "Durian 🍈", e: "🍈" }, { n: "Tembikai 🍉", e: "🍉" }, 
+                    { n: "Manggis 🟣", e: "🟣" }, { n: "Rambutan 🔴", e: "🔴" },
+                    { n: "Pisang 🍌", e: "🍌" }, { n: "Betik 🧡", e: "🧡" }, 
+                    { n: "Kelapa 🥥", e: "🥥" }, { n: "Nanas 🍍", e: "🍍" },
+                    { n: "Belimbing ⭐️", e: "⭐️" }, { n: "Epal Merah 🍎", e: "🍎" }
+                ];
+                for (let i = 0; i < 50; i++) {
+                    const fruit = fruits[i % fruits.length];
+                    const count = (i % 8) + 2; // Count ranges beautifully from 2 to 9
+                    let display = "";
+                    for (let c = 0; c < count; c++) {
+                        display += fruit.e;
+                    }
+                    // Generate options including correct answer
+                    let options = [count];
+                    while (options.length < 4) {
+                        let r = Math.floor(Math.random() * 9) + 1; // 1 to 9
+                        if (!options.includes(r)) {
+                            options.push(r);
+                        }
+                    }
+                    options.sort(() => Math.random() - 0.5);
+
+                    list.push({
+                        item: fruit.n,
+                        display: display,
+                        correctCount: count,
+                        options: options,
+                        soundHint: `Kira durian atau buah di atas. Ada ${count} biji buah!`
+                    });
+                }
+            } else if (modNum === 4) {
+                // Sains Awal generator: copies the 50 items
+                list = SCIENCE_50.map(item => ({
+                    item: item.name,
+                    type: item.type,
+                    image: item.img,
+                    options: [
+                        { text: "Benda Hidup (Living)", value: "LIVING", color: "bg-emerald-500 hover:bg-emerald-600" },
+                        { text: "Benda Bukan Hidup (Non-Living)", value: "NON-LIVING", color: "bg-amber-500 hover:bg-amber-600" }
+                    ],
+                    soundHint: item.hint
+                }));
+            } else if (modNum === 5) {
+                // Negaraku generator: copies the 50 symbols
+                list = NEGARAKU_50.map(item => ({
+                    name: item.name,
+                    image: item.img,
+                    options: item.opts,
+                    correctOption: item.corr,
+                    soundHint: item.hint
+                }));
+            } else if (modNum === 6) {
+                // Moral generator: copies the 50 scenarios
+                list = MORAL_50.map(item => ({
+                    scenario: item.s,
+                    image: item.img,
+                    options: item.o,
+                    soundHint: item.h
+                }));
+            }
+
+            return list;
+        }
+
+        function startModule(modNum) {
+            playSound('click');
+            currentModule = modNum;
+            currentQuestionIdx = 0;
+            
+            // Build the dynamic pool of 50 questions
+            activeQuestions = buildQuestionsForModule(modNum);
+
+            // Interface manipulation
+            showScreen('playZone');
+
+            const config = MODULE_CONFIGS[modNum];
+            document.getElementById('moduleTitle').textContent = config.title;
+            document.getElementById('moduleSubtitle').textContent = config.subtitle;
+            document.getElementById('robiTip').textContent = config.tip;
+
+            loadQuestion();
+        }
+
+        function goHome() {
+            playSound('click');
+            showScreen('homeScreen');
+            document.getElementById('rewardModal').classList.add('hidden');
+        }
+
+        // Trigger dynamic new question from the pool of 50 questions
+        function generateRandomQuestion() {
+            playSound('click');
+            // Swap to a random index within the 50 pool
+            const randIdx = Math.floor(Math.random() * 50);
+            currentQuestionIdx = randIdx;
+            loadQuestion();
+        }
+
+        function updateProgress() {
+            const progressPercent = ((currentQuestionIdx + 1) / 50) * 100;
+            document.getElementById('progressBar').style.width = progressPercent + '%';
+            document.getElementById('currentQuestionNum').textContent = currentQuestionIdx + 1;
+        }
+
+        function loadQuestion() {
+            updateProgress();
+            const container = document.getElementById('gameContent');
+            container.innerHTML = ''; // Reset container content
+
+            const q = activeQuestions[currentQuestionIdx];
+
+            // Render matching specific interactive screen per module
+            if (currentModule === 1) {
+                renderSukuKata(container, q);
+            } else if (currentModule === 2) {
+                renderEnglishPhonics(container, q);
+            } else if (currentModule === 3) {
+                renderJomKira(container, q);
+            } else if (currentModule === 4) {
+                renderSainsKidz(container, q);
+            } else if (currentModule === 5) {
+                renderNegaraku(container, q);
+            } else if (currentModule === 6) {
+                renderMoral(container, q);
+            }
+        }
+
+        function renderSukuKata(container, q) {
+            speak(`Cantumkan perkataan: Suku kata pertama ${q.syllable1}. Pilih suku kata kedua untuk ejaan ${q.soundHint}`, "ms-MY");
+            
+            const div = document.createElement('div');
+            div.className = "flex flex-col items-center space-y-6 w-full";
+            div.innerHTML = `
+                <div class="text-7xl md:text-8xl p-6 bg-rose-50 rounded-full border-4 border-rose-300 shadow-md animate-bounce">
+                    ${q.image}
+                </div>
+                
+                <!-- Syllable formula show -->
+                <div class="flex items-center space-x-4 text-3xl md:text-5xl font-black text-slate-800">
+                    <span class="bg-rose-200 px-6 py-3 rounded-2xl border-2 border-rose-400 text-rose-800">${q.syllable1}</span>
+                    <span>+</span>
+                    <span id="syllableDrop" class="bg-gray-100 px-6 py-3 rounded-2xl border-4 border-dashed border-gray-400 text-gray-400 animate-pulse min-w-[120px] text-center">?</span>
+                </div>
+
+                <!-- Multiple Options -->
+                <div class="grid grid-cols-2 gap-4 w-full max-w-md mt-4">
+                    ${q.options.map(opt => `
+                        <button onclick="checkSukuKata('${opt}', '${q.correctSyllable}')" class="bubble-btn bg-green-500 hover:bg-green-600 text-white text-2xl font-bold py-4 px-6 rounded-2xl tracking-wide border-b-4 border-green-700">
+                            ${opt}
+                        </button>
+                    `).join('')}
+                </div>
+            `;
+            container.appendChild(div);
+        }
+
+        function checkSukuKata(selected, correct) {
+            if (selected === correct) {
+                handleCorrectAnswer("Betul! Hebat!");
+            } else {
+                handleWrongAnswer("Suku kata salah! Cuba lagi!");
+            }
+        }
+
+        function renderEnglishPhonics(container, q) {
+            speak(`Complete the word: ${q.soundHint}`, "en-US");
+
+            const div = document.createElement('div');
+            div.className = "flex flex-col items-center space-y-6 w-full";
+            div.innerHTML = `
+                <div class="text-7xl md:text-8xl p-6 bg-blue-50 rounded-full border-4 border-blue-300 shadow-md animate-bounce">
+                    ${q.image}
+                </div>
+                
+                <!-- Display word with missing letter -->
+                <div class="text-4xl md:text-6xl font-black text-slate-800 tracking-wider">
+                    ${q.missingPattern.replace('_', '<span class="text-blue-600 underline underline-offset-8 animate-pulse font-mono">_</span>')}
+                </div>
+
+                <!-- Interactive Letters Options -->
+                <div class="grid grid-cols-4 gap-3 w-full max-w-sm mt-4">
+                    ${q.options.map(letter => `
+                        <button onclick="checkPhonics('${letter}', '${q.correctLetter}')" class="bubble-btn-blue bg-blue-500 hover:bg-blue-600 text-white text-3xl font-extrabold py-3 rounded-2xl border-b-4 border-blue-800">
+                            ${letter}
+                        </button>
+                    `).join('')}
+                </div>
+            `;
+            container.appendChild(div);
+        }
+
+        function checkPhonics(selected, correct) {
+            if (selected === correct) {
+                handleCorrectAnswer("Excellent! You did it!");
+            } else {
+                handleWrongAnswer("Oops, try another letter!");
+            }
+        }
+
+        function renderJomKira(container, q) {
+            speak(q.soundHint, "ms-MY");
+
+            const div = document.createElement('div');
+            div.className = "flex flex-col items-center space-y-6 w-full";
+            div.innerHTML = `
+                <div class="bg-yellow-50 border-4 border-yellow-200 p-6 rounded-3xl w-full max-w-md text-center shadow-inner min-h-[140px] flex items-center justify-center">
+                    <!-- High visual display of items to count -->
+                    <div class="text-4xl md:text-5xl tracking-widest leading-relaxed drop-shadow">
+                        ${q.display}
+                    </div>
+                </div>
+
+                <div class="text-lg md:text-xl font-bold text-gray-700">Kira jumlah ${q.item} di atas:</div>
+
+                <!-- Number selection options -->
+                <div class="grid grid-cols-4 gap-3 w-full max-w-sm">
+                    ${q.options.map(num => `
+                        <button onclick="checkCount(${num}, ${q.correctCount})" class="bubble-btn bg-yellow-400 hover:bg-yellow-500 text-yellow-950 text-3xl font-black py-4 rounded-2xl border-b-4 border-yellow-600">
+                            ${num}
+                        </button>
+                    `).join('')}
+                </div>
+            `;
+            container.appendChild(div);
+        }
+
+        function checkCount(selected, correct) {
+            if (selected === correct) {
+                handleCorrectAnswer("Betul! Pintar sekali!");
+            } else {
+                handleWrongAnswer("Salah kira! Jom cuba sekali lagi.");
+            }
+        }
+
+        function renderSainsKidz(container, q) {
+            speak(`Adakah ini benda hidup atau bukan hidup? ${q.item}`, "ms-MY");
+
+            const div = document.createElement('div');
+            div.className = "flex flex-col items-center space-y-6 w-full";
+            div.innerHTML = `
+                <div class="text-7xl md:text-8xl p-6 bg-green-50 rounded-full border-4 border-green-300 shadow-md animate-pulse">
+                    ${q.image}
+                </div>
+                
+                <h4 class="text-2xl font-bold text-slate-800 text-center">${q.item}</h4>
+
+                <!-- Sorting options -->
+                <div class="flex flex-col sm:flex-row gap-4 w-full max-w-md">
+                    ${q.options.map(opt => `
+                        <button onclick="checkScienceType('${opt.value}', '${q.type}')" class="w-full text-white text-lg md:text-xl font-bold py-5 px-4 rounded-3xl shadow-lg border-b-4 border-black/20 hover:scale-105 active:scale-95 transition-all ${opt.color}">
+                            ${opt.text}
+                        </button>
+                    `).join('')}
+                </div>
+            `;
+            container.appendChild(div);
+        }
+
+        function checkScienceType(selected, correct) {
+            if (selected === correct) {
+                handleCorrectAnswer("Hebat! Anda saintis bijak!");
+            } else {
+                handleWrongAnswer("Kurang tepat! Fikirkan semula.");
+            }
+        }
+
+        function renderNegaraku(container, q) {
+            speak(`Namakan simbol ini: ${q.name}`, "ms-MY");
+
+            const div = document.createElement('div');
+            div.className = "flex flex-col items-center space-y-6 w-full";
+            div.innerHTML = `
+                <div class="text-8xl p-6 bg-purple-50 rounded-full border-4 border-purple-300 shadow-md animate-bounce">
+                    ${q.image}
+                </div>
+                
+                <p class="text-lg text-slate-700 font-bold">Apakah nama simbol Malaysia ini?</p>
+
+                <!-- Grid options -->
+                <div class="grid grid-cols-2 gap-4 w-full max-w-lg">
+                    ${q.options.map(opt => `
+                        <button onclick="checkMalaysiaSymbol('${opt}', '${q.correctOption}')" class="bubble-btn-blue bg-purple-500 hover:bg-purple-600 text-white text-lg font-bold py-4 px-2 rounded-2xl border-b-4 border-purple-800 leading-tight">
+                            ${opt}
+                        </button>
+                    `).join('')}
+                </div>
+            `;
+            container.appendChild(div);
+        }
+
+        function checkMalaysiaSymbol(selected, correct) {
+            if (selected === correct) {
+                handleCorrectAnswer("Betul! Saya sayangkan Malaysia!");
+            } else {
+                handleWrongAnswer("Salah! Mari kenali Malaysia lagi.");
+            }
+        }
+
+        function renderMoral(container, q) {
+            speak(q.scenario, "ms-MY");
+
+            const div = document.createElement('div');
+            div.className = "flex flex-col items-center space-y-6 w-full";
+            div.innerHTML = `
+                <div class="text-7xl md:text-8xl p-5 bg-pink-50 rounded-full border-4 border-pink-300 shadow-md">
+                    ${q.image}
+                </div>
+                
+                <div class="bg-pink-50 rounded-2xl p-4 border border-pink-200 text-center font-bold text-pink-900 text-lg max-w-md">
+                    "${q.scenario}"
+                </div>
+
+                <!-- Safe options list -->
+                <div class="flex flex-col gap-3 w-full max-w-md">
+                    ${q.options.map(opt => `
+                        <button onclick="checkMoralChoice(${opt.c})" class="w-full bg-white hover:bg-pink-100 border-2 border-pink-300 text-pink-950 font-bold p-4 rounded-2xl text-left shadow-md flex items-center justify-between transition hover:scale-[1.01]">
+                            <span class="text-base md:text-lg">${opt.t}</span>
+                            <span class="text-2xl">${opt.e}</span>
+                        </button>
+                    `).join('')}
+                </div>
+            `;
+            container.appendChild(div);
+        }
+
+        function checkMoralChoice(isCorrect) {
+            if (isCorrect) {
+                handleCorrectAnswer("Syabas! Pilihan moral yang terpuji!");
+            } else {
+                handleWrongAnswer("Kelakuan ini kurang baik. Pilih kelakuan mulia!");
+            }
+        }
+
+        function handleCorrectAnswer(toastText) {
+            playSound('correct');
+            // Confetti bursts from side of the screen
+            confetti({
+                particleCount: 80,
+                spread: 60,
+                origin: { y: 0.8 }
+            });
+
+            showToastBanner(toastText, "green");
+            setTimeout(() => {
+                nextQuestion();
+            }, 1800);
+        }
+
+        function handleWrongAnswer(toastText) {
+            playSound('wrong');
+            showToastBanner(toastText, "rose");
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIdx < 49) {
+                currentQuestionIdx++;
+                loadQuestion();
+            } else {
+                // Completed all 50 questions of the module!
+                triggerModuleVictory();
+            }
+        }
+
+        function triggerModuleVictory() {
+            playSound('win');
+            
+            // Add stars
+            totalStars += 3;
+            document.getElementById('starVal').textContent = totalStars;
+
+            // Trigger gigantic colorful celebration confetti explosion
+            var end = Date.now() + (2.5 * 1000);
+            var colors = ['#bb0000', '#ffffff', '#22c55e', '#eab308'];
+
+            (function frame() {
+              confetti({
+                particleCount: 3,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0 },
+                colors: colors
+              });
+              confetti({
+                particleCount: 3,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1 },
+                colors: colors
+              });
+
+              if (Date.now() < end) {
+                requestAnimationFrame(frame);
+              }
+            }());
+
+            // Custom dynamic victory praise
+            const praises = [
+                "Hebat sungguh! Anda anak bijak Malaysia!",
+                "Wow! Robi sangat bangga dengan anda!",
+                "Terbaik! Selesai menjawab cabaran 50 soalan!",
+                "Luar biasa! Teruskan usaha bijak anda!"
+            ];
+            const randPraise = praises[Math.floor(Math.random() * praises.length)];
+            document.getElementById('rewardMessage').textContent = randPraise;
+
+            // Display Reward modal
+            document.getElementById('rewardModal').classList.remove('hidden');
+        }
+
+        function playAgain() {
+            document.getElementById('rewardModal').classList.add('hidden');
+            startModule(currentModule);
+        }
+    </script>
+
+    <!-- Activation Logic & Screen Controller -->
+    <script>
+        // Screen Routing
+        function showScreen(screenId) {
+            document.getElementById('activationScreen').classList.add('hidden');
+            document.getElementById('homeScreen').classList.add('hidden');
+            document.getElementById('playZone').classList.add('hidden');
+            
+            if (screenId === 'activationScreen') {
+                document.getElementById('activationScreen').classList.remove('hidden');
+                document.querySelector('header').classList.add('hidden');
+            } else if (screenId === 'homeScreen') {
+                document.getElementById('homeScreen').classList.remove('hidden');
+                document.querySelector('header').classList.remove('hidden');
+            } else if (screenId === 'playZone') {
+                document.getElementById('playZone').classList.remove('hidden');
+                document.querySelector('header').classList.remove('hidden');
+            }
+        }
+
+        // Custom child-friendly non-blocking toast warning
+        function showToastBanner(text, type = "green") {
+            // Remove existing duplicate toasts first to avoid layout stacking
+            const existing = document.querySelectorAll('.toast-banner');
+            existing.forEach(e => e.remove());
+
+            const bgClass = type === "green" ? "bg-emerald-500" : "bg-rose-500";
+            const icon = type === "green" ? "🌟" : "💡";
+            const banner = document.createElement('div');
+            banner.className = `toast-banner fixed top-10 left-1/2 transform -translate-x-1/2 ${bgClass} text-white font-extrabold px-6 py-3 rounded-2xl text-base md:text-xl shadow-2xl z-[9999] flex items-center space-x-2 animate-bounce border-4 border-white text-center w-[90%] max-w-md justify-center`;
+            banner.innerHTML = `<span>${icon}</span> <span>${text}</span>`;
+            document.body.appendChild(banner);
+
+            setTimeout(() => {
+                banner.remove();
+            }, 3000);
+        }
+
+        // Device Lock Verification (Strict RULE 1, 2, 3 implementation)
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        let db = null;
+        let auth = null;
+        let firebaseReady = false;
+
+        async function setupFirebase() {
+            if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+                try {
+                    const firebaseConfig = JSON.parse(__firebase_config);
+                    const app = firebase.initializeApp(firebaseConfig);
+                    auth = firebase.auth();
+                    db = firebase.firestore();
+                    
+                    // RULE 3: Authenticate before doing queries
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await auth.signInWithCustomToken(__initial_auth_token);
+                    } else {
+                        await auth.signInAnonymously();
+                    }
+                    firebaseReady = true;
+                    console.log("Firebase initialized successfully inside safe sandbox.");
+                } catch (err) {
+                    console.warn("Firebase config is present but connection failed. Local activation fallback enabled.", err);
+                }
+            } else {
+                console.warn("No firebase config found. Running app in standalone sandbox mode.");
+            }
+        }
+
+        // Fungsi menyemak kod pembelian (BIJAK001 hingga BIJAK100, termasuk kod sembunyi BIJAK2026)
+        function checkValidPurchaseCode(code) {
+            if (code === "BIJAK2026") return true; 
+            const match = code.match(/^BIJAK(0\d{2}|100)$/);
+            if (match) {
+                const num = parseInt(match[1], 10);
+                return num >= 1 && num <= 100;
+            }
+            return false;
+        }
+
+        async function activateApp() {
+            playSound('click');
+            const codeInput = document.getElementById('inputCode').value.trim().toUpperCase();
+            const childNameInput = document.getElementById('inputChildName').value.trim();
+
+            if (!codeInput || !childNameInput) {
+                showToastBanner("Sila masukkan Kod Pembelian dan Nama Anak!", "rose");
+                return;
+            }
+
+            if (!checkValidPurchaseCode(codeInput)) {
+                showToastBanner("Kod Pembelian tidak sah! Sila guna format BIJAK____", "rose");
+                return;
+            }
+
+            // Lock UI to prevent duplicate triggers
+            const btn = document.getElementById('btnActivate');
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = `<i class="fas fa-spinner animate-spin text-xl mr-2"></i> <span>Mengesahkan Kod Peranti...</span>`;
+            btn.disabled = true;
+
+            try {
+                // Ensure unique device signature remains permanent inside local device storage
+                let deviceId = localStorage.getItem('bj_device_id');
+                if (!deviceId) {
+                    deviceId = 'dev_' + Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
+                    localStorage.setItem('bj_device_id', deviceId);
+                }
+
+                if (firebaseReady && db) {
+                    // RULE 1: Strictly follow /artifacts/{appId}/public/data/{collectionName}/{documentId} path constraints
+                    const docRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('activations').doc(codeInput);
+                    
+                    // RULE 2: Direct document lookup, avoiding complex querying architectures
+                    const docSnap = await docRef.get();
+
+                    if (docSnap.exists) {
+                        const registeredData = docSnap.data();
+                        
+                        // Prevent secondary devices from using this specific bought code
+                        if (registeredData.deviceId !== deviceId) {
+                            showToastBanner("Kod pendaftaran ini sudah digunakan pada peranti lain!", "rose");
+                            btn.innerHTML = originalContent;
+                            btn.disabled = false;
+                            return;
+                        } else {
+                            // Same device login - seamlessly update children's credentials
+                            await docRef.update({
+                                childName: childNameInput,
+                                lastLoginAt: firebase.firestore.FieldValue.serverTimestamp()
+                            });
+                        }
+                    } else {
+                        // First registration globally of code
+                        await docRef.set({
+                            deviceId: deviceId,
+                            childName: childNameInput,
+                            purchaseCode: codeInput,
+                            activatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            lastLoginAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                    }
+                }
+
+                // Register successfully locally
+                localStorage.setItem('bj_activated', 'true');
+                localStorage.setItem('bj_child_name', childNameInput);
+                localStorage.setItem('bj_purchase_code', codeInput);
+
+                // Celebrate Success
+                playSound('win');
+                confetti({
+                    particleCount: 120,
+                    spread: 80,
+                    origin: { y: 0.6 }
+                });
+
+                showToastBanner(`Selamat Datang, ${childNameInput}! 🚀`, "green");
+                
+                setTimeout(() => {
+                    document.getElementById('robiWelcome').innerHTML = `"Selamat Datang, ${childNameInput}! Saya Robi si Arnab!"`;
+                    showScreen('homeScreen');
+                }, 1800);
+
+            } catch (err) {
+                console.error("Authentication/activation lock issue: ", err);
+                showToastBanner("Ralat sambungan rangkaian! Sila cuba seketika lagi.", "rose");
+            } finally {
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+            }
+        }
+
+        // Custom Secure Confirm Logout dialog avoiding native alert blocks
+        function deactivateApp() {
+            playSound('click');
+            
+            const overlay = document.createElement('div');
+            overlay.className = "fixed inset-0 bg-black/50 backdrop-blur-sm z-[10000] flex items-center justify-center p-4";
+            overlay.innerHTML = `
+                <div class="bg-white rounded-3xl border-8 border-yellow-400 p-6 max-w-sm w-full text-center space-y-4 shadow-2xl relative overflow-hidden animate-bounce" style="animation-iteration-count: 1;">
+                    <span class="text-5xl">🚪</span>
+                    <h3 class="text-2xl font-black text-slate-800">Tukar Peranti / Log Keluar?</h3>
+                    <p class="text-slate-600 font-medium text-sm">Adakah anda pasti mahu log keluar? Kod pembelian akan dibebaskan untuk pendaftaran baharu.</p>
+                    <div class="flex space-x-3 pt-2">
+                        <button id="btnCancelLogout" class="w-1/2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-extrabold py-3 rounded-xl transition">Batal</button>
+                        <button id="btnConfirmLogout" class="w-1/2 bg-rose-500 hover:bg-rose-600 text-white font-extrabold py-3 rounded-xl shadow-md transition flex items-center justify-center space-x-1">
+                            <span>Keluar</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+
+            overlay.querySelector('#btnCancelLogout').addEventListener('click', () => {
+                playSound('click');
+                overlay.remove();
+            });
+
+            overlay.querySelector('#btnConfirmLogout').addEventListener('click', async () => {
+                playSound('click');
+                const btn = overlay.querySelector('#btnConfirmLogout');
+                btn.disabled = true;
+                btn.innerHTML = `<i class="fas fa-spinner animate-spin mr-1"></i> <span>Memproses...</span>`;
+
+                const purchaseCode = localStorage.getItem('bj_purchase_code');
+
+                try {
+                    // Membebaskan kunci peranti di Cloud Firestore agar kod boleh didaftar semula
+                    if (firebaseReady && db && purchaseCode) {
+                        const docRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('activations').doc(purchaseCode);
+                        await docRef.delete();
+                        console.log("Device lock released successfully from database.");
+                    }
+                } catch (err) {
+                    console.error("Gagal memadamkan kunci kod di pangkalan data:", err);
+                }
+
+                // Erase local state details but persist unique device ID
+                localStorage.removeItem('bj_activated');
+                localStorage.removeItem('bj_child_name');
+                localStorage.removeItem('bj_purchase_code');
+                overlay.remove();
+                
+                // Clear inputs inside form
+                document.getElementById('inputCode').value = "";
+                document.getElementById('inputChildName').value = "";
+                
+                showScreen('activationScreen');
+                showToastBanner("Log keluar berjaya. Kod boleh digunakan semula!", "green");
+            });
+        }
+
+        // Initialize App on Window Loaded
+        window.onload = async function() {
+            // Warmup Speech Synth
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.getVoices();
+            }
+
+            // Load or create persistent hardware lock
+            let deviceId = localStorage.getItem('bj_device_id');
+            if (!deviceId) {
+                deviceId = 'dev_' + Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
+                localStorage.setItem('bj_device_id', deviceId);
+            }
+
+            // Establish secure connection to database
+            await setupFirebase();
+
+            // Reroute based on registration state
+            const isActivated = localStorage.getItem('bj_activated');
+            if (isActivated === 'true') {
+                const name = localStorage.getItem('bj_child_name') || 'Kawan';
+                document.getElementById('robiWelcome').innerHTML = `"Selamat Datang, ${name}! Saya Robi si Arnab!"`;
+                showScreen('homeScreen');
+            } else {
+                showScreen('activationScreen');
+            }
+
+            console.log("Bijak Kidz Malaysia Preschool app initialized successfully with Robi si Arnab.");
+        }
+    </script>
+</body>
+</html>
