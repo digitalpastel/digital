@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bijak Sifir - Aplikasi Matematik KSSR Year 1-3 (2026)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React & ReactDOM CDNs -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <!-- Babel for JSX compilation in browser -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;700&display=swap');
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%);
+            user-select: none;
+        }
+        .font-fun {
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800">
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // Web Audio Sound FX for rewarding feedback without lag
+        const playSound = (type) => {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                const ctx = new AudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                if (type === 'correct') {
+                    osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+                    osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.08); // E5
+                    osc.frequency.setValueAtTime(783.99, ctx.currentTime + 0.16); // G5
+                    gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.3);
+                } else if (type === 'wrong') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220.00, ctx.currentTime); // A3
+                    osc.frequency.setValueAtTime(147.00, ctx.currentTime + 0.1); // D3
+                    gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.3);
+                } else if (type === 'click') {
+                    osc.frequency.setValueAtTime(400, ctx.currentTime);
+                    gain.gain.setValueAtTime(0.05, ctx.currentTime);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.05);
+                }
+            } catch (e) { console.log(e); }
+        };
+
+        // --- Core KSSR Question Template Generator (Generates up to 100 deterministic items) ---
+        const generateQuestions = (year) => {
+            let list = [];
+            const categories = ['place_value', 'addition', 'subtraction', 'multiplication', 'division', 'money', 'time', 'fractions'];
+            
+            for (let i = 1; i <= 100; i++) {
+                let cat = categories[i % categories.length];
+                let q = { id: i, category: cat };
+                
+                if (cat === 'place_value') {
+                    let val = year === 1 ? (10 + (i % 89)) : year === 2 ? (100 + (i % 899)) : (1000 + (i % 8999));
+                    let digitType = i % 2 === 0 ? 'nilai tempat' : 'nilai digit';
+                    let digitTypeEn = i % 2 === 0 ? 'place value' : 'digit value';
+                    let strVal = String(val);
+                    let targetIdx = i % strVal.length;
+                    let targetDigit = strVal[targetIdx];
+                    
+                    let ans = "";
+                    if (digitType === 'nilai tempat') {
+                        let places = strVal.length === 2 ? ['puluh', 'sa'] : strVal.length === 3 ? ['ratus', 'puluh', 'sa'] : ['ribu', 'ratus', 'puluh', 'sa'];
+                        let placesEn = strVal.length === 2 ? ['tens', 'ones'] : strVal.length === 3 ? ['hundreds', 'tens', 'ones'] : ['thousands', 'hundreds', 'tens', 'ones'];
+                        ans = `${places[targetIdx]} / ${placesEn[targetIdx]}`;
+                        q.options = [ans, `sa / ones`, `puluh / tens`, `ratus / hundreds`].filter((v, idx, self) => self.indexOf(v) === idx).slice(0,4);
+                    } else {
+                        let factor = Math.pow(10, strVal.length - 1 - targetIdx);
+                        ans = String(Number(targetDigit) * factor);
+                        q.options = [ans, "0", "10", "100"].filter((v, idx, self) => self.indexOf(v) === idx).slice(0,4);
+                    }
+                    
+                    q.textBm = `Apakah ${digitType} bagi digit yang bergaris dalam ${strVal.slice(0, targetIdx)}[${targetDigit}]${strVal.slice(targetIdx+1)}?`;
+                    q.textEn = `What is the ${digitTypeEn} of the underlined digit in ${strVal.slice(0, targetIdx)}[${targetDigit}]${strVal.slice(targetIdx+1)}?`;
+                    q.answer = ans;
+                }
+                else if (cat === 'addition') {
+                    let max = year === 1 ? 20 : year === 2 ? 100 : 1000;
+                    let a = Math.floor(max / 3) + (i % Math.floor(max / 2));
+                    let b = 1 + (i % Math.floor(max / 3));
+                    q.textBm = `Kira hasil tambah: ${a} + ${b} = ?`;
+                    q.textEn = `Calculate the sum: ${a} + ${b} = ?`;
+                    q.answer = String(a + b);
+                    q.options = [q.answer, String(a + b + 2), String(a + b - 1), String(a + b + 10)].slice(0,4);
+                }
+                else if (cat === 'subtraction') {
+                    let max = year === 1 ? 20 : year === 2 ? 100 : 1000;
+                    let a = Math.floor(max / 2) + (i % Math.floor(max / 2));
+                    let b = 1 + (i % a);
+                    q.textBm = `Selesaikan: ${a} - ${b} = ?`;
+                    q.textEn = `Solve: ${a} - ${b} = ?`;
+                    q.answer = String(a - b);
+                    q.options = [q.answer, String(a - b + 1), String(a - b - 1), String(a - b + 5)].slice(0,4);
+                }
+                else if (cat === 'multiplication') {
+                    let factor = year === 1 ? 2 : year === 2 ? 5 : 8;
+                    let num = 1 + (i % 9);
+                    q.textBm = `Berapakah ${num} × ${factor}?`;
+                    q.textEn = `What is ${num} × ${factor}?`;
+                    q.answer = String(num * factor);
+                    q.options = [q.answer, String((num+1)*factor), String(num*factor-1), String(num*factor+2)].slice(0,4);
+                }
+                else if (cat === 'division') {
+                    let factor = year === 1 ? 2 : year === 2 ? 4 : 5;
+                    let ansNum = 1 + (i % 9);
+                    let product = ansNum * factor;
+                    q.textBm = `Bahagikan: ${product} ÷ ${factor} = ?`;
+                    q.textEn = `Divide: ${product} ÷ ${factor} = ?`;
+                    q.answer = String(ansNum);
+                    q.options = [q.answer, String(ansNum + 1), String(ansNum - 1), "0"].slice(0,4);
+                }
+                else if (cat === 'money') {
+                    let val = year === 1 ? 5 : year === 2 ? 20 : 50;
+                    let base = (i % 3) + 1;
+                    q.textBm = `Siti ada ${base} keping RM${val}. Berapakah jumlah wang Siti?`;
+                    q.textEn = `Siti has ${base} notes of RM${val}. What is the total amount of Siti's money?`;
+                    q.answer = `RM${base * val}`;
+                    q.options = [q.answer, `RM${(base+1)*val}`, `RM${base*val - 5}`, `RM5`].slice(0,4);
+                }
+                else if (cat === 'time') {
+                    let hr = 1 + (i % 12);
+                    q.textBm = `Jarum jam menunjuk ke angka ${hr} dan jarum minit menunjuk ke angka 12. Jam berapakah itu?`;
+                    q.textEn = `The hour hand points to ${hr} and the minute hand points to 12. What time is it?`;
+                    q.answer = `${hr}:00`;
+                    q.options = [q.answer, `${hr}:30`, `${hr === 12 ? 1 : hr + 1}:00`, `6:00`].slice(0,4);
+                }
+                else { // fractions
+                    q.textBm = `Sebuah kek dipotong kepada 4 bahagian yang sama besar. Alif makan 1 bahagian. Berapakah pecahan yang tinggal?`;
+                    q.textEn = `A cake is cut into 4 equal pieces. Alif eats 1 piece. What is the fraction left?`;
+                    q.answer = `3/4`;
+                    q.options = [`3/4`, `1/4`, `2/4`, `4/4`].slice(0,4);
+                }
+
+                // Randomize options safely and uniformly
+                q.options = q.options.sort(() => 0.5 - (i % 3) * 0.2);
+                list.push(q);
+            }
+            return list;
+        };
+
+        function App() {
+            // --- Profiles System (Stored in LocalStorage) ---
+            const [profiles, setProfiles] = React.useState(() => {
+                const saved = localStorage.getItem('bijak_profiles');
+                return saved ? JSON.parse(saved) : [];
+            });
+            const [currentProfile, setCurrentProfile] = React.useState(null);
+
+            // --- Auth Form State ---
+            const [signUpName, setSignUpName] = React.useState('');
+            const [signUpYear, setSignUpYear] = React.useState(1);
+            const [signUpAvatar, setSignUpAvatar] = React.useState('🐱');
+            const [recoveryInput, setRecoveryInput] = React.useState('');
+            const [showRecoveryAlert, setShowRecoveryAlert] = React.useState(null); // {username, code}
+
+            // --- App Views ---
+            // 'auth' | 'dashboard' | 'quiz_lobby' | 'quiz_active' | 'quiz_result' | 'sundry_shop'
+            const [view, setView] = React.useState('auth'); 
+            
+            // --- Quiz Engine State ---
+            const [quizMode, setQuizMode] = React.useState(10); // 10 or 100
+            const [questionsList, setQuestionsList] = React.useState([]);
+            const [currentQuestionIdx, setCurrentQuestionIdx] = React.useState(0);
+            const [selectedAnswer, setSelectedAnswer] = React.useState(null);
+            const [isAnswerChecked, setIsAnswerChecked] = React.useState(false);
+            const [score, setScore] = React.useState(0);
+
+            // --- Language Mode Toggle ---
+            // 'DLP' (Show both) | 'BM' (Malay only) | 'EN' (English only)
+            const [dlpMode, setDlpMode] = React.useState('DLP'); 
+
+            // --- Sundry Shop Game State ---
+            const [shopItem, setShopItem] = React.useState(null);
+            const [userPaid, setUserPaid] = React.useState(0);
+            const [shopMessage, setShopMessage] = React.useState('');
+
+            const avatars = ['🐱', '🦁', '🦊', '🐼', '🦖', '🦄', '🤖', '🐝'];
+
+            // Sync profiles to localStorage
+            React.useEffect(() => {
+                localStorage.setItem('bijak_profiles', JSON.stringify(profiles));
+            }, [profiles]);
+
+            // --- Auth Handlers ---
+            const handleSignUp = (e) => {
+                e.preventDefault();
+                if (!signUpName.trim()) return;
+                
+                const cleanName = signUpName.trim().substring(0, 15);
+                // Check duplicate
+                if (profiles.some(p => p.username.toLowerCase() === cleanName.toLowerCase())) {
+                    alert('Nama pengguna sudah wujud! Sila guna nama lain.');
+                    return;
+                }
+
+                // Generate child-friendly simple recovery token
+                const randomId = Math.floor(1000 + Math.random() * 9000);
+                const recoveryCode = `BIJAK-${randomId}`;
+
+                const newProfile = {
+                    username: cleanName,
+                    year: Number(signUpYear),
+                    avatar: signUpAvatar,
+                    recoveryCode: recoveryCode,
+                    stars: 0,
+                    badges: []
+                };
+
+                setProfiles([...profiles, newProfile]);
+                setCurrentProfile(newProfile);
+                setSignUpName('');
+                setShowRecoveryAlert({ username: cleanName, code: recoveryCode });
+                playSound('correct');
+            };
+
+            const handleLogin = (profile) => {
+                playSound('click');
+                setCurrentProfile(profile);
+                setView('dashboard');
+            };
+
+            const handleRecovery = (e) => {
+                e.preventDefault();
+                const matched = profiles.find(p => p.recoveryCode.toUpperCase() === recoveryInput.trim().toUpperCase());
+                if (matched) {
+                    setCurrentProfile(matched);
+                    setRecoveryInput('');
+                    setView('dashboard');
+                    playSound('correct');
+                } else {
+                    alert('Kod Pemulihan tidak dijumpai. Sila semak semula.');
+                    playSound('wrong');
+                }
+            };
+
+            const handleLogout = () => {
+                playSound('click');
+                setCurrentProfile(null);
+                setView('auth');
+            };
+
+            // --- Quiz Logic ---
+            const startQuiz = (modeCount) => {
+                playSound('click');
+                const fullPool = generateQuestions(currentProfile.year);
+                // Slice according to mode selection (10 or 100 items)
+                const items = fullPool.slice(0, modeCount);
+                setQuestionsList(items);
+                setQuizMode(modeCount);
+                setCurrentQuestionIdx(0);
+                setSelectedAnswer(null);
+                setIsAnswerChecked(false);
+                setScore(0);
+                setView('quiz_active');
+            };
+
+            const handleSelectOption = (opt) => {
+                if (isAnswerChecked) return;
+                playSound('click');
+                setSelectedAnswer(opt);
+            };
+
+            const checkAnswer = () => {
+                if (!selectedAnswer || isAnswerChecked) return;
+                const isCorrect = selectedAnswer === questionsList[currentQuestionIdx].answer;
+                if (isCorrect) {
+                    setScore(prev => prev + 1);
+                    playSound('correct');
+                } else {
+                    playSound('wrong');
+                }
+                setIsAnswerChecked(true);
+            };
+
+            const nextQuestion = () => {
+                playSound('click');
+                if (currentQuestionIdx + 1 < questionsList.length) {
+                    setCurrentQuestionIdx(prev => prev + 1);
+                    setSelectedAnswer(null);
+                    setIsAnswerChecked(false);
+                } else {
+                    // Quiz End - calculate rewards
+                    let starsEarned = score * 5;
+                    let earnedBadges = [...currentProfile.badges];
+                    
+                    if (quizMode === 100 && score >= 80 && !earnedBadges.includes('🚀 Wira 100 Soalan')) {
+                        earnedBadges.push('🚀 Wira 100 Soalan');
+                        starsEarned += 150; // Bonus massive star
+                    }
+                    if (score === quizMode && !earnedBadges.includes('👑 Pakar KSSR')) {
+                        earnedBadges.push('👑 Pakar KSSR');
+                    }
+
+                    // Update central profiles state securely
+                    const updated = profiles.map(p => {
+                        if (p.username === currentProfile.username) {
+                            return { ...p, stars: p.stars + starsEarned, badges: earnedBadges };
+                        }
+                        return p;
+                    });
+                    setProfiles(updated);
+                    setCurrentProfile(prev => ({ ...prev, stars: prev.stars + starsEarned, badges: earnedBadges }));
+                    
+                    setView('quiz_result');
+                }
+            };
+
+            // --- Sundry Shop Game Engine ---
+            const shopItems = [
+                { nameBm: 'Nasi Lemak Kampung', nameEn: 'Kampung Nasi Lemak', price: 2.50, icon: '🍛' },
+                { nameBm: 'Roti Canai Garing', nameEn: 'Crispy Roti Canai', price: 1.20, icon: '🫓' },
+                { nameBm: 'Teh Tarik Kaw', nameEn: 'Frothy Teh Tarik', price: 1.80, icon: '☕' },
+                { nameBm: 'Kari Ayam', nameEn: 'Chicken Curry', price: 4.50, icon: '🍲' },
+                { nameBm: 'Ais Kacang (ABC)', nameEn: 'Shaved Ice ABC', price: 3.00, icon: '🍧' }
+            ];
+
+            const startShopGame = () => {
+                playSound('click');
+                const randomItem = shopItems[Math.floor(Math.random() * shopItems.length)];
+                setShopItem(randomItem);
+                setUserPaid(0);
+                setShopMessage('');
+                setView('sundry_shop');
+            };
+
+            const addMoney = (amount) => {
+                playSound('click');
+                setUserPaid(prev => parseFloat((prev + amount).toFixed(2)));
+            };
+
+            const checkPayment = () => {
+                if (userPaid === shopItem.price) {
+                    setShopMessage('🎉 Syabas! Bayaran tepat. Pak Mat hadiahkan 20 Bintang! ⭐');
+                    playSound('correct');
+                    // Add profile stars
+                    const updated = profiles.map(p => {
+                        if (p.username === currentProfile.username) {
+                            return { ...p, stars: p.stars + 20 };
+                        }
+                        return p;
+                    });
+                    setProfiles(updated);
+                    setCurrentProfile(prev => ({ ...prev, stars: prev.stars + 20 }));
+                } else if (userPaid > shopItem.price) {
+                    setShopMessage(`Alamak! Terlebih bayar. Jumlah ialah RM${shopItem.price.toFixed(2)}, awak bayar RM${userPaid.toFixed(2)}. Sila cuba lagi!`);
+                    playSound('wrong');
+                } else {
+                    setShopMessage('Duit tidak mencukupi, sila tambah duit ke kaunter bayaran Pak Mat.');
+                    playSound('wrong');
+                }
+            };
+
+            return (
+                <div class="max-w-4xl mx-auto p-4 md:p-6">
+                    {/* Header bar */}
+                    <header class="flex flex-wrap items-center justify-between bg-white shadow-md rounded-2xl p-4 mb-6 border-b-4 border-emerald-500">
+                        <div class="flex items-center gap-3">
+                            <span class="text-3xl">🧮</span>
+                            <div>
+                                <h1 class="text-2xl font-fun text-emerald-600 tracking-tight">Malaysia Math Adventure</h1>
+                                <p class="text-xs text-slate-500 font-medium">Syllabus KSSR Semakan Year 1-3 • 2026 Edition</p>
+                            </div>
+                        </div>
+                        
+                        {currentProfile && (
+                            <div class="flex items-center gap-4 mt-2 sm:mt-0">
+                                <div class="bg-amber-100 px-3 py-1.5 rounded-xl flex items-center gap-2 border border-amber-300">
+                                    <span class="text-xl">⭐</span>
+                                    <span class="font-bold text-amber-700">{currentProfile.stars} Bintang</span>
+                                </div>
+                                <div class="flex items-center gap-2 bg-slate-100 p-1.5 rounded-xl">
+                                    <span class="text-2xl">{currentProfile.avatar}</span>
+                                    <div class="text-left hidden sm:block">
+                                        <div class="font-bold text-sm leading-tight text-slate-700">{currentProfile.username}</div>
+                                        <div class="text-xs text-emerald-600 font-semibold">Tahun {currentProfile.year}</div>
+                                    </div>
+                                    <button onClick={handleLogout} class="ml-2 text-xs bg-red-100 hover:bg-red-200 text-red-600 px-2 py-1 rounded-md font-bold transition">Keluar</button>
+                                </div>
+                            </div>
+                        )}
+                    </header>
+
+                    {/* VIEW: AUTHENTICATION (Login / Sign Up) */}
+                    {view === 'auth' && (
+                        <div class="grid md:grid-cols-2 gap-6 items-start">
+                            {/* Left Side: Login Profiles */}
+                            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                                <h2 class="text-xl font-fun text-slate-700 mb-4 flex items-center gap-2">👋 Masuk Kelas (Login)</h2>
+                                
+                                {profiles.length === 0 ? (
+                                    <div class="text-center py-8 text-slate-400 bg-slate-50 rounded-xl border-2 border-dashed border-slate-200">
+                                        <span class="text-4xl block mb-2">🎒</span>
+                                        Belum ada akaun pelajar. Sila daftar di sebelah kanan!
+                                    </div>
+                                ) : (
+                                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                        {profiles.map(p => (
+                                            <button key={p.username} onClick={() => handleLogin(p)} class="flex flex-col items-center p-4 bg-gradient-to-b from-slate-50 to-slate-100/50 rounded-xl border border-slate-200 hover:border-emerald-400 hover:scale-[1.03] transition shadow-xs group">
+                                                <span class="text-4xl mb-2 group-hover:scale-110 transition duration-200">{p.avatar}</span>
+                                                <span class="font-bold text-slate-700 truncate max-w-full text-center text-sm">{p.username}</span>
+                                                <span class="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-bold mt-1">Tahun {p.year}</span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+
+                                {/* Recovery Portal Form Area */}
+                                <div class="mt-8 pt-6 border-t border-slate-100">
+                                    <h3 class="text-sm font-bold text-slate-500 mb-2 uppercase tracking-wide">🔍 Lupa Nama Kanak-kanak?</h3>
+                                    <form onSubmit={handleRecovery} class="flex gap-2">
+                                        <input type="text" placeholder="Masukkan Kod Pemulihan (Cth: BIJAK-1234)" value={recoveryInput} onChange={(e) => setRecoveryInput(e.target.value)} class="flex-1 px-3 py-2 text-sm border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 uppercase font-mono" />
+                                        <button type="submit" class="bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-xl text-sm font-bold transition">Sahkan</button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            {/* Right Side: Sign Up */}
+                            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                                <h2 class="text-xl font-fun text-slate-700 mb-4 flex items-center gap-2">✨ Daftar Pelajar Baru</h2>
+                                <form onSubmit={handleSignUp} class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-bold text-slate-600 mb-1">Nama Kanak-Kanak / Username Only:</label>
+                                        <input type="text" required placeholder="Masukkan nama pendek anak..." value={signUpName} onChange={(e) => setSignUpName(e.target.value)} class="w-full px-4 py-2.5 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 font-bold" />
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-bold text-slate-600 mb-1">Tahun Pembelajaran (KSSR 2026):</label>
+                                        <div class="grid grid-cols-3 gap-2">
+                                            {[1, 2, 3].map(yr => (
+                                                <button key={yr} type="button" onClick={() => setSignUpYear(yr)} class={`py-2.5 font-bold rounded-xl border-2 transition ${signUpYear === yr ? 'bg-emerald-500 border-emerald-600 text-white' : 'bg-slate-50 border-slate-200 hover:bg-slate-100 text-slate-600'}`}>Tahun {yr}</button>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-bold text-slate-600 mb-1">Pilih Avatar Kegemaran:</label>
+                                        <div class="grid grid-cols-4 gap-2 bg-slate-50 p-2 rounded-xl border border-slate-200">
+                                            {avatars.map(av => (
+                                                <button key={av} type="button" onClick={() => setSignUpAvatar(av)} class={`text-2xl p-2 rounded-lg transition ${signUpAvatar === av ? 'bg-amber-400 scale-110 shadow-sm' : 'hover:bg-white'}`}>{av}</button>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-fun py-3 rounded-xl shadow-md border-b-4 border-emerald-700 hover:scale-[1.01] active:transform-none transition">Daftar & Mula Belajar 🚀</button>
+                                </form>
+                            </div>
+
+                            {/* Alert Card Box on Account Creation */}
+                            {showRecoveryAlert && (
+                                <div class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+                                    <div class="bg-white rounded-2xl p-6 max-w-sm w-full text-center shadow-2xl border-4 border-amber-400 animate-bounce-short">
+                                        <span class="text-5xl block mb-2">🎟️</span>
+                                        <h3 class="text-xl font-fun text-amber-600">Kad Pemulihan Akaun</h3>
+                                        <p class="text-sm text-slate-500 mt-1">Simpan kod ini! Jika anak lupa namanya, gunakan kod ini di halaman utama.</p>
+                                        
+                                        <div class="bg-amber-50 my-4 p-3 rounded-xl border border-amber-300 font-mono text-lg font-bold text-amber-800 tracking-wide">
+                                            {showRecoveryAlert.code}
+                                        </div>
+                                        
+                                        <p class="text-xs text-slate-400 mb-4">Akaun: <span class="font-bold text-slate-600">{showRecoveryAlert.username}</span></p>
+                                        
+                                        <button onClick={() => { playSound('click'); setView('dashboard'); setShowRecoveryAlert(null); }} class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-2 rounded-xl transition">Faham & Salin Kod</button>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {/* VIEW: DASHBOARD PANEL */}
+                    {view === 'dashboard' && (
+                        <div class="space-y-6">
+                            {/* Student Status Intro */}
+                            <div class="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-3xl p-6 text-white shadow-lg relative overflow-hidden">
+                                <div class="relative z-10">
+                                    <h2 class="text-2xl font-fun">Selamat Kembali, {currentProfile.username}! 👋</h2>
+                                    <p class="opacity-90 text-sm mt-1">Jom teroka dunia matematik KSSR Tahun {currentProfile.year}. Banyak bintang menanti anda hari ini!</p>
+                                </div>
+                                <span class="absolute -right-4 -bottom-8 text-9xl opacity-10 pointer-events-none">📐</span>
+                            </div>
+
+                            {/* Badge Gallery */}
+                            <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
+                                <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">🏆 Papan Pencapaian (Badges)</h3>
+                                {currentProfile.badges.length === 0 ? (
+                                    <p class="text-sm text-slate-400 italic">Selesaikan Kuiz Cabaran Mega untuk mendapatkan lencana wira anda!</p>
+                                ) : (
+                                    <div class="flex flex-wrap gap-2">
+                                        {currentProfile.badges.map(b => (
+                                            <span key={b} class="px-3 py-1.5 bg-amber-100 border border-amber-300 text-amber-800 rounded-xl font-bold text-xs flex items-center gap-1 shadow-xs">{b}</span>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Main Activities Hub */}
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 hover:border-emerald-300 transition flex flex-col justify-between">
+                                    <div>
+                                        <span class="text-4xl block mb-2">🚀</span>
+                                        <h3 class="text-lg font-fun text-slate-700">Zon Kuiz Matematik</h3>
+                                        <p class="text-sm text-slate-500 mt-1">Uji pemahaman matematik anda dengan sistem kuiz adaptif 10 soalan atau cabaran penuh 100 soalan KSSR.</p>
+                                    </div>
+                                    <button onClick={() => setView('quiz_lobby')} class="mt-4 w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2.5 rounded-xl text-center shadow-xs transition">Buka Kuiz Lobby</button>
+                                </div>
+
+                                <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 hover:border-sky-300 transition flex flex-col justify-between">
+                                    <div>
+                                        <span class="text-4xl block mb-2">🏪</span>
+                                        <h3 class="text-lg font-fun text-slate-700">Kedai Runcit Pak Mat</h3>
+                                        <p class="text-sm text-slate-500 mt-1">Mini-game simulasi mata wang Ringgit Malaysia (RM). Belajar mengira harga makanan tempatan seperti nasi lemak dan roti canai!</p>
+                                    </div>
+                                    <button onClick={startShopGame} class="mt-4 w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-2.5 rounded-xl text-center shadow-xs transition">Main Sekarang</button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* VIEW: QUIZ LOBBY */}
+                    {view === 'quiz_lobby' && (
+                        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 max-w-xl mx-auto">
+                            <h2 class="text-xl font-fun text-slate-700 text-center mb-1">🎯 Pilih Mod Cabaran Kuiz</h2>
+                            <p class="text-xs text-slate-400 text-center mb-6">Tahun {currentProfile.year} • Kurikulum Standard Sekolah Rendah</p>
+                            
+                            <div class="space-y-4">
+                                <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 hover:bg-emerald-50/50 transition relative group">
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <h3 class="font-bold text-slate-700 text-base">⏱️ Latihan Pintas</h3>
+                                            <p class="text-xs text-slate-500">10 Soalan rawak untuk ulang kaji pantas harian.</p>
+                                        </div>
+                                        <button onClick={() => startQuiz(10)} class="bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-bold px-4 py-2 rounded-xl shadow-xs transition">Mula (10 Qs)</button>
+                                    </div>
+                                </div>
+
+                                <div class="p-4 bg-slate-50 rounded-xl border border-amber-200 hover:bg-amber-50/50 transition relative group">
+                                    <div class="absolute -top-2.5 right-4 bg-amber-400 text-white text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md shadow-xs tracking-wider">Lencana Gergasi</div>
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <h3 class="font-bold text-slate-700 text-base">🌌 Cabaran Mega (100 Soalan)</h3>
+                                            <p class="text-xs text-slate-500">Ujian komprehensif mengandungi tepat 100 soalan berturut-turut untuk membuka lencana "Wira 100 Soalan".</p>
+                                        </div>
+                                        <button onClick={() => startQuiz(100)} class="bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold px-4 py-2 rounded-xl shadow-xs transition">Mula (100 Qs)</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button onClick={() => setView('dashboard')} class="mt-6 w-full bg-slate-100 hover:bg-slate-200 text-slate-600 text-sm font-bold py-2 rounded-xl transition">Kembali ke Menu</button>
+                        </div>
+                    )}
+
+                    {/* VIEW: ACTIVE QUIZ (With Instant Dwibahasa System) */}
+                    {view === 'quiz_active' && questionsList.length > 0 && (
+                        <div class="space-y-4">
+                            {/* Progress & Dwibahasa Bar Controls */}
+                            <div class="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-xl shadow-xs border border-slate-200">
+                                <div class="text-sm font-bold text-slate-600">
+                                    Soalan <span class="text-emerald-600">{currentQuestionIdx + 1}</span> daripada {questionsList.length}
+                                </div>
+                                
+                                {/* DwiBahasa Instant Filter Switch - Fixed Bug Zero Lag */}
+                                <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200">
+                                    <span class="text-xs font-bold text-slate-400 px-2 uppercase tracking-wide">Mod Soalan:</span>
+                                    <button onClick={() => { playSound('click'); setDlpMode('DLP'); }} class={`text-xs font-bold px-2.5 py-1 rounded-lg transition ${dlpMode === 'DLP' ? 'bg-emerald-500 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-200'}`}>DLP (Melayu + En)</button>
+                                    <button onClick={() => { playSound('click'); setDlpMode('BM'); }} class={`text-xs font-bold px-2.5 py-1 rounded-lg transition ${dlpMode === 'BM' ? 'bg-emerald-500 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-200'}`}>BM</button>
+                                    <button onClick={() => { playSound('click'); setDlpMode('EN'); }} class={`text-xs font-bold px-2.5 py-1 rounded-lg transition ${dlpMode === 'EN' ? 'bg-emerald-500 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-200'}`}>EN</button>
+                                </div>
+                            </div>
+
+                            {/* Question Box Card */}
+                            <div class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-200 relative">
+                                <div class="space-y-3">
+                                    {/* Conditional text injection based on fast variable state (No re-generation) */}
+                                    {(dlpMode === 'DLP' || dlpMode === 'BM') && (
+                                        <p class="text-lg md:text-xl font-bold text-slate-800 leading-relaxed">{questionsList[currentQuestionIdx].textBm}</p>
+                                    )}
+                                    {(dlpMode === 'DLP' || dlpMode === 'EN') && (
+                                        <p class={`text-base md:text-lg text-sky-600 italic leading-relaxed ${dlpMode === 'DLP' ? 'border-t border-dashed border-slate-100 pt-2 block' : ''}`}>{questionsList[currentQuestionIdx].textEn}</p>
+                                    )}
+                                </div>
+
+                                {/* Multiple Choice Answer Options Selection Grid */}
+                                <div class="grid sm:grid-cols-2 gap-3 mt-8">
+                                    {questionsList[currentQuestionIdx].options.map((opt) => {
+                                        let btnStyle = "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100";
+                                        
+                                        if (isAnswerChecked) {
+                                            if (opt === questionsList[currentQuestionIdx].answer) {
+                                                btnStyle = "bg-emerald-500 border-emerald-600 text-white font-bold";
+                                            } else if (opt === selectedAnswer) {
+                                                btnStyle = "bg-red-500 border-red-600 text-white";
+                                            } else {
+                                                btnStyle = "bg-slate-100 border-slate-200 text-slate-400 opacity-60";
+                                            }
+                                        } else if (opt === selectedAnswer) {
+                                            btnStyle = "bg-amber-400 border-amber-500 text-slate-900 font-bold scale-[1.01] shadow-sm";
+                                        }
+
+                                        return (
+                                            <button key={opt} disabled={isAnswerChecked} onClick={() => handleSelectOption(opt)} class={`w-full p-4 text-left border-2 rounded-xl font-medium transition text-base ${btnStyle}`}>
+                                                {opt}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+
+                                {/* Controller Check/Next Buttons */}
+                                <div class="mt-6 flex justify-end">
+                                    {!isAnswerChecked ? (
+                                        <button onClick={checkAnswer} disabled={!selectedAnswer} class={`px-6 py-2.5 font-bold rounded-xl shadow-xs transition ${selectedAnswer ? 'bg-emerald-500 text-white hover:bg-emerald-600' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}`}>Semak Jawapan</button>
+                                    ) : (
+                                        <button onClick={nextQuestion} class="bg-sky-500 hover:bg-sky-600 text-white px-6 py-2.5 font-bold rounded-xl shadow-xs transition">
+                                            {currentQuestionIdx + 1 === questionsList.length ? 'Selesai Kuiz' : 'Soalan Seterusnya ➡️'}
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* VIEW: QUIZ RESULT CARD SUMMARY */}
+                    {view === 'quiz_result' && (
+                        <div class="bg-white rounded-2xl p-6 shadow-md border border-slate-200 max-w-md mx-auto text-center">
+                            <span class="text-6xl block mb-2">🎉</span>
+                            <h2 class="text-2xl font-fun text-emerald-600">Kuiz Selesai!</h2>
+                            <p class="text-sm text-slate-500 mt-1">Tahniah atas usaha anda menyelesaikan tugasan latihan matematik ini.</p>
+                            
+                            <div class="my-6 bg-slate-50 p-4 rounded-xl border border-slate-200 grid grid-cols-2 gap-2">
+                                <div class="text-center">
+                                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wide">Skor Betul</span>
+                                    <div class="text-2xl font-fun text-slate-700">{score} / {quizMode}</div>
+                                </div>
+                                <div class="text-center">
+                                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wide">Bintang Dijana</span>
+                                    <div class="text-2xl font-fun text-amber-500">+{score * 5} ⭐</div>
+                                </div>
+                            </div>
+
+                            {quizMode === 100 && score >= 80 && (
+                                <div class="mb-6 p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-xs font-bold flex items-center justify-center gap-2">
+                                    🚀 Anda membuka Ganjaran Mega Lencana "Wira 100 Soalan" (+150 Bintang Bonus!)
+                                </div>
+                            )}
+
+                            <button onClick={() => setView('dashboard')} class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2.5 rounded-xl shadow-xs transition">Kembali ke Dashboard</button>
+                        </div>
+                    )}
+
+                    {/* VIEW: SUNDRY SHOP MINI-GAME */}
+                    {view === 'sundry_shop' && shopItem && (
+                        <div class="grid md:grid-cols-2 gap-6 items-start">
+                            {/* Left Side: Pak Mat Cashier counter */}
+                            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 text-center">
+                                <span class="text-5xl block mb-1">🏪</span>
+                                <h2 class="text-xl font-fun text-slate-700">Kaunter Kedai Pak Mat</h2>
+                                <p class="text-xs text-slate-400 mb-4">Letakkan jumlah wang yang tepat untuk membeli makanan di bawah.</p>
+                                
+                                <div class="bg-slate-50 p-4 rounded-2xl border-2 border-dashed border-slate-200 inline-block my-2 min-w-[200px]">
+                                    <span class="text-5xl block mb-1">{shopItem.icon}</span>
+                                    <h4 class="font-bold text-slate-700">{shopItem.nameBm}</h4>
+                                    <p class="text-xs text-sky-600 italic font-medium">{shopItem.nameEn}</p>
+                                    <div class="text-lg font-fun text-emerald-600 mt-1">Harga: RM {shopItem.price.toFixed(2)}</div>
+                                </div>
+
+                                <div class="mt-4 p-3 bg-emerald-50 rounded-xl border border-emerald-200">
+                                    <div class="text-xs uppercase font-bold text-slate-400 tracking-wider">Wang Anda Letak:</div>
+                                    <div class="text-2xl font-fun text-emerald-700">RM {userPaid.toFixed(2)}</div>
+                                </div>
+
+                                {shopMessage && (
+                                    <p class="mt-3 text-sm font-bold text-slate-700 bg-amber-50 p-2.5 rounded-lg border border-amber-200">{shopMessage}</p>
+                                ) }
+
+                                <div class="grid grid-cols-2 gap-2 mt-4">
+                                    <button onClick={checkPayment} class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 rounded-xl text-sm transition shadow-xs">Bayar Sekarang</button>
+                                    <button onClick={() => setUserPaid(0)} class="bg-slate-200 hover:bg-slate-300 text-slate-600 font-bold py-2 rounded-xl text-sm transition">Padam Duit</button>
+                                </div>
+                            </div>
+
+                            {/* Right Side: Coin & Note clickers tray */}
+                            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                                <h3 class="text-sm font-bold text-slate-500 mb-3 uppercase tracking-wide">🪙 Dulang Wang Ringgit (Klik untuk tambah)</h3>
+                                
+                                <div class="space-y-4">
+                                    {/* Banknotes Tray selection row */}
+                                    <div>
+                                        <h4 class="text-xs font-bold text-slate-400 mb-1">Wang Kertas</h4>
+                                        <div class="grid grid-cols-3 gap-2">
+                                            <button onClick={() => addMoney(1.00)} class="p-2 bg-blue-100 hover:bg-blue-200 text-blue-800 font-bold border border-blue-300 rounded-lg text-sm transition">RM 1 (Biru)</button>
+                                            <button onClick={() => addMoney(5.00)} class="p-2 bg-green-100 hover:bg-green-200 text-green-800 font-bold border border-green-300 rounded-lg text-sm transition">RM 5 (Hijau)</button>
+                                            <button onClick={() => addMoney(10.00)} class="p-2 bg-red-100 hover:bg-red-200 text-red-800 font-bold border border-red-300 rounded-lg text-sm transition">RM 10 (Merah)</button>
+                                        </div>
+                                    </div>
+
+                                    {/* Coins Tray selection row */}
+                                    <div>
+                                        <h4 class="text-xs font-bold text-slate-400 mb-1">Wang Syiling</h4>
+                                        <div class="grid grid-cols-3 gap-2">
+                                            <button onClick={() => addMoney(0.10)} class="p-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold border border-slate-300 rounded-lg text-sm transition">10 Sen</button>
+                                            <button onClick={() => addMoney(0.20)} class="p-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold border border-slate-400 rounded-lg text-sm transition">20 Sen</button>
+                                            <button onClick={() => addMoney(0.50)} class="p-2 bg-amber-100 hover:bg-amber-200 text-amber-800 font-bold border border-amber-300 rounded-lg text-sm transition">50 Sen (Emas)</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-6 pt-4 border-t border-slate-100 flex gap-2">
+                                    <button onClick={startShopGame} class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold py-2 rounded-xl transition">Tukar Item Baru</button>
+                                    <button onClick={() => setView('dashboard')} class="flex-1 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold py-2 rounded-xl transition">Kembali ke Menu</button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        const root = document.getElementById('root');
+        const reactRoot = ReactDOM.createRoot(root);
+        reactRoot.render(<App />);
+    </script>
+</body>
+</html>
