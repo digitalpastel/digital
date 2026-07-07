@@ -1,0 +1,3107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Daily Sales Report - Premium Enterprise Workspace</title>
+    
+    <!-- External Typography & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- HTML to PDF and PNG Conversion Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <!-- Tailwind CSS Library Loader -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            500: '#2bb673',
+                            600: '#249a60',
+                            700: '#0ea35b',
+                            800: '#0f7f57',
+                            900: '#14532d',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Bubble Background Animation */
+        .bg-bubbles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .bg-bubbles li {
+            position: absolute;
+            list-style: none;
+            display: block;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.08);
+            bottom: -160px;
+            border-radius: 50%;
+            animation: bubbleUp 25s infinite linear;
+        }
+        .bg-bubbles li:nth-child(1) { left: 10%; width: 80px; height: 80px; animation-delay: 0s; }
+        .bg-bubbles li:nth-child(2) { left: 20%; width: 30px; height: 30px; animation-delay: 2s; animation-duration: 17s; }
+        .bg-bubbles li:nth-child(3) { left: 25%; animation-delay: 4s; }
+        .bg-bubbles li:nth-child(4) { left: 40%; width: 60px; height: 60px; animation-duration: 22s; }
+        .bg-bubbles li:nth-child(5) { left: 70%; width: 30px; height: 30px; }
+        .bg-bubbles li:nth-child(6) { left: 80%; width: 120px; height: 120px; animation-delay: 3s; }
+        .bg-bubbles li:nth-child(7) { left: 32%; width: 160px; height: 160px; animation-delay: 7s; }
+        .bg-bubbles li:nth-child(8) { left: 55%; width: 20px; height: 20px; animation-delay: 15s; animation-duration: 40s; }
+        .bg-bubbles li:nth-child(9) { left: 25%; width: 15px; height: 15px; animation-delay: 2s; animation-duration: 40s; }
+        .bg-bubbles li:nth-child(10) { left: 90%; width: 140px; height: 140px; animation-delay: 11s; }
+
+        @keyframes bubbleUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0.8; border-radius: 50%; }
+            100% { transform: translateY(-1200px) rotate(720deg); opacity: 0; border-radius: 50%; }
+        }
+
+        /* Scrollbar aesthetics */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2bb673;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #0ea35b;
+        }
+        
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background: white;
+                color: black;
+            }
+            .print-area {
+                display: block !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 10px !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans transition-colors duration-200">
+
+    <!-- SECURE GATEWAY LOGIN PAGE -->
+    <div id="loginPage" class="relative min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-[#29b68a] via-[#22b36f] to-[#8bd143] overflow-hidden">
+        <ul class="bg-bubbles">
+            <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+        </ul>
+
+        <div class="relative z-10 w-full max-w-md text-center">
+            <!-- Brand Logo Design -->
+            <div class="flex items-center justify-center mb-4 gap-2 text-white">
+                <div class="w-12 h-12 rounded-xl bg-white text-brand-600 flex items-center justify-center shadow-lg font-bold text-2xl">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <span class="text-2xl font-bold tracking-tight text-white drop-shadow-md">Daily Sales Report</span>
+            </div>
+            
+            <h1 class="text-3xl font-extrabold text-white mb-2 drop-shadow-sm" id="authTitleHeader" data-translate="welcome">Let's jump back in!</h1>
+            <p class="text-white/90 text-sm mb-6 max-w-sm mx-auto" id="authSubtitleHeader" data-translate="subtitle">Please resume onboarding to unlock the entire feature suite of Daily Sales Report.</p>
+
+            <!-- Standard Login Panel -->
+            <div id="standardLoginCard" class="bg-white p-8 rounded-2xl shadow-2xl text-left border border-white/20 relative">
+                <!-- Lang Indicator (Login Page) -->
+                <div class="absolute top-4 right-4">
+                    <button onclick="toggleGlobalLanguage()" class="bg-brand-50 hover:bg-brand-100 text-brand-700 text-xs font-bold px-2.5 py-1 rounded-full transition-all border border-brand-200 shadow-sm flex items-center gap-1">
+                        <i class="fa-solid fa-language"></i> <span id="loginLangLabel">BM</span>
+                    </button>
+                </div>
+
+                <form id="signInForm" onsubmit="handleSignInSubmit(event)">
+                    <div class="mb-4">
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1.5" data-translate="username">Username</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                                <i class="fa-solid fa-user"></i>
+                            </span>
+                            <input required class="w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-800 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100" id="loginUsername" type="text" placeholder="e.g. businessowner">
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <div class="flex justify-between mb-1.5">
+                            <label class="text-xs font-bold text-gray-500 uppercase tracking-wide" data-translate="password">Password</label>
+                            <a href="#" onclick="triggerToast('Custom credentials can be created by choosing the Sign Up tab below.')" class="text-xs font-bold text-brand-600 hover:underline" data-translate="forgot">Forgot Password?</a>
+                        </div>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                                <i class="fa-solid fa-lock"></i>
+                            </span>
+                            <input required class="w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-800 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100" id="loginPassword" type="password" placeholder="••••••••">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full py-3 bg-gradient-to-r from-brand-500 to-brand-700 hover:from-brand-600 hover:to-brand-800 text-white rounded-lg text-sm font-bold tracking-wide shadow-lg shadow-brand-500/20 active:translate-y-0.5 transition-all">
+                        <i class="fa-solid fa-right-to-bracket mr-2"></i> <span data-translate="signIn">Sign In</span>
+                    </button>
+                </form>
+
+                <!-- Switching action to Sign Up -->
+                <div class="text-center mt-6">
+                    <p class="text-xs text-gray-500">
+                        <span data-translate="noAccount">Don't have an account?</span>
+                        <button onclick="toggleAuthForms(true)" class="text-brand-600 font-bold hover:underline ml-1" data-translate="signUp">Sign Up</button>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Registration Panel (Create New Account) -->
+            <div id="standardRegisterCard" class="bg-white p-8 rounded-2xl shadow-2xl text-left border border-white/20 relative hidden">
+                <form id="signUpForm" onsubmit="handleSignUpSubmit(event)">
+                    <div class="mb-4">
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1.5">Business / Store Name</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                                <i class="fa-solid fa-store"></i>
+                            </span>
+                            <input required class="w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-800 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100" id="regStoreName" type="text" placeholder="e.g. My KL Bookstore">
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1.5">Owner Username</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                                <i class="fa-solid fa-user"></i>
+                            </span>
+                            <input required class="w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-800 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100" id="regUsername" type="text" placeholder="e.g. manager123">
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1.5">Security Passcode (Password)</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                                <i class="fa-solid fa-lock"></i>
+                            </span>
+                            <input required class="w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-800 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100" id="regPassword" type="password" placeholder="Min 6 characters">
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1.5">Corporate Access Level</label>
+                        <select id="regRole" class="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-800 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100">
+                            <option value="Owner">Primary Business Owner</option>
+                            <option value="Staff">Staff Access / Cashier Desk</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="w-full py-3 bg-gradient-to-r from-brand-500 to-brand-700 hover:from-brand-600 hover:to-brand-800 text-white rounded-lg text-sm font-bold tracking-wide shadow-lg shadow-brand-500/20 active:translate-y-0.5 transition-all">
+                        <i class="fa-solid fa-user-check mr-2"></i>Cipta Akaun Pangkalan Data
+                    </button>
+                </form>
+
+                <div class="text-center mt-6">
+                    <p class="text-xs text-gray-500">
+                        <span data-translate="alreadyAccount">Already have an account?</span>
+                        <button onclick="toggleAuthForms(false)" class="text-brand-600 font-bold hover:underline ml-1" data-translate="signIn">Sign In</button>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Footer elements -->
+            <div class="text-center mt-6">
+                <p class="text-[11px] text-white/70 drop-shadow-sm font-medium">
+                    Daily Sales Report Enterprise Utility • Secure Sandbox Workspace<br>
+                    <span class="font-bold">© 2026 BrandWorkz Co. All rights reserved.</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- MAIN INTERACTIVE SYSTEM APPLICATION WORKSPACE -->
+    <div id="appLayout" class="hidden min-h-screen flex flex-col lg:flex-row">
+        
+        <!-- SIDEBAR NAVIGATION -->
+        <aside class="w-full lg:w-72 bg-white border-b lg:border-b-0 lg:border-r border-gray-100 flex flex-col shrink-0 no-print">
+            
+            <!-- Sidebar Header -->
+            <div class="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-lg bg-brand-500 text-white flex items-center justify-center font-bold text-lg shadow-md shadow-brand-500/10">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-sm font-bold tracking-tight text-gray-800" data-translate="salesReport">Daily Sales Report</h1>
+                        <span id="roleBadge" class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-brand-50 text-brand-600 uppercase" data-translate="unlockedFree">Enterprise Access</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active User Display Card -->
+            <div class="px-6 py-4 bg-gray-50 border-b border-gray-100 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-brand-400 to-brand-600 text-white flex items-center justify-center font-extrabold shadow-sm text-sm" id="userAvatarSymbol">
+                    U
+                </div>
+                <div class="truncate">
+                    <h4 id="userDisplayName" class="text-xs font-bold text-gray-700 truncate">Store Owner</h4>
+                    <p id="userDisplayUsername" class="text-[10px] text-gray-400 truncate">businessowner</p>
+                </div>
+            </div>
+
+            <!-- Scrollable Tab Links Group -->
+            <nav class="flex-grow py-4 px-3 space-y-1 overflow-y-auto max-h-[calc(100vh-280px)]">
+                <!-- Group Title -->
+                <p class="text-[10px] font-bold text-gray-400 uppercase px-4 mb-2 tracking-widest">Main Operations</p>
+                
+                <button onclick="activateTab('dashboard')" id="btn-tab-dashboard" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all text-brand-600 bg-brand-50/70 border-r-4 border-brand-500">
+                    <i class="fa-solid fa-gauge text-md shrink-0"></i>
+                    <span data-translate="dashboard">Dashboard</span>
+                </button>
+                <button onclick="activateTab('pos')" id="btn-tab-pos" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all text-gray-500 hover:text-brand-600 hover:bg-gray-50">
+                    <i class="fa-solid fa-cash-register text-md shrink-0"></i>
+                    <span>Sales Space / POS</span>
+                </button>
+                <button onclick="activateTab('customers')" id="btn-tab-customers" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all text-gray-500 hover:text-brand-600 hover:bg-gray-50">
+                    <i class="fa-solid fa-user-group text-md shrink-0"></i>
+                    <span>Customers CRM</span>
+                </button>
+                <button onclick="activateTab('inventory')" id="btn-tab-inventory" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all text-gray-500 hover:text-brand-600 hover:bg-gray-50">
+                    <i class="fa-solid fa-boxes-stacked text-md shrink-0"></i>
+                    <span>Stock Products</span>
+                </button>
+                <button onclick="activateTab('category')" id="btn-tab-category" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all text-gray-500 hover:text-brand-600 hover:bg-gray-50">
+                    <i class="fa-solid fa-tags text-md shrink-0"></i>
+                    <span>Categories</span>
+                </button>
+
+                <p class="text-[10px] font-bold text-gray-400 uppercase px-4 pt-3 mb-2 tracking-widest">Trading Desk</p>
+                <button onclick="activateTab('purchases')" id="btn-tab-purchases" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all text-gray-500 hover:text-brand-600 hover:bg-gray-50">
+                    <i class="fa-solid fa-truck-ramp-box text-md shrink-0"></i>
+                    <span>Supplier Purchases</span>
+                </button>
+                <button onclick="activateTab('quotations')" id="btn-tab-quotations" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all text-gray-500 hover:text-brand-600 hover:bg-gray-50">
+                    <i class="fa-solid fa-file-signature text-md shrink-0"></i>
+                    <span>Quotations</span>
+                </button>
+                <button onclick="activateTab('invoices')" id="btn-tab-invoices" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all text-gray-500 hover:text-brand-600 hover:bg-gray-50">
+                    <i class="fa-solid fa-file-invoice text-md shrink-0"></i>
+                    <span>Invoices</span>
+                </button>
+
+                <p class="text-[10px] font-bold text-gray-400 uppercase px-4 pt-3 mb-2 tracking-widest">Finance & Supply</p>
+                <button onclick="activateTab('expense')" id="btn-tab-expense" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all text-gray-500 hover:text-brand-600 hover:bg-gray-50">
+                    <i class="fa-solid fa-arrow-trend-down text-red-500 text-md shrink-0"></i>
+                    <span>Expense Logging</span>
+                </button>
+                <button onclick="activateTab('income')" id="btn-tab-income" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all text-gray-500 hover:text-brand-600 hover:bg-gray-50">
+                    <i class="fa-solid fa-arrow-trend-up text-green-500 text-md shrink-0"></i>
+                    <span>Other Incomes</span>
+                </button>
+                <button onclick="activateTab('suppliers')" id="btn-tab-suppliers" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all text-gray-500 hover:text-brand-600 hover:bg-gray-50">
+                    <i class="fa-solid fa-hands-helping text-md shrink-0"></i>
+                    <span>Suppliers Log</span>
+                </button>
+
+                <p class="text-[10px] font-bold text-gray-400 uppercase px-4 pt-3 mb-2 tracking-widest">Reports Console</p>
+                <button onclick="activateTab('report')" id="btn-tab-report" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all text-gray-500 hover:text-brand-600 hover:bg-gray-50">
+                    <i class="fa-solid fa-chart-pie text-md shrink-0"></i>
+                    <span>Business Analytics</span>
+                </button>
+            </nav>
+
+            <!-- Language and Progress Controls in Sidebar Bottom -->
+            <div class="p-4 border-t border-gray-100 space-y-2">
+                <!-- Dual Language Selection Switcher -->
+                <div class="flex items-center justify-between bg-gray-50 p-2.5 rounded-xl border border-gray-200">
+                    <span class="text-xs font-bold text-gray-500 flex items-center gap-1.5">
+                        <i class="fa-solid fa-language text-brand-500 text-sm"></i>
+                        <span>System Language</span>
+                    </span>
+                    <button onclick="toggleGlobalLanguage()" class="bg-brand-600 hover:bg-brand-700 text-white text-[10px] font-extrabold px-3 py-1 rounded-md shadow-sm uppercase tracking-wider transition-all">
+                        <span id="sidebarLangBtn">BM</span>
+                    </button>
+                </div>
+
+                <!-- Save Progress / Cloud Sync Trigger -->
+                <button onclick="initiateCloudSync()" class="w-full py-2.5 px-3 bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-700 hover:to-brand-800 text-white rounded-xl text-xs font-bold shadow-md shadow-brand-600/10 flex items-center justify-center gap-2 transition-all">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <span data-translate="saveProgress">Save Progress</span>
+                </button>
+
+                <button onclick="logOutSession()" class="w-full py-2 px-3 bg-white hover:bg-red-50 text-red-600 border border-red-100 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all">
+                    <i class="fa-solid fa-lock"></i>
+                    <span data-translate="lockPanel">Lock Panel</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN SCREEN PLATFORM VIEW -->
+        <main class="flex-grow flex flex-col min-w-0 bg-gray-50/50">
+            <!-- Top App Header -->
+            <header class="h-16 bg-white border-b border-gray-100 px-6 flex items-center justify-between shrink-0 no-print">
+                <div class="flex items-center gap-2">
+                    <h2 id="merchantTitleBanner" class="font-extrabold text-gray-800 text-lg">Daily Sales Report Shop</h2>
+                    <span class="hidden md:inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-green-50 text-green-700 border border-green-200">
+                        <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span> Cloud Active
+                    </span>
+                </div>
+                <div class="text-xs text-gray-400 font-semibold" id="clockCalendarWidget">
+                    Malaysia Standard Time
+                </div>
+            </header>
+
+            <!-- Dynamic Body Sections Container -->
+            <div class="flex-grow p-6 overflow-y-auto">
+                
+                <!-- SECTION 1: DASHBOARD PERFORMANCE ANATOMY -->
+                <section id="tab-dashboard" class="tab-pane flex flex-col gap-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-800" data-translate="businessRadar">Business Performance Radar</h2>
+                            <p class="text-xs text-gray-400">Comprehensive real-time tracking indicators.</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="activateTab('pos')" class="py-2 px-4 bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold rounded-xl shadow-md transition-all">
+                                <i class="fa-solid fa-plus mr-1"></i> Add New Sale
+                            </button>
+                            <button onclick="activateTab('report')" class="py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-md transition-all">
+                                <i class="fa-solid fa-chart-bar mr-1"></i> View Analytics of Reports
+                            </button>
+                            <button onclick="triggerDownloadReportModal()" class="py-2 px-4 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-xl shadow-md transition-all">
+                                <i class="fa-solid fa-download mr-1"></i> Download Report (PDF/Excel)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Performance Target Board -->
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                        
+                        <!-- Metric 1: Today's Sales -->
+                        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
+                            <div class="space-y-1.5">
+                                <span class="text-xs font-bold text-gray-400 uppercase tracking-wide block" data-translate="todaysSales">Today's Sales</span>
+                                <span id="dashTodaySales" class="text-lg lg:text-xl font-black text-gray-800 block">RM 0.00</span>
+                                <span class="text-[10px] text-green-500 font-bold block"><i class="fa-solid fa-caret-up"></i> Real-time</span>
+                            </div>
+                            <div class="w-11 h-11 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center text-lg shadow-inner">
+                                <i class="fa-solid fa-calendar-day"></i>
+                            </div>
+                        </div>
+
+                        <!-- Metric 2: Weekly Sales -->
+                        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
+                            <div class="space-y-1.5">
+                                <span class="text-xs font-bold text-gray-400 uppercase tracking-wide block" data-translate="weeklySales">Weekly Sales</span>
+                                <span id="dashWeeklySales" class="text-lg lg:text-xl font-black text-gray-800 block">RM 0.00</span>
+                                <span class="text-[10px] text-brand-600 font-bold block">Rolling 7 days</span>
+                            </div>
+                            <div class="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg shadow-inner">
+                                <i class="fa-solid fa-calendar-week"></i>
+                            </div>
+                        </div>
+
+                        <!-- Metric 3: Monthly Sales -->
+                        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
+                            <div class="space-y-1.5">
+                                <span class="text-xs font-bold text-gray-400 uppercase tracking-wide block" data-translate="monthlySales">Monthly Sales</span>
+                                <span id="dashMonthlySales" class="text-lg lg:text-xl font-black text-gray-800 block">RM 0.00</span>
+                                <span class="text-[10px] text-brand-600 font-bold block">Current month calendar</span>
+                            </div>
+                            <div class="w-11 h-11 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center text-lg shadow-inner">
+                                <i class="fa-solid fa-calendar-days"></i>
+                            </div>
+                        </div>
+
+                        <!-- Metric 4: Profit This Month -->
+                        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
+                            <div class="space-y-1.5">
+                                <div class="flex items-center gap-1">
+                                    <span class="text-xs font-bold text-gray-400 uppercase tracking-wide block" data-translate="profitMonth">Profit This Month</span>
+                                    <button onclick="activateTab('report')" class="text-[10px] text-brand-600 underline font-bold" title="View Full Profit Reports">View reports</button>
+                                </div>
+                                <span id="dashProfitMonth" class="text-lg lg:text-xl font-black text-brand-600 block">RM 0.00</span>
+                                <span class="text-[10px] text-gray-400 font-bold block">Margin evaluation</span>
+                            </div>
+                            <div class="w-11 h-11 rounded-xl bg-green-50 text-green-600 flex items-center justify-center text-lg shadow-inner">
+                                <i class="fa-solid fa-circle-dollar-to-slot"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Quick Stats Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div onclick="activateTab('inventory')" class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm hover:border-brand-500 cursor-pointer transition-all flex items-center gap-4">
+                            <div class="p-3 bg-brand-50 text-brand-600 rounded-xl text-lg">
+                                <i class="fa-solid fa-box"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-gray-400 uppercase">Show Total Products</h4>
+                                <p id="dashTotalProductText" class="text-xl font-black text-gray-800">0 Products</p>
+                            </div>
+                        </div>
+                        <div onclick="activateTab('customers')" class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm hover:border-brand-500 cursor-pointer transition-all flex items-center gap-4">
+                            <div class="p-3 bg-blue-50 text-blue-600 rounded-xl text-lg">
+                                <i class="fa-solid fa-users"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-gray-400 uppercase">Show Total Customers</h4>
+                                <p id="dashTotalCustomerText" class="text-xl font-black text-gray-800">0 Customers</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Custom Drawn SVG Performance Chart -->
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-3">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h3 class="font-extrabold text-sm text-gray-700 uppercase tracking-wider">Weekly Performance Curve</h3>
+                                <p class="text-[11px] text-gray-400">Visualization of dynamic RM revenue trend</p>
+                            </div>
+                        </div>
+                        <div class="w-full h-48 bg-gray-50 rounded-xl p-2 flex items-end relative overflow-hidden" id="dashChartContainer">
+                            <!-- Draw dynamic line chart via simple SVG -->
+                            <svg class="absolute inset-0 w-full h-full p-4" viewBox="0 0 100 100" preserveAspectRatio="none" id="dashboardSvgChart">
+                                <path d="M 0 90 L 20 70 L 40 80 L 60 40 L 80 50 L 100 20" fill="none" stroke="#2bb673" stroke-width="2" />
+                            </svg>
+                            <div class="absolute bottom-1 left-2 text-[8px] text-gray-400">Mon</div>
+                            <div class="absolute bottom-1 left-[20%] text-[8px] text-gray-400">Tue</div>
+                            <div class="absolute bottom-1 left-[40%] text-[8px] text-gray-400">Wed</div>
+                            <div class="absolute bottom-1 left-[60%] text-[8px] text-gray-400">Thu</div>
+                            <div class="absolute bottom-1 left-[80%] text-[8px] text-gray-400">Fri</div>
+                            <div class="absolute bottom-1 right-2 text-[8px] text-gray-400">Sat/Sun</div>
+                        </div>
+                    </div>
+
+                    <!-- Main Dashboard Recent Table -->
+                    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-50 flex items-center justify-between">
+                            <h3 class="font-extrabold text-gray-700 text-sm uppercase tracking-wider" data-translate="recentActivity">Recent Performance Ledger Activity</h3>
+                            <button onclick="activateTab('pos')" class="text-xs font-bold text-brand-600 hover:underline">View All Sales</button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-gray-50/50">
+                                        <th class="px-6 py-3.5 text-xs font-bold text-gray-400 uppercase tracking-wider" data-translate="receiptId">Receipt ID</th>
+                                        <th class="px-6 py-3.5 text-xs font-bold text-gray-400 uppercase tracking-wider" data-translate="timestamp">Timestamp</th>
+                                        <th class="px-6 py-3.5 text-xs font-bold text-gray-400 uppercase tracking-wider" data-translate="itemsDesc">Items Description</th>
+                                        <th class="px-6 py-3.5 text-xs font-bold text-gray-400 uppercase tracking-wider" data-translate="totalPaid">Total Paid</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dashLedgerPreviewTable">
+                                    <!-- Dynamic Rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- SECTION 2: CUSTOMERS MODULE -->
+                <section id="tab-customers" class="tab-pane hidden flex flex-col gap-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-800">All Registered Customers CRM</h2>
+                            <p class="text-xs text-gray-400">Manage client relationships, upload lists, and export profiles.</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="triggerAddCustomerModal()" class="py-2 px-4 bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold rounded-xl shadow-md transition-all">
+                                <i class="fa-solid fa-plus mr-1"></i> Add a Customer
+                            </button>
+                            <button onclick="triggerCSVImportModal('customers')" class="py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-md transition-all">
+                                <i class="fa-solid fa-file-csv mr-1"></i> Import CSV List
+                            </button>
+                            <button onclick="exportTableToCSV('customersTable', 'Customer_CRM_Report')" class="py-2 px-4 bg-green-600 hover:bg-green-700 text-white text-xs font-bold rounded-xl shadow-md transition-all">
+                                <i class="fa-solid fa-file-excel mr-1"></i> Export Excel/CSV
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse" id="customersTable">
+                                <thead>
+                                    <tr class="bg-gray-50/50">
+                                        <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Client Name</th>
+                                        <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Contact Phone</th>
+                                        <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Store Credit Spent (RM)</th>
+                                        <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Action Log</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="customersTableRows">
+                                    <!-- Dynamic Rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- SECTION 3: PRODUCT INVENTORY -->
+                <section id="tab-inventory" class="tab-pane hidden flex flex-col gap-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-800">All Store Products (SKUs)</h2>
+                            <p class="text-xs text-gray-400">Configure catalog prices, cost limits, and physical counts.</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="triggerProductCreationModal()" class="py-2.5 px-4 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-xs font-bold shadow-md shadow-brand-500/10 flex items-center gap-2 transition-all">
+                                <i class="fa-solid fa-plus"></i> Add a Product
+                            </button>
+                            <button onclick="exportTableToCSV('productsTable', 'Stock_Inventory_Report')" class="py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-md transition-all">
+                                <i class="fa-solid fa-file-excel"></i> Export CSV
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse" id="productsTable">
+                                <thead>
+                                    <tr class="bg-gray-50/50">
+                                        <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Product Name</th>
+                                        <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Cost Price (RM)</th>
+                                        <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Retail Price (RM)</th>
+                                        <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Stock Qty</th>
+                                        <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Status</th>
+                                        <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="inventoryCompleteTableRows">
+                                    <!-- Dynamic Rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- SECTION 4: CATEGORY MANAGEMENT -->
+                <section id="tab-category" class="tab-pane hidden flex flex-col gap-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-800">Category Management Portal</h2>
+                            <p class="text-xs text-gray-400">Classify products, set discounts, and analyze layouts.</p>
+                        </div>
+                        <button onclick="triggerAddCategoryModal()" class="py-2.5 px-4 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-xs font-bold shadow-md transition-all">
+                            <i class="fa-solid fa-plus mr-1"></i> Create New Category
+                        </button>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50/50">
+                                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Category Tag Name</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Associated Products Count</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider text-right">Action Log</th>
+                                </tr>
+                            </thead>
+                            <tbody id="categoryTableRows">
+                                <!-- Dynamic Rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+
+                <!-- SECTION 5: PURCHASES LOGGING -->
+                <section id="tab-purchases" class="tab-pane hidden flex flex-col gap-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-800">All Stock Purchases from Suppliers</h2>
+                            <p class="text-xs text-gray-400">Log new stock inventory intakes and cost parameters.</p>
+                        </div>
+                        <button onclick="triggerAddPurchaseModal()" class="py-2.5 px-4 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-xs font-bold shadow-md transition-all">
+                            <i class="fa-solid fa-plus mr-1"></i> Add a Purchase Log
+                        </button>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50/50">
+                                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Supplier Source</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Product Purchased</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Quantity Added</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Wholesale Cost Paid (RM)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="purchasesTableRows">
+                                <!-- Dynamic Rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+
+                <!-- SECTION 6: SALES SPACE / ALL SALES / POS -->
+                <section id="tab-pos" class="tab-pane hidden flex flex-col gap-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-800">Sales Space Desk & Live POS</h2>
+                            <p class="text-xs text-gray-400">Build transactions, modify client catalogs, and issue instant receipts.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+                        
+                        <!-- Left Panel: Product SKU selector -->
+                        <div class="xl:col-span-8 flex flex-col gap-4">
+                            <!-- EDITABLE META PANEL FOR TAX, NAME & ADDRESS -->
+                            <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm space-y-4">
+                                <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wide flex items-center gap-1.5">
+                                    <i class="fa-solid fa-sliders text-brand-500 text-sm"></i> Terminal & Invoice Meta Configuration
+                                </h4>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div>
+                                        <label class="block text-[10px] uppercase font-bold text-gray-400 mb-1">Custom Store Name</label>
+                                        <input id="posStoreNameInput" oninput="updateStoreMeta()" type="text" class="w-full text-xs p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 focus:outline-brand-500" value="Daily Sales Report Shop">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] uppercase font-bold text-gray-400 mb-1">Custom Tax Rate (%)</label>
+                                        <input id="posTaxInput" oninput="syncTaxFromLeft(this.value)" type="number" step="0.1" class="w-full text-xs p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 focus:outline-brand-500" value="6.0">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] uppercase font-bold text-gray-400 mb-1">User Address Location</label>
+                                        <input id="posAddressInput" oninput="updateStoreMeta()" type="text" class="w-full text-xs p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 focus:outline-brand-500" value="Selangor State Commercial Center, Malaysia">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col gap-3">
+                                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wide">Available Catalog Selection</h3>
+                                    <div class="flex gap-2 w-full sm:w-auto">
+                                        <input id="posSearchField" oninput="filterPOSGrid()" type="text" class="w-full sm:w-48 px-2.5 py-1.5 text-xs bg-gray-50 border border-gray-200 rounded-lg text-gray-700" placeholder="Search catalog...">
+                                        <select id="posCategoryFilter" onchange="filterPOSGrid()" class="px-2 py-1.5 text-xs bg-gray-50 border border-gray-200 rounded-lg text-gray-700">
+                                            <option value="">All Categories</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="posCatalogItemsGrid" class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                    <!-- Dynamic -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Panel: Dynamic Ticket Checkout Builder with direct inline edit features -->
+                        <div class="xl:col-span-4 bg-white p-6 rounded-2xl border border-gray-100 shadow-md flex flex-col justify-between min-h-[500px]">
+                            <div>
+                                <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+                                    <h3 class="font-bold text-gray-800 flex items-center gap-2">
+                                        <i class="fa-solid fa-receipt text-brand-500"></i>
+                                        <span data-translate="activeCart">Active Cart</span>
+                                    </h3>
+                                    <button onclick="flushActiveCart()" class="text-xs text-red-500 hover:text-red-700 font-bold">Clear All</button>
+                                </div>
+
+                                <!-- Live Inline Edit: Store Identifier Panel -->
+                                <div class="mb-4 p-3 bg-gray-50/50 border border-gray-100 rounded-xl space-y-2.5">
+                                    <div>
+                                        <label class="block text-[9px] uppercase font-bold text-gray-400 mb-0.5 tracking-wider">Outlet Name</label>
+                                        <input id="posStoreNameInputCart" oninput="syncStoreNameFromCart(this.value)" type="text" class="w-full text-xs font-bold px-2 py-1.5 bg-white border border-gray-200 rounded-lg text-gray-800 focus:outline-none focus:border-brand-500" value="Daily Sales Report Shop">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[9px] uppercase font-bold text-gray-400 mb-0.5 tracking-wider">Outlet Address</label>
+                                        <input id="posAddressInputCart" oninput="syncAddressFromCart(this.value)" type="text" class="w-full text-[10px] px-2 py-1.5 bg-white border border-gray-200 rounded-lg text-gray-600 focus:outline-none focus:border-brand-500" value="Selangor State Commercial Center, Malaysia">
+                                    </div>
+                                </div>
+
+                                <!-- Assign Customer Dropdown -->
+                                <div class="mb-4">
+                                    <label class="block text-[10px] uppercase font-bold text-gray-400 mb-1">Link Client Record</label>
+                                    <select id="posClientSelect" class="w-full text-xs p-2 bg-gray-50 border border-gray-200 rounded-lg">
+                                        <option value="">Walk-in Client</option>
+                                    </select>
+                                </div>
+
+                                <!-- CART ITEM ROSTERS -->
+                                <div id="checkoutCartItemsList" class="space-y-3 max-h-[300px] overflow-y-auto pr-1">
+                                    <p class="text-xs text-gray-400 text-center py-12" data-translate="cartEmpty">Cart is empty. Select items to checkout.</p>
+                                </div>
+                            </div>
+
+                            <div class="border-t border-gray-100 pt-4 mt-4 space-y-3">
+                                <!-- Price aggregates breakdown -->
+                                <div class="flex justify-between text-xs text-gray-400 font-medium">
+                                    <span>Subtotal</span>
+                                    <span id="summarySubtotal">RM 0.00</span>
+                                </div>
+                                <div class="flex justify-between items-center text-xs text-gray-400 font-medium">
+                                    <span class="flex items-center gap-1">
+                                        SST Tax (<input id="posTaxInputCart" type="number" step="0.1" min="0" class="w-12 px-1 py-0.5 bg-gray-50 border border-gray-200 rounded text-center text-[11px] font-bold text-gray-700 focus:outline-brand-500" value="6.0" oninput="syncTaxFromCart(this.value)">%)
+                                    </span>
+                                    <span id="summaryTax">RM 0.00</span>
+                                </div>
+                                <div class="flex justify-between text-base font-extrabold text-gray-800 pt-2 border-t border-dashed border-gray-100">
+                                    <span>GRAND TOTAL</span>
+                                    <span id="summaryGrandTotal" class="text-brand-600 font-black text-lg">RM 0.00</span>
+                                </div>
+
+                                <button onclick="triggerInvoiceSettlement()" class="w-full mt-2 py-3 bg-gradient-to-r from-brand-500 to-brand-700 hover:from-brand-600 hover:to-brand-800 text-white rounded-xl text-sm font-bold tracking-wide shadow-lg flex items-center justify-center gap-2 transition-all">
+                                    <i class="fa-solid fa-money-bill-wave"></i>
+                                    <span data-translate="dispatchSale">Dispatch Sale & Log Invoice</span>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+
+                <!-- SECTION 7: QUOTATIONS PORTAL -->
+                <section id="tab-quotations" class="tab-pane hidden flex flex-col gap-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-800">All Issued Business Quotations</h2>
+                            <p class="text-xs text-gray-400">Generate proposals for commercial clients.</p>
+                        </div>
+                        <button onclick="triggerAddQuotationModal()" class="py-2.5 px-4 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-xs font-bold shadow-md transition-all">
+                            <i class="fa-solid fa-plus mr-1"></i> Create New Proposal Quotation
+                        </button>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50/50">
+                                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Quotation Ref</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Target Client</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Proposed Amount (RM)</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider text-right">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="quotationsTableRows">
+                                <!-- Dynamic Rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+
+                <!-- SECTION 8: INVOICES CORE -->
+                <section id="tab-invoices" class="tab-pane hidden flex flex-col gap-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-800">Sales Invoices Management</h2>
+                            <p class="text-xs text-gray-400">Manage and track verified customer payment billing cycles.</p>
+                        </div>
+                        <button onclick="triggerAddInvoiceModal()" class="py-2.5 px-4 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-xs font-bold shadow-md transition-all">
+                            <i class="fa-solid fa-plus mr-1"></i> Create Standalone Invoice
+                        </button>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50/50">
+                                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Invoice ID</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Timestamp / Date</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Total Value</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Payment Status</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider text-right">Receipt Draft</th>
+                                </tr>
+                            </thead>
+                            <tbody id="invoicesTableRows">
+                                <!-- Dynamic Rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+
+                <!-- SECTION 9: EXPENSES LOGGING -->
+                <section id="tab-expense" class="tab-pane hidden flex flex-col gap-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-800">Store Corporate Expenses</h2>
+                            <p class="text-xs text-gray-400">Log internal overhead, bills, salaries, and stock purchase operations.</p>
+                        </div>
+                        <button onclick="triggerAddExpenseModal()" class="py-2.5 px-4 bg-red-500 hover:bg-red-600 text-white rounded-xl text-xs font-bold shadow-md transition-all">
+                            <i class="fa-solid fa-plus mr-1"></i> Log New Expense
+                        </button>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50/50">
+                                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Expense Item Description</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Overhead Category</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Total Amount Spent (RM)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="expenseTableRows">
+                                <!-- Dynamic Rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+
+                <!-- SECTION 10: NON-SALES INCOMES -->
+                <section id="tab-income" class="tab-pane hidden flex flex-col gap-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-800">Additional Capital Incomes</h2>
+                            <p class="text-xs text-gray-400">Record off-terminal income streams, consultation, and services.</p>
+                        </div>
+                        <button onclick="triggerAddIncomeModal()" class="py-2.5 px-4 bg-green-500 hover:bg-green-600 text-white rounded-xl text-xs font-bold shadow-md transition-all">
+                            <i class="fa-solid fa-plus mr-1"></i> Log Miscellaneous Income
+                        </button>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50/50">
+                                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Source of Capital</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Income Stream classification</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Total Value (RM)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="incomeTableRows">
+                                <!-- Dynamic Rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+
+                <!-- SECTION 11: SUPPLIERS ROSTER -->
+                <section id="tab-suppliers" class="tab-pane hidden flex flex-col gap-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-800">Corporate Supplier logs</h2>
+                            <p class="text-xs text-gray-400">Keep inventory supply streams verified with complete contact lists.</p>
+                        </div>
+                        <button onclick="triggerAddSupplierModal()" class="py-2.5 px-4 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-xs font-bold shadow-md transition-all">
+                            <i class="fa-solid fa-plus mr-1"></i> Add Supplier
+                        </button>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50/50">
+                                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Supplier Tag / Brand</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Direct Phone Contact</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Primary Location</th>
+                                </tr>
+                            </thead>
+                            <tbody id="suppliersTableRows">
+                                <!-- Dynamic Rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+
+                <!-- SECTION 12: ANALYTICS & REPORTS SYSTEM -->
+                <section id="tab-report" class="tab-pane hidden flex flex-col gap-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-800">Store Performance Analytics Reports</h2>
+                            <p class="text-xs text-gray-400">Track structural business balance sheets, sales, profit summary, and stock counts.</p>
+                        </div>
+                        <button onclick="window.print()" class="py-2.5 px-4 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-xs font-bold shadow-md transition-all">
+                            <i class="fa-solid fa-print mr-1"></i> Print Business Audit Sheet
+                        </button>
+                    </div>
+
+                    <!-- Financial Summary Board -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Total Revenue Report Card -->
+                        <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-3">
+                            <h3 class="text-xs font-bold text-gray-400 uppercase">Sales & Profit Summary</h3>
+                            <div class="space-y-1">
+                                <span class="text-[10px] text-gray-400">Current Sales Total Value</span>
+                                <p class="text-2xl font-black text-brand-600" id="reportSalesVal">RM 0.00</p>
+                            </div>
+                            <div class="space-y-1 pt-2 border-t border-dashed border-gray-100">
+                                <span class="text-[10px] text-gray-400">Computed Net Profit (Income - Cost & Expenses)</span>
+                                <p class="text-lg font-bold text-gray-800" id="reportProfitVal">RM 0.00</p>
+                            </div>
+                        </div>
+
+                        <!-- Current Overhead / Expense Metrics -->
+                        <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-3">
+                            <h3 class="text-xs font-bold text-gray-400 uppercase">Overhead Balances</h3>
+                            <div class="space-y-1">
+                                <span class="text-[10px] text-gray-400">Total Operational Expense Ledger</span>
+                                <p class="text-2xl font-black text-red-600" id="reportExpenseVal">RM 0.00</p>
+                            </div>
+                            <div class="space-y-1 pt-2 border-t border-dashed border-gray-100">
+                                <span class="text-[10px] text-gray-400">Total Wholesale Stock Intakes</span>
+                                <p class="text-lg font-bold text-gray-800" id="reportPurchasesVal">RM 0.00</p>
+                            </div>
+                        </div>
+
+                        <!-- Stock Valuations & Alerts -->
+                        <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-3">
+                            <h3 class="text-xs font-bold text-gray-400 uppercase">Stock Summary Report</h3>
+                            <div class="space-y-1">
+                                <span class="text-[10px] text-gray-400">Current Catalog Valuation size</span>
+                                <p class="text-2xl font-black text-blue-600" id="reportStockValuation">RM 0.00</p>
+                            </div>
+                            <div class="space-y-1 pt-2 border-t border-dashed border-gray-100 flex justify-between items-center">
+                                <div>
+                                    <span class="text-[10px] text-gray-400">Low Stock Alert Count</span>
+                                    <p class="text-lg font-bold text-red-500" id="reportLowStockCount">0 SKUs</p>
+                                </div>
+                                <button onclick="activateTab('inventory')" class="text-[10px] font-bold text-brand-500 hover:underline">Restock Desk</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- Standard Screen Footer Platform -->
+            <footer class="h-12 border-t border-gray-100 bg-white flex flex-col sm:flex-row items-center justify-between px-6 text-[10px] text-gray-400 shrink-0 no-print py-2 gap-1">
+                <span>Daily Sales Report Enterprise Suite • Malaysia Retail Terminal</span>
+                <span class="font-semibold text-gray-500">© 2026 BrandWorkz Co. All rights reserved.</span>
+            </footer>
+        </main>
+    </div>
+
+
+    <!-- MASTER MODALS SYSTEM -->
+
+    <!-- POPUP: HIGH FIDELITY DOCUMENT VIEWER & EXPORT PORTAL (NO PRINT ACTION) -->
+    <div id="documentViewerModal" class="fixed inset-0 bg-black/55 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden border border-gray-100 flex flex-col max-h-[90vh]">
+            <!-- Header of Modal -->
+            <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50 shrink-0">
+                <h3 id="docModalTitle" class="font-bold text-gray-800 text-sm">Document Viewer</h3>
+                <div class="flex items-center gap-2">
+                    <button onclick="downloadDocAsPDF()" class="bg-red-500 hover:bg-red-600 text-white text-[11px] font-bold px-3 py-2 rounded-xl flex items-center gap-1.5 transition-all shadow-md shadow-red-500/10">
+                        <i class="fa-solid fa-file-pdf"></i> Download PDF
+                    </button>
+                    <button onclick="downloadDocAsPNG()" class="bg-blue-500 hover:bg-blue-600 text-white text-[11px] font-bold px-3 py-2 rounded-xl flex items-center gap-1.5 transition-all shadow-md shadow-blue-500/10">
+                        <i class="fa-solid fa-file-image"></i> Download PNG
+                    </button>
+                    <button onclick="closeDocumentViewer()" class="text-gray-400 hover:text-gray-600 text-lg ml-2">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- Scrollable Document Area -->
+            <div class="p-6 overflow-y-auto bg-gray-100 flex-grow">
+                <div class="text-center mb-3">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold bg-brand-50 text-brand-700 border border-brand-200 shadow-sm">
+                        <i class="fa-solid fa-pen-to-square text-brand-600 animate-pulse"></i> Live Interactive Document Mode: Click directly on the Company Name or Address below to edit!
+                    </span>
+                </div>
+                <!-- Printable/Exportable paper aspect-ratio mockup container -->
+                <div id="exportableDocContainer" class="bg-white p-8 shadow-md rounded-xl max-w-[210mm] mx-auto text-gray-800" style="font-family: 'Inter', sans-serif;">
+                    <!-- Content generated dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- POPUP 1: CLOUD STORAGE SYNC PROGRESS MODAL -->
+    <div id="cloudSyncProgressModal" class="fixed inset-0 bg-black/55 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-sm text-center border border-gray-100">
+            <div class="w-16 h-16 rounded-full bg-brand-50 text-brand-500 flex items-center justify-center text-3xl mx-auto mb-4" id="syncIconWrap">
+                <i class="fa-solid fa-cloud-arrow-up animate-bounce"></i>
+            </div>
+            
+            <h3 id="syncModalTitle" class="text-lg font-bold text-gray-800" data-translate="syncing">Syncing data to secure cloud...</h3>
+            <p class="text-xs text-gray-400 mt-1 mb-6">Updating secure database replica tables.</p>
+            
+            <!-- Progress Bar -->
+            <div class="w-full bg-gray-100 h-2.5 rounded-full overflow-hidden mb-4 relative">
+                <div id="syncProgressBar" class="h-full bg-gradient-to-r from-brand-500 to-brand-700 w-0 transition-all duration-300"></div>
+            </div>
+            <span id="syncProgressPercent" class="text-xs font-bold text-brand-600 block mb-6">0% Completed</span>
+
+            <button id="syncModalDismissBtn" onclick="closeSyncModal()" class="w-full py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl text-xs transition-all hidden">
+                Dismiss Window
+            </button>
+        </div>
+    </div>
+
+
+    <!-- POPUP 2: INVOICE COMMITTED RECEIPT POPUP (PRINT-READY) -->
+    <div id="receiptModal" class="fixed inset-0 bg-black/55 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden border border-gray-100 p-6 flex flex-col justify-between">
+            
+            <div id="printableReceiptArea" class="text-gray-800 p-4 bg-white print-area">
+                <!-- Receipt Typography Design -->
+                <div class="text-center pb-4 border-b border-dashed border-gray-200 mb-4 space-y-1">
+                    <div class="w-10 h-10 rounded-full bg-brand-50 text-brand-500 flex items-center justify-center font-extrabold text-lg mx-auto shadow-inner">
+                        <i class="fa-solid fa-receipt"></i>
+                    </div>
+                    <h3 id="receiptStoreHeader" class="font-bold text-gray-800 text-sm tracking-tight">Daily Sales Report Shop</h3>
+                    <p id="receiptAddressHeader" class="text-[9px] text-gray-400">Selangor State Commercial Center, Malaysia</p>
+                    <p class="text-[9px] text-gray-500 font-semibold" id="receiptInvoiceMeta">INV-00000 | 2026-07-02</p>
+                </div>
+
+                <!-- Products Table Area -->
+                <div id="receiptItemsRoster" class="space-y-2 text-xs">
+                    <!-- Dynamic Rows -->
+                </div>
+
+                <!-- Aggregate Totals -->
+                <div class="border-t border-dashed border-gray-200 pt-3 mt-4 space-y-1.5 text-xs">
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Subtotal</span>
+                        <span id="receiptSubtotal">RM 0.00</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span id="receiptTaxLabel" class="text-gray-400">SST Tax (6.0%)</span>
+                        <span id="receiptTax">RM 0.00</span>
+                    </div>
+                    <div class="flex justify-between font-extrabold text-sm border-t border-dashed border-gray-200 pt-2 mt-2">
+                        <span>Total Committed</span>
+                        <span id="receiptGrandTotal" class="text-brand-600">RM 0.00</span>
+                    </div>
+                </div>
+
+                <!-- Bottom Footer Notes -->
+                <div class="text-center pt-5 border-t border-dashed border-gray-100 text-[9px] text-gray-400 flex flex-col gap-0.5 mt-5">
+                    <p class="font-semibold text-gray-500">Terima Kasih atas sokongan perniagaan anda!</p>
+                    <p>Powered by Daily Sales Report Suite • Malaysia</p>
+                    <p class="text-[8px] font-bold mt-1 text-gray-400">© 2026 BrandWorkz Co.</p>
+                </div>
+            </div>
+
+            <!-- Modal Action Buttons with direct PDF/PNG compiling options -->
+            <div class="mt-6 grid grid-cols-3 gap-2 no-print">
+                <button onclick="window.print()" class="py-2.5 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-[11px] font-bold shadow-md shadow-brand-500/10 flex items-center justify-center gap-1">
+                    <i class="fa-solid fa-print"></i> Print
+                </button>
+                <button onclick="downloadReceiptAsPDF()" class="py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-xl text-[11px] font-bold shadow-md shadow-red-500/10 flex items-center justify-center gap-1">
+                    <i class="fa-solid fa-file-pdf"></i> PDF
+                </button>
+                <button onclick="downloadReceiptAsPNG()" class="py-2.5 bg-blue-500 hover:bg-blue-600 text-white rounded-xl text-[11px] font-bold shadow-md shadow-blue-500/10 flex items-center justify-center gap-1">
+                    <i class="fa-solid fa-file-image"></i> PNG
+                </button>
+            </div>
+            <button onclick="closeReceiptModal()" class="w-full mt-2.5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-xs font-bold text-center no-print">
+                Close Desk
+            </button>
+        </div>
+    </div>
+
+
+    <!-- POPUP 3: ADD PRODUCT SKU INPUT MODAL -->
+    <div id="addProductModal" class="fixed inset-0 bg-black/55 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md border border-gray-100">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+                <h3 class="font-bold text-gray-800 text-md">Register New SKU Inventory</h3>
+                <button onclick="closeProductCreationModal()" class="text-gray-400 hover:text-gray-600 text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form id="newProductForm" onsubmit="handleProductCreation(event)">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Product Item Title</label>
+                        <input required id="newProdName" type="text" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-800 focus:outline-brand-500" placeholder="e.g. Mechanical Keyboard RGB">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Category</label>
+                        <select id="newProdCategory" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-800 focus:outline-brand-500">
+                            <!-- Dynamic options -->
+                        </select>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Cost Price (RM)</label>
+                            <input required id="newProdCost" type="number" step="0.01" min="0" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-800 focus:outline-brand-500" placeholder="e.g. 85.00">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Retail Price (RM)</label>
+                            <input required id="newProdPrice" type="number" step="0.01" min="0" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-800 focus:outline-brand-500" placeholder="e.g. 159.00">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Starting Stock Qty</label>
+                        <input required id="newProdStock" type="number" min="0" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-800 focus:outline-brand-500" placeholder="e.g. 24">
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-end gap-3">
+                    <button type="button" onclick="closeProductCreationModal()" class="py-2 px-4 bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold rounded-lg border border-gray-200">Cancel</button>
+                    <button type="submit" class="py-2 px-5 bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold rounded-lg shadow-md">Commit SKU</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- POPUP 4: ADD CUSTOMER MODAL -->
+    <div id="addCustomerModal" class="fixed inset-0 bg-black/55 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md border border-gray-100">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+                <h3 class="font-bold text-gray-800 text-md">Register New Customer Record</h3>
+                <button onclick="closeCustomerModal()" class="text-gray-400 hover:text-gray-600 text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form id="newCustomerForm" onsubmit="handleCustomerCreation(event)">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Customer Full Name</label>
+                        <input required id="custName" type="text" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-800" placeholder="e.g. Ahmad Ibrahim">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Phone Number</label>
+                        <input required id="custPhone" type="text" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-800" placeholder="e.g. +6012-3456789">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Starting Credit (Spent Amount)</label>
+                        <input required id="custSpent" type="number" step="0.01" value="0.00" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-800">
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-end gap-3">
+                    <button type="button" onclick="closeCustomerModal()" class="py-2 px-4 bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold rounded-lg border border-gray-200">Cancel</button>
+                    <button type="submit" class="py-2 px-5 bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold rounded-lg shadow-md">Register Client</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- POPUP 5: ADD CATEGORY MODAL -->
+    <div id="addCategoryModal" class="fixed inset-0 bg-black/55 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-sm border border-gray-100">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+                <h3 class="font-bold text-gray-800 text-md">Create New Category</h3>
+                <button onclick="closeCategoryModal()" class="text-gray-400 hover:text-gray-600 text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form id="newCategoryForm" onsubmit="handleCategoryCreation(event)">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Category Tag Name</label>
+                        <input required id="categoryName" type="text" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-800" placeholder="e.g. Electronics">
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-end gap-3">
+                    <button type="button" onclick="closeCategoryModal()" class="py-2 px-4 bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold rounded-lg">Cancel</button>
+                    <button type="submit" class="py-2 px-5 bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold rounded-lg shadow-md">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- POPUP 6: ADD PURCHASE MODAL -->
+    <div id="addPurchaseModal" class="fixed inset-0 bg-black/55 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md border border-gray-100">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+                <h3 class="font-bold text-gray-800 text-md">Log Stock Purchase</h3>
+                <button onclick="closePurchaseModal()" class="text-gray-400 hover:text-gray-600 text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form id="newPurchaseForm" onsubmit="handlePurchaseCreation(event)">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Supplier Link</label>
+                        <select id="purchaseSupplier" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-800">
+                            <!-- Dynamic supplier list -->
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Select Product SKU</label>
+                        <select id="purchaseProduct" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-800">
+                            <!-- Dynamic products -->
+                        </select>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Quantity Purchased</label>
+                            <input required id="purchaseQty" type="number" min="1" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-800">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Total Paid (RM)</label>
+                            <input required id="purchaseCost" type="number" step="0.01" min="0" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-800">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-end gap-3">
+                    <button type="button" onclick="closePurchaseModal()" class="py-2 px-4 bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold rounded-lg">Cancel</button>
+                    <button type="submit" class="py-2 px-5 bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold rounded-lg shadow-md">Log Intakes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- POPUP 7: CREATE QUOTATION MODAL -->
+    <div id="addQuotationModal" class="fixed inset-0 bg-black/55 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md border border-gray-100">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+                <h3 class="font-bold text-gray-800 text-md">Create New Proposal Quotation</h3>
+                <button onclick="closeQuotationModal()" class="text-gray-400 hover:text-gray-600 text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form id="newQuotationForm" onsubmit="handleQuotationCreation(event)">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Target Client Profile</label>
+                        <select id="quotationClient" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs text-gray-800">
+                            <!-- Customers -->
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Core Proposal Description</label>
+                        <textarea required id="quotationDesc" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs text-gray-800" placeholder="e.g. Delivery of high-end corporate packages"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Proposed Pricing Val (RM)</label>
+                        <input required id="quotationAmount" type="number" step="0.01" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs text-gray-800" placeholder="e.g. 1500.00">
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-end gap-3">
+                    <button type="button" onclick="closeQuotationModal()" class="py-2 px-4 bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold rounded-lg">Cancel</button>
+                    <button type="submit" class="py-2 px-5 bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold rounded-lg shadow-md">Create proposal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- POPUP 8: STANDALONE INVOICE MODAL -->
+    <div id="addInvoiceModal" class="fixed inset-0 bg-black/55 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md border border-gray-100">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+                <h3 class="font-bold text-gray-800 text-md">Log Standalone Custom Invoice</h3>
+                <button onclick="closeInvoiceModal()" class="text-gray-400 hover:text-gray-600 text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form id="newInvoiceForm" onsubmit="handleInvoiceCreation(event)">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Client Profile Link</label>
+                        <select id="invoiceClient" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs text-gray-800">
+                            <!-- Customers -->
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Invoice Item Description</label>
+                        <input required id="invoiceItemDesc" type="text" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs text-gray-800" placeholder="e.g. Services Rendered - Design">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Billed Amount (RM)</label>
+                            <input required id="invoiceAmount" type="number" step="0.01" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs text-gray-800">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Payment Status</label>
+                            <select id="invoiceStatus" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs text-gray-800">
+                                <option value="Paid">Fully Paid</option>
+                                <option value="Unpaid">Pending / Unpaid</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-end gap-3">
+                    <button type="button" onclick="closeInvoiceModal()" class="py-2 px-4 bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold rounded-lg">Cancel</button>
+                    <button type="submit" class="py-2 px-5 bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold rounded-lg shadow-md">Issue Invoice</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- POPUP 9: ADD EXPENSE MODAL -->
+    <div id="addExpenseModal" class="fixed inset-0 bg-black/55 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-sm border border-gray-100">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+                <h3 class="font-bold text-gray-800 text-md">Log Corporate Expense</h3>
+                <button onclick="closeExpenseModal()" class="text-gray-400 hover:text-gray-600 text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form id="newExpenseForm" onsubmit="handleExpenseCreation(event)">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Expense Title description</label>
+                        <input required id="expDesc" type="text" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs text-gray-800" placeholder="e.g. Office Rent">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Expense Type</label>
+                        <select id="expCategory" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs text-gray-800">
+                            <option value="Rent">Rent & Utilities</option>
+                            <option value="Inventory">Inventory Intake</option>
+                            <option value="Salary">Staff Salaries</option>
+                            <option value="Misc">Miscellaneous</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Spent Amount (RM)</label>
+                        <input required id="expAmount" type="number" step="0.01" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs text-gray-800">
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-end gap-3">
+                    <button type="button" onclick="closeExpenseModal()" class="py-2 px-4 bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold rounded-lg">Cancel</button>
+                    <button type="submit" class="py-2 px-5 bg-red-500 hover:bg-red-600 text-white text-xs font-bold rounded-lg shadow-md">Log Expense</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- POPUP 10: ADD INCOME MODAL -->
+    <div id="addIncomeModal" class="fixed inset-0 bg-black/55 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-sm border border-gray-100">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+                <h3 class="font-bold text-gray-800 text-md">Log Capital Income</h3>
+                <button onclick="closeIncomeModal()" class="text-gray-400 hover:text-gray-600 text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form id="newIncomeForm" onsubmit="handleIncomeCreation(event)">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Income description</label>
+                        <input required id="incDesc" type="text" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs text-gray-800" placeholder="e.g. Consultation Services">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Category Stream</label>
+                        <select id="incCategory" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs text-gray-800">
+                            <option value="Services">Services & Consultation</option>
+                            <option value="Investment">Investment Return</option>
+                            <option value="Misc">Miscellaneous</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Value Amount (RM)</label>
+                        <input required id="incAmount" type="number" step="0.01" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs text-gray-800">
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-end gap-3">
+                    <button type="button" onclick="closeIncomeModal()" class="py-2 px-4 bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold rounded-lg">Cancel</button>
+                    <button type="submit" class="py-2 px-5 bg-green-500 hover:bg-green-600 text-white text-xs font-bold rounded-lg shadow-md">Log Income</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- POPUP 11: ADD SUPPLIER MODAL -->
+    <div id="addSupplierModal" class="fixed inset-0 bg-black/55 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-sm border border-gray-100">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+                <h3 class="font-bold text-gray-800 text-md">Add Corporate Supplier</h3>
+                <button onclick="closeSupplierModal()" class="text-gray-400 hover:text-gray-600 text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form id="newSupplierForm" onsubmit="handleSupplierCreation(event)">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Supplier / Brand name</label>
+                        <input required id="suppName" type="text" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs text-gray-800" placeholder="e.g. Global Tech Distributors">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Direct phone</label>
+                        <input required id="suppPhone" type="text" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs text-gray-800" placeholder="e.g. +603-55667788">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Primary Location</label>
+                        <input required id="suppLocation" type="text" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs text-gray-800" placeholder="e.g. Shah Alam, Selangor">
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-end gap-3">
+                    <button type="button" onclick="closeSupplierModal()" class="py-2 px-4 bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold rounded-lg">Cancel</button>
+                    <button type="submit" class="py-2 px-5 bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold rounded-lg shadow-md">Add Supplier</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- POPUP 12: CSV IMPORT MODAL -->
+    <div id="csvImportModal" class="fixed inset-0 bg-black/55 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-sm border border-gray-100 text-center">
+            <h3 class="font-bold text-gray-800 mb-2 text-md">Simulated CSV List Import</h3>
+            <p class="text-xs text-gray-400 mb-6">Select or simulate a CSV schema file load into local active tables.</p>
+            <div class="border-2 border-dashed border-gray-200 rounded-xl p-6 mb-4 hover:border-brand-500 cursor-pointer transition-all">
+                <i class="fa-solid fa-file-csv text-brand-500 text-3xl mb-2"></i>
+                <p class="text-xs font-bold text-gray-600">Simulate Sample CSV Parse</p>
+                <input type="file" id="csvFileInput" class="hidden" accept=".csv" onchange="parseCSVFileSim(this)">
+            </div>
+            <div class="flex gap-2">
+                <button onclick="executeSampleCSVSim()" class="w-full py-2 bg-brand-500 text-white font-bold text-xs rounded-lg shadow-sm">Load Mock Entries</button>
+                <button onclick="closeCSVImportModal()" class="w-full py-2 bg-gray-100 text-gray-700 font-bold text-xs rounded-lg">Dismiss</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- POPUP 13: ADVANCED DOWNLOAD REPORT & EXPORTS MODAL -->
+    <div id="downloadReportModal" class="fixed inset-0 bg-black/55 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-sm border border-gray-100">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+                <h3 class="font-bold text-gray-800 text-md">Export Audit Suite</h3>
+                <button onclick="closeDownloadReportModal()" class="text-gray-400 hover:text-gray-600 text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <p class="text-xs text-gray-400 mb-4">Select the preferred file format package to generate business audit sheets.</p>
+            <div class="space-y-3">
+                <button onclick="window.print()" class="w-full py-3 px-4 bg-brand-50 hover:bg-brand-100 text-brand-800 rounded-xl text-xs font-bold border border-brand-200 flex items-center justify-between transition-all">
+                    <span>Print-Ready PDF Audit Statement</span>
+                    <i class="fa-solid fa-file-pdf text-red-500 text-lg"></i>
+                </button>
+                <button onclick="exportTableToCSV('customersTable', 'Daily_Sales_Report_Overview')" class="w-full py-3 px-4 bg-blue-50 hover:bg-blue-100 text-blue-800 rounded-xl text-xs font-bold border border-blue-200 flex items-center justify-between transition-all">
+                    <span>Export Excel Spreadsheet (.csv)</span>
+                    <i class="fa-solid fa-file-excel text-green-500 text-lg"></i>
+                </button>
+                <button onclick="activateTab('report'); closeDownloadReportModal();" class="w-full py-3 px-4 bg-purple-50 hover:bg-purple-100 text-purple-800 rounded-xl text-xs font-bold border border-purple-200 flex items-center justify-between transition-all">
+                    <span>Launch Interactive Advanced Analytics</span>
+                    <i class="fa-solid fa-chart-pie text-purple-500 text-lg"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- STANDARD POPUP DIALOG MESSAGE INSTEAD OF BROWSER ALERTS -->
+    <div id="globalToastAlert" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 bg-gray-900 text-white px-5 py-3.5 rounded-2xl shadow-2xl border border-gray-800 transition-all duration-300 max-w-sm flex items-center gap-3">
+        <i class="fa-solid fa-bell text-brand-500 text-lg"></i>
+        <p id="globalToastText" class="text-xs font-semibold leading-normal"></p>
+    </div>
+
+
+    <!-- GLOBAL JAVASCRIPT BUSINESS ENGINE STATE & IN-MEMORY RECORDS -->
+    <script>
+        // Dynamic Unified Application State Memory (12 connected sub-arrays)
+        let appState = {
+            activeUser: null,
+            activeLanguage: 'en', // 'en' or 'bm'
+            storeSettings: {
+                storeName: "Daily Sales Report Shop",
+                address: "Selangor State Commercial Center, Malaysia"
+            },
+            products: [
+                { id: 101, name: "Premium Wireless Headphones", cost: 45.00, price: 129.99, stock: 45, category: "Electronics" },
+                { id: 102, name: "Ergonomic Office Chair", cost: 95.00, price: 249.50, stock: 12, category: "Furniture" },
+                { id: 103, name: "Smart Fitness Watch", cost: 30.00, price: 89.00, stock: 80, category: "Electronics" },
+                { id: 104, name: "Mechanical Keyboard LED", cost: 25.00, price: 74.95, stock: 22, category: "Electronics" }
+            ],
+            categories: ["Electronics", "Furniture", "Books", "Clothing"],
+            sales: [
+                { id: "INV-92813", date: "2026-07-01 10:14", items: [{ prodId: 103, qty: 2, price: 89.00 }], subtotal: 178.00, tax: 10.68, total: 188.68, client: "Ahmad Ibrahim" },
+                { id: "INV-92814", date: "2026-07-02 15:42", items: [{ prodId: 101, qty: 1, price: 129.99 }, { prodId: 104, qty: 1, price: 74.95 }], subtotal: 204.94, tax: 12.30, total: 217.24, client: "Walk-in Client" }
+            ],
+            customers: [
+                { name: "Ahmad Ibrahim", phone: "+6012-3456789", spent: 188.68 },
+                { name: "Siti Aminah", phone: "+6017-9876543", spent: 0.00 },
+                { name: "Tan Wei Kiat", phone: "+6019-2233445", spent: 0.00 }
+            ],
+            purchases: [
+                { supplier: "Global Tech Distributors", product: "Premium Wireless Headphones", qty: 45, cost: 2025.00 },
+                { supplier: "Evergreen Woodcraft", product: "Ergonomic Office Chair", qty: 12, cost: 1140.00 }
+            ],
+            quotations: [
+                { ref: "QT-1001", client: "Ahmad Ibrahim", desc: "Corporate Packages for Staff Welfare", amount: 2500.00 }
+            ],
+            invoices: [
+                { id: "INV-92813", date: "2026-07-01", total: 188.68, status: "Paid" },
+                { id: "INV-92814", date: "2026-07-02", total: 217.24, status: "Paid" },
+                { id: "INV-1005", date: "2026-07-03", total: 1250.00, status: "Unpaid" }
+            ],
+            expense: [
+                { desc: "Storefront Rent July", type: "Rent", amount: 1500.00 },
+                { desc: "Electricity Utility", type: "Misc", amount: 350.00 }
+            ],
+            income: [
+                { desc: "Store System Training Consultation", type: "Services", amount: 1200.00 }
+            ],
+            suppliers: [
+                { name: "Global Tech Distributors", phone: "+603-55667788", location: "Shah Alam, Selangor" },
+                { name: "Evergreen Woodcraft", phone: "+603-88991122", location: "Kajang, Selangor" }
+            ],
+            cart: []
+        };
+
+        const languageDictionary = {
+            en: {
+                welcome: "Let's jump back in!",
+                subtitle: "Please resume onboarding to unlock the entire feature suite of Daily Sales Report.",
+                signIn: "Sign In",
+                signUp: "Sign Up",
+                username: "Username",
+                password: "Password",
+                forgot: "Forgot Password?",
+                noAccount: "Don't have an account?",
+                alreadyAccount: "Already have an account?",
+                dashboard: "Dashboard",
+                salesRegister: "Sales Register",
+                salesLedger: "Sales Ledger",
+                inventory: "Stock Inventory",
+                saveProgress: "Save Progress",
+                lockPanel: "Lock Panel",
+                unlockedFree: "Enterprise Mode",
+                salesReport: "Daily Sales Report",
+                businessRadar: "Business Performance Radar",
+                todaysSales: "Today's Sales",
+                weeklySales: "Weekly Sales",
+                monthlySales: "Monthly Sales",
+                profitMonth: "Profit this Month",
+                recentActivity: "Recent Ledger Activity",
+                receiptId: "Receipt ID",
+                timestamp: "Timestamp",
+                itemsDesc: "Items Description",
+                totalPaid: "Total Paid",
+                availableCatalog: "Available Catalog SKU Selection",
+                activeCart: "Active Cart",
+                cartEmpty: "Cart is empty. Select items to checkout.",
+                dispatchSale: "Dispatch Sale & Log Invoice",
+                addInventory: "Add New Product SKU",
+                prodName: "Product Name",
+                retailPrice: "Retail Price (RM)",
+                costPrice: "Cost Price (RM)",
+                stockCount: "Stock Qty",
+                syncing: "Syncing data to secure cloud..."
+            },
+            bm: {
+                welcome: "Mari masuk semula!",
+                subtitle: "Sila sambung pendaftaran untuk membuka keseluruhan fungsi Daily Sales Report.",
+                signIn: "Log Masuk",
+                signUp: "Daftar Akaun",
+                username: "Nama Pengguna",
+                password: "Kata Laluan",
+                forgot: "Lupa Kata Laluan?",
+                noAccount: "Belum ada akaun?",
+                alreadyAccount: "Sudah mempunyai akaun?",
+                dashboard: "Papan Pemuka",
+                salesRegister: "Daftar Jualan",
+                salesLedger: "Lejar Jualan",
+                inventory: "Inventori Stok",
+                saveProgress: "Simpan Kemajuan",
+                lockPanel: "Kunci Panel",
+                unlockedFree: "Mod Perusahaan",
+                salesReport: "Laporan Jualan Harian",
+                businessRadar: "Radar Prestasi Perniagaan",
+                todaysSales: "Jualan Hari Ini",
+                weeklySales: "Jualan Mingguan",
+                monthlySales: "Jualan Bulanan",
+                profitMonth: "Untung Bulan Ini",
+                recentActivity: "Aktiviti Lejar Terkini",
+                receiptId: "ID Resit",
+                timestamp: "Masa / Tarikh",
+                itemsDesc: "Butiran Barangan",
+                totalPaid: "Jumlah Bayaran",
+                availableCatalog: "Pilihan SKU Katalog Sedia Ada",
+                activeCart: "Troli Aktif",
+                cartEmpty: "Troli kosong. Sila pilih barangan.",
+                dispatchSale: "Selesaikan Jualan & Rekod Invois",
+                addInventory: "Tambah SKU Produk Baru",
+                prodName: "Nama Produk",
+                retailPrice: "Harga Jualan (RM)",
+                costPrice: "Harga Kos (RM)",
+                stockCount: "Stok Qty",
+                syncing: "Menyinkronkan data ke cloud selamat..."
+            }
+        };
+
+        // Custom Custom Modals Toast
+        function triggerToast(msg) {
+            const toast = document.getElementById('globalToastAlert');
+            const text = document.getElementById('globalToastText');
+            text.innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 4000);
+        }
+
+        // DOM Translation Execution Hook
+        function executeInterfaceTranslation() {
+            const lang = appState.activeLanguage;
+            document.querySelectorAll('[data-translate]').forEach(el => {
+                const translationKey = el.getAttribute('data-translate');
+                if (languageDictionary[lang] && languageDictionary[lang][translationKey]) {
+                    const iconChild = el.querySelector('i');
+                    if (iconChild) {
+                        const tempSpan = document.createElement('span');
+                        tempSpan.innerText = " " + languageDictionary[lang][translationKey];
+                        el.innerHTML = '';
+                        el.appendChild(iconChild);
+                        el.appendChild(tempSpan);
+                    } else {
+                        el.innerText = languageDictionary[lang][translationKey];
+                    }
+                }
+            });
+
+            document.getElementById('loginLangLabel').innerText = (lang === 'en') ? 'BM' : 'EN';
+            document.getElementById('sidebarLangBtn').innerText = (lang === 'en') ? 'BM' : 'EN';
+        }
+
+        function toggleGlobalLanguage() {
+            appState.activeLanguage = (appState.activeLanguage === 'en') ? 'bm' : 'en';
+            executeInterfaceTranslation();
+        }
+
+        // User Registry Fallback Configuration
+        function loadOrCreateUserRegistry() {
+            let registry = localStorage.getItem('dsr_registered_users');
+            if (!registry) {
+                const initialAccount = [
+                    { username: 'businessowner', password: 'password123', storeName: 'Daily Sales Report Shop', role: 'Owner' }
+                ];
+                localStorage.setItem('dsr_registered_users', JSON.stringify(initialAccount));
+                return initialAccount;
+            }
+            return JSON.parse(registry);
+        }
+
+        function toggleAuthForms(showRegister) {
+            const loginCard = document.getElementById('standardLoginCard');
+            const registerCard = document.getElementById('standardRegisterCard');
+            const authTitle = document.getElementById('authTitleHeader');
+            const authSubtitle = document.getElementById('authSubtitleHeader');
+
+            if (showRegister) {
+                loginCard.classList.add('hidden');
+                registerCard.classList.remove('hidden');
+                authTitle.innerText = "Cipta Akaun Baru";
+                authSubtitle.innerText = "Start managing your sales and inventory dynamically for free.";
+            } else {
+                registerCard.classList.add('hidden');
+                loginCard.classList.remove('hidden');
+                executeInterfaceTranslation();
+            }
+        }
+
+        function handleSignInSubmit(event) {
+            event.preventDefault();
+            const username = document.getElementById('loginUsername').value.trim();
+            const pass = document.getElementById('loginPassword').value.trim();
+
+            const database = loadOrCreateUserRegistry();
+            const matchedUser = database.find(u => u.username.toLowerCase() === username.toLowerCase() && u.password === pass);
+
+            if (matchedUser) {
+                logUserIntoWorkspace(matchedUser);
+            } else {
+                triggerToast("Authentication Failed. If you haven't registered, select 'Sign Up' first.");
+            }
+        }
+
+        function handleSignUpSubmit(event) {
+            event.preventDefault();
+            const storeName = document.getElementById('regStoreName').value.trim();
+            const username = document.getElementById('regUsername').value.trim();
+            const pass = document.getElementById('regPassword').value.trim();
+            const role = document.getElementById('regRole').value;
+
+            if (pass.length < 6) {
+                triggerToast("Password security must be 6 characters minimum.");
+                return;
+            }
+
+            const database = loadOrCreateUserRegistry();
+            const usernameExists = database.some(u => u.username.toLowerCase() === username.toLowerCase());
+
+            if (usernameExists) {
+                triggerToast("Account with this username already exists.");
+                return;
+            }
+
+            const newAccount = { storeName, username, password: pass, role };
+            database.push(newAccount);
+            localStorage.setItem('dsr_registered_users', JSON.stringify(database));
+
+            triggerToast("Account creation successful! Logging you in now.");
+            logUserIntoWorkspace(newAccount);
+        }
+
+        function logUserIntoWorkspace(user) {
+            appState.activeUser = user;
+            appState.storeSettings.storeName = user.storeName || "Daily Sales Report Shop";
+
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('appLayout').classList.remove('hidden');
+
+            document.getElementById('userDisplayName').innerText = user.storeName;
+            document.getElementById('userDisplayUsername').innerText = user.username;
+            document.getElementById('merchantTitleBanner').innerText = user.storeName;
+            document.getElementById('userAvatarSymbol').innerText = user.storeName.charAt(0).toUpperCase();
+
+            // Set inputs with logged user values dynamically
+            if (document.getElementById('posStoreNameInput')) {
+                document.getElementById('posStoreNameInput').value = appState.storeSettings.storeName;
+            }
+            if (document.getElementById('posStoreNameInputCart')) {
+                document.getElementById('posStoreNameInputCart').value = appState.storeSettings.storeName;
+            }
+            if (document.getElementById('posAddressInputCart')) {
+                document.getElementById('posAddressInputCart').value = appState.storeSettings.address;
+            }
+            if (document.getElementById('posAddressInput')) {
+                document.getElementById('posAddressInput').value = appState.storeSettings.address;
+            }
+
+            syncCachedMemory();
+            executeInterfaceTranslation();
+            activateTab('dashboard');
+            calculatePerformanceMetrics();
+        }
+
+        function logOutSession() {
+            appState.activeUser = null;
+            document.getElementById('appLayout').classList.add('hidden');
+            document.getElementById('loginPage').classList.remove('hidden');
+            toggleAuthForms(false);
+        }
+
+        function syncCachedMemory() {
+            const cachedProducts = localStorage.getItem(`dsr_products_${appState.activeUser.username}`);
+            const cachedSales = localStorage.getItem(`dsr_sales_${appState.activeUser.username}`);
+            const cachedCustomers = localStorage.getItem(`dsr_customers_${appState.activeUser.username}`);
+            const cachedCategories = localStorage.getItem(`dsr_categories_${appState.activeUser.username}`);
+            const cachedPurchases = localStorage.getItem(`dsr_purchases_${appState.activeUser.username}`);
+            const cachedQuotations = localStorage.getItem(`dsr_quotations_${appState.activeUser.username}`);
+            const cachedInvoices = localStorage.getItem(`dsr_invoices_${appState.activeUser.username}`);
+            const cachedExpenses = localStorage.getItem(`dsr_expenses_${appState.activeUser.username}`);
+            const cachedIncomes = localStorage.getItem(`dsr_incomes_${appState.activeUser.username}`);
+            const cachedSuppliers = localStorage.getItem(`dsr_suppliers_${appState.activeUser.username}`);
+
+            if (cachedProducts) appState.products = JSON.parse(cachedProducts);
+            if (cachedSales) appState.sales = JSON.parse(cachedSales);
+            if (cachedCustomers) appState.customers = JSON.parse(cachedCustomers);
+            if (cachedCategories) appState.categories = JSON.parse(cachedCategories);
+            if (cachedPurchases) appState.purchases = JSON.parse(cachedPurchases);
+            if (cachedQuotations) appState.quotations = JSON.parse(cachedQuotations);
+            if (cachedInvoices) appState.invoices = JSON.parse(cachedInvoices);
+            if (cachedExpenses) appState.expense = JSON.parse(cachedExpenses);
+            if (cachedIncomes) appState.income = JSON.parse(cachedIncomes);
+            if (cachedSuppliers) appState.suppliers = JSON.parse(cachedSuppliers);
+        }
+
+        function persistLocalWorkspaceData() {
+            if (appState.activeUser) {
+                localStorage.setItem(`dsr_products_${appState.activeUser.username}`, JSON.stringify(appState.products));
+                localStorage.setItem(`dsr_sales_${appState.activeUser.username}`, JSON.stringify(appState.sales));
+                localStorage.setItem(`dsr_customers_${appState.activeUser.username}`, JSON.stringify(appState.customers));
+                localStorage.setItem(`dsr_categories_${appState.activeUser.username}`, JSON.stringify(appState.categories));
+                localStorage.setItem(`dsr_purchases_${appState.activeUser.username}`, JSON.stringify(appState.purchases));
+                localStorage.setItem(`dsr_quotations_${appState.activeUser.username}`, JSON.stringify(appState.quotations));
+                localStorage.setItem(`dsr_invoices_${appState.activeUser.username}`, JSON.stringify(appState.invoices));
+                localStorage.setItem(`dsr_expenses_${appState.activeUser.username}`, JSON.stringify(appState.expense));
+                localStorage.setItem(`dsr_incomes_${appState.activeUser.username}`, JSON.stringify(appState.income));
+                localStorage.setItem(`dsr_suppliers_${appState.activeUser.username}`, JSON.stringify(appState.suppliers));
+            }
+        }
+
+        // Navigation Controller
+        function activateTab(tabName) {
+            document.querySelectorAll('.tab-pane').forEach(tab => tab.classList.add('hidden'));
+            document.querySelectorAll('[id^="btn-tab-"]').forEach(btn => {
+                btn.className = "w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all text-gray-500 hover:text-brand-600 hover:bg-gray-50";
+            });
+
+            const targetSection = document.getElementById(`tab-${tabName}`);
+            if (targetSection) {
+                targetSection.classList.remove('hidden');
+            }
+            
+            const activeBtn = document.getElementById(`btn-tab-${tabName}`);
+            if (activeBtn) {
+                activeBtn.className = "w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all text-brand-600 bg-brand-50/70 border-r-4 border-brand-500";
+            }
+
+            // Route load triggers
+            if (tabName === 'dashboard') {
+                calculatePerformanceMetrics();
+            } else if (tabName === 'customers') {
+                renderCustomersTable();
+            } else if (tabName === 'inventory') {
+                renderInventoryTableRows();
+            } else if (tabName === 'category') {
+                renderCategoryTable();
+            } else if (tabName === 'purchases') {
+                renderPurchasesTable();
+            } else if (tabName === 'pos') {
+                renderPOSCatalogGrid();
+                renderCartLedgerPane();
+            } else if (tabName === 'quotations') {
+                renderQuotationsTable();
+            } else if (tabName === 'invoices') {
+                renderInvoicesTable();
+            } else if (tabName === 'expense') {
+                renderExpensesTable();
+            } else if (tabName === 'income') {
+                renderIncomesTable();
+            } else if (tabName === 'suppliers') {
+                renderSuppliersTable();
+            } else if (tabName === 'report') {
+                renderBusinessReportConsole();
+            }
+        }
+
+        // Calculations & Metrics
+        function calculatePerformanceMetrics() {
+            let totalToday = 0;
+            let totalWeekly = 0;
+            let totalMonthly = 0;
+            let estimatedProfit = 0;
+
+            const now = new Date();
+            const todayStr = now.toISOString().slice(0, 10);
+            const targetWeekStart = new Date();
+            targetWeekStart.setDate(now.getDate() - 7);
+            const currentYearStr = now.getFullYear().toString();
+            const currentMonthStr = (now.getMonth() + 1).toString().padStart(2, '0');
+
+            appState.sales.forEach(sale => {
+                const saleDateOnly = sale.date.split(' ')[0];
+                const saleDateObj = new Date(saleDateOnly);
+
+                if (saleDateOnly === todayStr) totalToday += sale.total;
+                if (saleDateObj >= targetWeekStart) totalWeekly += sale.total;
+                if (saleDateOnly.startsWith(`${currentYearStr}-${currentMonthStr}`)) {
+                    totalMonthly += sale.total;
+                    
+                    sale.items.forEach(itemRecord => {
+                        const originalProduct = appState.products.find(p => p.id === itemRecord.prodId);
+                        if (originalProduct) {
+                            estimatedProfit += ((itemRecord.price - originalProduct.cost) * itemRecord.qty);
+                        } else {
+                            estimatedProfit += (itemRecord.price * 0.40 * itemRecord.qty);
+                        }
+                    });
+                }
+            });
+
+            // Adjust with external expenses and miscellaneous income
+            appState.income.forEach(inc => estimatedProfit += inc.amount);
+            appState.expense.forEach(exp => estimatedProfit -= exp.amount);
+
+            document.getElementById('dashTodaySales').innerText = `RM ${totalToday.toFixed(2)}`;
+            document.getElementById('dashWeeklySales').innerText = `RM ${totalWeekly.toFixed(2)}`;
+            document.getElementById('dashMonthlySales').innerText = `RM ${totalMonthly.toFixed(2)}`;
+            document.getElementById('dashProfitMonth').innerText = `RM ${estimatedProfit.toFixed(2)}`;
+
+            document.getElementById('dashTotalProductText').innerText = `${appState.products.length} Products`;
+            document.getElementById('dashTotalCustomerText').innerText = `${appState.customers.length} Customers`;
+
+            // Draw Dynamic Weekly Performance SVG curve
+            renderDynamicSvgPerformanceCurve();
+
+            const previewContainer = document.getElementById('dashLedgerPreviewTable');
+            previewContainer.innerHTML = '';
+            const recentSales = [...appState.sales].reverse().slice(0, 3);
+            
+            if (recentSales.length === 0) {
+                previewContainer.innerHTML = `<tr><td colspan="4" class="px-6 py-8 text-center text-xs text-gray-400">No active ledger records completed.</td></tr>`;
+                return;
+            }
+
+            recentSales.forEach(sale => {
+                let itemsDescArray = sale.items.map(i => {
+                    const matched = appState.products.find(p => p.id === i.prodId);
+                    return matched ? `${matched.name} x${i.qty}` : `Product x${i.qty}`;
+                });
+                
+                previewContainer.innerHTML += `
+                    <tr class="border-b border-gray-100 hover:bg-gray-50/50 transition-all text-xs">
+                        <td class="px-6 py-4 text-xs font-black text-brand-600">${sale.id}</td>
+                        <td class="px-6 py-4 text-xs text-gray-400">${sale.date}</td>
+                        <td class="px-6 py-4 text-xs font-medium text-gray-600 truncate max-w-[200px]">${itemsDescArray.join(', ')}</td>
+                        <td class="px-6 py-4 text-xs font-extrabold text-gray-800">RM ${sale.total.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        function renderDynamicSvgPerformanceCurve() {
+            const chart = document.getElementById('dashboardSvgChart');
+            if (!chart) return;
+            
+            // Build dynamic coordinates matching last sales
+            let values = [20, 40, 30, 60, 50, 80];
+            if (appState.sales.length > 0) {
+                values = appState.sales.slice(-6).map(s => Math.min(90, Math.max(10, s.total / 10)));
+            }
+            while(values.length < 6) { values.unshift(30); }
+
+            let pathStr = `M 0 ${100 - values[0]}`;
+            for (let i = 1; i < values.length; i++) {
+                pathStr += ` L ${(i / (values.length - 1)) * 100} ${100 - values[i]}`;
+            }
+
+            chart.innerHTML = `<path d="${pathStr}" fill="none" stroke="#2bb673" stroke-width="3" stroke-linecap="round" />`;
+        }
+
+        // Custom Modals Trigger Control Functions
+        function triggerDownloadReportModal() {
+            document.getElementById('downloadReportModal').classList.remove('hidden');
+        }
+        function closeDownloadReportModal() {
+            document.getElementById('downloadReportModal').classList.add('hidden');
+        }
+
+        // BI-DIRECTIONAL REALTIME SYNCHRONIZATION HELPERS
+        function syncTaxFromCart(val) {
+            const taxNum = parseFloat(val) || 0;
+            if (document.getElementById('posTaxInput')) {
+                document.getElementById('posTaxInput').value = taxNum;
+            }
+            renderCartLedgerPane();
+        }
+
+        // Realtime sync from left side configuration fields
+        function syncTaxFromLeft(val) {
+            const taxNum = parseFloat(val) || 0;
+            if (document.getElementById('posTaxInputCart')) {
+                document.getElementById('posTaxInputCart').value = taxNum;
+            }
+            renderCartLedgerPane();
+        }
+
+        function syncStoreNameFromCart(val) {
+            appState.storeSettings.storeName = val.trim() || "Daily Sales Report Shop";
+            if (document.getElementById('posStoreNameInput')) {
+                document.getElementById('posStoreNameInput').value = appState.storeSettings.storeName;
+            }
+            document.getElementById('merchantTitleBanner').innerText = appState.storeSettings.storeName;
+            if (appState.activeUser) {
+                appState.activeUser.storeName = appState.storeSettings.storeName;
+            }
+        }
+
+        function syncAddressFromCart(val) {
+            appState.storeSettings.address = val.trim() || "Your Business Address";
+            if (document.getElementById('posAddressInput')) {
+                document.getElementById('posAddressInput').value = appState.storeSettings.address;
+            }
+        }
+
+        // --- Tab Module Renderings ---
+        function updateStoreMeta() {
+            const nameInput = document.getElementById('posStoreNameInput').value.trim();
+            const addrInput = document.getElementById('posAddressInput').value.trim();
+            
+            appState.storeSettings.storeName = nameInput || "Daily Sales Report Shop";
+            appState.storeSettings.address = addrInput || "Your Business Address";
+            
+            // Sync to Cart fields
+            if (document.getElementById('posStoreNameInputCart')) {
+                document.getElementById('posStoreNameInputCart').value = appState.storeSettings.storeName;
+            }
+            if (document.getElementById('posAddressInputCart')) {
+                document.getElementById('posAddressInputCart').value = appState.storeSettings.address;
+            }
+            
+            // Dynamic Header Updates
+            document.getElementById('merchantTitleBanner').innerText = appState.storeSettings.storeName;
+            if (appState.activeUser) {
+                appState.activeUser.storeName = appState.storeSettings.storeName;
+            }
+        }
+
+        // CRM Customers
+        function renderCustomersTable() {
+            const tbody = document.getElementById('customersTableRows');
+            tbody.innerHTML = '';
+            appState.customers.forEach(c => {
+                tbody.innerHTML += `
+                    <tr class="border-b border-gray-100 hover:bg-gray-50/50 transition-all text-xs">
+                        <td class="px-6 py-4 font-extrabold text-gray-700">${c.name}</td>
+                        <td class="px-6 py-4 text-gray-500">${c.phone}</td>
+                        <td class="px-6 py-4 font-semibold text-brand-700">RM ${parseFloat(c.spent).toFixed(2)}</td>
+                        <td class="px-6 py-4 text-xs">
+                            <button onclick="triggerToast('Details of ${c.name} are loaded.')" class="text-brand-600 hover:underline">View History</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function triggerAddCustomerModal() {
+            document.getElementById('newCustomerForm').reset();
+            document.getElementById('addCustomerModal').classList.remove('hidden');
+        }
+        function closeCustomerModal() {
+            document.getElementById('addCustomerModal').classList.add('hidden');
+        }
+        function handleCustomerCreation(e) {
+            e.preventDefault();
+            const name = document.getElementById('custName').value.trim();
+            const phone = document.getElementById('custPhone').value.trim();
+            const spent = parseFloat(document.getElementById('custSpent').value) || 0.00;
+
+            appState.customers.push({ name, phone, spent });
+            persistLocalWorkspaceData();
+            closeCustomerModal();
+            renderCustomersTable();
+            triggerToast(`Customer ${name} logged successfully.`);
+        }
+
+        // Stock Products
+        function renderInventoryTableRows() {
+            const table = document.getElementById('inventoryCompleteTableRows');
+            table.innerHTML = '';
+
+            appState.products.forEach(p => {
+                const stockIsLow = p.stock <= 5;
+                const badgeStyle = stockIsLow ? "bg-red-50 text-red-600" : "bg-green-50 text-green-700";
+                const statusLabel = stockIsLow ? "Restock needed" : "Healthy";
+
+                table.innerHTML += `
+                    <tr class="border-b border-gray-100 hover:bg-gray-50/50 transition-all text-xs">
+                        <td class="px-6 py-4 font-extrabold text-gray-700">${p.name} <p class="text-[9px] text-gray-400">${p.category}</p></td>
+                        <td class="px-6 py-4 font-medium text-gray-500">RM ${p.cost.toFixed(2)}</td>
+                        <td class="px-6 py-4 font-semibold text-brand-700">RM ${p.price.toFixed(2)}</td>
+                        <td class="px-6 py-4 font-bold text-gray-900">${p.stock} units</td>
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${badgeStyle}">${statusLabel}</span>
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <button onclick="adjustInventoryPrompt(${p.id})" class="text-xs font-bold text-brand-600 hover:underline mr-3">Adjust Stock</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function adjustInventoryPrompt(prodId) {
+            const prod = appState.products.find(p => p.id === prodId);
+            if (!prod) return;
+
+            const target = prompt(`Enter new exact inventory volume size for '${prod.name}':`, prod.stock);
+            if (target === null) return;
+
+            const targetInt = parseInt(target);
+            if (!isNaN(targetInt) && targetInt >= 0) {
+                prod.stock = targetInt;
+                persistLocalWorkspaceData();
+                renderInventoryTableRows();
+                triggerToast(`Stock updated for ${prod.name}`);
+            } else {
+                triggerToast("Invalid input parameters registered.");
+            }
+        }
+
+        function triggerProductCreationModal() {
+            const select = document.getElementById('newProdCategory');
+            select.innerHTML = '';
+            appState.categories.forEach(cat => {
+                select.innerHTML += `<option value="${cat}">${cat}</option>`;
+            });
+
+            document.getElementById('newProductForm').reset();
+            document.getElementById('addProductModal').classList.remove('hidden');
+        }
+        function closeProductCreationModal() {
+            document.getElementById('addProductModal').classList.add('hidden');
+        }
+        function handleProductCreation(e) {
+            e.preventDefault();
+            const name = document.getElementById('newProdName').value.trim();
+            const category = document.getElementById('newProdCategory').value;
+            const cost = parseFloat(document.getElementById('newProdCost').value);
+            const price = parseFloat(document.getElementById('newProdPrice').value);
+            const stock = parseInt(document.getElementById('newProdStock').value);
+
+            const newProduct = {
+                id: Date.now(),
+                name,
+                cost,
+                price,
+                stock,
+                category
+            };
+
+            appState.products.push(newProduct);
+            persistLocalWorkspaceData();
+            closeProductCreationModal();
+            renderInventoryTableRows();
+            triggerToast(`Product SKU ${name} committed.`);
+        }
+
+        // Category management
+        function renderCategoryTable() {
+            const tbody = document.getElementById('categoryTableRows');
+            tbody.innerHTML = '';
+            appState.categories.forEach(cat => {
+                const count = appState.products.filter(p => p.category === cat).length;
+                tbody.innerHTML += `
+                    <tr class="border-b border-gray-100 text-xs">
+                        <td class="px-6 py-4 font-bold text-gray-700">${cat}</td>
+                        <td class="px-6 py-4 text-gray-500">${count} Products linked</td>
+                        <td class="px-6 py-4 text-right">
+                            <button onclick="triggerToast('Categories are locked to verify product integrity.')" class="text-xs text-gray-400 hover:underline">Protected</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Trigger add category modal popup
+        function triggerAddCategoryModal() {
+            document.getElementById('newCategoryForm').reset();
+            document.getElementById('addCategoryModal').classList.remove('hidden');
+        }
+        function closeCategoryModal() {
+            document.getElementById('addCategoryModal').classList.add('hidden');
+        }
+        function handleCategoryCreation(e) {
+            e.preventDefault();
+            const name = document.getElementById('categoryName').value.trim();
+            if (appState.categories.includes(name)) {
+                triggerToast("Category already exists.");
+                return;
+            }
+            appState.categories.push(name);
+            persistLocalWorkspaceData();
+            closeCategoryModal();
+            renderCategoryTable();
+            triggerToast(`Category ${name} logged.`);
+        }
+
+        // Purchases logging
+        function renderPurchasesTable() {
+            const tbody = document.getElementById('purchasesTableRows');
+            tbody.innerHTML = '';
+            appState.purchases.forEach(p => {
+                tbody.innerHTML += `
+                    <tr class="border-b border-gray-100 text-xs">
+                        <td class="px-6 py-4 font-bold text-gray-700">${p.supplier}</td>
+                        <td class="px-6 py-4 text-gray-500">${p.product}</td>
+                        <td class="px-6 py-4 font-medium text-gray-800">${p.qty} units</td>
+                        <td class="px-6 py-4 text-brand-700 font-extrabold">RM ${parseFloat(p.cost).toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        function triggerAddPurchaseModal() {
+            const suppSelect = document.getElementById('purchaseSupplier');
+            suppSelect.innerHTML = '';
+            appState.suppliers.forEach(s => {
+                suppSelect.innerHTML += `<option value="${s.name}">${s.name}</option>`;
+            });
+
+            const pSel = document.getElementById('purchaseProduct');
+            pSel.innerHTML = '';
+            appState.products.forEach(p => {
+                pSel.innerHTML += `<option value="${p.name}">${p.name}</option>`;
+            });
+
+            document.getElementById('newPurchaseForm').reset();
+            document.getElementById('addPurchaseModal').classList.remove('hidden');
+        }
+        function closePurchaseModal() {
+            document.getElementById('addPurchaseModal').classList.add('hidden');
+        }
+        function handlePurchaseCreation(e) {
+            e.preventDefault();
+            const supplier = document.getElementById('purchaseSupplier').value;
+            const product = document.getElementById('purchaseProduct').value;
+            const qty = parseInt(document.getElementById('purchaseQty').value);
+            const cost = parseFloat(document.getElementById('purchaseCost').value);
+
+            // Add stock quantity to existing product SKU
+            const matched = appState.products.find(p => p.name === product);
+            if (matched) {
+                matched.stock += qty;
+            }
+
+            appState.purchases.push({ supplier, product, qty, cost });
+            persistLocalWorkspaceData();
+            closePurchaseModal();
+            renderPurchasesTable();
+            triggerToast("Purchase Intake stock updated successfully.");
+        }
+
+        // Sales POS terminal selection grid
+        function renderPOSCatalogGrid() {
+            const grid = document.getElementById('posCatalogItemsGrid');
+            grid.innerHTML = '';
+
+            const clientSelect = document.getElementById('posClientSelect');
+            clientSelect.innerHTML = `<option value="">Walk-in Client</option>`;
+            appState.customers.forEach(c => {
+                clientSelect.innerHTML += `<option value="${c.name}">${c.name}</option>`;
+            });
+
+            const catSelect = document.getElementById('posCategoryFilter');
+            catSelect.innerHTML = `<option value="">All Categories</option>`;
+            appState.categories.forEach(cat => {
+                catSelect.innerHTML += `<option value="${cat}">${cat}</option>`;
+            });
+
+            filterPOSGrid();
+        }
+
+        function filterPOSGrid() {
+            const grid = document.getElementById('posCatalogItemsGrid');
+            const search = document.getElementById('posSearchField').value.toLowerCase();
+            const cat = document.getElementById('posCategoryFilter').value;
+
+            grid.innerHTML = '';
+            appState.products.forEach(prod => {
+                if (cat && prod.category !== cat) return;
+                if (search && !prod.name.toLowerCase().includes(search)) return;
+
+                const isLowStock = prod.stock <= 5;
+                const cardBadgeMarkup = isLowStock ? 
+                    `<span class="absolute top-2 right-2 px-1.5 py-0.5 rounded text-[8px] font-bold bg-red-100 text-red-600 animate-pulse">LOW</span>` : '';
+
+                grid.innerHTML += `
+                    <div onclick="addProductIdToCart(${prod.id})" class="relative bg-white p-4 rounded-xl border border-gray-100 hover:border-brand-500 hover:shadow-md cursor-pointer text-center space-y-1 transition-all">
+                        ${cardBadgeMarkup}
+                        <h4 class="font-bold text-gray-700 text-xs truncate">${prod.name}</h4>
+                        <p class="text-[10px] text-gray-400">Stok: ${prod.stock} units</p>
+                        <p class="text-brand-600 font-extrabold text-sm">RM ${prod.price.toFixed(2)}</p>
+                    </div>
+                `;
+            });
+        }
+
+        function addProductIdToCart(prodId) {
+            const matchedProduct = appState.products.find(p => p.id === prodId);
+            if (!matchedProduct) return;
+
+            if (matchedProduct.stock <= 0) {
+                triggerToast(`Insufficient stock level: '${matchedProduct.name}' is currently unavailable.`);
+                return;
+            }
+
+            const cartReference = appState.cart.find(item => item.product.id === prodId);
+            if (cartReference) {
+                if (cartReference.qty >= matchedProduct.stock) {
+                    triggerToast(`Action denied. Selected volume exceeds maximum stock levels.`);
+                    return;
+                }
+                cartReference.qty++;
+            } else {
+                appState.cart.push({ product: matchedProduct, qty: 1 });
+            }
+
+            renderCartLedgerPane();
+        }
+
+        function subtractCartQty(prodId) {
+            const cartReference = appState.cart.find(item => item.product.id === prodId);
+            if (cartReference) {
+                cartReference.qty--;
+                if (cartReference.qty <= 0) {
+                    appState.cart = appState.cart.filter(item => item.product.id !== prodId);
+                }
+            }
+            renderCartLedgerPane();
+        }
+
+        function flushActiveCart() {
+            appState.cart = [];
+            renderCartLedgerPane();
+        }
+
+        function renderCartLedgerPane() {
+            const list = document.getElementById('checkoutCartItemsList');
+            const lang = appState.activeLanguage;
+
+            if (appState.cart.length === 0) {
+                list.innerHTML = `<p class="text-xs text-gray-400 text-center py-12">${languageDictionary[lang].cartEmpty}</p>`;
+                document.getElementById('summarySubtotal').innerText = "RM 0.00";
+                document.getElementById('summaryTax').innerText = "RM 0.00";
+                document.getElementById('summaryGrandTotal').innerText = "RM 0.00";
+                return;
+            }
+
+            list.innerHTML = '';
+            let subtotalSum = 0;
+
+            appState.cart.forEach(cartItem => {
+                const costLine = cartItem.product.price * cartItem.qty;
+                subtotalSum += costLine;
+
+                list.innerHTML += `
+                    <div class="flex items-center justify-between p-2.5 rounded-lg bg-gray-50 border border-gray-100 text-xs">
+                        <div class="truncate max-w-[140px]">
+                            <h5 class="font-bold text-gray-700 truncate">${cartItem.product.name}</h5>
+                            <p class="text-[10px] text-gray-400">RM ${cartItem.product.price.toFixed(2)} each</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="subtractCartQty(${cartItem.product.id})" class="w-6 h-6 rounded bg-gray-200 hover:bg-gray-300 flex items-center justify-center font-bold text-gray-700">-</button>
+                            <span class="font-bold text-gray-800">${cartItem.qty}</span>
+                            <button onclick="addProductIdToCart(${cartItem.product.id})" class="w-6 h-6 rounded bg-gray-200 hover:bg-gray-300 flex items-center justify-center font-bold text-gray-700">+</button>
+                        </div>
+                        <div class="font-bold text-gray-800 text-right min-w-[50px]">
+                            RM ${costLine.toFixed(2)}
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Read the dynamic tax rate directly from the cart input field
+            const taxInputVal = parseFloat(document.getElementById('posTaxInputCart') ? document.getElementById('posTaxInputCart').value : document.getElementById('posTaxInput').value) || 0;
+            const taxRatio = taxInputVal / 100;
+            const computedTax = subtotalSum * taxRatio;
+            const computedGrandTotal = subtotalSum + computedTax;
+
+            document.getElementById('summarySubtotal').innerText = `RM ${subtotalSum.toFixed(2)}`;
+            document.getElementById('summaryTax').innerText = `RM ${computedTax.toFixed(2)}`;
+            document.getElementById('summaryGrandTotal').innerText = `RM ${computedGrandTotal.toFixed(2)}`;
+        }
+
+        function triggerInvoiceSettlement() {
+            if (appState.cart.length === 0) {
+                triggerToast("Please build cart allocation volumes first.");
+                return;
+            }
+
+            const clientName = document.getElementById('posClientSelect').value || "Walk-in Client";
+            const generatedInvoiceNumber = "INV-" + Math.floor(10000 + Math.random() * 90000);
+            const stamp = new Date();
+            const dateTextString = stamp.toISOString().slice(0, 10) + " " + stamp.toTimeString().slice(0, 5);
+
+            let calculatedSubtotal = 0;
+            const committedSalesItems = [];
+
+            appState.cart.forEach(cartItem => {
+                calculatedSubtotal += (cartItem.product.price * cartItem.qty);
+                committedSalesItems.push({
+                    prodId: cartItem.product.id,
+                    qty: cartItem.qty,
+                    price: cartItem.product.price
+                });
+
+                cartItem.product.stock = Math.max(0, cartItem.product.stock - cartItem.qty);
+            });
+
+            const taxInputVal = parseFloat(document.getElementById('posTaxInputCart') ? document.getElementById('posTaxInputCart').value : document.getElementById('posTaxInput').value) || 0;
+            const taxRatio = taxInputVal / 100;
+            const computedTaxVal = calculatedSubtotal * taxRatio;
+            const computedTotalVal = calculatedSubtotal + computedTaxVal;
+
+            const newReceiptRecord = {
+                id: generatedInvoiceNumber,
+                date: dateTextString,
+                items: committedSalesItems,
+                subtotal: calculatedSubtotal,
+                tax: computedTaxVal,
+                taxPercent: taxInputVal,
+                total: computedTotalVal,
+                client: clientName
+            };
+
+            appState.sales.push(newReceiptRecord);
+
+            // Register default Invoice entry to synchronize across invoices tables
+            appState.invoices.push({
+                id: generatedInvoiceNumber,
+                date: stamp.toISOString().slice(0, 10),
+                total: computedTotalVal,
+                status: "Paid"
+            });
+
+            // Update CRM spent balance if linked
+            if (clientName !== "Walk-in Client") {
+                const customer = appState.customers.find(c => c.name === clientName);
+                if (customer) {
+                    customer.spent = parseFloat(customer.spent) + computedTotalVal;
+                }
+            }
+
+            persistLocalWorkspaceData();
+            populatePrintableReceipt(newReceiptRecord);
+            flushActiveCart();
+            triggerToast("POS Sale checkout processed successfully.");
+        }
+
+        function populatePrintableReceipt(receiptRecord) {
+            document.getElementById('receiptStoreHeader').innerText = appState.storeSettings.storeName;
+            document.getElementById('receiptAddressHeader').innerText = appState.storeSettings.address;
+            document.getElementById('receiptInvoiceMeta').innerText = `${receiptRecord.id} | ${receiptRecord.date}`;
+            
+            const taxLabelPercent = receiptRecord.taxPercent !== undefined ? receiptRecord.taxPercent : (parseFloat(document.getElementById('posTaxInputCart').value) || 0);
+            document.getElementById('receiptTaxLabel').innerText = `SST Tax (${taxLabelPercent}%)`;
+
+            const rosterBody = document.getElementById('receiptItemsRoster');
+            rosterBody.innerHTML = '';
+
+            receiptRecord.items.forEach(item => {
+                const productReference = appState.products.find(p => p.id === item.prodId);
+                const title = productReference ? productReference.name : "Product SKU";
+                const totalLineVal = item.qty * item.price;
+
+                rosterBody.innerHTML += `
+                    <div class="flex justify-between items-start leading-tight">
+                        <div class="max-w-[70%]">
+                            <span class="font-bold">${title}</span><br>
+                            <span class="text-gray-400 text-[10px]">${item.qty} x RM ${item.price.toFixed(2)}</span>
+                        </div>
+                        <span class="font-semibold text-gray-700">RM ${totalLineVal.toFixed(2)}</span>
+                    </div>
+                `;
+            });
+
+            document.getElementById('receiptSubtotal').innerText = `RM ${receiptRecord.subtotal.toFixed(2)}`;
+            document.getElementById('receiptTax').innerText = `RM ${receiptRecord.tax.toFixed(2)}`;
+            document.getElementById('receiptGrandTotal').innerText = `RM ${receiptRecord.total.toFixed(2)}`;
+
+            document.getElementById('receiptModal').classList.remove('hidden');
+        }
+
+        function closeReceiptModal() {
+            document.getElementById('receiptModal').classList.add('hidden');
+            activateTab('dashboard');
+        }
+
+        function downloadReceiptAsPDF() {
+            const element = document.getElementById('printableReceiptArea');
+            const receiptMeta = document.getElementById('receiptInvoiceMeta').innerText;
+            const receiptId = receiptMeta.split('|')[0].trim();
+            const opt = {
+                margin:       10,
+                filename:     `Receipt_${receiptId}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            triggerToast("Compiling PDF Receipt Statement...");
+            html2pdf().set(opt).from(element).save().then(() => {
+                triggerToast("Receipt PDF downloaded successfully!");
+            });
+        }
+
+        function downloadReceiptAsPNG() {
+            const element = document.getElementById('printableReceiptArea');
+            const receiptMeta = document.getElementById('receiptInvoiceMeta').innerText;
+            const receiptId = receiptMeta.split('|')[0].trim();
+            triggerToast("Rasterizing Receipt Image...");
+            html2canvas(element, { scale: 2, useCORS: true }).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const link = document.createElement('a');
+                link.download = `Receipt_${receiptId}.png`;
+                link.href = imgData;
+                link.click();
+                triggerToast("Receipt PNG downloaded successfully!");
+            });
+        }
+
+        // Quotations Table Renders
+        function renderQuotationsTable() {
+            const tbody = document.getElementById('quotationsTableRows');
+            tbody.innerHTML = '';
+            appState.quotations.forEach(q => {
+                tbody.innerHTML += `
+                    <tr class="border-b border-gray-100 text-xs">
+                        <td class="px-6 py-4 font-bold text-brand-600">${q.ref}</td>
+                        <td class="px-6 py-4 text-gray-700">${q.client}</td>
+                        <td class="px-6 py-4 font-semibold text-gray-800">RM ${parseFloat(q.amount).toFixed(2)}</td>
+                        <td class="px-6 py-4 text-right">
+                            <button onclick="openQuotationViewer('${q.ref}')" class="text-brand-600 hover:underline"><i class="fa-solid fa-eye"></i> View & Export</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function triggerAddQuotationModal() {
+            const clientSelect = document.getElementById('quotationClient');
+            clientSelect.innerHTML = '';
+            appState.customers.forEach(c => {
+                clientSelect.innerHTML += `<option value="${c.name}">${c.name}</option>`;
+            });
+
+            document.getElementById('newQuotationForm').reset();
+            document.getElementById('addQuotationModal').classList.remove('hidden');
+        }
+        function closeQuotationModal() {
+            document.getElementById('addQuotationModal').classList.add('hidden');
+        }
+        function handleQuotationCreation(e) {
+            e.preventDefault();
+            const client = document.getElementById('quotationClient').value;
+            const desc = document.getElementById('quotationDesc').value;
+            const amount = parseFloat(document.getElementById('quotationAmount').value);
+
+            const ref = "QT-" + Math.floor(1000 + Math.random() * 9000);
+            appState.quotations.push({ ref, client, desc, amount });
+            persistLocalWorkspaceData();
+            closeQuotationModal();
+            renderQuotationsTable();
+            triggerToast("Quotation proposal created.");
+        }
+
+        // Invoices Core
+        function renderInvoicesTable() {
+            const tbody = document.getElementById('invoicesTableRows');
+            tbody.innerHTML = '';
+            appState.invoices.forEach(i => {
+                const badge = i.status === 'Paid' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-600';
+                tbody.innerHTML += `
+                    <tr class="border-b border-gray-100 text-xs">
+                        <td class="px-6 py-4 font-bold text-brand-600">${i.id}</td>
+                        <td class="px-6 py-4 text-gray-400">${i.date}</td>
+                        <td class="px-6 py-4 font-semibold text-gray-800">RM ${parseFloat(i.total).toFixed(2)}</td>
+                        <td class="px-6 py-4"><span class="px-2.5 py-1 rounded-full text-[9px] font-bold ${badge}">${i.status}</span></td>
+                        <td class="px-6 py-4 text-right">
+                            <button onclick="openInvoiceViewer('${i.id}')" class="text-xs text-brand-600 font-bold hover:underline"><i class="fa-solid fa-eye"></i> View & Export</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function triggerAddInvoiceModal() {
+            const clientSelect = document.getElementById('invoiceClient');
+            clientSelect.innerHTML = '';
+            appState.customers.forEach(c => {
+                clientSelect.innerHTML += `<option value="${c.name}">${c.name}</option>`;
+            });
+
+            document.getElementById('newInvoiceForm').reset();
+            document.getElementById('addInvoiceModal').classList.remove('hidden');
+        }
+        function closeInvoiceModal() {
+            document.getElementById('addInvoiceModal').classList.add('hidden');
+        }
+        function handleInvoiceCreation(e) {
+            e.preventDefault();
+            const client = document.getElementById('invoiceClient').value;
+            const desc = document.getElementById('invoiceItemDesc').value;
+            const amount = parseFloat(document.getElementById('invoiceAmount').value);
+            const status = document.getElementById('invoiceStatus').value;
+
+            const invoiceId = "INV-" + Math.floor(10000 + Math.random() * 90000);
+            const today = new Date().toISOString().slice(0, 10);
+
+            appState.invoices.push({ id: invoiceId, date: today, total: amount, status });
+            persistLocalWorkspaceData();
+            closeInvoiceModal();
+            renderInvoicesTable();
+            triggerToast("Standalone Custom Invoice logged successfully.");
+        }
+
+        // Expenses tracker
+        function renderExpensesTable() {
+            const tbody = document.getElementById('expenseTableRows');
+            tbody.innerHTML = '';
+            appState.expense.forEach(e => {
+                tbody.innerHTML += `
+                    <tr class="border-b border-gray-100 text-xs">
+                        <td class="px-6 py-4 font-bold text-gray-700">${e.desc}</td>
+                        <td class="px-6 py-4 text-gray-400">${e.type}</td>
+                        <td class="px-6 py-4 text-red-600 font-extrabold">RM ${parseFloat(e.amount).toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        function triggerAddExpenseModal() {
+            document.getElementById('newExpenseForm').reset();
+            document.getElementById('addExpenseModal').classList.remove('hidden');
+        }
+        function closeExpenseModal() {
+            document.getElementById('addExpenseModal').classList.add('hidden');
+        }
+        function handleExpenseCreation(e) {
+            e.preventDefault();
+            const desc = document.getElementById('expDesc').value.trim();
+            const type = document.getElementById('expCategory').value;
+            const amount = parseFloat(document.getElementById('expAmount').value);
+
+            appState.expense.push({ desc, type, amount });
+            persistLocalWorkspaceData();
+            closeExpenseModal();
+            renderExpensesTable();
+            triggerToast(`Expense ${desc} logged.`);
+        }
+
+        // Non-sales Income tracker
+        function renderIncomesTable() {
+            const tbody = document.getElementById('incomeTableRows');
+            tbody.innerHTML = '';
+            appState.income.forEach(i => {
+                tbody.innerHTML += `
+                    <tr class="border-b border-gray-100 text-xs">
+                        <td class="px-6 py-4 font-bold text-gray-700">${i.desc}</td>
+                        <td class="px-6 py-4 text-gray-400">${i.type}</td>
+                        <td class="px-6 py-4 text-green-600 font-extrabold">RM ${parseFloat(i.amount).toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        function triggerAddIncomeModal() {
+            document.getElementById('newIncomeForm').reset();
+            document.getElementById('addIncomeModal').classList.remove('hidden');
+        }
+        function closeIncomeModal() {
+            document.getElementById('addIncomeModal').classList.add('hidden');
+        }
+        function handleIncomeCreation(e) {
+            e.preventDefault();
+            const desc = document.getElementById('incDesc').value.trim();
+            const type = document.getElementById('incCategory').value;
+            const amount = parseFloat(document.getElementById('incAmount').value);
+
+            appState.income.push({ desc, type, amount });
+            persistLocalWorkspaceData();
+            closeIncomeModal();
+            renderIncomesTable();
+            triggerToast(`Capital Income ${desc} added.`);
+        }
+
+        // Suppliers log
+        function renderSuppliersTable() {
+            const tbody = document.getElementById('suppliersTableRows');
+            tbody.innerHTML = '';
+            appState.suppliers.forEach(s => {
+                tbody.innerHTML += `
+                    <tr class="border-b border-gray-100 text-xs">
+                        <td class="px-6 py-4 font-bold text-gray-700">${s.name}</td>
+                        <td class="px-6 py-4 text-gray-500">${s.phone}</td>
+                        <td class="px-6 py-4 text-gray-400">${s.location}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        function triggerAddSupplierModal() {
+            document.getElementById('newSupplierForm').reset();
+            document.getElementById('addSupplierModal').classList.remove('hidden');
+        }
+        function closeSupplierModal() {
+            document.getElementById('addSupplierModal').classList.add('hidden');
+        }
+        function handleSupplierCreation(e) {
+            e.preventDefault();
+            const name = document.getElementById('suppName').value.trim();
+            const phone = document.getElementById('suppPhone').value.trim();
+            const location = document.getElementById('suppLocation').value.trim();
+
+            appState.suppliers.push({ name, phone, location });
+            persistLocalWorkspaceData();
+            closeSupplierModal();
+            renderSuppliersTable();
+            triggerToast(`Supplier ${name} configured.`);
+        }
+
+        // CSV Import Simulators
+        function triggerCSVImportModal() {
+            document.getElementById('csvImportModal').classList.remove('hidden');
+        }
+        function closeCSVImportModal() {
+            document.getElementById('csvImportModal').classList.add('hidden');
+        }
+        function parseCSVFileSim(input) {
+            if (input.files && input.files[0]) {
+                triggerToast(`File ${input.files[0].name} imported parsed successfully.`);
+                closeCSVImportModal();
+            }
+        }
+        function executeSampleCSVSim() {
+            // Push some mock customers to the store
+            appState.customers.push(
+                { name: "John Doe (CSV)", phone: "+6013-1112233", spent: 0.00 },
+                { name: "Jane Lim (CSV)", phone: "+6013-4445566", spent: 0.00 }
+            );
+            persistLocalWorkspaceData();
+            renderCustomersTable();
+            closeCSVImportModal();
+            triggerToast("Imported mock entries successfully.");
+        }
+
+        // Export To Excel Helper (Exports any table to Excel CSV structure)
+        function exportTableToCSV(tableID, filename = '') {
+            let csv = [];
+            const rows = document.querySelectorAll(`table#${tableID} tr`);
+            
+            for (let i = 0; i < rows.length; i++) {
+                let row = [], cols = rows[i].querySelectorAll("td, th");
+                for (let j = 0; j < cols.length; j++) {
+                    row.push('"' + cols[j].innerText.replace(/"/g, '""') + '"');
+                }
+                csv.push(row.join(","));
+            }
+
+            const csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
+            const downloadLink = document.createElement("a");
+            downloadLink.download = `${filename}.csv`;
+            downloadLink.href = window.URL.createObjectURL(csvFile);
+            downloadLink.style.display = "none";
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            triggerToast("CSV sheet successfully formatted and exported.");
+        }
+
+        // Business Report Core Tab Renders
+        function renderBusinessReportConsole() {
+            let totalSalesSum = 0;
+            let totalCostPaidToProducts = 0;
+            appState.sales.forEach(sale => {
+                totalSalesSum += sale.total;
+                sale.items.forEach(item => {
+                    const matched = appState.products.find(p => p.id === item.prodId);
+                    if (matched) {
+                        totalCostPaidToProducts += (matched.cost * item.qty);
+                    }
+                });
+            });
+
+            let expenseSum = 0;
+            appState.expense.forEach(e => expenseSum += e.amount);
+
+            let incomeSum = 0;
+            appState.income.forEach(i => incomeSum += i.amount);
+
+            let purchaseSum = 0;
+            appState.purchases.forEach(p => purchaseSum += p.cost);
+
+            // Compute net profits
+            const netProfit = totalSalesSum + incomeSum - (totalCostPaidToProducts + expenseSum);
+
+            document.getElementById('reportSalesVal').innerText = `RM ${totalSalesSum.toFixed(2)}`;
+            document.getElementById('reportProfitVal').innerText = `RM ${netProfit.toFixed(2)}`;
+            document.getElementById('reportExpenseVal').innerText = `RM ${expenseSum.toFixed(2)}`;
+            document.getElementById('reportPurchasesVal').innerText = `RM ${purchaseSum.toFixed(2)}`;
+
+            let inventoryValuation = 0;
+            let lowStockCount = 0;
+            appState.products.forEach(p => {
+                inventoryValuation += (p.price * p.stock);
+                if (p.stock <= 5) lowStockCount++;
+            });
+
+            document.getElementById('reportStockValuation').innerText = `RM ${inventoryValuation.toFixed(2)}`;
+            document.getElementById('reportLowStockCount').innerText = `${lowStockCount} SKUs`;
+        }
+
+        // Save progress trigger simulation
+        function initiateCloudSync() {
+            const modal = document.getElementById('cloudSyncProgressModal');
+            const progress = document.getElementById('syncProgressBar');
+            const textPct = document.getElementById('syncProgressPercent');
+            const dismissBtn = document.getElementById('syncModalDismissBtn');
+            const title = document.getElementById('syncModalTitle');
+            const iconWrap = document.getElementById('syncIconWrap');
+
+            modal.classList.remove('hidden');
+            dismissBtn.classList.add('hidden');
+            progress.style.width = '0%';
+            textPct.innerText = '0% Completed';
+            title.innerText = (appState.activeLanguage === 'en') ? "Syncing data to secure cloud..." : "Menyinkronkan data ke cloud selamat...";
+            iconWrap.innerHTML = `<i class="fa-solid fa-cloud-arrow-up animate-bounce"></i>`;
+
+            let progressStepValue = 0;
+            const timerSequence = setInterval(() => {
+                progressStepValue += 20;
+                progress.style.width = `${progressStepValue}%`;
+                textPct.innerText = `${progressStepValue}% Completed`;
+
+                if (progressStepValue >= 100) {
+                    clearInterval(timerSequence);
+                    persistLocalWorkspaceData();
+                    title.innerText = (appState.activeLanguage === 'en') ? "Sync Completed successfully!" : "Sinkronisasi Cloud Berjaya!";
+                    iconWrap.innerHTML = `<i class="fa-solid fa-circle-check text-brand-500"></i>`;
+                    dismissBtn.classList.remove('hidden');
+                }
+            }, 300);
+        }
+
+        function closeSyncModal() {
+            document.getElementById('cloudSyncProgressModal').classList.add('hidden');
+        }
+
+        // --- EXPORT PDF/PNG WITHOUT PRINT ACTION ENGINE ---
+        let activeViewingDoc = null;
+
+        function openQuotationViewer(refCode) {
+            const quotation = appState.quotations.find(q => q.ref === refCode);
+            if (!quotation) return;
+
+            activeViewingDoc = { type: 'Quotation', data: quotation };
+            document.getElementById('docModalTitle').innerText = `Quotation Proposal - ${refCode}`;
+
+            const container = document.getElementById('exportableDocContainer');
+            container.innerHTML = `
+                <div class="border-b-2 border-brand-500 pb-6 mb-6">
+                    <div class="flex justify-between items-start">
+                        <div class="max-w-[65%]">
+                            <h1 contenteditable="true" oninput="syncStoreNameFromDoc(this.innerText)" class="text-xl font-extrabold text-gray-800 tracking-tight uppercase hover:bg-gray-50 focus:bg-gray-50 focus:ring-2 focus:ring-brand-500 p-1.5 rounded cursor-pointer border border-dashed border-transparent hover:border-gray-200 focus:outline-none transition-all" title="Click to edit corporate name">${appState.storeSettings.storeName}</h1>
+                            <p contenteditable="true" oninput="syncAddressFromDoc(this.innerText)" class="text-[11px] text-gray-400 mt-1 hover:bg-gray-50 focus:bg-gray-50 focus:ring-2 focus:ring-brand-500 p-1.5 rounded cursor-pointer border border-dashed border-transparent hover:border-gray-200 focus:outline-none transition-all" title="Click to edit physical location">${appState.storeSettings.address}</p>
+                        </div>
+                        <div class="text-right">
+                            <h2 class="text-lg font-black text-brand-600 tracking-wider uppercase">QUOTATION PROPOSAL</h2>
+                            <p class="text-xs font-bold text-gray-400 mt-1">Ref: ${quotation.ref}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-6 mb-8 text-xs">
+                    <div>
+                        <h4 class="font-bold text-gray-400 uppercase tracking-wider mb-2">Prepared For:</h4>
+                        <p class="font-bold text-gray-800 text-sm">${quotation.client}</p>
+                        <p class="text-gray-500 mt-1">Valued Customer Account</p>
+                    </div>
+                    <div class="text-right">
+                        <h4 class="font-bold text-gray-400 uppercase tracking-wider mb-2">Date Issued:</h4>
+                        <p class="font-bold text-gray-800">${new Date().toISOString().slice(0, 10)}</p>
+                        <p class="text-gray-500 mt-1">Valid for 30 Days</p>
+                    </div>
+                </div>
+
+                <div class="border border-gray-200 rounded-xl overflow-hidden mb-6 text-xs">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50 font-bold text-gray-500 border-b border-gray-200">
+                                <th class="p-4">Description / Proposal Line Items</th>
+                                <th class="p-4 text-right">Total Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-gray-100">
+                                <td class="p-4">
+                                    <p class="font-bold text-gray-800">${quotation.desc}</p>
+                                    <p class="text-gray-400 text-[10px] mt-0.5">As per custom project requirements</p>
+                                </td>
+                                <td class="p-4 text-right font-bold text-gray-800">RM ${parseFloat(quotation.amount).toFixed(2)}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="flex justify-end text-xs mb-8">
+                    <div class="w-64 space-y-2">
+                        <div class="flex justify-between font-bold text-sm border-t border-gray-200 pt-2">
+                            <span class="text-gray-500">PROPOSED TOTAL</span>
+                            <span class="text-brand-600">RM ${parseFloat(quotation.amount).toFixed(2)}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-t border-dashed border-gray-200 pt-6 text-center text-[10px] text-gray-400">
+                    <p class="font-semibold text-gray-500">Thank you for considering our business proposal!</p>
+                    <p class="mt-1">BrandWorkz Co. Suite • Professional Quotation Statement</p>
+                </div>
+            `;
+
+            document.getElementById('documentViewerModal').classList.remove('hidden');
+        }
+
+        function openInvoiceViewer(invoiceId) {
+            const invoice = appState.invoices.find(i => i.id === invoiceId);
+            if (!invoice) return;
+
+            activeViewingDoc = { type: 'Invoice', data: invoice };
+            document.getElementById('docModalTitle').innerText = `Tax Invoice - ${invoiceId}`;
+
+            const container = document.getElementById('exportableDocContainer');
+            container.innerHTML = `
+                <div class="border-b-2 border-brand-500 pb-6 mb-6">
+                    <div class="flex justify-between items-start">
+                        <div class="max-w-[65%]">
+                            <h1 contenteditable="true" oninput="syncStoreNameFromDoc(this.innerText)" class="text-xl font-extrabold text-gray-800 tracking-tight uppercase hover:bg-gray-50 focus:bg-gray-50 focus:ring-2 focus:ring-brand-500 p-1.5 rounded cursor-pointer border border-dashed border-transparent hover:border-gray-200 focus:outline-none transition-all" title="Click to edit corporate name">${appState.storeSettings.storeName}</h1>
+                            <p contenteditable="true" oninput="syncAddressFromDoc(this.innerText)" class="text-[11px] text-gray-400 mt-1 hover:bg-gray-50 focus:bg-gray-50 focus:ring-2 focus:ring-brand-500 p-1.5 rounded cursor-pointer border border-dashed border-transparent hover:border-gray-200 focus:outline-none transition-all" title="Click to edit physical location">${appState.storeSettings.address}</p>
+                        </div>
+                        <div class="text-right">
+                            <h2 class="text-lg font-black text-brand-600 tracking-wider uppercase">TAX INVOICE</h2>
+                            <p class="text-xs font-bold text-gray-400 mt-1">ID: ${invoice.id}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-6 mb-8 text-xs">
+                    <div>
+                        <h4 class="font-bold text-gray-400 uppercase tracking-wider mb-2">Billed To:</h4>
+                        <p class="font-bold text-gray-800 text-sm">Customer Record Profile</p>
+                        <p class="text-gray-500 mt-1">Registered Trading Client</p>
+                    </div>
+                    <div class="text-right">
+                        <h4 class="font-bold text-gray-400 uppercase tracking-wider mb-2">Invoice Details:</h4>
+                        <p class="text-gray-500">Date Issued: <span class="font-bold text-gray-800">${invoice.date}</span></p>
+                        <p class="text-gray-500 mt-1">Status: <span class="font-bold text-green-600">${invoice.status}</span></p>
+                    </div>
+                </div>
+
+                <div class="border border-gray-200 rounded-xl overflow-hidden mb-6 text-xs">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50 font-bold text-gray-500 border-b border-gray-200">
+                                <th class="p-4">Itemized Description</th>
+                                <th class="p-4 text-right">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-gray-100">
+                                <td class="p-4">
+                                    <p class="font-bold text-gray-800">Standard Business Transaction Line Item</p>
+                                    <p class="text-gray-400 text-[10px] mt-0.5">Automated accounting system entry</p>
+                                </td>
+                                <td class="p-4 text-right font-bold text-gray-800">RM ${parseFloat(invoice.total).toFixed(2)}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="flex justify-end text-xs mb-8">
+                    <div class="w-64 space-y-2">
+                        <div class="flex justify-between font-bold text-sm border-t border-gray-200 pt-2">
+                            <span class="text-gray-500">GRAND TOTAL</span>
+                            <span class="text-brand-600 font-extrabold">RM ${parseFloat(invoice.total).toFixed(2)}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-t border-dashed border-gray-200 pt-6 text-center text-[10px] text-gray-400">
+                    <p class="font-semibold text-gray-500">Terima kasih atas sokongan perniagaan anda!</p>
+                    <p class="mt-1">BrandWorkz Co. Suite • Secure Sales Ledger Invoice</p>
+                </div>
+            `;
+
+            document.getElementById('documentViewerModal').classList.remove('hidden');
+        }
+
+        function syncStoreNameFromDoc(val) {
+            const cleanVal = val.replace(/\n/g, '').trim() || "Daily Sales Report Shop";
+            appState.storeSettings.storeName = cleanVal;
+            
+            // Sync terminal input values
+            if (document.getElementById('posStoreNameInput')) {
+                document.getElementById('posStoreNameInput').value = cleanVal;
+            }
+            if (document.getElementById('posStoreNameInputCart')) {
+                document.getElementById('posStoreNameInputCart').value = cleanVal;
+            }
+            
+            // Sync static headers
+            document.getElementById('merchantTitleBanner').innerText = cleanVal;
+            
+            if (appState.activeUser) {
+                appState.activeUser.storeName = cleanVal;
+            }
+            persistLocalWorkspaceData();
+        }
+
+        function syncAddressFromDoc(val) {
+            const cleanVal = val.replace(/\n/g, '').trim() || "Your Business Address";
+            appState.storeSettings.address = cleanVal;
+            
+            // Sync terminal address inputs
+            if (document.getElementById('posAddressInput')) {
+                document.getElementById('posAddressInput').value = cleanVal;
+            }
+            if (document.getElementById('posAddressInputCart')) {
+                document.getElementById('posAddressInputCart').value = cleanVal;
+            }
+            persistLocalWorkspaceData();
+        }
+
+        function closeDocumentViewer() {
+            document.getElementById('documentViewerModal').classList.add('hidden');
+            activeViewingDoc = null;
+        }
+
+        // Standard save
+        function downloadDocAsPDF() {
+            if (!activeViewingDoc) return;
+            const element = document.getElementById('exportableDocContainer');
+            
+            const filename = `${activeViewingDoc.type}_${activeViewingDoc.data.ref || activeViewingDoc.data.id}.pdf`;
+            const opt = {
+                margin:       10,
+                filename:     filename,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            
+            triggerToast("Compiling professional PDF package... Please wait.");
+            html2pdf().set(opt).from(element).save().then(() => {
+                triggerToast("PDF downloaded successfully!");
+            });
+        }
+
+        function downloadDocAsPNG() {
+            if (!activeViewingDoc) return;
+            const element = document.getElementById('exportableDocContainer');
+            
+            triggerToast("Rasterizing image package...");
+            html2canvas(element, { scale: 2, useCORS: true }).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const link = document.createElement('a');
+                link.download = `${activeViewingDoc.type}_${activeViewingDoc.data.ref || activeViewingDoc.data.id}.png`;
+                link.href = imgData;
+                link.click();
+                triggerToast("PNG downloaded successfully!");
+            });
+        }
+
+        // Live Timing Logic
+        function setupLiveClock() {
+            const widget = document.getElementById('clockCalendarWidget');
+            setInterval(() => {
+                const nowObj = new Date();
+                const calendarStr = nowObj.toLocaleDateString('ms-MY', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                const timeStr = nowObj.toLocaleTimeString('en-US', { hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                widget.innerText = `${calendarStr} • ${timeStr}`;
+            }, 1000);
+        }
+
+        // Boot Init
+        window.onload = function() {
+            setupLiveClock();
+            loadOrCreateUserRegistry();
+        };
+
+    </script>
+</body>
+</html>
