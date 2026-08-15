@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en"><head><script>window["__codeletBootstrap__"]=JSON.parse('{"A":"A","B":"20260814-05-a1b2e7b","C":{"Abril Fatface":"YACgEZbkUVE,0","Alfa Slab One":"YACgEYS9sJU,0","Anton":"YACgEcYqQ-A,0","Archivo":"YAHO2-t-jNE,0","Arial":"YAGyDvJ_4Ts,0","Bebas Neue":"YACgESME5ew,0","Bricolage Grotesque":"YAFyMcdwzpc,0","Canva Sans":"YAFLd8sKbwc,2","Caveat":"YALBs2ploWQ,0","Comic Sans MS":"YAHO2VMiyZo,0","Cormorant Garamond":"YAFdJhX-538,0","Courier New":"YAGzXiGs0_8,0","DM Sans":"YAD1aU3sLnI,0","DM Serif Display":"YAD1aYG82rc,0","Forum":"YACgEcnnqB4,0","Fraunces":"YAEul-FRQw4,0","Georgia":"YAGzXkO0pEM,0","Helvetica Neue":"YAFcf6CtJfI,0","Impact":"YAFcfnjI7Vk,0","Inter":"YAFdJvSyp_k,3","Iowan Old Style":"YAGNIFa8j9o,0","Jacques Francois":"YAHO2a5g66Q,0","JetBrains Mono":"YAFdJksXcAk,0","Libre Baskerville":"YACgEUFdPdA,0","Manrope":"YAHO2b2feC4,0","Merriweather":"YACgEXvHxxs,0","Montserrat":"YADLjI9qxTA,0","Nunito":"YACgEX8C5Gg,0","Oleo Script":"YACgEQQ14jI,0","Phantom Sans":"YAHO2E8Pb88,0","Playfair Display":"YACgEYmuCJE,0","Poppins":"YAFdJjbTu24,1","Press Start 2P":"YAFyGr-8pmQ,0","Quicksand":"YADWjpfPmdk,0","Raleway":"YACgEVg3xZg,0","Segoe UI":"YAHNdRD1Klw,0","Source Sans 3":"YAG4lO1Mj10,0","Spectral":"YAHO2rVUHIM,0","Times New Roman":"YAGzXW3gftg,0","Times":"YAGzXW3gftg,0","Ubuntu":"YACgERDU--Q,0","Work Sans":"YAGXhLOKv44,0","Yellowtail":"YACgEYG4kG4,0","ui-monospace":"YADlN8CFZ8Q,0","ui-sans-serif":"YACkoN-xg4g,0"}}');</script><script src="/_sdk/7949ff62d67710d5.telemetry_sdk.js" integrity="sha512-KIvXA82Di44YY/RH9/63A9MuTuavYgDFG8PfErJn7Wli4K0LAOk+coo/aPXk3+ZNL96nHh9VYD4PE+fLes+laQ=="></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Portfolio</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Fraunces:opsz,wght@9..144,700;9..144,800&amp;display=swap" rel="stylesheet">
+  <style>
+    :root { --ink: #111111; --paper: #f4f0e8; --acid: #d8ff3e; --orange: #ff6b35; }
+    html { scroll-behavior: smooth; }
+    body { font-family: "DM Sans", sans-serif; background: var(--paper); color: var(--ink); }
+    .display-face { font-family: "Fraunces", serif; }
+    .noise { background-image: radial-gradient(rgba(17,17,17,.18) .65px, transparent .65px); background-size: 5px 5px; }
+    .hero-grid { background-image: linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px); background-size: 34px 34px; }
+    .marquee-track { animation: glide 20s linear infinite; width: max-content; }
+    @keyframes glide { to { transform: translateX(-50%); } }
+    .reveal-card .card-caption { transform: translateY(105%); transition: transform .34s cubic-bezier(.2,.7,.2,1); }
+    .reveal-card:hover .card-caption, .reveal-card:focus-within .card-caption { transform: translateY(0); }
+    .reveal-card img { transition: transform .5s ease; }
+    .reveal-card:hover img { transform: scale(1.055); }
+    .nav-link { position: relative; }
+    .nav-link::after { content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 2px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform .2s; }
+    .nav-link:hover::after, .nav-link:focus::after { transform: scaleX(1); }
+    :focus-visible { outline: 3px solid var(--acid); outline-offset: 4px; }
+    @media (max-width: 767px) { .mobile-menu { display: none; } .mobile-menu.is-open { display: flex; } }
+  </style>
+  <script src="/_sdk/0e8d3a91e1c6f495.data_sdk.js" type="text/javascript" integrity="sha512-c00oDoGjsMgluCLLEyVl3suwEkgjOGGplVFbsilUoBg4aMKNmsL3mwsc9r0dPn95qiSZyjBousQXgROkAW7p/w=="></script>
+  <script src="/_sdk/eba18683f23e5798.resizing_sdk.js" type="text/javascript" integrity="sha512-E0UWUllhwPXaNJtjyTKXWKrIE+FruPfFpO4mRmMDP2LI+U9bOizy5npCq6xx/JyWcvSK7D3TFf2wFR2Mha9kbA=="></script>
+ </head>
+ <body data-template-id="__page-root" class="w-full overflow-x-hidden" style="background: rgb(244, 240, 232);">
+  <header class="sticky top-0 z-50 border-b-2 border-black bg-[#f4f0e8]/95 backdrop-blur">
+   <nav aria-label="Primary navigation" class="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 md:px-8">
+    <a href="#top" data-template-id="brand-name" class="canva-link font-bold tracking-tight" style="color: rgb(17, 17, 17); font-weight: 700; font-style: normal; font-size: 18px;">NOVA / BRAND LAB</a> <button id="menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false" class="rounded-full border-2 border-black p-2 md:hidden"> <i data-lucide="menu" aria-hidden="true" class="h-5 w-5"></i> </button>
+    <div id="nav-menu" class="mobile-menu absolute left-0 top-full hidden w-full flex-col gap-5 border-b-2 border-black bg-[#f4f0e8] px-5 py-6 text-sm font-bold md:static md:flex md:w-auto md:flex-row md:items-center md:border-0 md:bg-transparent md:p-0">
+     <a class="nav-link" href="#work" data-template-id="nav-work" style="color: rgb(17, 17, 17); font-weight: 700; font-style: normal; font-size: 16px;">Work</a> <a class="nav-link" href="#services" data-template-id="nav-services" style="color: rgb(17, 17, 17); font-weight: 700; font-style: normal; font-size: 16px;">Services</a> <a class="nav-link" href="#tools" data-template-id="nav-tools" style="color: rgb(17, 17, 17); font-weight: 700; font-style: normal; font-size: 16px;">Tools</a> <a class="rounded-full bg-black px-4 py-2 text-white transition hover:bg-[#ff6b35]" href="#contact" data-template-id="nav-contact" style="background: rgb(17, 17, 17); color: rgb(255, 255, 255); font-weight: 700; font-style: normal; font-size: 16px;">Let’s talk</a>
+    </div>
+   </nav>
+  </header>
+  <main id="top">
+   <section class="relative overflow-hidden bg-[#111111] text-white">
+    <div class="hero-grid absolute inset-0 opacity-40"></div>
+    <div class="relative mx-auto grid max-w-7xl gap-10 px-5 py-16 md:grid-cols-12 md:px-8 md:py-24">
+     <div class="md:col-span-7">
+      <p data-template-id="hero-kicker" class="canva-text mb-5 inline-flex rounded-full border border-[#d8ff3e] px-3 py-1 text-xs font-bold uppercase tracking-[0.2em] text-[#d8ff3e]" style="color: rgb(216, 255, 62); font-weight: 700; font-style: normal; font-size: 16px;">Mascot logos &amp; identity systems</p>
+      <h1 data-template-id="hero-title" class="canva-text display-face max-w-4xl font-bold leading-[.92] tracking-[-.055em]" style="color: rgb(255, 255, 255); font-weight: 800; font-style: normal; font-size: 32px;">Characters with
+real brand power.</h1>
+      <p data-template-id="hero-bio" class="canva-text mt-7 max-w-2xl text-lg leading-relaxed text-stone-300" style="color: rgb(214, 211, 209); font-weight: 400; font-style: normal; font-size: 18px;">I’m a multidisciplinary designer who builds loud, lovable visual identities for businesses ready to be remembered. From a single mascot mark to an entire brand universe, I turn personality into practical design.</p><a href="#contact" data-template-id="hero-cta" class="canva-button mt-8 inline-flex items-center gap-2 rounded-full bg-[#d8ff3e] px-6 py-3 font-bold text-black transition hover:-translate-y-1 hover:bg-white" style="background: rgb(216, 255, 62); color: rgb(17, 17, 17); font-weight: 700; font-style: normal; font-size: 16px;">Start a project</a>
+     </div>
+     <div class="relative md:col-span-5 md:pt-4">
+      <div class="absolute -right-3 -top-3 h-28 w-28 rounded-full bg-[#ff6b35] noise"></div>
+      <div class="relative overflow-hidden border-2 border-white bg-stone-700 p-3 shadow-[10px_10px_0_#d8ff3e]">
+       <img data-template-id="hero-image" loading="lazy" class="canva-image h-[340px] w-full object-cover md:h-[440px]" src="https://images.pexels.com/photos/1714202/pexels-photo-1714202.jpeg" alt="A stylish modern workspace with dual monitors displaying design software in a dimly lit room.">
+      </div>
+      <p data-template-id="hero-image-note" class="canva-text mt-6 max-w-sm text-sm font-medium text-stone-400" style="color: rgb(168, 162, 158); font-weight: 400; font-style: normal; font-size: 14px;">Independent designer · Available for selected collaborations</p>
+     </div>
+    </div>
+   </section>
+   <section id="about" class="border-b-2 border-black bg-[#f4f0e8] px-5 py-20 md:px-8">
+    <div class="mx-auto grid max-w-7xl gap-10 md:grid-cols-12 md:items-center">
+     <div class="md:col-span-5">
+      <p data-template-id="about-eyebrow" class="canva-text text-xs font-bold uppercase tracking-[.2em] text-[#e34a1b]" style="color: rgb(227, 74, 27); font-weight: 700; font-style: normal; font-size: 16px;">About me</p>
+      <h2 data-template-id="about-title" class="canva-text display-face mt-3 font-bold leading-none tracking-[-.05em]" style="color: rgb(17, 17, 17); font-weight: 800; font-style: normal; font-size: 24px;">Design with a point of view.</h2>
+     </div>
+     <div class="md:col-span-7 md:border-l-2 md:border-black md:pl-10">
+      <p data-template-id="about-copy" class="canva-text max-w-2xl text-lg leading-relaxed text-stone-700" style="color: rgb(68, 64, 60); font-weight: 400; font-style: normal; font-size: 18px;">I build brands that feel like people: distinctive, expressive and easy to remember. My work brings strategy and personality together, turning big ideas into visual systems that can live everywhere.</p>
+      <p data-template-id="about-note" class="canva-text mt-6 text-sm font-bold uppercase tracking-[.12em] text-[#e34a1b]" style="color: rgb(227, 74, 27); font-weight: 700; font-style: normal; font-size: 16px;">Strategy · Character · Craft</p>
+     </div>
+    </div>
+   </section>
+   <section aria-label="Creative disciplines" class="overflow-hidden border-y-2 border-black bg-[#d8ff3e] py-3">
+    <div class="marquee-track flex gap-10 whitespace-nowrap text-sm font-bold uppercase tracking-[.16em]">
+     <span>Masots • Identity Systems • Logos • Visual Worlds • </span><span>Masots • Identity Systems • Logos • Visual Worlds • </span>
+    </div>
+   </section>
+   <section id="work" class="mx-auto max-w-7xl px-5 py-20 md:px-8">
+    <div class="mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+     <div>
+      <p data-template-id="logo-eyebrow" class="canva-text text-xs font-bold uppercase tracking-[.2em] text-[#e34a1b]" style="color: rgb(227, 74, 27); font-weight: 700; font-style: normal; font-size: 16px;">01 — Selected logo work</p>
+      <h2 data-template-id="logo-title" class="canva-text display-face mt-2 font-bold tracking-[-.04em]" style="color: rgb(17, 17, 17); font-weight: 800; font-style: normal; font-size: 24px;">A logo should have a pulse.</h2>
+     </div>
+     <p data-template-id="logo-description" class="canva-text max-w-md text-base leading-relaxed text-stone-700" style="color: rgb(68, 64, 60); font-weight: 400; font-style: normal; font-size: 16px;">Distinctive identities built to connect at a glance and keep working everywhere.</p>
+    </div>
+    <div class="grid gap-5 md:grid-cols-12">
+     <article data-template-id="logo-card-one" class="canva-card group relative min-h-[410px] overflow-hidden bg-[#ff6b35] md:col-span-7" style="background: rgb(255, 107, 53);">
+      <img data-template-id="logo-image-one" loading="lazy" class="canva-image h-full w-full object-cover mix-blend-multiply opacity-80" src="https://images.pexels.com/photos/18094459/pexels-photo-18094459.jpeg" alt="A lively mascot character in Ajolotes Lerma costume, waving in a bright indoor setting.">
+      <div class="absolute inset-x-0 bottom-0 bg-[#ff6b35] p-6 text-black">
+       <p data-template-id="logo-one-type" class="canva-text text-xs font-bold uppercase tracking-[.18em]" style="color: rgb(17, 17, 17); font-weight: 700; font-style: normal; font-size: 16px;">Mascot character</p>
+       <h3 data-template-id="logo-one-name" class="canva-text display-face mt-1 font-bold" style="color: rgb(17, 17, 17); font-weight: 800; font-style: normal; font-size: 19px;">Friendly. Fearless. Familiar.</h3>
+      </div>
+     </article>
+     <article data-template-id="logo-card-two" class="canva-card relative min-h-[410px] overflow-hidden bg-[#111111] text-white md:col-span-5" style="background: rgb(17, 17, 17);">
+      <img data-template-id="logo-image-two" loading="lazy" class="canva-image h-full w-full object-cover opacity-75" src="https://images.pexels.com/photos/32278399/pexels-photo-32278399.jpeg" alt="Vibrant tiger logo on a white pinstriped baseball jersey, emphasizing team spirit.">
+      <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black to-transparent p-6 pt-20">
+       <p data-template-id="logo-two-type" class="canva-text text-xs font-bold uppercase tracking-[.18em] text-[#d8ff3e]" style="color: rgb(216, 255, 62); font-weight: 700; font-style: normal; font-size: 16px;">Team identity</p>
+       <h3 data-template-id="logo-two-name" class="canva-text display-face mt-1 font-bold" style="color: rgb(255, 255, 255); font-weight: 800; font-style: normal; font-size: 19px;">Built for the roar.</h3>
+      </div>
+     </article>
+     <article data-template-id="logo-card-three" class="canva-card relative overflow-hidden border-2 border-black bg-white p-6 md:col-span-12 md:grid md:grid-cols-2 md:items-center md:gap-10" style="background: rgb(255, 255, 255);">
+      <img data-template-id="logo-image-three" loading="lazy" class="canva-image h-64 w-full object-cover md:h-80" src="https://images.pexels.com/photos/8490097/pexels-photo-8490097.jpeg" alt="Overhead shot of business cards and stationery on a dark desk with modern accessories.">
+      <div class="py-6 md:py-0">
+       <p data-template-id="logo-three-type" class="canva-text text-xs font-bold uppercase tracking-[.18em] text-[#e34a1b]" style="color: rgb(227, 74, 27); font-weight: 700; font-style: normal; font-size: 16px;">Brand foundations</p>
+       <h3 data-template-id="logo-three-name" class="canva-text display-face mt-2 font-bold tracking-[-.04em]" style="color: rgb(17, 17, 17); font-weight: 800; font-style: normal; font-size: 19px;">Marks made to move.</h3>
+       <p data-template-id="logo-three-copy" class="canva-text mt-4 max-w-md leading-relaxed text-stone-700" style="color: rgb(68, 64, 60); font-weight: 400; font-style: normal; font-size: 16px;">Every identity begins with a strategic core, then develops into an unmistakable visual signature.</p>
+      </div>
+     </article>
+    </div>
+   </section>
+   <section class="border-y-2 border-black bg-[#1e3d35] text-white">
+    <div class="mx-auto grid max-w-7xl gap-10 px-5 py-20 md:grid-cols-2 md:px-8">
+     <div>
+      <p data-template-id="identity-eyebrow" class="canva-text text-xs font-bold uppercase tracking-[.2em] text-[#d8ff3e]" style="color: rgb(216, 255, 62); font-weight: 700; font-style: normal; font-size: 16px;">02 — Visual identity</p>
+      <h2 data-template-id="identity-title" class="canva-text display-face mt-3 font-bold leading-none tracking-[-.05em]" style="color: rgb(255, 255, 255); font-weight: 800; font-style: normal; font-size: 24px;">A system, not just a symbol.</h2>
+      <p data-template-id="identity-copy" class="canva-text mt-6 max-w-lg leading-relaxed text-stone-200" style="color: rgb(231, 229, 228); font-weight: 400; font-style: normal; font-size: 17px;">The best brands are recognisable before you read their name. I build flexible visual systems with colour, type, graphic assets and rules that let every touchpoint feel unmistakably yours.</p>
+      <div class="mt-8 flex flex-wrap gap-2">
+       <span data-template-id="identity-tag-one" class="canva-tag rounded-full border border-white px-3 py-1 text-sm" style="color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">Colour worlds</span> <span data-template-id="identity-tag-two" class="canva-tag rounded-full border border-white px-3 py-1 text-sm" style="color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">Typography</span> <span data-template-id="identity-tag-three" class="canva-tag rounded-full border border-white px-3 py-1 text-sm" style="color: rgb(255, 255, 255); font-weight: 600; font-style: normal; font-size: 16px;">Brand toolkits</span>
+      </div>
+     </div>
+     <div class="grid gap-5 sm:grid-cols-2">
+      <img data-template-id="identity-image-one" loading="lazy" class="canva-image h-72 w-full border-2 border-white object-cover sm:mt-10" src="https://images.pexels.com/photos/37663437/pexels-photo-37663437.jpeg" alt="Top view of a creative workspace featuring color swatches, pencils, and design materials, ideal for branding projects."> <img data-template-id="identity-image-two" loading="lazy" class="canva-image h-72 w-full border-2 border-[#d8ff3e] object-cover" src="https://images.pexels.com/photos/5706009/pexels-photo-5706009.jpeg" alt="Minimalist stationery flat lay featuring an envelope and card on a pastel background.">
+     </div>
+    </div>
+   </section>
+   <section class="mx-auto max-w-7xl px-5 py-20 md:px-8">
+    <div class="grid gap-8 md:grid-cols-12">
+     <div class="md:col-span-5">
+      <p data-template-id="mascot-eyebrow" class="canva-text text-xs font-bold uppercase tracking-[.2em] text-[#e34a1b]" style="color: rgb(227, 74, 27); font-weight: 700; font-style: normal; font-size: 16px;">03 — Mascot brand worlds</p>
+      <h2 data-template-id="mascot-title" class="canva-text display-face mt-3 font-bold leading-none tracking-[-.05em]" style="color: rgb(17, 17, 17); font-weight: 800; font-style: normal; font-size: 24px;">Give your brand a face people remember.</h2>
+      <p data-template-id="mascot-copy" class="canva-text mt-6 leading-relaxed text-stone-700" style="color: rgb(68, 64, 60); font-weight: 400; font-style: normal; font-size: 17px;">Mascots create an emotional shortcut: they turn values into someone audiences can cheer for, trust, and share. I shape characters that are expressive, scalable and ready for every application.</p>
+     </div>
+     <div class="grid gap-5 sm:grid-cols-2 md:col-span-7">
+      <img data-template-id="mascot-image-one" loading="lazy" class="canva-image h-72 w-full border-2 border-black object-cover" src="https://images.pexels.com/photos/36809724/pexels-photo-36809724.jpeg" alt="Two costumed lion mascots interacting energetically on a vibrant stage setting.">
+      <div data-template-id="mascot-callout" class="canva-panel flex min-h-72 flex-col justify-between bg-[#d8ff3e] p-6 text-black" style="background: rgb(216, 255, 62); color: rgb(17, 17, 17);">
+       <i data-lucide="sparkles" aria-hidden="true" class="h-10 w-10"></i>
+       <div>
+        <p data-template-id="mascot-callout-small" class="canva-text text-xs font-bold uppercase tracking-[.2em]" style="color: rgb(17, 17, 17); font-weight: 700; font-style: normal; font-size: 16px;">From concept to campaign</p>
+        <p data-template-id="mascot-callout-big" class="canva-text display-face mt-2 font-bold leading-none" style="color: rgb(17, 17, 17); font-weight: 800; font-style: normal; font-size: 16px;">Character
+is strategy.</p>
+       </div>
+      </div><img data-template-id="mascot-image-two" loading="lazy" class="canva-image h-72 w-full border-2 border-black object-cover sm:col-span-2" src="https://images.pexels.com/photos/9456721/pexels-photo-9456721.jpeg" alt="Close-up of Cheetos Mac'N Cheese box on a kitchen counter, emphasizing bold packaging.">
+     </div>
+    </div>
+   </section>
+   <section class="bg-[#111111] px-5 py-20 text-white md:px-8">
+    <div class="mx-auto max-w-7xl">
+     <div class="mb-10">
+      <p data-template-id="gallery-eyebrow" class="canva-text text-xs font-bold uppercase tracking-[.2em] text-[#d8ff3e]" style="color: rgb(216, 255, 62); font-weight: 700; font-style: normal; font-size: 16px;">04 — Beyond the logo</p>
+      <h2 data-template-id="gallery-title" class="canva-text display-face mt-3 font-bold tracking-[-.05em]" style="color: rgb(255, 255, 255); font-weight: 800; font-style: normal; font-size: 24px;">Design built for the real world.</h2>
+     </div>
+     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <article class="reveal-card relative h-72 overflow-hidden border border-stone-700"><img data-template-id="gallery-logo-image" loading="lazy" class="canva-image h-full w-full object-cover" src="https://images.pexels.com/photos/28905721/pexels-photo-28905721.jpeg" alt="Close-up of a shiny metallic car logo on a dark surface.">
+       <div class="card-caption absolute inset-x-0 bottom-0 bg-[#ff6b35] p-5 text-black">
+        <p data-template-id="gallery-logo-label" class="canva-text font-bold" style="color: rgb(17, 17, 17); font-weight: 700; font-style: normal; font-size: 20px;">Logo</p>
+       </div>
+      </article>
+      <article class="reveal-card relative h-72 overflow-hidden border border-stone-700"><img data-template-id="gallery-mascot-logo-image" loading="lazy" class="canva-image h-full w-full object-cover" src="https://images.pexels.com/photos/18094459/pexels-photo-18094459.jpeg" alt="A lively mascot character in Ajolotes Lerma costume, waving in a bright indoor setting.">
+       <div class="card-caption absolute inset-x-0 bottom-0 bg-[#d8ff3e] p-5 text-black">
+        <p data-template-id="gallery-mascot-logo-label" class="canva-text font-bold" style="color: rgb(17, 17, 17); font-weight: 700; font-style: normal; font-size: 20px;">Mascot Logo</p>
+       </div>
+      </article>
+      <article class="reveal-card relative h-72 overflow-hidden border border-stone-700"><img data-template-id="gallery-poster-image" loading="lazy" class="canva-image h-full w-full object-cover" src="https://images.pexels.com/photos/3964737/pexels-photo-3964737.jpeg" alt="Big distinct black digits slightly covered by paper on old street billboard">
+       <div class="card-caption absolute inset-x-0 bottom-0 bg-[#ff6b35] p-5 text-black">
+        <p data-template-id="gallery-poster-label" class="canva-text font-bold" style="color: rgb(17, 17, 17); font-weight: 700; font-style: normal; font-size: 20px;">Posters</p>
+       </div>
+      </article>
+      <article class="reveal-card relative h-72 overflow-hidden border border-stone-700"><img data-template-id="gallery-flyer-image" loading="lazy" class="canva-image h-full w-full object-cover" src="https://images.pexels.com/photos/6114589/pexels-photo-6114589.jpeg" alt="Black Friday sale flyer on wooden table with blue ceramic decor, offering 25% off everything.">
+       <div class="card-caption absolute inset-x-0 bottom-0 bg-[#d8ff3e] p-5 text-black">
+        <p data-template-id="gallery-flyer-label" class="canva-text font-bold" style="color: rgb(17, 17, 17); font-weight: 700; font-style: normal; font-size: 20px;">Flyers</p>
+       </div>
+      </article>
+      <article class="reveal-card relative h-72 overflow-hidden border border-stone-700"><img data-template-id="gallery-brochure-image" loading="lazy" class="canva-image h-full w-full object-cover" src="https://images.pexels.com/photos/7648514/pexels-photo-7648514.jpeg" alt="Close-up of neatly arranged conference program pamphlets on a wooden surface.">
+       <div class="card-caption absolute inset-x-0 bottom-0 bg-white p-5 text-black">
+        <p data-template-id="gallery-brochure-label" class="canva-text font-bold" style="color: rgb(17, 17, 17); font-weight: 700; font-style: normal; font-size: 20px;">Brochures</p>
+       </div>
+      </article>
+      <article class="reveal-card relative h-72 overflow-hidden border border-stone-700"><img data-template-id="gallery-packaging-image" loading="lazy" class="canva-image h-full w-full object-cover" src="https://images.pexels.com/photos/9594428/pexels-photo-9594428.jpeg" alt="Three minimalist cardboard packages labeled Cloth on a yellow background.">
+       <div class="card-caption absolute inset-x-0 bottom-0 bg-[#ff6b35] p-5 text-black">
+        <p data-template-id="gallery-packaging-label" class="canva-text font-bold" style="color: rgb(17, 17, 17); font-weight: 700; font-style: normal; font-size: 20px;">Packaging &amp; labels</p>
+       </div>
+      </article>
+      <article class="reveal-card relative h-72 overflow-hidden border border-stone-700"><img data-template-id="gallery-banner-image" loading="lazy" class="canva-image h-full w-full object-cover" src="https://images.pexels.com/photos/18833783/pexels-photo-18833783.jpeg" alt="Vibrant layered paper design featuring the word Creativity in bold letters.">
+       <div class="card-caption absolute inset-x-0 bottom-0 bg-[#d8ff3e] p-5 text-black">
+        <p data-template-id="gallery-banner-label" class="canva-text font-bold" style="color: rgb(17, 17, 17); font-weight: 700; font-style: normal; font-size: 20px;">Banners</p>
+       </div>
+      </article>
+      <article class="reveal-card relative h-72 overflow-hidden border border-stone-700"><img data-template-id="gallery-menu-image" loading="lazy" class="canva-image h-full w-full object-cover" src="https://images.pexels.com/photos/12955615/pexels-photo-12955615.jpeg" alt="Two individuals explore food menus at a wooden table in a cozy café.">
+       <div class="card-caption absolute inset-x-0 bottom-0 bg-white p-5 text-black">
+        <p data-template-id="gallery-menu-label" class="canva-text font-bold" style="color: rgb(17, 17, 17); font-weight: 700; font-style: normal; font-size: 20px;">Menus</p>
+       </div>
+      </article>
+      <article class="reveal-card relative h-72 overflow-hidden border border-stone-700 sm:col-span-2"><img data-template-id="gallery-shirt-image" loading="lazy" class="canva-image h-full w-full object-cover" src="https://images.pexels.com/photos/15258903/pexels-photo-15258903.png" alt="Two young men showcase stylish graphic T-shirts in a casual urban setting.">
+       <div class="card-caption absolute inset-x-0 bottom-0 bg-[#ff6b35] p-5 text-black">
+        <p data-template-id="gallery-shirt-label" class="canva-text font-bold" style="color: rgb(17, 17, 17); font-weight: 700; font-style: normal; font-size: 20px;">Shirts &amp; merchandise</p>
+       </div>
+      </article>
+     </div>
+    </div>
+   </section>
+   <section id="services" class="mx-auto max-w-7xl px-5 py-20 md:px-8">
+    <p data-template-id="services-eyebrow" class="canva-text text-xs font-bold uppercase tracking-[.2em] text-[#e34a1b]" style="color: rgb(227, 74, 27); font-weight: 700; font-style: normal; font-size: 16px;">05 — Ways to work together</p>
+    <h2 data-template-id="services-title" class="canva-text display-face mt-3 font-bold tracking-[-.05em]" style="color: rgb(17, 17, 17); font-weight: 800; font-style: normal; font-size: 24px;">Useful creativity, with a little bite.</h2>
+    <div class="mt-10 grid gap-4 md:grid-cols-2">
+     <article data-template-id="service-one-card" class="canva-card border-2 border-black bg-white p-6" style="background: rgb(255, 255, 255);"><span data-template-id="service-one-number" class="canva-text text-sm font-bold text-[#e34a1b]" style="color: rgb(227, 74, 27); font-weight: 700; font-style: normal; font-size: 16px;">01</span>
+      <h3 data-template-id="service-one-title" class="canva-text mt-10 font-bold" style="color: rgb(17, 17, 17); font-weight: 700; font-style: normal; font-size: 22px;">Mascot Logo Design</h3>
+      <p data-template-id="service-one-copy" class="canva-text mt-2 leading-relaxed text-stone-700" style="color: rgb(68, 64, 60); font-weight: 400; font-style: normal; font-size: 16px;">Original characters and logo marks designed to make your business instantly recognisable.</p>
+     </article>
+     <article data-template-id="service-two-card" class="canva-card border-2 border-black bg-white p-6" style="background: rgb(255, 255, 255);"><span data-template-id="service-two-number" class="canva-text text-sm font-bold text-[#e34a1b]" style="color: rgb(227, 74, 27); font-weight: 700; font-style: normal; font-size: 16px;">02</span>
+      <h3 data-template-id="service-two-title" class="canva-text mt-10 font-bold" style="color: rgb(17, 17, 17); font-weight: 700; font-style: normal; font-size: 22px;">Identity Systems</h3>
+      <p data-template-id="service-two-copy" class="canva-text mt-2 leading-relaxed text-stone-700" style="color: rgb(68, 64, 60); font-weight: 400; font-style: normal; font-size: 16px;">Clear visual foundations, brand guidelines and expressive assets for a consistent presence.</p>
+     </article>
+     <article data-template-id="service-three-card" class="canva-card border-2 border-black bg-white p-6" style="background: rgb(255, 255, 255);"><span data-template-id="service-three-number" class="canva-text text-sm font-bold text-[#e34a1b]" style="color: rgb(227, 74, 27); font-weight: 700; font-style: normal; font-size: 16px;">03</span>
+      <h3 data-template-id="service-three-title" class="canva-text mt-10 font-bold" style="color: rgb(17, 17, 17); font-weight: 700; font-style: normal; font-size: 22px;">Campaign Design</h3>
+      <p data-template-id="service-three-copy" class="canva-text mt-2 leading-relaxed text-stone-700" style="color: rgb(68, 64, 60); font-weight: 400; font-style: normal; font-size: 16px;">Poster, print, packaging and social assets that take your new identity into the wild.</p>
+     </article>
+     <article data-template-id="service-four-card" class="canva-card border-2 border-black bg-[#d8ff3e] p-6" style="background: rgb(216, 255, 62);"><span data-template-id="service-four-number" class="canva-text text-sm font-bold" style="color: rgb(17, 17, 17); font-weight: 700; font-style: normal; font-size: 16px;">04</span>
+      <h3 data-template-id="service-four-title" class="canva-text mt-10 font-bold" style="color: rgb(17, 17, 17); font-weight: 700; font-style: normal; font-size: 22px;">Creative Direction</h3>
+      <p data-template-id="service-four-copy" class="canva-text mt-2 leading-relaxed" style="color: rgb(17, 17, 17); font-weight: 400; font-style: normal; font-size: 16px;">A sharp visual point of view for teams with a story worth telling.</p>
+     </article>
+    </div>
+   </section>
+   <section id="tools" class="border-y-2 border-black bg-[#ff6b35] px-5 py-16 md:px-8">
+    <div class="mx-auto max-w-7xl">
+     <p data-template-id="tools-eyebrow" class="canva-text text-xs font-bold uppercase tracking-[.2em]" style="color: rgb(17, 17, 17); font-weight: 700; font-style: normal; font-size: 16px;">06 — Creative toolkit</p>
+     <h2 data-template-id="tools-title" class="canva-text display-face mt-2 font-bold tracking-[-.05em]" style="color: rgb(17, 17, 17); font-weight: 800; font-style: normal; font-size: 24px;">Tools I use to make the magic.</h2>
+     <div class="mt-8 flex flex-wrap gap-3">
+      <span data-template-id="tool-one" class="canva-tag rounded-full border-2 border-black px-4 py-2 font-bold" style="background: rgb(255, 107, 53); color: rgb(17, 17, 17); font-weight: 700; font-style: normal; font-size: 16px;">Adobe Illustrator</span><span data-template-id="tool-two" class="canva-tag rounded-full border-2 border-black px-4 py-2 font-bold" style="background: rgb(255, 107, 53); color: rgb(17, 17, 17); font-weight: 700; font-style: normal; font-size: 16px;">Photoshop</span><span data-template-id="tool-three" class="canva-tag rounded-full border-2 border-black px-4 py-2 font-bold" style="background: rgb(255, 107, 53); color: rgb(17, 17, 17); font-weight: 700; font-style: normal; font-size: 16px;">Figma</span><span data-template-id="tool-four" class="canva-tag rounded-full border-2 border-black px-4 py-2 font-bold" style="background: rgb(255, 107, 53); color: rgb(17, 17, 17); font-weight: 700; font-style: normal; font-size: 16px;">Procreate</span><span data-template-id="tool-five" class="canva-tag rounded-full border-2 border-black px-4 py-2 font-bold" style="background: rgb(255, 107, 53); color: rgb(17, 17, 17); font-weight: 700; font-style: normal; font-size: 16px;">InDesign</span>
+     </div>
+    </div>
+   </section>
+   <section id="testimonials" class="border-y-2 border-black bg-[#f4f0e8] px-5 py-20 md:px-8">
+    <div class="mx-auto max-w-7xl">
+     <div class="mb-10 max-w-2xl">
+      <p data-template-id="testimonials-eyebrow" class="canva-text text-xs font-bold uppercase tracking-[.2em] text-[#e34a1b]" style="color: rgb(227, 74, 27); font-weight: 700; font-style: normal; font-size: 16px;">What clients say</p>
+      <h2 data-template-id="testimonials-title" class="canva-text display-face mt-3 font-bold leading-none tracking-[-.05em]" style="color: rgb(17, 17, 17); font-weight: 800; font-style: normal; font-size: 24px;">Good work leaves a mark.</h2>
+     </div>
+     <div class="grid gap-5 md:grid-cols-3">
+      <article data-template-id="testimonial-one-card" class="canva-card border-2 border-black bg-white p-6" style="background: rgb(255, 255, 255);">
+       <p data-template-id="testimonial-one-quote" class="canva-text text-lg leading-relaxed text-stone-700" style="color: rgb(68, 64, 60); font-weight: 400; font-style: normal; font-size: 18px;">The new identity finally feels as bold and clear as the business behind it.</p>
+       <p data-template-id="testimonial-one-name" class="canva-text mt-8 text-sm font-bold uppercase tracking-[.12em] text-[#e34a1b]" style="color: rgb(227, 74, 27); font-weight: 700; font-style: normal; font-size: 16px;">— Maya, founder</p>
+      </article>
+      <article data-template-id="testimonial-two-card" class="canva-card border-2 border-black bg-[#d8ff3e] p-6" style="background: rgb(216, 255, 62);">
+       <p data-template-id="testimonial-two-quote" class="canva-text text-lg leading-relaxed text-stone-700" style="color: rgb(68, 64, 60); font-weight: 400; font-style: normal; font-size: 18px;">A thoughtful creative partner who turned a loose idea into a brand people instantly understood.</p>
+       <p data-template-id="testimonial-two-name" class="canva-text mt-8 text-sm font-bold uppercase tracking-[.12em]" style="color: rgb(17, 17, 17); font-weight: 700; font-style: normal; font-size: 16px;">— Alex, creative lead</p>
+      </article>
+      <article data-template-id="testimonial-three-card" class="canva-card border-2 border-black bg-[#ff6b35] p-6" style="background: rgb(255, 107, 53);">
+       <p data-template-id="testimonial-three-quote" class="canva-text text-lg leading-relaxed text-stone-700" style="color: rgb(68, 64, 60); font-weight: 400; font-style: normal; font-size: 18px;">The mascot gave our team a personality — and our audience something to rally around.</p>
+       <p data-template-id="testimonial-three-name" class="canva-text mt-8 text-sm font-bold uppercase tracking-[.12em]" style="color: rgb(17, 17, 17); font-weight: 700; font-style: normal; font-size: 16px;">— Jordan, brand director</p>
+      </article>
+     </div>
+    </div>
+   </section>
+   <section id="contact" class="bg-[#111111] px-5 py-20 text-white md:px-8">
+    <div class="mx-auto max-w-4xl text-center">
+     <p data-template-id="contact-eyebrow" class="canva-text text-xs font-bold uppercase tracking-[.2em] text-[#d8ff3e]" style="color: rgb(216, 255, 62); font-weight: 700; font-style: normal; font-size: 16px;">07 — Contact</p>
+     <h2 data-template-id="contact-title" class="canva-text display-face mt-4 font-bold leading-[.95] tracking-[-.06em]" style="color: rgb(255, 255, 255); font-weight: 800; font-style: normal; font-size: 24px;">Let’s make your brand impossible to ignore.</h2>
+     <p data-template-id="contact-copy" class="canva-text mx-auto mt-6 max-w-xl leading-relaxed text-stone-300" style="color: rgb(214, 211, 209); font-weight: 400; font-style: normal; font-size: 17px;">Have a project in mind, a rough idea, or a mascot waiting to be born? Send a note and let’s see what we can build together.</p><a href="mailto:hello@yourstudio.com" target="_blank" rel="noopener noreferrer" data-template-id="contact-email" class="canva-link mt-9 inline-block border-b-2 border-[#d8ff3e] pb-2 font-bold text-[#d8ff3e] transition hover:text-white" style="color: rgb(216, 255, 62); font-weight: 700; font-style: normal; font-size: 20px;">brandworkzco@gmail.com</a>
+    </div>
+   </section>
+  </main>
+  <footer class="border-t-2 border-black bg-[#f4f0e8] px-5 py-6 md:px-8">
+   <div class="mx-auto flex max-w-7xl flex-col justify-between gap-2 text-sm font-medium md:flex-row">
+    <p data-template-id="footer-copy" class="canva-text" style="color: rgb(17, 17, 17); font-weight: 500; font-style: normal; font-size: 16px;">© 2026 Brandworkz Co. All rights reserved.</p>
+    <p data-template-id="footer-note" class="canva-text" style="color: rgb(17, 17, 17); font-weight: 500; font-style: normal; font-size: 16px;">Big personalities welcome.</p>
+   </div>
+  </footer><a href="https://wa.me/60138973700" target="_blank" rel="noopener noreferrer" data-template-id="whatsapp-widget" class="canva-button fixed bottom-5 right-5 z-[60] inline-flex items-center gap-2 rounded-full bg-[#25D366] px-4 py-3 text-sm font-bold text-white shadow-lg shadow-black/20 transition hover:-translate-y-1 hover:bg-[#1ebe5d] md:bottom-6 md:right-6" style="background: rgb(37, 211, 102); color: rgb(255, 255, 255); font-weight: 700;"><i data-lucide="message-circle" aria-hidden="true" class="h-5 w-5 shrink-0"></i><span data-template-id="whatsapp-widget-label" class="canva-text" style="color: rgb(255, 255, 255); font-weight: 700; font-style: normal; font-size: 14px;">Chat on WhatsApp</span></a>
+  <script src="/_sdk/a051f9537983733d.editing_sdk.js" integrity="sha512-IWn3eBHnVt7zQ0Rp79J72qSgJoLbskCA9lcfY4retf+5km4LjuhSHpvx+182KCHmEZ6EbJtWqVsybpV8Sd8PQQ=="></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      const toggle = document.getElementById('menu-toggle');
+      const menu = document.getElementById('nav-menu');
+      toggle.addEventListener('click', () => {
+        const open = menu.classList.toggle('is-open');
+        toggle.setAttribute('aria-expanded', String(open));
+      });
+      menu.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
+        menu.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+      }));
+    });
+  </script>
+ 
+</body></html>
