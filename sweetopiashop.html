@@ -393,6 +393,252 @@
                     </div>
                 </div>
             </section>
+            <!-- STYLES -->
+<style>
+    .expert-slideshow-section {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+        background-color: #111;
+        font-family: inherit;
+    }
+
+    .expert-slideshow-wrapper {
+        position: relative;
+        width: 100%;
+        height: 520px;
+    }
+
+    @media (max-width: 992px) {
+        .expert-slideshow-wrapper {
+            height: 380px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .expert-slideshow-wrapper {
+            height: 280px;
+        }
+    }
+
+    .expert-slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out;
+        display: flex;
+        align-items: center;
+        pointer-events: none;
+    }
+
+    .expert-slide.active {
+        opacity: 1;
+        visibility: visible;
+        z-index: 2;
+        pointer-events: auto;
+    }
+
+    .expert-slide img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .expert-slide::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.65) 100%);
+        z-index: 2;
+    }
+
+    .expert-slide-caption {
+        position: relative;
+        z-index: 3;
+        max-width: 700px;
+        margin-left: 8%;
+        padding: 0 20px;
+        color: #ffffff;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    }
+
+    .expert-slide-caption h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+        line-height: 1.2;
+    }
+
+    .expert-slide-caption p {
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+        opacity: 0.95;
+    }
+
+    .expert-btn {
+        display: inline-block;
+        padding: 10px 24px;
+        background-color: #22c55e;
+        color: #0b1120;
+        text-decoration: none;
+        font-weight: 700;
+        border-radius: 8px;
+        transition: background-color 0.3s ease;
+    }
+
+    .expert-btn:hover {
+        background-color: #16a34a;
+        color: #ffffff;
+    }
+
+    @media (max-width: 576px) {
+        .expert-slide-caption h2 {
+            font-size: 1.5rem;
+        }
+        .expert-slide-caption p {
+            font-size: 0.95rem;
+        }
+        .expert-btn {
+            padding: 8px 16px;
+            font-size: 0.85rem;
+        }
+    }
+
+    .expert-slide-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0, 0, 0, 0.5);
+        color: #ffffff;
+        border: none;
+        width: 48px;
+        height: 48px;
+        cursor: pointer;
+        z-index: 20;
+        font-size: 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.3s ease;
+    }
+
+    .expert-slide-btn:hover {
+        background: rgba(0, 0, 0, 0.9);
+    }
+
+    .expert-slide-prev {
+        left: 20px;
+    }
+
+    .expert-slide-next {
+        right: 20px;
+    }
+
+    .expert-slide-dots {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 10px;
+        z-index: 20;
+    }
+
+    .expert-dot {
+        width: 12px;
+        height: 12px;
+        background: rgba(255, 255, 255, 0.4);
+        border-radius: 50%;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.3s ease;
+    }
+
+    .expert-dot.active {
+        background: #ffffff;
+        transform: scale(1.2);
+    }
+</style>
+<!-- SCRIPT -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const slides = document.querySelectorAll(".expert-slide");
+        const dots = document.querySelectorAll(".expert-dot");
+        const prevBtn = document.querySelector(".expert-slide-prev");
+        const nextBtn = document.querySelector(".expert-slide-next");
+        if (slides.length === 0) return;
+        
+        let currentIndex = 0;
+        let slideInterval;
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.toggle("active", i === index);
+                if (dots[i]) dots[i].classList.toggle("active", i === index);
+            });
+            currentIndex = index;
+        }
+
+        function nextSlide() {
+            let nextIndex = (currentIndex + 1) % slides.length;
+            showSlide(nextIndex);
+        }
+
+        function prevSlide() {
+            let prevIndex = (currentIndex - 1 + slides.length) % slides.length;
+            showSlide(prevIndex);
+        }
+
+        function startAutoPlay() {
+            clearInterval(slideInterval);
+            slideInterval = setInterval(nextSlide, 5000);
+        }
+
+        function resetAutoPlay() {
+            clearInterval(slideInterval);
+            startAutoPlay();
+        }
+
+        if (nextBtn) {
+            nextBtn.onclick = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                nextSlide();
+                resetAutoPlay();
+            };
+        }
+
+        if (prevBtn) {
+            prevBtn.onclick = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                prevSlide();
+                resetAutoPlay();
+            };
+        }
+
+        dots.forEach((dot, i) => {
+            dot.onclick = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                showSlide(i);
+                resetAutoPlay();
+            };
+        });
+
+        startAutoPlay();
+    });
+</script>            
 
             <div class="p-6 md:p-10 min-h-[550px]">
 
