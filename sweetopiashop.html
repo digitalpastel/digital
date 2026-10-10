@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LumiLens - Premium Contact Lens Store & Admin Portal</title>
+    <title>LumiLens - Premium Contact Lens Store &amp; FPX Checkout</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         tailwind.config = {
@@ -40,12 +39,193 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+
+        /* Slideshow Container & Base Layout */
+        .expert-slideshow-section {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            background-color: #111;
+            font-family: inherit;
+        }
+
+        .expert-slideshow-wrapper {
+            position: relative;
+            width: 100%;
+            height: 520px;
+        }
+
+        @media (max-width: 992px) {
+            .expert-slideshow-wrapper {
+                height: 380px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .expert-slideshow-wrapper {
+                height: 280px;
+            }
+        }
+
+        /* Individual Slide Styling */
+        .expert-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out;
+            display: flex;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        .expert-slide.active {
+            opacity: 1;
+            visibility: visible;
+            z-index: 2;
+            pointer-events: auto;
+        }
+
+        .expert-slide img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Dark Overlay for Text Contrast */
+        .expert-slide::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.65) 100%);
+            z-index: 2;
+        }
+
+        /* Captions & Text */
+        .expert-slide-caption {
+            position: relative;
+            z-index: 3;
+            max-width: 700px;
+            margin-left: 8%;
+            padding: 0 20px;
+            color: #ffffff;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        }
+
+        .expert-slide-caption h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            line-height: 1.2;
+        }
+
+        .expert-slide-caption p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            opacity: 0.95;
+        }
+
+        .expert-btn {
+            display: inline-block;
+            padding: 10px 24px;
+            background-color: #22c55e;
+            color: #0b1120;
+            text-decoration: none;
+            font-weight: 700;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .expert-btn:hover {
+            background-color: #16a34a;
+            color: #ffffff;
+        }
+
+        @media (max-width: 576px) {
+            .expert-slide-caption h2 {
+                font-size: 1.5rem;
+            }
+            .expert-slide-caption p {
+                font-size: 0.95rem;
+            }
+            .expert-btn {
+                padding: 8px 16px;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Navigation Arrows */
+        .expert-slide-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: #ffffff;
+            border: none;
+            width: 48px;
+            height: 48px;
+            cursor: pointer;
+            z-index: 20;
+            font-size: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
+        }
+
+        .expert-slide-btn:hover {
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .expert-slide-prev {
+            left: 20px;
+        }
+
+        .expert-slide-next {
+            right: 20px;
+        }
+
+        /* Navigation Dots */
+        .expert-slide-dots {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 20;
+        }
+
+        .expert-dot {
+            width: 12px;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        .expert-dot.active {
+            background: #ffffff;
+            transform: scale(1.2);
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-start p-2 sm:p-6 text-slate-100">
 
+    <!-- TOP HEADER -->
     <header class="w-full max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between pb-4 mb-6 border-b border-slate-800 gap-4">
-        <div class="flex items-center space-x-3 cursor-pointer" onclick="switchDesktopTab('catalog')">
+        <div class="flex items-center space-x-3 cursor-pointer" onclick="switchPage('catalog')">
             <div class="w-10 h-10 rounded-2xl bg-brand-500 flex items-center justify-center text-slate-950 font-extrabold text-xl shadow-lg shadow-brand-500/20">
                 <i class="fa-solid fa-eye"></i>
             </div>
@@ -54,25 +234,14 @@
                 <p class="text-xs text-slate-400">Professional Contact Lens Marketplace (RM)</p>
             </div>
         </div>
-        <div class="flex items-center space-x-3">
-            <button onclick="switchDesktopTab('cart')" class="bg-slate-800 hover:bg-slate-700 text-white font-bold px-4 py-2.5 rounded-xl text-xs border border-slate-700 transition-all flex items-center space-x-2">
-                <i class="fa-solid fa-cart-shopping text-brand-400"></i>
-                <span>Cart (<span id="desktop-cart-count">0</span>)</span>
-            </button>
-            <button onclick="switchDesktopTab('account')" id="nav-account-btn" class="bg-slate-800 hover:bg-slate-700 text-white font-bold px-4 py-2.5 rounded-xl text-xs border border-slate-700 transition-all flex items-center space-x-2">
-                <i class="fa-solid fa-user text-brand-400"></i>
-                <span id="nav-account-label">Sign In</span>
-            </button>
-            <button onclick="openAdminModal()" id="nav-admin-btn" class="hidden bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 font-bold px-3 py-2.5 rounded-xl text-xs border border-amber-500/30 transition-all flex items-center space-x-2">
-                <i class="fa-solid fa-shield-halved"></i>
-                <span>Admin Workspace</span>
-            </button>
+        <div class="flex items-center space-x-3" id="header-nav-actions">
+            <!-- Populated Dynamically -->
         </div>
     </header>
 
     <main id="app-wrapper" class="w-full max-w-7xl flex-1 flex flex-col items-center justify-center transition-all duration-300 relative">
 
-        <!-- Toast Notification Element -->
+        <!-- TOAST NOTIFICATION -->
         <div id="toast" class="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 text-white px-5 py-3 rounded-2xl shadow-2xl border border-slate-700 flex items-center space-x-3 transition-all duration-300 opacity-0 pointer-events-none transform -translate-y-4">
             <div id="toast-icon-wrapper" class="w-8 h-8 rounded-full bg-brand-500 flex items-center justify-center text-slate-950 font-bold">
                 <i class="fa-solid fa-check text-xs"></i>
@@ -83,163 +252,377 @@
             </div>
         </div>
 
-        <!-- ================= DESKTOP STORE VIEW ================= -->
-        <div id="desktop-view" class="w-full flex flex-col bg-slate-900 rounded-3xl border border-slate-800 overflow-hidden shadow-2xl">
-            <!-- Hero Banner -->
-            <div class="p-6 md:p-10 bg-gradient-to-r from-slate-900 via-brand-950/40 to-slate-900 border-b border-slate-800 flex flex-col md:flex-row items-center justify-between gap-6">
-                <div class="max-w-xl">
-                    <span class="bg-brand-500/20 text-brand-400 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">New Collection 2026</span>
-                    <h2 class="text-3xl md:text-4xl font-extrabold text-white mt-3 mb-2">Crystal Clear Vision & Vibrant Colors</h2>
-                    <p class="text-sm text-slate-300 mb-6 leading-relaxed">
-                        Explore breathable hydrogel contact lenses, natural color shifts, and precise prescriptions engineered for all-day comfort. RM currency supported.
-                    </p>
-                    <div class="flex flex-wrap gap-3">
-                        <button onclick="switchDesktopTab('catalog')" class="bg-brand-500 hover:bg-brand-400 text-slate-950 font-bold px-6 py-3 rounded-xl text-xs transition-all shadow-lg shadow-brand-500/20">Explore Catalog</button>
-                        <button onclick="switchDesktopTab('cart')" class="bg-slate-800 hover:bg-slate-700 text-white font-bold px-6 py-3 rounded-xl text-xs border border-slate-700 transition-all">View Cart</button>
+        <!-- ================= PAGE 1: AUTHENTICATION ================= -->
+        <div id="page-auth" class="w-full max-w-md mx-auto py-10">
+            <div class="bg-slate-900/90 p-8 rounded-3xl border border-slate-800 space-y-6 shadow-2xl">
+                <div class="text-center space-y-2">
+                    <div class="w-12 h-12 bg-brand-500/20 rounded-2xl mx-auto flex items-center justify-center text-brand-400 text-xl font-bold">
+                        <i class="fa-solid fa-lock"></i>
                     </div>
+                    <h3 id="auth-form-title" class="text-xl font-bold text-white">Sign In to LumiLens</h3>
+                    <p id="auth-form-subtitle" class="text-xs text-slate-400">Customer or Administrator Access</p>
                 </div>
-                <div class="relative w-full md:w-96 h-56 rounded-2xl overflow-hidden border border-brand-500/30 shadow-2xl">
-                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=800" alt="Hero Model" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent flex items-end p-4">
-                        <p class="text-xs font-bold text-white">Daily Moist Technology • UV Protection</p>
+
+                <div class="grid grid-cols-2 gap-2 bg-slate-950 p-1.5 rounded-2xl border border-slate-800">
+                    <button type="button" onclick="setAuthModeTab('signin')" id="tab-auth-signin" class="py-2.5 text-xs font-bold rounded-xl bg-brand-500 text-slate-950 transition-all">Sign In</button>
+                    <button type="button" onclick="setAuthModeTab('signup')" id="tab-auth-signup" class="py-2.5 text-xs font-semibold rounded-xl text-slate-400 hover:text-white transition-all">Customer Sign Up</button>
+                </div>
+
+                <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">Email Address</label>
+                        <input type="email" id="auth-email" required="" placeholder="user@example.com or sweetopia.lens@gmail.com" class="w-full bg-slate-950 border border-slate-700 text-xs text-white rounded-xl p-3 focus:outline-none focus:border-brand-500">
                     </div>
-                </div>
-            </div>
-
-            <!-- Tab Navigation Header -->
-            <div class="px-6 md:px-10 py-4 bg-slate-950/50 border-b border-slate-800 flex flex-wrap items-center justify-between gap-4">
-                <div class="flex items-center space-x-2">
-                    <button onclick="switchDesktopTab('catalog')" id="dtab-catalog" class="desktop-tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-brand-500 text-slate-950 transition-all">Store Catalog</button>
-                    <button onclick="switchDesktopTab('cart')" id="dtab-cart" class="desktop-tab-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition-all">Shopping Cart</button>
-                    <button onclick="switchDesktopTab('favourites')" id="dtab-favourites" class="desktop-tab-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition-all">Wishlist</button>
-                    <button onclick="switchDesktopTab('account')" id="dtab-account" class="desktop-tab-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition-all">My Account</button>
-                </div>
-                <div class="relative w-full sm:w-72">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                    <input type="text" id="desktop-search" oninput="filterDesktopProducts()" placeholder="Search lenses by name, tone..." class="w-full bg-slate-800 text-xs text-white placeholder-slate-400 pl-10 pr-4 py-2.5 rounded-xl border border-slate-700 focus:outline-none focus:border-brand-500">
-                </div>
-            </div>
-
-            <div class="p-6 md:p-10 min-h-[500px]">
-                
-                <!-- 1. CATALOG SECTION -->
-                <div id="desktop-section-catalog" class="space-y-6">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-2 overflow-x-auto pb-2">
-                            <button onclick="desktopFilter('all', this)" class="dcat-btn px-4 py-2 rounded-xl text-xs font-bold bg-brand-500 text-slate-950 shrink-0">All Lenses</button>
-                            <button onclick="desktopFilter('colored', this)" class="dcat-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 shrink-0">Colored Series</button>
-                            <button onclick="desktopFilter('daily', this)" class="dcat-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 shrink-0">Daily Disposable</button>
-                            <button onclick="desktopFilter('monthly', this)" class="dcat-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 shrink-0">Monthly Hydrogel</button>
-                            <button onclick="desktopFilter('toric', this)" class="dcat-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 shrink-0">Astigmatism (Toric)</button>
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="text-xs font-bold text-slate-300">Password</label>
+                            <button type="button" onclick="openForgotPassword()" class="text-[11px] text-brand-400 hover:underline">Forgot Password?</button>
                         </div>
-                        <button onclick="openAdminModal()" id="admin-add-product-btn" class="hidden bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs shadow-lg flex items-center space-x-2 shrink-0">
-                            <i class="fa-solid fa-plus"></i>
-                            <span>Admin Workspace</span>
+                        <input type="password" id="auth-password" required="" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-700 text-xs text-white rounded-xl p-3 focus:outline-none focus:border-brand-500">
+                    </div>
+
+                    <div id="admin-quick-signin-box" class="pt-2">
+                        <button type="button" onclick="fillAdminCredentials()" class="w-full bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 font-bold py-2.5 rounded-xl text-xs border border-amber-500/30 transition-all flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-shield-halved"></i>
+                            <span>Admin Quick Sign In (sweetopia.lens@gmail.com)</span>
                         </button>
                     </div>
 
-                    <div id="desktop-product-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <button type="submit" id="auth-submit-btn" class="w-full bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold py-3.5 rounded-xl text-xs shadow-lg shadow-brand-500/20 transition-all">
+                        Sign In to Dashboard
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ================= PAGE 2: DASHBOARD & STORE CATALOG ================= -->
+        <div id="page-dashboard" class="w-full hidden flex flex-col bg-slate-900 rounded-3xl border border-slate-800 overflow-hidden shadow-2xl">
+
+            <!-- 5-PHOTO SLIDESHOW BELOW THE HEADER (VISIBLE ON PAGE 2 ONLY) -->
+            <div class="w-full overflow-hidden border-b border-slate-800 shadow-xl">
+                <section class="expert-slideshow-section">
+                    <div class="expert-slideshow-wrapper">
+                        <!-- Slide 1 -->
+                        <div class="expert-slide active">
+                            <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=1600&q=80" alt="Premium Colored Contact Lenses">
+                            <div class="expert-slide-caption">
+                                <h2>No. 1 Contact Lens Store in Malaysia</h2>
+                                <p>High quality daily and monthly coloured lenses tailored for your natural beauty and comfort.</p>
+                                <a href="#store-product-grid" onclick="switchTab('catalog')" class="expert-btn">Explore Lenses</a>
+                            </div>
+                        </div>
+
+                        <!-- Slide 2 -->
+                        <div class="expert-slide">
+                            <img src="https://images.unsplash.com/photo-1583946099066-764f2537f136?auto=format&fit=crop&w=1600&q=80" alt="Crystal Clear Vision Lenses">
+                            <div class="expert-slide-caption">
+                                <h2>Super Urgent Power Ready Stock</h2>
+                                <p>Available in powers from 0.00 up to -8.00 with fast nationwide delivery and online FPX checkout.</p>
+                                <a href="#store-product-grid" onclick="switchTab('catalog')" class="expert-btn">Shop Ready Stock</a>
+                            </div>
+                        </div>
+
+                        <!-- Slide 3 -->
+                        <div class="expert-slide">
+                            <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1600&q=80" alt="Mystic Grey and Natural Shades">
+                            <div class="expert-slide-caption">
+                                <h2>Monthly &amp; 3-Month Disposables</h2>
+                                <p>Experience breathable, ultra-moisturizing colored lenses designed for all-day wear.</p>
+                                <a href="#store-product-grid" onclick="switchTab('catalog')" class="expert-btn">View Collection</a>
+                            </div>
+                        </div>
+
+                        <!-- Slide 4 -->
+                        <div class="expert-slide">
+                            <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1600&q=80" alt="Emerald Green Elegance">
+                            <div class="expert-slide-caption">
+                                <h2>Vibrant Emerald &amp; Sapphire Shades</h2>
+                                <p>Transform your look instantly with our striking, ophthalmologist-approved color collection.</p>
+                                <a href="#store-product-grid" onclick="switchTab('catalog')" class="expert-btn">Discover Colors</a>
+                            </div>
+                        </div>
+
+                        <!-- Slide 5 -->
+                        <div class="expert-slide">
+                            <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=1600&q=80" alt="ToyyibPay Secure Checkout">
+                            <div class="expert-slide-caption">
+                                <h2>Secure FPX Online Banking Checkout</h2>
+                                <p>Fast and safe payments via ToyyibPay with real-time order tracking and admin invoice sync.</p>
+                                <a href="#store-product-grid" onclick="switchTab('catalog')" class="expert-btn">Order Now</a>
+                            </div>
+                        </div>
+
+                        <!-- Controls -->
+                        <button type="button" class="expert-slide-btn expert-slide-prev" aria-label="Previous Slide">&#10094;</button>
+                        <button type="button" class="expert-slide-btn expert-slide-next" aria-label="Next Slide">&#10095;</button>
+
+                        <div class="expert-slide-dots">
+                            <span class="expert-dot active" data-slide="0"></span>
+                            <span class="expert-dot" data-slide="1"></span>
+                            <span class="expert-dot" data-slide="2"></span>
+                            <span class="expert-dot" data-slide="3"></span>
+                            <span class="expert-dot" data-slide="4"></span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="px-6 md:px-10 py-4 bg-slate-950/80 border-b border-slate-800 flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center space-x-2">
+                    <button onclick="switchTab('catalog')" id="dtab-catalog" class="dtab-btn px-4 py-2 rounded-xl text-xs font-bold bg-brand-500 text-slate-950 transition-all">Store Catalog</button>
+                    <button onclick="switchTab('cart')" id="dtab-cart" class="dtab-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition-all">Cart (<span id="cart-badge-count">0</span>)</button>
+                    <button onclick="switchTab('customer-dashboard')" id="dtab-customer-dashboard" class="dtab-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition-all">My Orders &amp; Invoices</button>
+                    <button onclick="switchTab('admin-workspace')" id="dtab-admin-workspace" class="hidden dtab-btn px-4 py-2 rounded-xl text-xs font-bold bg-amber-500 text-slate-950 transition-all flex items-center space-x-1.5">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <span>Admin Workspace</span>
+                    </button>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <span id="user-email-display" class="text-xs text-slate-300 font-semibold">user@example.com</span>
+                    <button onclick="handleSignOut()" class="bg-red-500/20 hover:bg-red-500/30 text-red-400 font-bold px-3 py-2 rounded-xl text-xs border border-red-500/30 transition-all">
+                        Sign Out
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-6 md:p-10 min-h-[550px]">
+
+                <!-- TAB 1: CATALOG -->
+                <div id="tab-section-catalog" class="space-y-6">
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-4 pb-4 border-b border-slate-800">
+                        <div class="flex items-center space-x-2 overflow-x-auto pb-2 w-full md:w-auto">
+                            <button onclick="filterCatalog('all', this)" id="cat-btn-all" class="cat-btn px-4 py-2 rounded-xl text-xs font-bold bg-brand-500 text-slate-950 shrink-0">All Lenses</button>
+                            <button onclick="filterCatalog('3 Months Disposable', this)" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 shrink-0">3 Months Disposable</button>
+                            <button onclick="filterCatalog('1 Month Disposable', this)" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 shrink-0">1 Month Disposable</button>
+                            <button onclick="filterCatalog('1 Day Disposable', this)" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 shrink-0">1 Day Disposable</button>
+                        </div>
+                        <div class="relative w-full md:w-72">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                            <input type="text" id="store-search" oninput="filterStoreProducts()" placeholder="Search lenses..." class="w-full bg-slate-800 text-xs text-white placeholder-slate-400 pl-10 pr-4 py-2.5 rounded-xl border border-slate-700 focus:outline-none focus:border-brand-500">
+                        </div>
+                    </div>
+
+                    <div id="store-product-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                         <!-- Populated Dynamically -->
                     </div>
                 </div>
 
-                <!-- 2. CART SECTION -->
-                <div id="desktop-section-cart" class="hidden max-w-3xl mx-auto space-y-6">
+                <!-- TAB 2: CART & FPX CHECKOUT -->
+                <div id="tab-section-cart" class="hidden max-w-3xl mx-auto space-y-6">
                     <div class="flex items-center justify-between pb-4 border-b border-slate-800">
-                        <h3 class="text-xl font-bold text-white">Your Shopping Cart (<span id="desktop-cart-title-count">0</span>)</h3>
+                        <h3 class="text-xl font-bold text-white">Your Cart (<span id="cart-title-count">0</span>)</h3>
                         <button onclick="clearCart()" class="text-xs text-slate-400 hover:text-red-400">Clear Cart</button>
                     </div>
-                    <div id="desktop-cart-items" class="space-y-4">
+                    <div id="cart-items-container" class="space-y-4">
                         <p class="text-xs text-slate-400 text-center py-8">Your cart is currently empty.</p>
                     </div>
-                    <div id="desktop-cart-summary" class="hidden bg-slate-800/80 p-6 rounded-3xl border border-slate-700 space-y-3">
+                    <div id="cart-summary-box" class="hidden bg-slate-800/80 p-6 rounded-3xl border border-slate-700 space-y-3">
                         <div class="flex justify-between text-xs text-slate-400">
                             <span>Subtotal</span>
                             <span id="cart-subtotal">RM 0.00</span>
                         </div>
                         <div class="flex justify-between text-xs text-slate-400">
-                            <span>Eye Care Solution Gift</span>
-                            <span class="text-brand-400 font-bold">FREE</span>
+                            <span>ToyyibPay FPX Integration</span>
+                            <span class="text-brand-400 font-bold">Secure Online Banking</span>
                         </div>
                         <div class="border-t border-slate-700 pt-3 flex justify-between text-base font-bold text-white">
                             <span>Total Amount (RM)</span>
                             <span id="cart-total" class="text-brand-400">RM 0.00</span>
                         </div>
-                        <button onclick="checkoutOrder()" class="w-full bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold py-4 rounded-2xl text-center shadow-lg shadow-brand-500/20 text-xs transition-all mt-3">
-                            PROCEED TO SECURE CHECKOUT (RM)
+                        <button onclick="processToyyibPayCheckout()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-2xl text-center shadow-lg shadow-blue-500/20 text-xs transition-all mt-3 flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-credit-card"></i>
+                            <span>PAY VIA TOYYIBPAY FPX (RM)</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- 3. WISHLIST SECTION -->
-                <div id="desktop-section-favourites" class="hidden space-y-6">
-                    <h3 class="text-xl font-bold text-white mb-4">My Wishlist</h3>
-                    <div id="wishlist-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                        <p class="text-xs text-slate-400">No items saved in wishlist yet.</p>
+                <!-- TAB 3: CUSTOMER DASHBOARD -->
+                <div id="tab-section-customer-dashboard" class="hidden space-y-6">
+                    <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+                        <div>
+                            <h3 class="text-xl font-bold text-white">Customer Dashboard</h3>
+                            <p class="text-xs text-slate-400 mt-0.5">Track your active invoices approved and managed by admin.</p>
+                        </div>
+                        <span class="text-xs bg-brand-500/20 text-brand-400 px-3 py-1.5 rounded-xl font-bold">Active Shopper</span>
+                    </div>
+
+                    <div id="customer-orders-list" class="space-y-4">
+                        <!-- Populated dynamically -->
                     </div>
                 </div>
 
-                <!-- 4. ACCOUNT SECTION (Sign In / Sign Up / Profile) -->
-                <div id="desktop-section-account" class="hidden max-w-md mx-auto space-y-6">
-                    <!-- Auth Form Card -->
-                    <div id="auth-container" class="bg-slate-800/90 p-8 rounded-3xl border border-slate-700 space-y-6 shadow-2xl">
-                        <div class="text-center space-y-2">
-                            <div class="w-12 h-12 bg-brand-500/20 rounded-2xl mx-auto flex items-center justify-center text-brand-400 text-xl font-bold">
-                                <i class="fa-solid fa-lock"></i>
+                <!-- TAB 4: ADMIN WORKSPACE -->
+                <div id="tab-section-admin-workspace" class="hidden space-y-6">
+                    <div class="flex items-center justify-between pb-4 border-b border-slate-800 bg-amber-500/10 p-4 rounded-2xl border border-amber-500/30">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-amber-500/20 rounded-xl flex items-center justify-center text-amber-400">
+                                <i class="fa-solid fa-shield-halved text-lg"></i>
                             </div>
-                            <h3 id="auth-form-title" class="text-xl font-bold text-white">Sign In to LumiLens</h3>
-                            <p id="auth-form-subtitle" class="text-xs text-slate-400">Admin email: sweetopia.lens@gmail.com</p>
+                            <div>
+                                <h3 class="text-sm font-bold text-white">Admin Workspace Control Center</h3>
+                                <p class="text-xs text-slate-300">Firestore Real-time sync for stock, live products, and invoices.</p>
+                            </div>
+                        </div>
+                        <button onclick="exportInvoicesToCSV()" class="bg-brand-500 hover:bg-brand-400 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs flex items-center space-x-2 shadow-lg">
+                            <i class="fa-solid fa-file-csv"></i>
+                            <span>Export Invoices CSV</span>
+                        </button>
+                    </div>
+
+                    <div class="flex space-x-2 border-b border-slate-800 pb-3">
+                        <button onclick="switchAdminSubTab('stock')" id="adm-sub-stock" class="px-4 py-2 rounded-xl text-xs font-bold bg-amber-500 text-slate-950">Editable Power Stock &amp; Brands</button>
+                        <button onclick="switchAdminSubTab('products')" id="adm-sub-products" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300">Manage Products</button>
+                        <button onclick="switchAdminSubTab('orders')" id="adm-sub-orders" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300">ToyyibPay Invoices Management</button>
+                    </div>
+
+                    <!-- ADMIN SUB-TAB 1: POWER STOCK & BRAND CATALOG MANAGEMENT -->
+                    <div id="adm-sub-section-stock" class="space-y-6">
+                        <div class="bg-slate-950 p-5 rounded-3xl border border-slate-800 space-y-4">
+                            <div class="flex items-center justify-between">
+                                <h4 class="text-xs font-bold text-white">Select Prescription Power Range (0.00 to -8.00)</h4>
+                                <span class="text-[10px] text-brand-400 font-bold">Power Selector</span>
+                            </div>
+                            <div class="max-h-60 overflow-y-auto pr-2">
+                                <select id="admin-global-power-select" onchange="onAdminPowerRangeChange()" class="w-full bg-slate-900 border border-slate-700 text-xs text-brand-500 focus:ring-brand-500/30 accent-sky-500 rounded-xl p-3 focus:outline-none cursor-pointer">
+                                    <option value="0.00">0.00 (No Power)</option>
+                                    <option value="-0.25">-0.25</option>
+                                    <option value="-0.50">-0.50</option>
+                                    <option value="-0.75">-0.75</option>
+                                    <option value="-1.00">-1.00</option>
+                                    <option value="-1.25">-1.25</option>
+                                    <option value="-1.50">-1.50</option>
+                                    <option value="-1.75">-1.75</option>
+                                    <option value="-2.00">-2.00</option>
+                                    <option value="-2.25">-2.25</option>
+                                    <option value="-2.50">-2.50</option>
+                                    <option value="-2.75">-2.75</option>
+                                    <option value="-3.00">-3.00</option>
+                                    <option value="-3.25">-3.25</option>
+                                    <option value="-3.50">-3.50</option>
+                                    <option value="-3.75">-3.75</option>
+                                    <option value="-4.00">-4.00</option>
+                                    <option value="-4.25">-4.25</option>
+                                    <option value="-4.50">-4.50</option>
+                                    <option value="-4.75">-4.75</option>
+                                    <option value="-5.00">-5.00</option>
+                                    <option value="-5.25">-5.25</option>
+                                    <option value="-5.50">-5.50</option>
+                                    <option value="-5.75">-5.75</option>
+                                    <option value="-6.00">-6.00</option>
+                                    <option value="-6.25">-6.25</option>
+                                    <option value="-6.50">-6.50</option>
+                                    <option value="-6.75">-6.75</option>
+                                    <option value="-7.00">-7.00</option>
+                                    <option value="-7.25">-7.25</option>
+                                    <option value="-7.50">-7.50</option>
+                                    <option value="-7.75">-7.75</option>
+                                    <option value="-8.00">-8.00</option>
+                                </select>
+                            </div>
                         </div>
 
-                        <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-4">
-                            <div>
-                                <label class="block text-xs font-bold text-slate-300 mb-1">Email Address</label>
-                                <input type="email" id="auth-email" required placeholder="sweetopia.lens@gmail.com" class="w-full bg-slate-900 border border-slate-700 text-xs text-white rounded-xl p-3 focus:outline-none focus:border-brand-500">
-                            </div>
-                            <div>
-                                <div class="flex justify-between items-center mb-1">
-                                    <label class="text-xs font-bold text-slate-300">Password</label>
-                                    <button type="button" onclick="openForgotPassword()" class="text-[11px] text-brand-400 hover:underline">Forgot Password?</button>
+                        <!-- Product Stock Checkboxes Connected to Power Range -->
+                        <div class="bg-slate-950 p-5 rounded-3xl border border-slate-800 space-y-4">
+                            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                                <div>
+                                    <h4 class="text-xs font-bold text-white">Manage Product Availability for Selected Power</h4>
+                                    <p class="text-[10px] text-slate-400 mt-0.5">Check or uncheck products to toggle availability for the currently selected power.</p>
                                 </div>
-                                <input type="password" id="auth-password" required placeholder="••••••••" class="w-full bg-slate-900 border border-slate-700 text-xs text-white rounded-xl p-3 focus:outline-none focus:border-brand-500">
+                                <span class="text-[10px] bg-amber-500/20 text-amber-400 px-2.5 py-1 rounded-lg font-bold">Power Stock Sync</span>
                             </div>
 
-                            <button type="submit" id="auth-submit-btn" class="w-full bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold py-3.5 rounded-xl text-xs shadow-lg shadow-brand-500/20 transition-all">
-                                Sign In
-                            </button>
-                        </form>
+                            <div class="space-y-2">
+                                <label class="flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-900 cursor-pointer transition-colors group border border-slate-800/60">
+                                    <span class="text-xs text-slate-300 font-medium group-hover:text-white">HAZEL NATURAL</span>
+                                    <input type="checkbox" id="power-cb-p1" checked="" class="lens-checkbox w-4 h-4 rounded border-slate-700 bg-slate-900 text-brand-500 focus:ring-brand-500/30 accent-sky-500 cursor-pointer" onchange="updatePowerStockFromCheckboxes()">
+                                </label>
 
-                        <div class="text-center pt-2 border-t border-slate-700">
-                            <p id="auth-toggle-text" class="text-xs text-slate-400">
-                                Don't have an account? <button type="button" onclick="toggleAuthMode('signup')" class="text-brand-400 font-bold hover:underline">Sign Up</button>
-                            </p>
+                                <label class="flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-900 cursor-pointer transition-colors group border border-slate-800/60">
+                                    <span class="text-xs text-slate-300 font-medium group-hover:text-white">CRYSTAL CLEAR</span>
+                                    <input type="checkbox" id="power-cb-p2" checked="" class="lens-checkbox w-4 h-4 rounded border-slate-700 bg-slate-900 text-brand-500 focus:ring-brand-500/30 accent-sky-500 cursor-pointer" onchange="updatePowerStockFromCheckboxes()">
+                                </label>
+
+                                <label class="flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-900 cursor-pointer transition-colors group border border-slate-800/60">
+                                    <span class="text-xs text-slate-300 font-medium group-hover:text-white">EMERALD GREEN</span>
+                                    <input type="checkbox" id="power-cb-p3" checked="" class="lens-checkbox w-4 h-4 rounded border-slate-700 bg-slate-900 text-brand-500 focus:ring-brand-500/30 accent-sky-500 cursor-pointer" onchange="updatePowerStockFromCheckboxes()">
+                                </label>
+
+                                <label class="flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-900 cursor-pointer transition-colors group border border-slate-800/60">
+                                    <span class="text-xs text-slate-300 font-medium group-hover:text-white">MYSTIC GREY</span>
+                                    <input type="checkbox" id="power-cb-p4" checked="" class="lens-checkbox w-4 h-4 rounded border-slate-700 bg-slate-900 text-brand-500 focus:ring-brand-500/30 accent-sky-500 cursor-pointer" onchange="updatePowerStockFromCheckboxes()">
+                                </label>
+
+                                <label class="flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-900 cursor-pointer transition-colors group border border-slate-800/60">
+                                    <span class="text-xs text-slate-300 font-medium group-hover:text-white">MONTHLY COMFORT</span>
+                                    <input type="checkbox" id="power-cb-p5" checked="" class="lens-checkbox w-4 h-4 rounded border-slate-700 bg-slate-900 text-brand-500 focus:ring-brand-500/30 accent-sky-500 cursor-pointer" onchange="updatePowerStockFromCheckboxes()">
+                                </label>
+                            </div>
+
+                            <div class="pt-2">
+                                <button onclick="saveAdminStockSettings()" class="w-full bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold py-3 rounded-xl text-xs shadow-lg shadow-brand-500/20 transition-all flex items-center justify-center space-x-2">
+                                    <i class="fa-solid fa-floppy-disk"></i>
+                                    <span>Save &amp; Publish Live Stock Settings</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Logged In Profile Card -->
-                    <div id="profile-container" class="hidden bg-slate-800/90 p-8 rounded-3xl border border-slate-700 space-y-6 shadow-2xl">
-                        <div class="flex items-center space-x-4">
-                            <div class="w-16 h-16 rounded-full bg-brand-500/20 border-2 border-brand-500 flex items-center justify-center text-brand-400 text-xl font-extrabold">
-                                <span id="profile-initials">U</span>
+                    <!-- ADMIN SUB-TAB 2: PRODUCTS -->
+                    <div id="adm-sub-section-products" class="hidden space-y-4">
+                        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <h4 class="text-xs font-bold text-white" id="admin-form-title">Add New Product</h4>
+                                <button onclick="resetAdminProductForm()" class="text-[11px] text-slate-400 hover:text-white">Clear Form</button>
                             </div>
-                            <div>
-                                <h3 id="profile-email" class="text-sm font-bold text-white">user@example.com</h3>
-                                <p id="profile-role-badge" class="text-xs text-brand-400 font-semibold mt-0.5">Verified Customer</p>
+                            <input type="hidden" id="edit-prod-id">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-[10px] font-bold text-slate-400 mb-1">Product Name</label>
+                                    <input type="text" id="admin-prod-name" placeholder="e.g. Sapphire Blue" class="w-full bg-slate-900 border border-slate-700 text-xs text-white rounded-xl p-2.5">
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-bold text-slate-400 mb-1">Price (RM)</label>
+                                    <input type="text" id="admin-prod-price" placeholder="45.00" class="w-full bg-slate-900 border border-slate-700 text-xs text-white rounded-xl p-2.5">
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-bold text-slate-400 mb-1">Category</label>
+                                    <select id="admin-prod-cat" class="w-full bg-slate-900 border border-slate-700 text-xs text-white rounded-xl p-2.5">
+                                        <option value="3 Months Disposable">3 Months Disposable</option>
+                                        <option value="1 Month Disposable">1 Month Disposable</option>
+                                        <option value="1 Day Disposable">1 Day Disposable</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-bold text-slate-400 mb-1">Product Image (Device Upload)</label>
+                                    <input type="file" id="admin-prod-file" accept="image/*" onchange="handleImageFileUpload(event)" class="w-full bg-slate-900 border border-slate-700 text-xs text-slate-300 rounded-xl p-2 file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-brand-500 file:text-slate-950 hover:file:bg-brand-600 cursor-pointer">
+                                    <input type="hidden" id="admin-prod-img-base64">
+                                </div>
+                            </div>
+                            <div id="admin-image-preview-container" class="hidden items-center space-x-3 pt-2">
+                                <span class="text-[10px] text-slate-400">Image Preview:</span>
+                                <img id="admin-image-preview-tag" src="" class="w-12 h-12 object-cover rounded-xl border border-slate-700">
+                            </div>
+                            <div class="flex space-x-2 pt-2">
+                                <button onclick="saveAdminProduct()" class="bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs flex items-center space-x-1.5">
+                                    <i class="fa-solid fa-plus"></i>
+                                    <span>Save &amp; Publish Live</span>
+                                </button>
                             </div>
                         </div>
-                        <div class="bg-slate-900/60 p-4 rounded-2xl border border-slate-700/60 space-y-2">
-                            <div class="flex justify-between text-xs text-slate-400">
-                                <span>Account UID:</span>
-                                <span id="profile-uid" class="font-mono text-white text-[10px]">...</span>
-                            </div>
-                            <div class="flex justify-between text-xs text-slate-400">
-                                <span>Access Rights:</span>
-                                <span id="profile-rights" class="text-white font-bold">Standard Shopper</span>
-                            </div>
+                        <div id="admin-products-list" class="space-y-2 max-h-56 overflow-y-auto">
+                            <!-- Populated dynamically -->
                         </div>
-                        <button onclick="handleSignOut()" class="w-full bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/30 font-bold py-3.5 rounded-xl text-xs transition-all">
-                            Sign Out
-                        </button>
+                    </div>
+
+                    <!-- ADMIN SUB-TAB 3: ORDERS -->
+                    <div id="adm-sub-section-orders" class="hidden space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h4 class="text-xs font-bold text-white">All ToyyibPay Customer Invoices (Admin Control)</h4>
+                            <p class="text-[11px] text-slate-400">Deleting an invoice removes it from client dashboards.</p>
+                        </div>
+                        <div id="admin-all-orders-list" class="space-y-3 max-h-80 overflow-y-auto pr-2">
+                            <!-- Populated dynamically -->
+                        </div>
                     </div>
                 </div>
 
@@ -250,26 +633,25 @@
         <div id="screen-detail" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-2 sm:p-6">
             <div class="w-full max-w-xl bg-slate-900 rounded-3xl border border-slate-700 overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
                 <div class="px-6 py-4 flex items-center justify-between border-b border-slate-800">
-                    <h3 class="text-sm font-bold text-white">Product Detail</h3>
+                    <h3 class="text-sm font-bold text-white">Product Detail &amp; Prescription</h3>
                     <button onclick="closeProductDetail()" class="w-8 h-8 rounded-xl bg-slate-800 flex items-center justify-center text-slate-300 hover:text-white">
                         <i class="fa-solid fa-xmark text-xs"></i>
                     </button>
                 </div>
                 <div class="flex-1 overflow-y-auto p-6 space-y-4">
-                    <div class="w-full h-64 bg-slate-950 rounded-2xl flex items-center justify-center overflow-hidden">
-                        <img id="detail-img" src="" class="w-56 h-56 object-cover rounded-xl shadow-xl">
+                    <div class="w-full h-60 bg-slate-950 rounded-2xl flex items-center justify-center overflow-hidden">
+                        <img id="detail-img" src="" class="w-48 h-48 object-cover rounded-xl shadow-xl">
                     </div>
                     <div>
-                        <p id="detail-category" class="text-xs text-brand-400 font-bold mb-1">Monthly Colored Lens</p>
+                        <p id="detail-category" class="text-xs text-brand-400 font-bold mb-1">COLORED LENS</p>
                         <h2 id="detail-title" class="text-xl font-extrabold text-white">HAZEL NATURAL</h2>
-                        <span id="detail-price" class="text-lg font-extrabold text-brand-400 mt-2 block">RM 45.00</span>
+                        <span id="detail-price" class="text-lg font-extrabold text-brand-400 mt-1 block">RM 45.00</span>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-300 mb-2">Prescription Power (PWR up to -8.00)</label>
+                        <label class="block text-xs font-bold text-slate-300 mb-2">Select Prescription (NO PWR 0.00)(PWR -0.25 to -8.00)</label>
                         <select id="detail-pwr" class="w-full bg-slate-800 border border-slate-700 text-xs text-white rounded-xl p-3 focus:outline-none focus:border-brand-500">
-                            <!-- Populated dynamically based on admin stock rules -->
+                            <!-- Populated dynamically -->
                         </select>
-                        <p id="pwr-status-note" class="text-[11px] text-slate-400 mt-1">Managed securely by admin stock settings.</p>
                     </div>
                 </div>
                 <div class="p-4 border-t border-slate-800 flex space-x-3">
@@ -280,106 +662,21 @@
             </div>
         </div>
 
-        <!-- ================= ADMIN WORKSPACE MODAL (Stock, Colors & Invoices) ================= -->
-        <div id="admin-modal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-2 sm:p-6">
-            <div class="w-full max-w-4xl bg-slate-900 rounded-3xl border border-amber-500/40 overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-                <div class="px-6 py-4 flex items-center justify-between border-b border-slate-800 bg-amber-500/10">
-                    <div class="flex items-center space-x-2">
-                        <i class="fa-solid fa-shield-halved text-amber-400"></i>
-                        <h3 class="text-sm font-bold text-white">Admin Workspace: Sweetopia Lens Control Center</h3>
-                    </div>
-                    <button onclick="closeAdminModal()" class="w-8 h-8 rounded-xl bg-slate-800 flex items-center justify-center text-slate-300 hover:text-white">
-                        <i class="fa-solid fa-xmark text-xs"></i>
+        <!-- ================= TOYYIBPAY REDIRECT CONFIRMATION MODAL ================= -->
+        <div id="fpx-modal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-2 sm:p-6">
+            <div class="w-full max-w-md bg-slate-900 rounded-3xl border border-slate-700 overflow-hidden shadow-2xl flex flex-col p-6 space-y-4 text-center">
+                <div class="w-14 h-14 bg-blue-500/20 rounded-2xl mx-auto flex items-center justify-center text-blue-400 text-2xl font-bold">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </div>
+                <h3 class="text-lg font-bold text-white">Redirecting to ToyyibPay FPX</h3>
+                <p class="text-xs text-slate-300">Order ID: <span id="fpx-modal-order-id" class="font-mono text-brand-400 font-bold"></span></p>
+                <p class="text-xs text-slate-400">You are about to be securely redirected to your ToyyibPay payment link: <br><b class="text-slate-200">https://toyyibpay.com/brandworks</b></p>
+                <div class="pt-2 flex space-x-3">
+                    <button onclick="confirmToyyibPayRedirect()" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl text-xs">
+                        Proceed to ToyyibPay
                     </button>
-                </div>
-                <div class="flex-1 overflow-y-auto p-6 space-y-6">
-                    <!-- Admin Tab Switch -->
-                    <div class="flex space-x-2 border-b border-slate-800 pb-4">
-                        <button onclick="switchAdminTab('stock')" id="adm-tab-stock" class="px-4 py-2 rounded-xl text-xs font-bold bg-amber-500 text-slate-950">Editable Power Stock</button>
-                        <button onclick="switchAdminTab('products')" id="adm-tab-products" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300">Manage Lens Colors</button>
-                        <button onclick="switchAdminTab('invoices')" id="adm-tab-invoices" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300">Customer Invoices & Orders</button>
-                    </div>
-
-                    <!-- Tab 1: Stock Control (-0.25 to -8.00) -->
-                    <div id="adm-section-stock" class="space-y-4">
-                        <p class="text-xs text-slate-300">
-                            Toggle each prescription power between <span class="text-brand-400 font-bold">Available</span> and <span class="text-red-400 font-bold">Sold Out</span>.
-                        </p>
-                        <div id="admin-powers-list" class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-72 overflow-y-auto pr-2">
-                            <!-- Populated dynamically -->
-                        </div>
-                    </div>
-
-                    <!-- Tab 2: Product & Color Management -->
-                    <div id="adm-section-products" class="hidden space-y-4">
-                        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
-                            <h4 class="text-xs font-bold text-white" id="form-product-title">Add New Contact Lens Color / Item</h4>
-                            <input type="hidden" id="edit-product-id">
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                <div>
-                                    <label class="block text-[10px] font-bold text-slate-400 mb-1">Lens Name / Color</label>
-                                    <input type="text" id="admin-p-name" placeholder="e.g. Sapphire Blue" class="w-full bg-slate-900 border border-slate-700 text-xs text-white rounded-xl p-2.5">
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] font-bold text-slate-400 mb-1">Price (RM)</label>
-                                    <input type="text" id="admin-p-price" placeholder="45.00" class="w-full bg-slate-900 border border-slate-700 text-xs text-white rounded-xl p-2.5">
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] font-bold text-slate-400 mb-1">Category</label>
-                                    <select id="admin-p-cat" class="w-full bg-slate-900 border border-slate-700 text-xs text-white rounded-xl p-2.5">
-                                        <option value="colored">Colored Series</option>
-                                        <option value="daily">Daily Disposable</option>
-                                        <option value="monthly">Monthly Hydrogel</option>
-                                        <option value="toric">Astigmatism (Toric)</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] font-bold text-slate-400 mb-1">Image URL</label>
-                                    <input type="text" id="admin-p-image" placeholder="https://..." class="w-full bg-slate-900 border border-slate-700 text-xs text-white rounded-xl p-2.5">
-                                </div>
-                            </div>
-                            <div class="flex space-x-2 pt-2">
-                                <button onclick="saveAdminProduct()" class="bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs">Save Product Color</button>
-                                <button onclick="resetAdminProductForm()" class="bg-slate-800 text-slate-300 px-4 py-2 rounded-xl text-xs">Cancel</button>
-                            </div>
-                        </div>
-
-                        <div class="space-y-2">
-                            <h4 class="text-xs font-bold text-white">Existing Lenses in Catalog</h4>
-                            <div id="admin-products-list" class="space-y-2 max-h-56 overflow-y-auto">
-                                <!-- Populated dynamically -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Tab 3: Customer Invoices & Orders -->
-                    <div id="adm-section-invoices" class="hidden space-y-4">
-                        <div class="flex items-center justify-between">
-                            <h4 class="text-xs font-bold text-white">Customer Orders & Invoices Feed</h4>
-                            <span class="text-[10px] bg-amber-500/20 text-amber-400 px-2.5 py-1 rounded-lg">Real-time Admin Feed</span>
-                        </div>
-                        <div id="admin-invoices-list" class="space-y-3 max-h-72 overflow-y-auto pr-2">
-                            <!-- Sample or Dynamic Invoices -->
-                            <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 flex items-center justify-between">
-                                <div>
-                                    <div class="flex items-center space-x-2">
-                                        <span class="text-xs font-bold text-white">Invoice #INV-2026-089</span>
-                                        <span class="text-[9px] bg-brand-500/20 text-brand-400 px-2 py-0.5 rounded">Paid (RMX)</span>
-                                    </div>
-                                    <p class="text-[11px] text-slate-400 mt-1">Customer: nur.shopper@yahoo.com • Hazel Natural (PWR -2.25) x2</p>
-                                </div>
-                                <div class="text-right">
-                                    <span class="text-xs font-extrabold text-brand-400">RM 90.00</span>
-                                    <p class="text-[9px] text-slate-500">Today, 09:45 AM</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="p-4 border-t border-slate-800 bg-slate-950 flex justify-between items-center">
-                    <span class="text-xs text-slate-400">Logged in as: sweetopia.lens@gmail.com</span>
-                    <button onclick="closeAdminModal(); showToast('Saved', 'Admin workspace updated successfully.');" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-6 py-2.5 rounded-xl text-xs">
-                        Close Workspace
+                    <button onclick="closeToyyibPayModal()" class="bg-slate-800 text-slate-300 px-4 py-3 rounded-xl text-xs">
+                        Cancel
                     </button>
                 </div>
             </div>
@@ -394,12 +691,12 @@
                         <i class="fa-solid fa-xmark text-xs"></i>
                     </button>
                 </div>
-                <p class="text-xs text-slate-300">Enter your registered email address to receive password reset instructions.</p>
+                <p class="text-xs text-slate-300">Enter your email address to receive password reset instructions.</p>
                 <div>
                     <label class="block text-xs font-bold text-slate-300 mb-1">Email Address</label>
-                    <input type="email" id="forgot-email" placeholder="sweetopia.lens@gmail.com" class="w-full bg-slate-950 border border-slate-700 text-xs text-white rounded-xl p-3 focus:outline-none focus:border-brand-500">
+                    <input type="email" id="forgot-email" placeholder="name@example.com" class="w-full bg-slate-950 border border-slate-700 text-xs text-white rounded-xl p-3">
                 </div>
-                <button onclick="submitForgotPassword()" class="w-full bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold py-3 rounded-xl text-xs shadow-lg shadow-brand-500/20">
+                <button onclick="submitForgotPassword()" class="w-full bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold py-3 rounded-xl text-xs">
                     Send Reset Email
                 </button>
             </div>
@@ -410,9 +707,8 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
-        import { getFirestore } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
 
-        // Firebase Global Initialization with exact user config
         const firebaseConfig = {
             apiKey: "AIzaSyB3Gcqiv-hJIs7p4dPqEAo2_WyRAlENEkk",
             authDomain: "sweeetopialens.firebaseapp.com",
@@ -427,355 +723,206 @@
             app = initializeApp(firebaseConfig);
             db = getFirestore(app);
             auth = getAuth(app);
-
             const token = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-            if (token) {
-                await signInWithCustomToken(auth, token);
-            } else {
-                await signInAnonymously(auth);
-            }
-        } catch(e) {
-            console.warn("Firebase fallback mode:", e);
-        }
+            if (token) { await signInWithCustomToken(auth, token); }
+            else { await signInAnonymously(auth); }
+        } catch(e) { console.warn("Firebase mode:", e); }
 
-        // Product Catalog Data with RM Prices
         let products = [
-            { id: 1, name: "HAZEL NATURAL", price: "45.00", category: "colored", image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500", desc: "Monthly Colored Lens with warm hazel tones.", badge: "Bestseller" },
-            { id: 2, name: "CRYSTAL CLEAR", price: "120.00", category: "daily", image: "https://images.unsplash.com/photo-1583946099066-764f2537f136?auto=format&fit=crop&q=80&w=500", desc: "30 Pcs Box Hydrogel Daily Disposable.", badge: "30 Pcs Box" },
-            { id: 3, name: "EMERALD GREEN", price: "55.00", category: "colored", image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&q=80&w=500", desc: "Monthly Vivid Green Contact Lenses.", badge: "Hot" },
-            { id: 4, name: "MYSTIC GREY", price: "48.00", category: "colored", image: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&q=80&w=500", desc: "Deep Grey Monthly Lens for striking looks.", badge: "New" },
-            { id: 5, name: "TORIC ASTIGMATISM", price: "145.00", category: "toric", image: "https://images.unsplash.com/photo-1583946099066-764f2537f136?auto=format&fit=crop&q=80&w=500", desc: "Precision optics for astigmatism correction.", badge: "Toric" },
-            { id: 6, name: "MONTHLY COMFORT", price: "65.00", category: "monthly", image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500", desc: "Ultra-breathable hydrogel for daily wear.", badge: "Monthly" }
+            { id: "p1", name: "HAZEL NATURAL", price: "45.00", category: "3 Months Disposable", image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500", badge: "In Stock" },
+            { id: "p2", name: "CRYSTAL CLEAR", price: "120.00", category: "1 Month Disposable", image: "https://images.unsplash.com/photo-1583946099066-764f2537f136?auto=format&fit=crop&q=80&w=500", badge: "In Stock" },
+            { id: "p3", name: "EMERALD GREEN", price: "55.00", category: "3 Months Disposable", image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&q=80&w=500", badge: "In Stock" },
+            { id: "p4", name: "MYSTIC GREY", price: "48.00", category: "3 Months Disposable", image: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&q=80&w=500", badge: "In Stock" },
+            { id: "p5", name: "MONTHLY COMFORT", price: "65.00", category: "1 Day Disposable", image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500", badge: "In Stock" }
         ];
 
-        // Power levels from -0.25 to -8.00 in 0.25 increments
-        window.powerStockStatus = {
-            "-0.25": true, "-0.50": true, "-0.75": true,
-            "-1.00": true, "-1.25": true, "-1.50": true, "-1.75": true,
-            "-2.00": true, "-2.25": true, "-2.50": true, "-2.75": true,
-            "-3.00": true, "-3.25": true, "-3.50": true, "-3.75": true,
-            "-4.00": true, "-4.25": true, "-4.50": true, "-4.75": true,
-            "-5.00": true, "-5.25": true, "-5.50": true, "-5.75": true,
-            "-6.00": true, "-6.25": true, "-6.50": true, "-6.75": true,
-            "-7.00": true, "-7.25": true, "-7.50": true, "-7.75": true,
-            "-8.00": true
-        };
+        // Per-product power stock mapping: { productId: { powerValue: boolean } }
+        const powersList = [
+            "0.00", "-0.25", "-0.50", "-0.75", "-1.00", "-1.25", "-1.50", "-1.75", "-2.00",
+            "-2.25", "-2.50", "-2.75", "-3.00", "-3.25", "-3.50", "-3.75", "-4.00",
+            "-4.25", "-4.50", "-4.75", "-5.00", "-5.25", "-5.50", "-5.75", "-6.00",
+            "-6.25", "-6.50", "-6.75", "-7.00", "-7.25", "-7.50", "-7.75", "-8.00"
+        ];
+
+        window.productPowerStock = {};
+        products.forEach(p => {
+            window.productPowerStock[p.id] = {};
+            powersList.forEach(pw => {
+                window.productPowerStock[p.id][pw] = true; // default all available
+            });
+        });
 
         let cart = [];
-        let wishlist = [];
+        let allOrders = [];
+
+        let currentUser = null;
         let authMode = 'signin';
         let currentSelectedProduct = null;
-        let currentUser = null;
+        let pendingOrderId = null;
         const ADMIN_EMAIL = "sweetopia.lens@gmail.com";
         const ADMIN_PASS = "134228";
+        const TOYYIBPAY_URL = "https://toyyibpay.com/brandworks";
 
-        // Expose to window
-        window.switchDesktopTab = switchDesktopTab;
-        window.desktopFilter = desktopFilter;
-        window.filterDesktopProducts = filterDesktopProducts;
+        // Expose globally
+        window.switchPage = switchPage;
+        window.switchTab = switchTab;
+        window.setAuthModeTab = setAuthModeTab;
+        window.fillAdminCredentials = fillAdminCredentials;
+        window.handleAuthSubmit = handleAuthSubmit;
+        window.handleSignOut = handleSignOut;
+        window.filterCatalog = filterCatalog;
+        window.filterStoreProducts = filterStoreProducts;
         window.openProductDetail = openProductDetail;
         window.closeProductDetail = closeProductDetail;
         window.addCurrentProductToCart = addCurrentProductToCart;
+        window.changeQty = changeQty;
+        window.removeFromCart = removeFromCart;
         window.clearCart = clearCart;
-        window.checkoutOrder = checkoutOrder;
-        window.toggleAuthMode = toggleAuthMode;
-        window.handleAuthSubmit = handleAuthSubmit;
-        window.handleSignOut = handleSignOut;
-        window.openAdminModal = openAdminModal;
-        window.closeAdminModal = closeAdminModal;
-        window.switchAdminTab = switchAdminTab;
-        window.togglePowerStock = togglePowerStock;
+        window.processToyyibPayCheckout = processToyyibPayCheckout;
+        window.confirmToyyibPayRedirect = confirmToyyibPayRedirect;
+        window.closeToyyibPayModal = closeToyyibPayModal;
+        window.switchAdminSubTab = switchAdminSubTab;
+        window.onAdminPowerRangeChange = onAdminPowerRangeChange;
+        window.updatePowerStockFromCheckboxes = updatePowerStockFromCheckboxes;
+        window.saveAdminStockSettings = saveAdminStockSettings;
+        window.handleImageFileUpload = handleImageFileUpload;
         window.saveAdminProduct = saveAdminProduct;
         window.editAdminProduct = editAdminProduct;
         window.deleteAdminProduct = deleteAdminProduct;
         window.resetAdminProductForm = resetAdminProductForm;
+        window.deleteAdminOrder = deleteAdminOrder;
+        window.exportInvoicesToCSV = exportInvoicesToCSV;
         window.openForgotPassword = openForgotPassword;
         window.closeForgotPassword = closeForgotPassword;
         window.submitForgotPassword = submitForgotPassword;
         window.showToast = showToast;
 
         document.addEventListener('DOMContentLoaded', () => {
-            renderProducts(products);
-            renderAdminPowerList();
+            renderStoreProducts(products);
             renderAdminProductsList();
-
-            // Auto-populate admin credentials in inputs for ease of testing
-            const emailInput = document.getElementById('auth-email');
-            const passInput = document.getElementById('auth-password');
-            if(emailInput && passInput) {
-                emailInput.value = ADMIN_EMAIL;
-                passInput.value = ADMIN_PASS;
-            }
+            initFirestoreListeners();
+            onAdminPowerRangeChange();
+            initSlideshow();
 
             if (auth) {
                 onAuthStateChanged(auth, async (user) => {
                     if (user && !user.isAnonymous) {
-                        await user.reload();
-                        
-                        if (!user.emailVerified && user.email.toLowerCase() !== ADMIN_EMAIL.toLowerCase() && user.providerData.some(p => p.providerId === 'password')) {
-                            currentUser = null;
-                            updateAuthUI(null);
-                        } else {
-                            currentUser = user;
-                            updateAuthUI(user);
-                        }
+                        currentUser = user;
+                        updateUIAfterLogin(user);
                     } else {
                         currentUser = null;
-                        updateAuthUI(null);
+                        switchPage('auth');
                     }
                 });
             }
         });
 
-        function validateRealEmail(email) {
-            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-            return emailRegex.test(email);
+        // --- FIRESTORE REAL-TIME SYNC ---
+        function initFirestoreListeners() {
+            if (!db) return;
+            onSnapshot(collection(db, "lumilens_products"), (snapshot) => {
+                if (!snapshot.empty) {
+                    const loaded = [];
+                    snapshot.forEach(docSnap => {
+                        const data = { id: docSnap.id, ...docSnap.data() };
+                        loaded.push(data);
+                        if (!window.productPowerStock[data.id]) {
+                            window.productPowerStock[data.id] = {};
+                            powersList.forEach(pw => window.productPowerStock[data.id][pw] = true);
+                        }
+                    });
+                    products = loaded;
+                }
+                renderStoreProducts(products);
+                renderAdminProductsList();
+            }, (err) => { console.warn("Products sync error:", err); });
+
+            onSnapshot(collection(db, "lumilens_orders"), (snapshot) => {
+                const loadedOrders = [];
+                snapshot.forEach(docSnap => {
+                    loadedOrders.push({ id: docSnap.id, ...docSnap.data() });
+                });
+                allOrders = loadedOrders.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+                renderAdminOrdersList();
+                renderCustomerOrders();
+            }, (err) => { console.warn("Orders sync error:", err); });
         }
 
-        function switchDesktopTab(tabName) {
-            ['catalog', 'cart', 'favourites', 'account'].forEach(t => {
-                const sec = document.getElementById('desktop-section-' + t);
+        function switchPage(pageName) {
+            const pageAuth = document.getElementById('page-auth');
+            const pageDashboard = document.getElementById('page-dashboard');
+            const navActions = document.getElementById('header-nav-actions');
+
+            if (pageName === 'auth') {
+                pageAuth.classList.remove('hidden');
+                pageDashboard.classList.add('hidden');
+                navActions.innerHTML = `<span class="text-xs text-slate-400">Please Sign In or Register</span>`;
+            } else {
+                pageAuth.classList.add('hidden');
+                pageDashboard.classList.remove('hidden');
+                switchTab('catalog');
+            }
+        }
+
+        function switchTab(tabName) {
+            ['catalog', 'cart', 'customer-dashboard', 'admin-workspace'].forEach(t => {
+                const sec = document.getElementById('tab-section-' + t);
                 const btn = document.getElementById('dtab-' + t);
                 if (sec) sec.classList.add('hidden');
-                if (btn) {
+                if (btn && t !== 'admin-workspace') {
                     btn.classList.remove('bg-brand-500', 'text-slate-950', 'font-bold');
                     btn.classList.add('text-slate-400', 'font-semibold');
                 }
             });
 
-            const activeSec = document.getElementById('desktop-section-' + tabName);
+            const activeSec = document.getElementById('tab-section-' + tabName);
             const activeBtn = document.getElementById('dtab-' + tabName);
             if (activeSec) activeSec.classList.remove('hidden');
-            if (activeBtn) {
+            if (activeBtn && tabName !== 'admin-workspace') {
                 activeBtn.classList.remove('text-slate-400', 'font-semibold');
                 activeBtn.classList.add('bg-brand-500', 'text-slate-950', 'font-bold');
             }
 
+            if (tabName === 'catalog') {
+                // Automatically show all lenses when Store Catalog tab is clicked/opened
+                const allBtn = document.getElementById('cat-btn-all');
+                filterCatalog('all', allBtn);
+            }
             if (tabName === 'cart') renderCartItems();
-            if (tabName === 'favourites') renderWishlistItems();
-        }
-
-        function renderProducts(list) {
-            const grid = document.getElementById('desktop-product-grid');
-            if (!grid) return;
-            if (list.length === 0) {
-                grid.innerHTML = '<p class="col-span-full text-center text-xs text-slate-400 py-12">No contact lenses found.</p>';
-                return;
-            }
-
-            grid.innerHTML = list.map(p => `
-                <div class="bg-slate-800/80 rounded-3xl p-4 border border-slate-700/60 flex flex-col justify-between group hover:border-brand-500/50 transition-all cursor-pointer" onclick="openProductDetail(${p.id})">
-                    <div class="relative w-full h-48 rounded-2xl bg-slate-900/60 overflow-hidden flex items-center justify-center mb-4">
-                        <span class="absolute top-3 left-3 bg-brand-500 text-slate-950 text-[9px] font-extrabold px-2.5 py-0.5 rounded uppercase z-10">${p.badge || 'In Stock'}</span>
-                        <img src="${p.image}" class="w-40 h-40 object-cover group-hover:scale-105 transition-transform duration-300">
-                    </div>
-                    <div>
-                        <p class="text-[10px] text-slate-400 mb-1 uppercase">${p.category} lens</p>
-                        <h3 class="text-sm font-bold text-white mb-2">${p.name}</h3>
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm font-extrabold text-brand-400">RM ${p.price}</span>
-                            <span class="text-[10px] bg-slate-700 text-slate-300 px-2.5 py-1 rounded-lg font-semibold">Available</span>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function desktopFilter(cat, btn) {
-            document.querySelectorAll('.dcat-btn').forEach(b => {
-                b.classList.remove('bg-brand-500', 'text-slate-950', 'font-bold');
-                b.classList.add('bg-slate-800', 'text-slate-300');
-            });
-            if (btn) {
-                btn.classList.remove('bg-slate-800', 'text-slate-300');
-                btn.classList.add('bg-brand-500', 'text-slate-950', 'font-bold');
-            }
-
-            if (cat === 'all') {
-                renderProducts(products);
-            } else {
-                renderProducts(products.filter(p => p.category === cat));
+            if (tabName === 'customer-dashboard') renderCustomerOrders();
+            if (tabName === 'admin-workspace') {
+                renderAdminProductsList();
+                renderAdminOrdersList();
             }
         }
 
-        function filterDesktopProducts() {
-            const query = document.getElementById('desktop-search').value.toLowerCase();
-            const filtered = products.filter(p => p.name.toLowerCase().includes(query) || p.desc.toLowerCase().includes(query));
-            renderProducts(filtered);
-        }
-
-        function openProductDetail(id) {
-            currentSelectedProduct = products.find(p => p.id === id);
-            if (!currentSelectedProduct) return;
-
-            document.getElementById('detail-title').innerText = currentSelectedProduct.name;
-            document.getElementById('detail-price').innerText = 'RM ' + currentSelectedProduct.price;
-            document.getElementById('detail-img').src = currentSelectedProduct.image;
-            document.getElementById('detail-category').innerText = currentSelectedProduct.category.toUpperCase() + ' CONTACT LENS';
-
-            const pwrSelect = document.getElementById('detail-pwr');
-            pwrSelect.innerHTML = Object.keys(window.powerStockStatus).map(pwr => {
-                const isAvailable = window.powerStockStatus[pwr];
-                const label = isAvailable ? `PWR ${pwr} (In Stock)` : `PWR ${pwr} (SOLD OUT)`;
-                return `<option value="${pwr}" ${!isAvailable ? 'disabled class="text-red-400 bg-slate-950"' : ''}>${label}</option>`;
-            }).join('');
-
-            const modal = document.getElementById('screen-detail');
-            modal.classList.remove('opacity-0', 'pointer-events-none');
-            modal.classList.add('opacity-100');
-        }
-
-        function closeProductDetail() {
-            const modal = document.getElementById('screen-detail');
-            modal.classList.remove('opacity-100');
-            modal.classList.add('opacity-0', 'pointer-events-none');
-        }
-
-        function addCurrentProductToCart() {
-            if (!currentSelectedProduct) return;
-            const pwr = document.getElementById('detail-pwr').value;
-
-            if (!window.powerStockStatus[pwr]) {
-                showToast("Sold Out", `Power ${pwr} is currently sold out.`, true);
-                return;
-            }
-
-            const existing = cart.find(item => item.id === currentSelectedProduct.id && item.pwr === pwr);
-            if (existing) {
-                existing.qty += 1;
-            } else {
-                cart.push({
-                    ...currentSelectedProduct,
-                    pwr,
-                    qty: 1
-                });
-            }
-
-            updateCartCount();
-            closeProductDetail();
-            showToast("Added to Cart", `${currentSelectedProduct.name} (PWR ${pwr}) added.`);
-        }
-
-        function updateCartCount() {
-            const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
-            document.getElementById('desktop-cart-count').innerText = totalQty;
-            document.getElementById('desktop-cart-title-count').innerText = totalQty;
-        }
-
-        function renderCartItems() {
-            const container = document.getElementById('desktop-cart-items');
-            const summaryBox = document.getElementById('desktop-cart-summary');
-
-            if (cart.length === 0) {
-                container.innerHTML = '<p class="text-xs text-slate-400 text-center py-8">Your cart is currently empty.</p>';
-                summaryBox.classList.add('hidden');
-                return;
-            }
-
-            summaryBox.classList.remove('hidden');
-            let subtotal = 0;
-
-            container.innerHTML = cart.map((item, index) => {
-                const itemTotal = parseFloat(item.price) * item.qty;
-                subtotal += itemTotal;
-                return `
-                    <div class="bg-slate-800/90 p-4 rounded-2xl border border-slate-700 flex items-center space-x-4">
-                        <img src="${item.image}" class="w-16 h-16 rounded-xl object-cover bg-slate-900">
-                        <div class="flex-1">
-                            <h4 class="text-sm font-bold text-white">${item.name}</h4>
-                            <p class="text-xs text-slate-400">Prescription PWR: ${item.pwr}</p>
-                            <span class="text-sm font-extrabold text-brand-400">RM ${item.price}</span>
-                        </div>
-                        <div class="flex flex-col items-end space-y-2">
-                            <button onclick="removeFromCart(${index})" class="text-slate-500 hover:text-red-400 text-xs"><i class="fa-solid fa-trash"></i></button>
-                            <div class="flex items-center space-x-3 bg-slate-900 px-3 py-1 rounded-xl text-xs font-bold">
-                                <button onclick="changeQty(${index}, -1)" class="text-slate-400 hover:text-white">-</button>
-                                <span>${item.qty}</span>
-                                <button onclick="changeQty(${index}, 1)" class="text-slate-400 hover:text-white">+</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            document.getElementById('cart-subtotal').innerText = 'RM ' + subtotal.toFixed(2);
-            document.getElementById('cart-total').innerText = 'RM ' + subtotal.toFixed(2);
-        }
-
-        function changeQty(index, delta) {
-            cart[index].qty += delta;
-            if (cart[index].qty <= 0) {
-                cart.splice(index, 1);
-            }
-            updateCartCount();
-            renderCartItems();
-        }
-
-        function removeFromCart(index) {
-            cart.splice(index, 1);
-            updateCartCount();
-            renderCartItems();
-            showToast("Removed", "Item removed from cart.");
-        }
-
-        function clearCart() {
-            cart = [];
-            updateCartCount();
-            renderCartItems();
-            showToast("Cart Cleared", "All items have been cleared.");
-        }
-
-        function checkoutOrder() {
-            if (cart.length === 0) return;
-            cart = [];
-            updateCartCount();
-            renderCartItems();
-            switchDesktopTab('catalog');
-            showToast("Order Placed Successfully! (RM)", "Your contact lenses are being packaged.");
-        }
-
-        function renderWishlistItems() {
-            const grid = document.getElementById('wishlist-grid');
-            if (wishlist.length === 0) {
-                grid.innerHTML = '<p class="text-xs text-slate-400 col-span-full text-center py-8">No wishlist items saved yet.</p>';
-                return;
-            }
-            grid.innerHTML = wishlist.map(p => `
-                <div class="bg-slate-800/80 rounded-3xl p-4 border border-slate-700 flex flex-col justify-between">
-                    <div class="w-full h-48 rounded-2xl bg-slate-900 overflow-hidden flex items-center justify-center mb-3">
-                        <img src="${p.image}" class="w-40 h-40 object-cover">
-                    </div>
-                    <div>
-                        <p class="text-[10px] text-slate-400 mb-1">${p.category}</p>
-                        <h3 class="text-sm font-bold text-white mb-2">${p.name}</h3>
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm font-extrabold text-brand-400">RM ${p.price}</span>
-                            <button onclick="openProductDetail(${p.id})" class="bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs">View</button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // ================= AUTHENTICATION LOGIC =================
-        function toggleAuthMode(mode) {
+        function setAuthModeTab(mode) {
             authMode = mode;
+            const btnIn = document.getElementById('tab-auth-signin');
+            const btnUp = document.getElementById('tab-auth-signup');
             const title = document.getElementById('auth-form-title');
-            const subtitle = document.getElementById('auth-form-subtitle');
-            const btn = document.getElementById('auth-submit-btn');
-            const toggleText = document.getElementById('auth-toggle-text');
+            const submitBtn = document.getElementById('auth-submit-btn');
+            const adminBox = document.getElementById('admin-quick-signin-box');
 
             if (mode === 'signup') {
+                btnUp.className = "py-2.5 text-xs font-bold rounded-xl bg-brand-500 text-slate-950 transition-all";
+                btnIn.className = "py-2.5 text-xs font-semibold rounded-xl text-slate-400 hover:text-white transition-all";
                 title.innerText = "Create LumiLens Account";
-                subtitle.innerText = "Register with a real email (@yahoo, @outlook, @gmail)";
-                btn.innerText = "Sign Up";
-                toggleText.innerHTML = `Already have an account? <button type="button" onclick="toggleAuthMode('signin')" class="text-brand-400 font-bold hover:underline">Sign In</button>`;
+                submitBtn.innerText = "Register New Account";
+                adminBox.classList.add('hidden');
             } else {
+                btnIn.className = "py-2.5 text-xs font-bold rounded-xl bg-brand-500 text-slate-950 transition-all";
+                btnUp.className = "py-2.5 text-xs font-semibold rounded-xl text-slate-400 hover:text-white transition-all";
                 title.innerText = "Sign In to LumiLens";
-                subtitle.innerText = "Admin email: sweetopia.lens@gmail.com";
-                btn.innerText = "Sign In";
-                toggleText.innerHTML = `Don't have an account? <button type="button" onclick="toggleAuthMode('signup')" class="text-brand-400 font-bold hover:underline">Sign Up</button>`;
+                submitBtn.innerText = "Sign In to Dashboard";
+                adminBox.classList.remove('hidden');
             }
+        }
+
+        function fillAdminCredentials() {
+            document.getElementById('auth-email').value = ADMIN_EMAIL;
+            document.getElementById('auth-password').value = ADMIN_PASS;
+            showToast("Admin Credentials Set", "Click Sign In to access Admin Workspace.");
         }
 
         async function handleAuthSubmit(event) {
@@ -783,326 +930,582 @@
             const email = document.getElementById('auth-email').value.trim();
             const password = document.getElementById('auth-password').value;
 
-            if (!validateRealEmail(email)) {
-                showToast("Invalid Email", "Please enter a valid existing email format.", true);
-                return;
-            }
-
             if (!auth) {
-                showToast("Offline Mode", "Firebase authentication not active.", true);
+                showToast("Error", "Firebase auth unavailable.", true);
                 return;
             }
 
             try {
                 if (authMode === 'signup') {
-                    // Quick pre-check for admin creation or regular user
-                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                    const user = userCredential.user;
-                    
-                    if (email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
-                        await sendEmailVerification(user);
-                        showToast("Verification Sent", `Verification link sent to ${user.email}. Please verify inbox!`);
-                        await signOut(auth);
-                        toggleAuthMode('signin');
-                        return;
-                    } else {
-                        showToast("Admin Account Created", "Admin account registered successfully.");
-                    }
+                    const cred = await createUserWithEmailAndPassword(auth, email, password);
+                    await sendEmailVerification(cred.user);
+                    showToast("Verification Email Sent", `Check your inbox at ${email}.`);
+                    await signOut(auth);
+                    setAuthModeTab('signin');
                 } else {
-                    // Sign In flow
-                    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                    const user = userCredential.user;
-
-                    const isAdmin = email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
-
-                    if (!user.emailVerified && !isAdmin) {
-                        await signOut(auth);
-                        showToast("Email Unverified", "Please verify your email address before signing in.", true);
-                        return;
-                    }
-
-                    showToast("Signed In Successfully", `Welcome to LumiLens, ${user.email}!`);
-                    
-                    // Automatically redirect to LumiLens home store catalog & open admin modal if admin
-                    switchDesktopTab('catalog');
-                    if (isAdmin) {
-                        setTimeout(() => {
-                            openAdminModal();
-                        }, 500);
-                    }
+                    const cred = await signInWithEmailAndPassword(auth, email, password);
+                    currentUser = cred.user;
+                    updateUIAfterLogin(currentUser);
+                    showToast("Signed In Successfully", `Welcome to LumiLens!`);
                 }
-            } catch (error) {
-                // Handle fallback if account already exists during sign in / sign up
-                if (error.code === 'auth/email-already-in-use' && authMode === 'signup') {
-                    try {
-                        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                        showToast("Signed In", `Welcome back, ${email}!`);
-                        switchDesktopTab('catalog');
-                        if (email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
-                            setTimeout(() => openAdminModal(), 500);
-                        }
-                        return;
-                    } catch (signInErr) {
-                        showToast("Auth Error", signInErr.message, true);
-                        return;
-                    }
+            } catch (err) {
+                if (err.code === 'auth/email-already-in-use' && authMode === 'signup') {
+                    const cred = await signInWithEmailAndPassword(auth, email, password);
+                    currentUser = cred.user;
+                    updateUIAfterLogin(currentUser);
+                    showToast("Signed In", `Welcome back!`);
+                    return;
                 }
-                showToast("Auth Error", error.message, true);
+                showToast("Auth Error", err.message, true);
+            }
+        }
+
+        function updateUIAfterLogin(user) {
+            const isAdmin = user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+            document.getElementById('user-email-display').innerText = user.email;
+            const adminWorkspaceBtn = document.getElementById('dtab-admin-workspace');
+
+            if (isAdmin) {
+                adminWorkspaceBtn.classList.remove('hidden');
+                switchPage('dashboard');
+                switchTab('admin-workspace');
+            } else {
+                adminWorkspaceBtn.classList.add('hidden');
+                switchPage('dashboard');
+                switchTab('catalog');
             }
         }
 
         async function handleSignOut() {
             if (!auth) return;
-            try {
-                await signOut(auth);
-                showToast("Signed Out", "Successfully logged out.");
-                switchDesktopTab('account');
-            } catch (error) {
-                showToast("Error", error.message, true);
-            }
+            await signOut(auth);
+            currentUser = null;
+            switchPage('auth');
+            showToast("Signed Out", "Successfully logged out.");
         }
 
-        function updateAuthUI(user) {
-            const authContainer = document.getElementById('auth-container');
-            const profileContainer = document.getElementById('profile-container');
-            const navLabel = document.getElementById('nav-account-label');
-            const navAdminBtn = document.getElementById('nav-admin-btn');
-            const adminAddBtn = document.getElementById('admin-add-product-btn');
-
-            const isAdmin = user && user.email && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
-
-            if (user && !user.isAnonymous) {
-                authContainer.classList.add('hidden');
-                profileContainer.classList.remove('hidden');
-                navLabel.innerText = user.email.split('@')[0];
-                document.getElementById('profile-email').innerText = user.email;
-                document.getElementById('profile-initials').innerText = user.email.charAt(0).toUpperCase();
-                document.getElementById('profile-uid').innerText = user.uid;
-
-                if (isAdmin) {
-                    document.getElementById('profile-role-badge').innerText = "Store Administrator";
-                    document.getElementById('profile-rights').innerText = "Full Control (Stock, Colors & Invoices)";
-                    navAdminBtn.classList.remove('hidden');
-                    if(adminAddBtn) adminAddBtn.classList.remove('hidden');
-                } else {
-                    document.getElementById('profile-role-badge').innerText = "Verified Customer";
-                    document.getElementById('profile-rights').innerText = "Standard Shopper";
-                    navAdminBtn.classList.add('hidden');
-                    if(adminAddBtn) adminAddBtn.classList.add('hidden');
-                }
-            } else {
-                authContainer.classList.remove('hidden');
-                profileContainer.classList.add('hidden');
-                navLabel.innerText = "Sign In";
-                navAdminBtn.classList.add('hidden');
-                if(adminAddBtn) adminAddBtn.classList.add('hidden');
-            }
-        }
-
-        // ================= ADMIN CONTROLS (STOCK, COLORS & INVOICES) =================
-        function openAdminModal() {
-            if (!currentUser || currentUser.email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
-                showToast("Access Denied", "Only admin (sweetopia.lens@gmail.com) can access the admin workspace.", true);
+        function renderStoreProducts(list) {
+            const grid = document.getElementById('store-product-grid');
+            if (!grid) return;
+            if (list.length === 0) {
+                grid.innerHTML = '<p class="col-span-full text-center text-xs text-slate-400 py-8">No products found.</p>';
                 return;
             }
-            renderAdminPowerList();
-            renderAdminProductsList();
-            document.getElementById('admin-modal').classList.remove('opacity-0', 'pointer-events-none');
-            document.getElementById('admin-modal').classList.add('opacity-100');
-        }
 
-        function closeAdminModal() {
-            document.getElementById('admin-modal').classList.remove('opacity-100');
-            document.getElementById('admin-modal').classList.add('opacity-0', 'pointer-events-none');
-        }
-
-        function switchAdminTab(tabName) {
-            const stockSec = document.getElementById('adm-section-stock');
-            const prodSec = document.getElementById('adm-section-products');
-            const invSec = document.getElementById('adm-section-invoices');
-            
-            const stockBtn = document.getElementById('adm-tab-stock');
-            const prodBtn = document.getElementById('adm-tab-products');
-            const invBtn = document.getElementById('adm-tab-invoices');
-
-            [stockSec, prodSec, invSec].forEach(s => s.classList.add('hidden'));
-            [stockBtn, prodBtn, invBtn].forEach(b => {
-                b.className = "px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300";
-            });
-
-            if (tabName === 'stock') {
-                stockSec.classList.remove('hidden');
-                stockBtn.className = "px-4 py-2 rounded-xl text-xs font-bold bg-amber-500 text-slate-950";
-            } else if (tabName === 'products') {
-                prodSec.classList.remove('hidden');
-                prodBtn.className = "px-4 py-2 rounded-xl text-xs font-bold bg-amber-500 text-slate-950";
-            } else if (tabName === 'invoices') {
-                invSec.classList.remove('hidden');
-                invBtn.className = "px-4 py-2 rounded-xl text-xs font-bold bg-amber-500 text-slate-950";
-            }
-        }
-
-        function renderAdminPowerList() {
-            const listContainer = document.getElementById('admin-powers-list');
-            if (!listContainer) return;
-
-            listContainer.innerHTML = Object.keys(window.powerStockStatus).map(pwr => {
-                const isAvailable = window.powerStockStatus[pwr];
-                return `
-                    <div class="flex items-center justify-between bg-slate-950 p-3 rounded-2xl border border-slate-800">
-                        <span class="text-xs font-bold text-white">PWR <span class="text-amber-400 font-mono">${pwr}</span></span>
-                        <button onclick="togglePowerStock('${pwr}')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${isAvailable ? 'bg-brand-500/20 text-brand-400 border border-brand-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/30'}">
-                            ${isAvailable ? 'Available' : 'Sold Out'}
-                        </button>
+            grid.innerHTML = list.map(p => `
+                <div class="bg-slate-800/80 rounded-3xl p-4 border border-slate-700/60 flex flex-col justify-between group hover:border-brand-500/50 transition-all cursor-pointer" onclick="openProductDetail('${p.id}')">
+                    <div class="relative w-full h-44 rounded-2xl bg-slate-900/60 overflow-hidden flex items-center justify-center mb-3">
+                        <span class="absolute top-2.5 left-2.5 bg-brand-500 text-slate-950 text-[9px] font-extrabold px-2 py-0.5 rounded uppercase z-10">${p.badge || 'In Stock'}</span>
+                        <img src="${p.image}" class="w-36 h-36 object-cover group-hover:scale-105 transition-transform" onerror="this.src='https://placehold.co/200x200/1e293b/4ade80?text=Lens'">
                     </div>
-                `;
-            }).join('');
-        }
-
-        function togglePowerStock(pwr) {
-            window.powerStockStatus[pwr] = !window.powerStockStatus[pwr];
-            renderAdminPowerList();
-            showToast("Stock Updated", `PWR ${pwr} set to ${window.powerStockStatus[pwr] ? 'Available' : 'Sold Out'}.`);
-        }
-
-        function renderAdminProductsList() {
-            const container = document.getElementById('admin-products-list');
-            if (!container) return;
-
-            container.innerHTML = products.map(p => `
-                <div class="flex items-center justify-between bg-slate-950 p-3 rounded-2xl border border-slate-800">
-                    <div class="flex items-center space-x-3">
-                        <img src="${p.image}" class="w-10 h-10 rounded-xl object-cover">
-                        <div>
-                            <h5 class="text-xs font-bold text-white">${p.name}</h5>
-                            <p class="text-[10px] text-slate-400">RM ${p.price} • ${p.category}</p>
+                    <div>
+                        <p class="text-[10px] text-slate-400 uppercase mb-1">${p.category} lens</p>
+                        <h3 class="text-sm font-bold text-white mb-2">${p.name}</h3>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-extrabold text-brand-400">RM ${p.price}</span>
+                            <span class="text-[10px] bg-brand-500/20 text-brand-400 px-2.5 py-1 rounded-lg font-bold">Select Power</span>
                         </div>
-                    </div>
-                    <div class="flex space-x-2">
-                        <button onclick="editAdminProduct(${p.id})" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1 rounded-xl text-xs">Edit</button>
-                        <button onclick="deleteAdminProduct(${p.id})" class="bg-red-500/20 hover:bg-red-500/30 text-red-400 px-3 py-1 rounded-xl text-xs">Delete</button>
                     </div>
                 </div>
             `).join('');
         }
 
-        function saveAdminProduct() {
-            const id = document.getElementById('edit-product-id').value;
-            const name = document.getElementById('admin-p-name').value.trim();
-            const price = document.getElementById('admin-p-price').value.trim();
-            const category = document.getElementById('admin-p-cat').value;
-            const image = document.getElementById('admin-p-image').value.trim() || "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500";
+        function filterCatalog(cat, btn) {
+            document.querySelectorAll('.cat-btn').forEach(b => {
+                b.className = "cat-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 shrink-0";
+            });
+            if (btn) btn.className = "cat-btn px-4 py-2 rounded-xl text-xs font-bold bg-brand-500 text-slate-950 shrink-0";
+            if (cat === 'all') renderStoreProducts(products);
+            else renderStoreProducts(products.filter(p => p.category === cat));
+        }
 
-            if (!name || !price) {
-                showToast("Error", "Please provide product name and price.", true);
+        function filterStoreProducts() {
+            const q = document.getElementById('store-search').value.toLowerCase();
+            renderStoreProducts(products.filter(p => p.name.toLowerCase().includes(q)));
+        }
+
+        function openProductDetail(id) {
+            currentSelectedProduct = products.find(p => p.id == id);
+            if (!currentSelectedProduct) return;
+
+            document.getElementById('detail-title').innerText = currentSelectedProduct.name;
+            document.getElementById('detail-price').innerText = 'RM ' + currentSelectedProduct.price;
+            document.getElementById('detail-img').src = currentSelectedProduct.image;
+            document.getElementById('detail-category').innerText = currentSelectedProduct.category.toUpperCase() + ' CONTACT LENS';
+
+            const pwrMap = window.productPowerStock[currentSelectedProduct.id] || {};
+            const pwrSelect = document.getElementById('detail-pwr');
+            pwrSelect.innerHTML = powersList.map(pwr => {
+                const avail = pwrMap[pwr] !== false;
+                const displayLabel = pwr === "0.00" ? "0.00 (No Power)" : pwr;
+                return `<option value="${pwr}" ${!avail ? 'disabled class="text-red-400 bg-slate-950"' : ''}>PWR ${displayLabel} ${avail ? '(In Stock)' : '(SOLD OUT)'}</option>`;
+            }).join('');
+
+            document.getElementById('screen-detail').classList.remove('opacity-0', 'pointer-events-none');
+            document.getElementById('screen-detail').classList.add('opacity-100');
+        }
+
+        function closeProductDetail() {
+            document.getElementById('screen-detail').classList.remove('opacity-100');
+            document.getElementById('screen-detail').classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        function addCurrentProductToCart() {
+            if (!currentSelectedProduct) return;
+            const pwr = document.getElementById('detail-pwr').value;
+            const pwrMap = window.productPowerStock[currentSelectedProduct.id] || {};
+            if (pwrMap[pwr] === false) {
+                showToast("Sold Out", `Power ${pwr} for ${currentSelectedProduct.name} is currently out of stock.`, true);
                 return;
             }
 
-            if (id) {
-                const prod = products.find(p => p.id == id);
-                if (prod) {
-                    prod.name = name;
-                    prod.price = price;
-                    prod.category = category;
-                    prod.image = image;
-                }
-                showToast("Updated", `Lens color '${name}' updated successfully.`);
-            } else {
-                const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
-                products.push({
-                    id: newId,
-                    name,
-                    price,
-                    category,
-                    image,
-                    desc: "Admin created color variant.",
-                    badge: "Custom"
-                });
-                showToast("Created", `New lens color '${name}' added to catalog.`);
+            const existing = cart.find(i => i.id === currentSelectedProduct.id && i.pwr === pwr);
+            if (existing) { existing.qty += 1; }
+            else { cart.push({ ...currentSelectedProduct, pwr, qty: 1 }); }
+
+            updateCartBadge();
+            closeProductDetail();
+            showToast("Added to Cart", `${currentSelectedProduct.name} (PWR ${pwr}) added.`);
+        }
+
+        function updateCartBadge() {
+            const count = cart.reduce((s, i) => s + i.qty, 0);
+            document.getElementById('cart-badge-count').innerText = count;
+            document.getElementById('cart-title-count').innerText = count;
+        }
+
+        function renderCartItems() {
+            const container = document.getElementById('cart-items-container');
+            const summaryBox = document.getElementById('cart-summary-box');
+            if (cart.length === 0) {
+                container.innerHTML = '<p class="text-xs text-slate-400 text-center py-8">Your cart is currently empty.</p>';
+                summaryBox.classList.add('hidden');
+                return;
+            }
+            summaryBox.classList.remove('hidden');
+            let sub = 0;
+            container.innerHTML = cart.map((item, idx) => {
+                sub += parseFloat(item.price) * item.qty;
+                return `
+                    <div class="bg-slate-800/90 p-4 rounded-2xl border border-slate-700 flex items-center space-x-4">
+                        <img src="${item.image}" class="w-14 h-14 rounded-xl object-cover" onerror="this.src='https://placehold.co/100x100/1e293b/4ade80?text=Lens'">
+                        <div class="flex-1">
+                            <h4 class="text-sm font-bold text-white">${item.name}</h4>
+                            <p class="text-xs text-slate-400">Power: ${item.pwr} • RM ${item.price}</p>
+                        </div>
+                        <div class="flex items-center space-x-3 bg-slate-900 px-3 py-1.5 rounded-xl text-xs font-bold">
+                            <button onclick="changeQty(${idx}, -1)" class="text-slate-400 hover:text-white">-</button>
+                            <span>${item.qty}</span>
+                            <button onclick="changeQty(${idx}, 1)" class="text-slate-400 hover:text-white">+</button>
+                        </div>
+                        <button onclick="removeFromCart(${idx})" class="text-slate-500 hover:text-red-400"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('cart-subtotal').innerText = 'RM ' + sub.toFixed(2);
+            document.getElementById('cart-total').innerText = 'RM ' + sub.toFixed(2);
+        }
+
+        function changeQty(idx, d) {
+            cart[idx].qty += d;
+            if (cart[idx].qty <= 0) cart.splice(idx, 1);
+            updateCartBadge();
+            renderCartItems();
+        }
+
+        function removeFromCart(idx) {
+            cart.splice(idx, 1);
+            updateCartBadge();
+            renderCartItems();
+        }
+
+        function clearCart() {
+            cart = [];
+            updateCartBadge();
+            renderCartItems();
+        }
+
+        // --- TOYYIBPAY FPX CHECKOUT & FIRESTORE INVOICES ---
+        async function processToyyibPayCheckout() {
+            if (cart.length === 0) return;
+            const alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const randomCode = Array.from({length: 5}, () => alphabets[Math.floor(Math.random() * alphabets.length)]).join('');
+            pendingOrderId = `261009SW${randomCode}`;
+            const total = cart.reduce((s, i) => s + (parseFloat(i.price) * i.qty), 0).toFixed(2);
+
+            const newOrder = {
+                id: pendingOrderId,
+                customer: currentUser ? currentUser.email : "guest@lumilens.my",
+                items: [...cart],
+                total: total,
+                status: "Pending ToyyibPay FPX",
+                date: new Date().toLocaleString(),
+                timestamp: new Date().toISOString()
+            };
+
+            if (db) {
+                try {
+                    await setDoc(doc(db, "lumilens_orders", pendingOrderId), newOrder);
+                } catch(e) { console.warn("Firestore order write error:", e); }
             }
 
-            resetAdminProductForm();
-            renderProducts(products);
+            document.getElementById('fpx-modal-order-id').innerText = pendingOrderId;
+            document.getElementById('fpx-modal').classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        function confirmToyyibPayRedirect() {
+            cart = [];
+            updateCartBadge();
+            window.location.href = TOYYIBPAY_URL;
+        }
+
+        function closeToyyibPayModal() {
+            document.getElementById('fpx-modal').classList.add('opacity-0', 'pointer-events-none');
+            switchTab('customer-dashboard');
+            showToast("Order Generated", `Order ID ${pendingOrderId} created. Complete payment on ToyyibPay.`);
+        }
+
+        function renderCustomerOrders() {
+            const container = document.getElementById('customer-orders-list');
+            if (!container) return;
+            const userEmail = currentUser ? currentUser.email : "";
+            const userOrders = allOrders.filter(o => o.customer === userEmail || userEmail === ADMIN_EMAIL);
+
+            if (userOrders.length === 0) {
+                container.innerHTML = '<p class="text-xs text-slate-400 text-center py-8">No approved purchase invoices found in your dashboard.</p>';
+                return;
+            }
+
+            container.innerHTML = userOrders.map(o => `
+                <div class="bg-slate-950 p-5 rounded-3xl border border-slate-800 space-y-3">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-800 pb-3">
+                        <div>
+                            <span class="text-xs font-extrabold text-brand-400 font-mono">Order ID: ${o.id}</span>
+                            <p class="text-[10px] text-slate-400 mt-0.5">${o.date} • Customer: ${o.customer}</p>
+                        </div>
+                        <span class="bg-blue-500/20 text-blue-400 text-[10px] font-bold px-3 py-1 rounded-xl">${o.status}</span>
+                    </div>
+                    <div class="space-y-2">
+                         ${(o.items || []).map(i => `
+                            <div class="flex justify-between text-xs text-slate-300">
+                                <span>${i.name} (PWR ${i.pwr}) x${i.qty}</span>
+                                <span class="font-bold">RM ${(parseFloat(i.price) * i.qty).toFixed(2)}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="border-t border-slate-800/80 pt-2 flex justify-between items-center text-xs">
+                        <span class="text-slate-400">Total Amount (RM)</span>
+                        <span class="text-base font-extrabold text-brand-400">RM ${o.total}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- ADMIN WORKSPACE ---
+        function switchAdminSubTab(sub) {
+            ['stock', 'products', 'orders'].forEach(s => {
+                document.getElementById('adm-sub-section-' + s).classList.add('hidden');
+                document.getElementById('adm-sub-' + s).className = "px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300";
+            });
+            document.getElementById('adm-sub-section-' + sub).classList.remove('hidden');
+            document.getElementById('adm-sub-' + sub).className = "px-4 py-2 rounded-xl text-xs font-bold bg-amber-500 text-slate-950";
+        }
+
+        function onAdminPowerRangeChange() {
+            const selectedPwr = document.getElementById('admin-global-power-select').value;
+            products.forEach(p => {
+                const cb = document.getElementById(`power-cb-${p.id}`);
+                if (cb) {
+                    const isAvailable = window.productPowerStock[p.id] ? window.productPowerStock[p.id][selectedPwr] !== false : true;
+                    cb.checked = isAvailable;
+                }
+            });
+        }
+
+        function updatePowerStockFromCheckboxes() {
+            const selectedPwr = document.getElementById('admin-global-power-select').value;
+            products.forEach(p => {
+                const cb = document.getElementById(`power-cb-${p.id}`);
+                if (cb) {
+                    if (!window.productPowerStock[p.id]) window.productPowerStock[p.id] = {};
+                    window.productPowerStock[p.id][selectedPwr] = cb.checked;
+                }
+            });
+        }
+
+        function saveAdminStockSettings() {
+            const selectedPwr = document.getElementById('admin-global-power-select').value;
+            updatePowerStockFromCheckboxes();
+            renderStoreProducts(products);
+            showToast("Stock Settings Saved", `Power ${selectedPwr} availability updated live for all catalog products.`);
+        }
+
+        // FileReader implementation for Direct Device / PC File Upload
+        function handleImageFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64String = e.target.result;
+                document.getElementById('admin-prod-img-base64').value = base64String;
+                
+                // Show preview
+                const previewContainer = document.getElementById('admin-image-preview-container');
+                const previewTag = document.getElementById('admin-image-preview-tag');
+                previewTag.src = base64String;
+                previewContainer.classList.remove('hidden');
+                previewContainer.classList.add('flex');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function renderAdminProductsList() {
+            const list = document.getElementById('admin-products-list');
+            if (!list) return;
+            if (products.length === 0) {
+                list.innerHTML = '<p class="text-xs text-slate-400 text-center py-4">No products found.</p>';
+                return;
+            }
+            list.innerHTML = products.map(p => `
+                <div class="flex items-center justify-between bg-slate-950 p-3 rounded-2xl border border-slate-800">
+                    <div class="flex items-center space-x-3">
+                        <img src="${p.image}" class="w-10 h-10 rounded-xl object-cover" onerror="this.src='https://placehold.co/100x100/1e293b/4ade80?text=Lens'">
+                        <div>
+                            <h5 class="text-xs font-bold text-white">${p.name}</h5>
+                            <p class="text-[10px] text-slate-400">RM ${p.price} • ${p.category}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="editAdminProduct('${p.id}')" class="bg-slate-800 text-slate-200 px-3 py-1.5 rounded-xl text-xs">Edit</button>
+                        <button onclick="deleteAdminProduct('${p.id}')" class="w-8 h-8 rounded-xl bg-red-500/20 text-red-400 hover:bg-red-500/30 flex items-center justify-center"><i class="fa-solid fa-trash text-xs"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function saveAdminProduct() {
+            const id = document.getElementById('edit-prod-id').value;
+            const name = document.getElementById('admin-prod-name').value.trim();
+            const price = document.getElementById('admin-prod-price').value.trim();
+            const category = document.getElementById('admin-prod-cat').value;
+            const base64Img = document.getElementById('admin-prod-img-base64').value;
+            
+            const existingProduct = products.find(i => i.id === id);
+            const image = base64Img || (existingProduct ? existingProduct.image : "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500");
+
+            if (!name || !price) { showToast("Error", "Provide name and price.", true); return; }
+
+            const prodId = id || ("p_" + Date.now());
+            const productData = { id: prodId, name, price, category, image, badge: "In Stock" };
+
+            if (!window.productPowerStock[prodId]) {
+                window.productPowerStock[prodId] = {};
+                powersList.forEach(pw => window.productPowerStock[prodId][pw] = true);
+            }
+
+            if (db) {
+                try {
+                    await setDoc(doc(db, "lumilens_products", prodId), productData);
+                } catch(e) { console.warn("Firestore product save error:", e); }
+            }
+
+            const existingIdx = products.findIndex(p => p.id === prodId);
+            if (existingIdx >= 0) {
+                products[existingIdx] = productData;
+            } else {
+                products.push(productData);
+            }
+
+            renderStoreProducts(products);
             renderAdminProductsList();
+            resetAdminProductForm();
+            showToast("Saved Live", "Product published successfully with uploaded image.");
         }
 
         function editAdminProduct(id) {
-            const p = products.find(item => item.id === id);
+            const p = products.find(i => i.id == id);
             if (!p) return;
+            document.getElementById('edit-prod-id').value = p.id;
+            document.getElementById('admin-prod-name').value = p.name;
+            document.getElementById('admin-prod-price').value = p.price;
+            document.getElementById('admin-prod-cat').value = p.category;
+            document.getElementById('admin-prod-img-base64').value = p.image;
+            
+            if (p.image) {
+                const previewContainer = document.getElementById('admin-image-preview-container');
+                const previewTag = document.getElementById('admin-image-preview-tag');
+                previewTag.src = p.image;
+                previewContainer.classList.remove('hidden');
+                previewContainer.classList.add('flex');
+            }
 
-            document.getElementById('edit-product-id').value = p.id;
-            document.getElementById('admin-p-name').value = p.name;
-            document.getElementById('admin-p-price').value = p.price;
-            document.getElementById('admin-p-cat').value = p.category;
-            document.getElementById('admin-p-image').value = p.image;
-            document.getElementById('form-product-title').innerText = `Edit Lens Color: ${p.name}`;
+            document.getElementById('admin-form-title').innerText = `Edit: ${p.name}`;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function deleteAdminProduct(id) {
-            products = products.filter(p => p.id !== id);
-            renderProducts(products);
+        async function deleteAdminProduct(id) {
+            if (db) {
+                try {
+                    await deleteDoc(doc(db, "lumilens_products", String(id)));
+                } catch(e) { console.warn("Firestore product delete error:", e); }
+            }
+            products = products.filter(i => i.id != id);
+            renderStoreProducts(products);
             renderAdminProductsList();
-            showToast("Deleted", "Contact lens color removed from catalog.");
+            showToast("Deleted", "Product removed live.");
         }
 
         function resetAdminProductForm() {
-            document.getElementById('edit-product-id').value = "";
-            document.getElementById('admin-p-name').value = "";
-            document.getElementById('admin-p-price').value = "";
-            document.getElementById('admin-p-image').value = "";
-            document.getElementById('form-product-title').innerText = "Add New Contact Lens Color / Item";
+            document.getElementById('edit-prod-id').value = "";
+            document.getElementById('admin-prod-name').value = "";
+            document.getElementById('admin-prod-price').value = "";
+            document.getElementById('admin-prod-file').value = "";
+            document.getElementById('admin-prod-img-base64').value = "";
+            document.getElementById('admin-image-preview-container').classList.add('hidden');
+            document.getElementById('admin-image-preview-container').classList.remove('flex');
+            document.getElementById('admin-form-title').innerText = "Add New Product";
         }
 
-        function openForgotPassword() {
-            document.getElementById('forgot-modal').classList.remove('opacity-0', 'pointer-events-none');
-            document.getElementById('forgot-modal').classList.add('opacity-100');
-        }
-
-        function closeForgotPassword() {
-            document.getElementById('forgot-modal').classList.remove('opacity-100');
-            document.getElementById('forgot-modal').classList.add('opacity-0', 'pointer-events-none');
-        }
-
-        async function submitForgotPassword() {
-            const email = document.getElementById('forgot-email').value;
-            if (!email) {
-                showToast("Error", "Please enter your email.", true);
+        function renderAdminOrdersList() {
+            const container = document.getElementById('admin-all-orders-list');
+            if (!container) return;
+            if (allOrders.length === 0) {
+                container.innerHTML = '<p class="text-xs text-slate-400 text-center py-6">No invoices recorded in database.</p>';
                 return;
             }
-            try {
-                if (auth) {
-                    await sendPasswordResetEmail(auth, email);
-                }
-                closeForgotPassword();
-                showToast("Reset Email Sent", `Follow this link to reset your LumiLens password for your ${email} account.`);
-            } catch (e) {
-                closeForgotPassword();
-                showToast("Password Reset", `Follow this link to reset your LumiLens password for your ${email} account.`);
+            container.innerHTML = allOrders.map(o => `
+                <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xs font-bold text-amber-400 font-mono">${o.id}</span>
+                            <span class="text-[9px] bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded">${o.status}</span>
+                        </div>
+                        <p class="text-[11px] text-slate-300 mt-1">Customer: ${o.customer} • Total: <b>RM ${o.total}</b></p>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <span class="text-[10px] text-slate-500">${o.date}</span>
+                        <button onclick="deleteAdminOrder('${o.id}')" class="w-8 h-8 rounded-xl bg-red-500/20 text-red-400 hover:bg-red-500/30 flex items-center justify-center"><i class="fa-solid fa-trash text-xs"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function deleteAdminOrder(orderId) {
+            if (db) {
+                try {
+                    await deleteDoc(doc(db, "lumilens_orders", orderId));
+                } catch(e) { console.warn("Firestore delete order error:", e); }
             }
+            allOrders = allOrders.filter(o => o.id !== orderId);
+            renderAdminOrdersList();
+            renderCustomerOrders();
+            showToast("Invoice Deleted", `Order ${orderId} removed from client dashboards.`);
+        }
+
+        function exportInvoicesToCSV() {
+            let csv = "Order ID,Customer Email,Total (RM),Status,Date\r\n";
+            allOrders.forEach(o => {
+                csv += `"${o.id}","${o.customer}","${o.total}","${o.status}","${o.date}"\r\n`;
+            });
+            const link = document.createElement("a");
+            link.href = encodeURI("data:text/csv;charset=utf-8," + csv);
+            link.download = `LumiLens_ToyyibPay_Invoices_${new Date().toISOString().slice(0,10)}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast("Exported", "Invoices CSV downloaded.");
+        }
+
+        function openForgotPassword() { document.getElementById('forgot-modal').classList.remove('opacity-0', 'pointer-events-none'); }
+        function closeForgotPassword() { document.getElementById('forgot-modal').classList.add('opacity-0', 'pointer-events-none'); }
+        async function submitForgotPassword() {
+            const email = document.getElementById('forgot-email').value;
+            if (auth && email) await sendPasswordResetEmail(auth, email);
+            closeForgotPassword();
+            showToast("Password Reset", `Instructions sent to ${email}.`);
         }
 
         function showToast(title, msg, isError = false) {
-            const toast = document.getElementById('toast');
-            const iconWrapper = document.getElementById('toast-icon-wrapper');
+            const t = document.getElementById('toast');
             document.getElementById('toast-title').innerText = title;
             document.getElementById('toast-msg').innerText = msg;
-
-            if (isError) {
-                iconWrapper.className = "w-8 h-8 rounded-full bg-red-500 flex items-center justify-center text-slate-950 font-bold";
-                iconWrapper.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-xs"></i>';
-            } else {
-                iconWrapper.className = "w-8 h-8 rounded-full bg-brand-500 flex items-center justify-center text-slate-950 font-bold";
-                iconWrapper.innerHTML = '<i class="fa-solid fa-check text-xs"></i>';
-            }
-
-            toast.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-4');
-            toast.classList.add('opacity-100', 'translate-y-0');
-
+            t.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-4');
+            t.classList.add('opacity-100', 'translate-y-0');
             setTimeout(() => {
-                toast.classList.remove('opacity-100', 'translate-y-0');
-                toast.classList.add('opacity-0', 'pointer-events-none', '-translate-y-4');
+                t.classList.remove('opacity-100', 'translate-y-0');
+                t.classList.add('opacity-0', 'pointer-events-none', '-translate-y-4');
             }, 4000);
         }
+
+        // Slideshow JavaScript Logic (5 Photos with Left/Right Buttons and Dots)
+        function initSlideshow() {
+            const slides = document.querySelectorAll(".expert-slide");
+            const dots = document.querySelectorAll(".expert-dot");
+            const prevBtn = document.querySelector(".expert-slide-prev");
+            const nextBtn = document.querySelector(".expert-slide-next");
+            if (slides.length === 0) return;
+            
+            let currentIndex = 0;
+            let slideInterval;
+
+            function showSlide(index) {
+                slides.forEach((slide, i) => {
+                    slide.classList.toggle("active", i === index);
+                    if (dots[i]) dots[i].classList.toggle("active", i === index);
+                });
+                currentIndex = index;
+            }
+
+            function nextSlide() {
+                let nextIndex = (currentIndex + 1) % slides.length;
+                showSlide(nextIndex);
+            }
+
+            function prevSlide() {
+                let prevIndex = (currentIndex - 1 + slides.length) % slides.length;
+                showSlide(prevIndex);
+            }
+
+            function startAutoPlay() {
+                clearInterval(slideInterval);
+                slideInterval = setInterval(nextSlide, 5000);
+            }
+
+            function resetAutoPlay() {
+                clearInterval(slideInterval);
+                startAutoPlay();
+            }
+
+            if (nextBtn) {
+                nextBtn.onclick = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    nextSlide();
+                    resetAutoPlay();
+                };
+            }
+
+            if (prevBtn) {
+                prevBtn.onclick = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    prevSlide();
+                    resetAutoPlay();
+                };
+            }
+
+            dots.forEach((dot, i) => {
+                dot.onclick = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    showSlide(i);
+                    resetAutoPlay();
+                };
+            });
+
+            startAutoPlay();
+        }
     </script>
-</body>
-</html>
+
+</body></html>
