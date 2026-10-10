@@ -294,10 +294,7 @@
                     <button onclick="switchTab('catalog')" id="dtab-catalog" class="dtab-btn px-4 py-2 rounded-xl text-xs transition-all bg-brand-500 text-slate-950 font-bold">Store Catalog</button>
                     <button onclick="switchTab('cart')" id="dtab-cart" class="dtab-btn px-4 py-2 rounded-xl text-xs hover:text-white transition-all text-slate-400 font-semibold">Cart (<span id="cart-badge-count">0</span>)</button>
                     <button onclick="switchTab('customer-dashboard')" id="dtab-customer-dashboard" class="dtab-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition-all">My Orders &amp; Invoices</button>
-                    <button onclick="switchTab('admin-workspace')" id="dtab-admin-workspace-link" class="dtab-btn px-4 py-2 rounded-xl text-xs font-semibold text-amber-400 hover:text-amber-300 transition-all flex items-center space-x-1">
-                        <i class="fa-solid fa-shield-halved text-[10px]"></i>
-                        <span>Admin Workspace</span>
-                    </button>
+                    <!-- Admin link removed for customers -->
                 </div>
                 <div class="flex items-center space-x-3">
                     <span id="user-email-display" class="text-xs text-slate-300 font-semibold">user@example.com</span>
@@ -460,7 +457,7 @@
                     </div>
                 </div>
 
-                <!-- TAB 4: ADMIN WORKSPACE -->
+                <!-- TAB 4: ADMIN WORKSPACE (Admin Only) -->
                 <div id="tab-section-admin-workspace" class="hidden space-y-6">
                     <div class="flex items-center justify-between pb-4 border-b border-slate-800 bg-amber-500/10 p-4 rounded-2xl border border-amber-500/30">
                         <div class="flex items-center space-x-3">
@@ -691,7 +688,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, deleteDoc, getDoc, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB3Gcqiv-hJIs7p4dPqEAo2_WyRAlENEkk",
@@ -778,7 +775,6 @@
         window.showToast = showToast;
 
         document.addEventListener('DOMContentLoaded', async () => {
-            // Seed initial products to Firestore if collection is empty
             if (db) {
                 try {
                     const snap = await getDocs(collection(db, "lumilens_products"));
@@ -803,9 +799,12 @@
                 onAuthStateChanged(auth, async (user) => {
                     if (user && !user.isAnonymous) {
                         currentUser = user;
+                        await loadCustomerCartFromFirestore(user.uid);
                         updateUIAfterLogin(user);
                     } else {
                         currentUser = null;
+                        cart = [];
+                        updateCartBadge();
                         switchPage('auth');
                     }
                 });
@@ -843,6 +842,30 @@
             }, (err) => { console.warn("Orders sync error:", err); });
         }
 
+        async function loadCustomerCartFromFirestore(uid) {
+            if (!db || !uid) return;
+            try {
+                const cartDoc = await getDoc(doc(db, "lumilens_carts", uid));
+                if (cartDoc.exists()) {
+                    cart = cartDoc.data().items || [];
+                } else {
+                    cart = [];
+                }
+                updateCartBadge();
+            } catch (e) {
+                console.warn("Error loading cart from Firestore:", e);
+            }
+        }
+
+        async function saveCustomerCartToFirestore() {
+            if (!db || !currentUser || currentUser.isAnonymous) return;
+            try {
+                await setDoc(doc(db, "lumilens_carts", currentUser.uid), { items: cart, updatedAt: new Date().toISOString() });
+            } catch (e) {
+                console.warn("Error saving cart to Firestore:", e);
+            }
+        }
+
         function switchPage(pageName) {
             const pageAuth = document.getElementById('page-auth');
             const pageDashboard = document.getElementById('page-dashboard');
@@ -864,6 +887,11 @@
         }
 
         function switchTab(tabName) {
+            // Prevent regular customers from accessing admin workspace
+            if (tabName === 'admin-workspace' && (!currentUser || currentUser.email.toLowerCase() !== ADMIN_EMAIL.toLowerCase())) {
+                return;
+            }
+
             ['catalog', 'cart', 'customer-dashboard', 'admin-workspace'].forEach(t => {
                 const sec = document.getElementById('tab-section-' + t);
                 const btn = document.getElementById('dtab-' + t);
@@ -888,7 +916,7 @@
             }
             if (tabName === 'cart') renderCartItems();
             if (tabName === 'customer-dashboard') renderCustomerOrders();
-            if (tabName === 'admin-workspace') {
+            if (tabName === 'admin-workspace' && currentUser && currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
                 renderAdminProductsList();
                 renderAdminPowerStockCheckboxes();
                 renderAdminOrdersList();
@@ -973,6 +1001,8 @@
             if (!auth) return;
             await signOut(auth);
             currentUser = null;
+            cart = [];
+            updateCartBadge();
             switchPage('auth');
             showToast("Signed Out", "Successfully logged out.");
         }
@@ -1043,7 +1073,7 @@
             document.getElementById('screen-detail').classList.add('opacity-0', 'pointer-events-none');
         }
 
-        function addCurrentProductToCart() {
+        async function addCurrentProductToCart() {
             if (!currentSelectedProduct) return;
             const pwr = document.getElementById('detail-pwr').value;
             const pwrMap = window.productPowerStock[currentSelectedProduct.id] || {};
@@ -1057,6 +1087,7 @@
             else { cart.push({ ...currentSelectedProduct, pwr, qty: 1 }); }
 
             updateCartBadge();
+            await saveCustomerCartToFirestore();
             closeProductDetail();
             showToast("Added to Cart", `${currentSelectedProduct.name} (PWR ${pwr}) added.`);
         }
@@ -1099,23 +1130,26 @@
             document.getElementById('cart-total').innerText = 'RM ' + sub.toFixed(2);
         }
 
-        function changeQty(idx, d) {
+        async function changeQty(idx, d) {
             cart[idx].qty += d;
             if (cart[idx].qty <= 0) cart.splice(idx, 1);
             updateCartBadge();
             renderCartItems();
+            await saveCustomerCartToFirestore();
         }
 
-        function removeFromCart(idx) {
+        async function removeFromCart(idx) {
             cart.splice(idx, 1);
             updateCartBadge();
             renderCartItems();
+            await saveCustomerCartToFirestore();
         }
 
-        function clearCart() {
+        async function clearCart() {
             cart = [];
             updateCartBadge();
             renderCartItems();
+            await saveCustomerCartToFirestore();
         }
 
         async function processToyyibPayCheckout() {
@@ -1145,9 +1179,10 @@
             document.getElementById('fpx-modal').classList.remove('opacity-0', 'pointer-events-none');
         }
 
-        function confirmToyyibPayRedirect() {
+        async function confirmToyyibPayRedirect() {
             cart = [];
             updateCartBadge();
+            await saveCustomerCartToFirestore();
             window.location.href = TOYYIBPAY_URL;
         }
 
