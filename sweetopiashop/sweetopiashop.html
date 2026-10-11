@@ -793,7 +793,9 @@
                     const snap = await getDocs(collection(db, "lumilens_products"));
                     if (snap.empty) {
                         for (const p of products) {
-                            await setDoc(doc(db, "lumilens_products", p.id), p);
+                            const initialPowerStock = {};
+                            powersList.forEach(pw => initialPowerStock[pw] = true);
+                            await setDoc(doc(db, "lumilens_products", p.id), { ...p, powerStock: initialPowerStock });
                         }
                     }
                 } catch(e) {
@@ -832,7 +834,9 @@
                     snapshot.forEach(docSnap => {
                         const data = { id: docSnap.id, ...docSnap.data() };
                         loaded.push(data);
-                        if (!window.productPowerStock[data.id]) {
+                        if (data.powerStock) {
+                            window.productPowerStock[data.id] = data.powerStock;
+                        } else if (!window.productPowerStock[data.id]) {
                             window.productPowerStock[data.id] = {};
                             powersList.forEach(pw => window.productPowerStock[data.id][pw] = true);
                         }
@@ -1284,11 +1288,25 @@
             });
         }
 
-        function saveAdminStockSettings() {
+        async function saveAdminStockSettings() {
             const selectedPwr = document.getElementById('admin-global-power-select').value;
             updatePowerStockFromCheckboxes();
+
+            if (db) {
+                try {
+                    for (const p of products) {
+                        await setDoc(doc(db, "lumilens_products", p.id), {
+                            ...p,
+                            powerStock: window.productPowerStock[p.id]
+                        }, { merge: true });
+                    }
+                } catch (e) {
+                    console.warn("Error saving power stock to Firestore:", e);
+                }
+            }
+
             renderStoreProducts(products);
-            showToast("Stock Settings Saved", `Power ${selectedPwr} availability updated live for all catalog products.`);
+            showToast("Stock Settings Saved", `Power ${selectedPwr} availability updated live in Cloud Firestore.`);
         }
 
         function handleImageFileUpload(event) {
@@ -1346,12 +1364,20 @@
             if (!name || !price) { showToast("Error", "Provide name and price.", true); return; }
 
             const prodId = id || ("p_" + Date.now());
-            const productData = { id: prodId, name, price, category, image, badge: "In Stock" };
-
             if (!window.productPowerStock[prodId]) {
                 window.productPowerStock[prodId] = {};
                 powersList.forEach(pw => window.productPowerStock[prodId][pw] = true);
             }
+
+            const productData = { 
+                id: prodId, 
+                name, 
+                price, 
+                category, 
+                image, 
+                badge: "In Stock",
+                powerStock: window.productPowerStock[prodId]
+            };
 
             if (db) {
                 try {
