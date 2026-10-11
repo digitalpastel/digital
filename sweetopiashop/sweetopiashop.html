@@ -278,10 +278,11 @@
                         <p id="inv-a4-phone" style="color: #475569; margin: 0;"></p>
                     </div>
                     <div style="text-align: right;">
-                        <p style="font-weight: 700; color: #0f172a; margin: 0 0 4px 0;">Order & Status:</p>
+                        <p style="font-weight: 700; color: #0f172a; margin: 0 0 4px 0;">Order & Delivery Tracking:</p>
                         <p id="inv-a4-date" style="color: #475569; margin: 0 0 2px 0;"></p>
                         <p id="inv-a4-paymethod" style="color: #0f172a; font-weight: 600; margin: 0 0 2px 0;"></p>
-                        <p id="inv-a4-status" style="color: #16a34a; font-weight: 600; margin: 0;"></p>
+                        <p id="inv-a4-status" style="color: #16a34a; font-weight: 600; margin: 0 0 2px 0;"></p>
+                        <p id="inv-a4-tracking" style="color: #2563eb; font-weight: 700; margin: 0; font-family: monospace;"></p>
                     </div>
                 </div>
                 <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 13px;">
@@ -327,6 +328,7 @@
                     <p style="margin: 0 0 2px 0;"><b>Customer Name:</b> <span id="inv-80-name"></span></p>
                     <p style="margin: 0 0 2px 0;"><b>Phone:</b> <span id="inv-80-phone"></span></p>
                     <p style="margin: 0 0 2px 0;"><b>Address:</b> <span id="inv-80-address"></span></p>
+                    <p style="margin: 0 0 2px 0;"><b>Tracking No:</b> <span id="inv-80-tracking" style="font-family: monospace; font-weight: bold;"></span></p>
                     <p style="margin: 0;"><b>Date:</b> <span id="inv-80-date"></span></p>
                 </div>
                 <div id="inv-80-items" style="font-size: 11px; margin-bottom: 12px; border-bottom: 1px dashed #cbd5e1; padding-bottom: 8px;"></div>
@@ -394,7 +396,7 @@
                 <div class="flex items-center space-x-2">
                     <button onclick="switchTab('catalog')" id="dtab-catalog" class="dtab-btn px-4 py-2 rounded-xl text-xs transition-all bg-brand-500 text-slate-950 font-bold">Store Catalog</button>
                     <button onclick="switchTab('cart')" id="dtab-cart" class="dtab-btn px-4 py-2 rounded-xl text-xs hover:text-white transition-all text-slate-400 font-semibold">Cart (<span id="cart-badge-count">0</span>)</button>
-                    <button onclick="switchTab('customer-dashboard')" id="dtab-customer-dashboard" class="dtab-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition-all">My Orders &amp; Invoices</button>
+                    <button onclick="switchTab('customer-dashboard')" id="dtab-customer-dashboard" class="dtab-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition-all">My Orders &amp; Tracking</button>
                 </div>
                 <div class="flex items-center space-x-3">
                     <span id="user-email-display" class="text-xs text-slate-300 font-semibold">user@example.com</span>
@@ -471,7 +473,7 @@
                         <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&amp;fit=crop&amp;w=1600&amp;q=80" alt="ToyyibPay Secure Checkout">
                         <div class="expert-slide-caption">
                             <h2>Secure FPX &amp; COD Checkout</h2>
-                            <p>Fast and safe payments with real-time order tracking and admin invoice dispatch sync.</p>
+                            <p>Fast and safe payments with live courier tracking and delivery notifications.</p>
                             <a href="#store-product-grid" class="expert-btn">Order Now</a>
                         </div>
                     </div>
@@ -562,7 +564,7 @@
                     <div class="flex items-center justify-between pb-4 border-b border-slate-800">
                         <div>
                             <h3 class="text-xl font-bold text-white">Customer Dashboard</h3>
-                            <p class="text-xs text-slate-400 mt-0.5">Track your orders, fill billing forms, and download A4 or 80mm PNG invoices.</p>
+                            <p class="text-xs text-slate-400 mt-0.5">Track your delivery progress, fill billing forms, and download invoice PNGs.</p>
                         </div>
                         <span class="text-xs bg-brand-500/20 text-brand-400 px-3 py-1.5 rounded-xl font-bold">Active Shopper</span>
                     </div>
@@ -581,7 +583,7 @@
                             </div>
                             <div>
                                 <h3 class="text-sm font-bold text-white">Admin Workspace Control Center</h3>
-                                <p class="text-xs text-slate-300">Firestore Real-time sync for stock, live products, and invoices.</p>
+                                <p class="text-xs text-slate-300">Firestore Real-time sync for stock, live products, and tracking dispatch.</p>
                             </div>
                         </div>
                         <button onclick="exportInvoicesToCSV()" class="bg-brand-500 hover:bg-brand-400 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs flex items-center space-x-2 shadow-lg">
@@ -593,7 +595,7 @@
                     <div class="flex space-x-2 border-b border-slate-800 pb-3">
                         <button onclick="switchAdminSubTab('stock')" id="adm-sub-stock" class="px-4 py-2 rounded-xl text-xs font-bold bg-amber-500 text-slate-950">Editable Power Stock &amp; Brands</button>
                         <button onclick="switchAdminSubTab('products')" id="adm-sub-products" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300">Manage Products</button>
-                        <button onclick="switchAdminSubTab('orders')" id="adm-sub-orders" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300">Customer Invoices &amp; Dispatch Approval</button>
+                        <button onclick="switchAdminSubTab('orders')" id="adm-sub-orders" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300">Courier Tracking &amp; Invoices</button>
                     </div>
 
                     <!-- ADMIN SUB-TAB 1: POWER STOCK & BRAND CATALOG MANAGEMENT -->
@@ -715,8 +717,8 @@
                     <!-- ADMIN SUB-TAB 3: ORDERS -->
                     <div id="adm-sub-section-orders" class="hidden space-y-4">
                         <div class="flex items-center justify-between">
-                            <h4 class="text-xs font-bold text-white">Customer Invoices &amp; Dispatch Approval</h4>
-                            <p class="text-[11px] text-slate-400">Approve invoices once delivery is dispatched.</p>
+                            <h4 class="text-xs font-bold text-white">Courier Tracking Numbers &amp; Invoice Dispatch</h4>
+                            <p class="text-[11px] text-slate-400">Enter courier tracking number to mark order as Dispatched.</p>
                         </div>
                         <div id="admin-all-orders-list" class="space-y-3 max-h-96 overflow-y-auto pr-2"><p class="text-xs text-slate-400 text-center py-6">No invoices recorded in database.</p></div>
                     </div>
@@ -771,7 +773,7 @@
                 <form id="billing-form" onsubmit="handleBillingFormSubmit(event)" class="space-y-3">
                     <div>
                         <label class="block text-xs font-bold text-slate-300 mb-1">Full Name</label>
-                        <input type="text" id="bill-name" required placeholder="Nur Zuraysha" class="w-full bg-slate-950 border border-slate-700 text-xs text-white rounded-xl p-3 focus:outline-none focus:border-brand-500">
+                        <input type="text" id="bill-name" required placeholder="Nur" class="w-full bg-slate-950 border border-slate-700 text-xs text-white rounded-xl p-3 focus:outline-none focus:border-brand-500">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-300 mb-1">Phone Number</label>
@@ -886,7 +888,29 @@
         });
 
         let cart = [];
-        let allOrders = [];
+        // PRE-LOADED FAKE CUSTOMER ORDER FOR INSTANT TESTING
+        let allOrders = [
+            {
+                id: "261009SWMALAY",
+                customer: "nur@brandworkz.co",
+                items: [
+                    { id: "p1", name: "HAZEL NATURAL", price: "25.00", category: "3 Months Disposable", image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500", pwr: "-1.50", qty: 2 }
+                ],
+                subtotal: "50.00",
+                shipping: "0.00",
+                total: "50.00",
+                paymentMethod: "ToyyibPay FPX",
+                status: "Pending",
+                trackingNumber: "",
+                billing: { 
+                    name: "Nur", 
+                    phone: "+60 12-345 6789", 
+                    address: "No. 12, Lorong Kenanga 3, Tabuan Jaya, 93350 Kuching, Sarawak" 
+                },
+                date: new Date().toLocaleString(),
+                timestamp: new Date().toISOString()
+            }
+        ];
 
         let currentUser = null;
         let authMode = 'signin';
@@ -920,7 +944,7 @@
         window.handleBillingFormSubmit = handleBillingFormSubmit;
         window.confirmToyyibPayRedirect = confirmToyyibPayRedirect;
         window.openBillingFormModal = openBillingFormModal;
-        window.adminApproveOrder = adminApproveOrder;
+        window.adminSaveTracking = adminSaveTracking;
         window.switchAdminSubTab = switchAdminSubTab;
         window.onAdminPowerRangeChange = onAdminPowerRangeChange;
         window.updatePowerStockFromCheckboxes = updatePowerStockFromCheckboxes;
@@ -957,6 +981,8 @@
             renderStoreProducts(products);
             renderAdminProductsList();
             renderAdminPowerStockCheckboxes();
+            renderAdminOrdersList();
+            renderCustomerOrders();
             initFirestoreListeners();
             onAdminPowerRangeChange();
             initSlideshow();
@@ -1007,13 +1033,19 @@
             }, (err) => { console.warn("Products sync error:", err); });
 
             onSnapshot(collection(db, "lumilens_orders"), (snapshot) => {
-                const loadedOrders = [];
-                snapshot.forEach(docSnap => {
-                    loadedOrders.push({ id: docSnap.id, ...docSnap.data() });
-                });
-                allOrders = loadedOrders.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
-                renderAdminOrdersList();
-                renderCustomerOrders();
+                if (!snapshot.empty) {
+                    const loadedOrders = [];
+                    snapshot.forEach(docSnap => {
+                        loadedOrders.push({ id: docSnap.id, ...docSnap.data() });
+                    });
+                    // Merge with fake order if not already present
+                    if (!loadedOrders.some(o => o.id === "261009SWMALAY")) {
+                        loadedOrders.push(allOrders[0]);
+                    }
+                    allOrders = loadedOrders.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+                    renderAdminOrdersList();
+                    renderCustomerOrders();
+                }
             }, (err) => { console.warn("Orders sync error:", err); });
         }
 
@@ -1297,7 +1329,7 @@
 
         function calculateCartTotals() {
             const totalPairs = cart.reduce((s, i) => s + i.qty, 0);
-            const subtotal = totalPairs * 25.00; // RM25 per pair
+            const subtotal = totalPairs * 25.00;
             
             let shipping = 0;
             if (totalPairs === 1 || totalPairs > 10) {
@@ -1320,7 +1352,6 @@
             const totals = calculateCartTotals();
 
             container.innerHTML = cart.map((item, idx) => {
-                const itemSub = parseFloat(item.price) * item.qty;
                 return `
                     <div class="bg-slate-800/90 p-4 rounded-2xl border border-slate-700 flex items-center space-x-4">
                         <img src="${item.image}" class="w-14 h-14 rounded-xl object-cover" onerror="this.src='https://placehold.co/100x100/1e293b/4ade80?text=Lens'">
@@ -1399,6 +1430,7 @@
                 total: totals.grandTotal.toFixed(2),
                 paymentMethod: activePaymentMethod === 'fpx' ? 'ToyyibPay FPX' : 'Cash on Delivery (COD)',
                 status: "Pending",
+                trackingNumber: "",
                 billing: { name: "", phone: "", address: "" },
                 date: new Date().toLocaleString(),
                 timestamp: new Date().toISOString()
@@ -1410,7 +1442,6 @@
                 } catch(e) { console.warn("Firestore order write error:", e); }
             }
 
-            // Open billing form modal so customer fills their info
             document.getElementById('billing-modal-order-tag').innerText = `Order ID: ${pendingOrderId}`;
             document.getElementById('billing-modal').classList.remove('opacity-0', 'pointer-events-none');
         }
@@ -1441,7 +1472,6 @@
 
             const payMethod = orderRef ? orderRef.paymentMethod : 'ToyyibPay FPX';
 
-            // Empty cart after checkout
             cart = [];
             updateCartBadge();
             await saveCustomerCartToFirestore();
@@ -1451,7 +1481,7 @@
                 document.getElementById('fpx-modal').classList.remove('opacity-0', 'pointer-events-none');
             } else {
                 switchTab('customer-dashboard');
-                showToast("Order Placed (COD)", `Order ID ${pendingOrderId} sent to admin for approval & dispatch.`);
+                showToast("Order Placed (COD)", `Order ID ${pendingOrderId} sent to admin for dispatch.`);
             }
         }
 
@@ -1485,16 +1515,45 @@
 
             container.innerHTML = userOrders.map(o => {
                 const hasBilling = o.billing && o.billing.name;
-                const statusColor = o.status === 'Approved / Dispatched' ? 'bg-brand-500/20 text-brand-400' : 'bg-amber-500/20 text-amber-400';
+                const isDispatched = o.status === 'Dispatched' && o.trackingNumber;
+                const statusBadge = isDispatched ? 'bg-brand-500/20 text-brand-400' : 'bg-amber-500/20 text-amber-400';
+                const statusText = isDispatched ? 'Dispatched / In Transit' : 'Pending Shipment';
+
                 return `
-                    <div class="bg-slate-950 p-5 rounded-3xl border border-slate-800 space-y-3">
+                    <div class="bg-slate-950 p-5 rounded-3xl border border-slate-800 space-y-4">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-800 pb-3">
                             <div>
                                 <span class="text-xs font-extrabold text-brand-400 font-mono">Order ID: ${o.id}</span>
                                 <p class="text-[10px] text-slate-400 mt-0.5">${o.date} • Method: ${o.paymentMethod || 'FPX'}</p>
                             </div>
-                            <span class="${statusColor} text-[10px] font-bold px-3 py-1 rounded-xl">${o.status}</span>
+                            <span class="${statusBadge} text-[10px] font-bold px-3 py-1 rounded-xl">${statusText}</span>
                         </div>
+
+                        ${isDispatched ? `
+                            <div class="bg-blue-600/10 border border-blue-500/30 p-3.5 rounded-2xl space-y-2">
+                                <div class="flex items-center justify-between text-xs">
+                                    <span class="text-blue-400 font-bold"><i class="fa-solid fa-truck-fast"></i> Courier Tracking Number:</span>
+                                    <span class="font-mono text-white font-extrabold bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-700">${o.trackingNumber}</span>
+                                </div>
+                                <div class="relative pt-2">
+                                    <div class="flex mb-2 items-center justify-between text-[10px] text-slate-400 font-bold">
+                                        <span class="text-brand-400">Order Placed</span>
+                                        <span class="text-brand-400">Packed</span>
+                                        <span class="text-brand-400">Dispatched</span>
+                                        <span class="text-slate-300">Out for Delivery</span>
+                                    </div>
+                                    <div class="overflow-hidden h-2 mb-2 text-xs flex rounded bg-slate-900 border border-slate-800">
+                                        <div style="width: 75%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-brand-500"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        ` : `
+                            <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800 text-[11px] text-slate-400 flex items-center space-x-2">
+                                <i class="fa-solid fa-clock text-amber-400"></i>
+                                <span>Waiting for admin to dispatch product and issue tracking number.</span>
+                            </div>
+                        `}
+
                         <div class="space-y-1 text-xs text-slate-300">
                              ${(o.items || []).map(i => `
                                 <div class="flex justify-between">
@@ -1519,7 +1578,7 @@
                             </div>
                         `}
                         <div class="border-t border-slate-800/80 pt-2 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-xs">
-                            <span class="text-[10px] text-slate-500">Invoice includes complete billing form for admin dispatch.</span>
+                            <span class="text-[10px] text-slate-500">Invoice includes complete billing form &amp; tracking info.</span>
                             <div class="flex items-center space-x-2">
                                 <button onclick="downloadInvoicePNG('${o.id}', 'a4')" class="bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold px-3 py-2 rounded-xl text-[11px] shadow-lg flex items-center space-x-1.5 transition-all">
                                     <i class="fa-solid fa-download"></i>
@@ -1546,6 +1605,7 @@
             const bName = order.billing && order.billing.name ? order.billing.name : "Not provided";
             const bPhone = order.billing && order.billing.phone ? order.billing.phone : "Not provided";
             const bAddr = order.billing && order.billing.address ? order.billing.address : "Not provided";
+            const trackNo = order.trackingNumber ? `Tracking No: ${order.trackingNumber}` : "Tracking No: Pending Dispatch";
 
             if (format === 'a4') {
                 document.getElementById('inv-a4-id').innerText = `INV-${order.id}`;
@@ -1554,7 +1614,8 @@
                 document.getElementById('inv-a4-address').innerText = `Address: ${bAddr}`;
                 document.getElementById('inv-a4-date').innerText = order.date;
                 document.getElementById('inv-a4-paymethod').innerText = `Method: ${order.paymentMethod || 'FPX'}`;
-                document.getElementById('inv-a4-status').innerText = `Status: ${order.status}`;
+                document.getElementById('inv-a4-status').innerText = `Status: ${order.status || 'Pending'}`;
+                document.getElementById('inv-a4-tracking').innerText = trackNo;
                 document.getElementById('inv-a4-subtotal').innerText = `RM ${order.subtotal || order.total}`;
                 document.getElementById('inv-a4-shipping').innerText = `RM ${order.shipping || '0.00'}`;
                 document.getElementById('inv-a4-total').innerText = `RM ${order.total}`;
@@ -1579,6 +1640,7 @@
                 document.getElementById('inv-80-name').innerText = bName;
                 document.getElementById('inv-80-phone').innerText = bPhone;
                 document.getElementById('inv-80-address').innerText = bAddr;
+                document.getElementById('inv-80-tracking').innerText = order.trackingNumber || 'Pending';
                 document.getElementById('inv-80-date').innerText = order.date;
                 document.getElementById('inv-80-subtotal').innerText = `RM ${order.subtotal || order.total}`;
                 document.getElementById('inv-80-shipping').innerText = `RM ${order.shipping || '0.00'}`;
@@ -1816,31 +1878,38 @@
             }
             container.innerHTML = allOrders.map(o => {
                 const hasBilling = o.billing && o.billing.name;
-                const isApproved = o.status === 'Approved / Dispatched';
+                const isDispatched = o.status === 'Dispatched' && o.trackingNumber;
                 return `
                     <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                             <div>
                                 <div class="flex items-center space-x-2">
                                     <span class="text-xs font-bold text-amber-400 font-mono">${o.id}</span>
-                                    <span class="text-[9px] ${isApproved ? 'bg-brand-500/20 text-brand-400' : 'bg-amber-500/20 text-amber-400'} px-2 py-0.5 rounded font-bold">${o.status}</span>
+                                    <span class="text-[9px] ${isDispatched ? 'bg-brand-500/20 text-brand-400' : 'bg-amber-500/20 text-amber-400'} px-2 py-0.5 rounded font-bold">${o.status || 'Pending'}</span>
                                 </div>
                                 <p class="text-[11px] text-slate-300 mt-1">Customer: ${o.customer} • Method: ${o.paymentMethod || 'FPX'} • Total: <b>RM ${o.total}</b></p>
                             </div>
                             <div class="flex items-center space-x-2">
-                                ${!isApproved ? `
-                                    <button onclick="adminApproveOrder('${o.id}')" class="bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold px-3 py-1.5 rounded-xl text-xs shadow-lg">
-                                        Approve Invoice &amp; Dispatch
-                                    </button>
-                                ` : `
-                                    <span class="text-xs text-brand-400 font-bold"><i class="fa-solid fa-check"></i> Dispatched</span>
-                                `}
                                 <button onclick="deleteAdminOrder('${o.id}')" class="w-8 h-8 rounded-xl bg-red-500/20 text-red-400 hover:bg-red-500/30 flex items-center justify-center"><i class="fa-solid fa-trash text-xs"></i></button>
                             </div>
                         </div>
+                        
+                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[11px] text-slate-300 font-bold">Courier Tracking Number:</span>
+                                <span class="text-[10px] text-slate-400">${isDispatched ? 'Dispatched' : 'Pending Shipment'}</span>
+                            </div>
+                            <div class="flex space-x-2">
+                                <input type="text" id="track-input-${o.id}" value="${o.trackingNumber || ''}" placeholder="e.g. SW2026MY9876" class="flex-1 bg-slate-950 border border-slate-700 text-xs text-white rounded-xl px-3 py-2">
+                                <button onclick="adminSaveTracking('${o.id}')" class="bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs shadow-lg">
+                                    Dispatch &amp; Save Tracking
+                                </button>
+                            </div>
+                        </div>
+
                         ${hasBilling ? `
-                            <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 text-[11px] text-slate-300">
-                                <b class="text-white">Filled Billing Info:</b> ${o.billing.name} | Phone: ${o.billing.phone} \vert{} Addr:${o.billing.address}
+                            <div class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800/80 text-[11px] text-slate-300">
+                                <b class="text-white">Billing Info:</b> ${o.billing.name} | Phone: ${o.billing.phone} \vert{} Addr:${o.billing.address}
                             </div>
                         ` : `
                             <div class="text-[11px] text-amber-400">⚠️ Customer has not filled the billing form yet.</div>
@@ -1850,17 +1919,35 @@
             }).join('');
         }
 
-        async function adminApproveOrder(orderId) {
+        async function adminSaveTracking(orderId) {
+            const trackingInput = document.getElementById(`track-input-${orderId}`);
+            const trackingNumber = trackingInput ? trackingInput.value.trim() : "";
+
+            if (!trackingNumber) {
+                showToast("Error", "Please enter a valid tracking number.", true);
+                return;
+            }
+
+            const updatedData = {
+                status: "Dispatched",
+                trackingNumber: trackingNumber
+            };
+
             if (db) {
                 try {
-                    await setDoc(doc(db, "lumilens_orders", orderId), { status: "Approved / Dispatched" }, { merge: true });
-                } catch(e) { console.warn("Firestore order approval error:", e); }
+                    await setDoc(doc(db, "lumilens_orders", orderId), updatedData, { merge: true });
+                } catch(e) { console.warn("Firestore tracking update error:", e); }
             }
+
             const orderRef = allOrders.find(o => o.id === orderId);
-            if (orderRef) orderRef.status = "Approved / Dispatched";
+            if (orderRef) {
+                orderRef.status = "Dispatched";
+                orderRef.trackingNumber = trackingNumber;
+            }
+
             renderAdminOrdersList();
             renderCustomerOrders();
-            showToast("Invoice Approved", `Order ${orderId} marked as Approved & Dispatched.`);
+            showToast("Product Dispatched", `Tracking number ${trackingNumber} published. Customer notified.`);
         }
 
         async function deleteAdminOrder(orderId) {
@@ -1876,12 +1963,12 @@
         }
 
         function exportInvoicesToCSV() {
-            let csv = "Order ID,Customer Email,Payment Method,Total (RM),Status,Customer Name,Phone,Address,Date\r\n";
+            let csv = "Order ID,Customer Email,Payment Method,Tracking No,Total (RM),Status,Customer Name,Phone,Address,Date\r\n";
             allOrders.forEach(o => {
                 const bName = o.billing ? o.billing.name : "";
                 const bPhone = o.billing ? o.billing.phone : "";
                 const bAddr = o.billing ? o.billing.address.replace(/(\r\n|\n|\r)/gm, " ") : "";
-                csv += `"${o.id}","${o.customer}","${o.paymentMethod || 'FPX'}","${o.total}","${o.status}","${bName}","${bPhone}","${bAddr}","${o.date}"\r\n`;
+                csv += `"${o.id}","${o.customer}","${o.paymentMethod || 'FPX'}","${o.trackingNumber || ''}","${o.total}","${o.status || 'Pending'}","${bName}","${bPhone}","${bAddr}","${o.date}"\r\n`;
             });
             const link = document.createElement("a");
             link.href = encodeURI("data:text/csv;charset=utf-8," + csv);
