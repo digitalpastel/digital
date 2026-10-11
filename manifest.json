@@ -1,7 +1,7 @@
 {
   "name": "Sweetopia Shop",
   "short_name": "Sweetopia",
-  "start_url": "https://digitalpastel.github.io/digital/sweetopiashoptest.html",
+  "start_url": "https://digitalpastel.github.io/digital/sweetopiashop.html",
   "display": "standalone",
   "background_color": "#0b1120",
   "theme_color": "#22c55e",
