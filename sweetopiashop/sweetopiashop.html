@@ -752,7 +752,7 @@
         let authMode = 'signin';
         let currentSelectedProduct = null;
         let pendingOrderId = null;
-        const ADMIN_EMAIL = "sweetopia.lens@gmail.com";
+        const ADMIN_EMAIL = "yeegummy@gmail.com";
         const TOYYIBPAY_URL = "https://toyyibpay.com/brandworks";
 
         window.switchPage = switchPage;
@@ -896,16 +896,26 @@
                 pageAuth.classList.add('hidden');
                 pageDashboard.classList.remove('hidden');
                 if (currentUser && currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
-                    switchTab('admin-workspace');
+                    const savedTab = sessionStorage.getItem('sweetopia_active_tab') || 'admin-workspace';
+                    const savedSubTab = sessionStorage.getItem('sweetopia_admin_subtab') || 'stock';
+                    switchTab(savedTab, false);
+                    if(savedTab === 'admin-workspace') {
+                        switchAdminSubTab(savedSubTab, false);
+                    }
                 } else {
-                    switchTab('catalog');
+                    const savedTab = sessionStorage.getItem('sweetopia_active_tab') || 'catalog';
+                    switchTab(savedTab, false);
                 }
             }
         }
 
-        function switchTab(tabName) {
+        function switchTab(tabName, saveState = true) {
             if (tabName === 'admin-workspace' && (!currentUser || currentUser.email.toLowerCase() !== ADMIN_EMAIL.toLowerCase())) {
                 return;
+            }
+
+            if (saveState) {
+                sessionStorage.setItem('sweetopia_active_tab', tabName);
             }
 
             ['catalog', 'cart', 'customer-dashboard', 'admin-workspace'].forEach(t => {
@@ -1003,18 +1013,27 @@
                 customerNavBar.classList.add('hidden');
                 adminNavBar.classList.remove('hidden');
                 switchPage('dashboard');
-                switchTab('admin-workspace');
+                
+                const savedTab = sessionStorage.getItem('sweetopia_active_tab') || 'admin-workspace';
+                const savedSubTab = sessionStorage.getItem('sweetopia_admin_subtab') || 'stock';
+                switchTab(savedTab, false);
+                if(savedTab === 'admin-workspace') {
+                    switchAdminSubTab(savedSubTab, false);
+                }
             } else {
                 document.getElementById('user-email-display').innerText = user.email;
                 customerNavBar.classList.remove('hidden');
                 adminNavBar.classList.add('hidden');
                 switchPage('dashboard');
-                switchTab('catalog');
+                
+                const savedTab = sessionStorage.getItem('sweetopia_active_tab') || 'catalog';
+                switchTab(savedTab, false);
             }
         }
 
         async function handleSignOut() {
             if (!auth) return;
+            sessionStorage.clear();
             await signOut(auth);
             currentUser = null;
             cart = [];
@@ -1244,13 +1263,20 @@
             `).join('');
         }
 
-        function switchAdminSubTab(sub) {
+        function switchAdminSubTab(sub, saveState = true) {
+            if (saveState) {
+                sessionStorage.setItem('sweetopia_admin_subtab', sub);
+            }
             ['stock', 'products', 'orders'].forEach(s => {
-                document.getElementById('adm-sub-section-' + s).classList.add('hidden');
-                document.getElementById('adm-sub-' + s).className = "px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300";
+                const sec = document.getElementById('adm-sub-section-' + s);
+                const btn = document.getElementById('adm-sub-' + s);
+                if(sec) sec.classList.add('hidden');
+                if(btn) btn.className = "px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300";
             });
-            document.getElementById('adm-sub-section-' + sub).classList.remove('hidden');
-            document.getElementById('adm-sub-' + sub).className = "px-4 py-2 rounded-xl text-xs font-bold bg-amber-500 text-slate-950";
+            const targetSec = document.getElementById('adm-sub-section-' + sub);
+            const targetBtn = document.getElementById('adm-sub-' + sub);
+            if(targetSec) targetSec.classList.remove('hidden');
+            if(targetBtn) targetBtn.className = "px-4 py-2 rounded-xl text-xs font-bold bg-amber-500 text-slate-950";
         }
 
         function renderAdminPowerStockCheckboxes() {
