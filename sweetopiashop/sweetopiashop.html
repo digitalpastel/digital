@@ -922,7 +922,7 @@
                 const sec = document.getElementById('tab-section-' + t);
                 const btn = document.getElementById('dtab-' + t);
                 if (sec) sec.classList.add('hidden');
-                if (btn && t !== 'admin-workspace' && t !== 'admin-workspace-link') {
+                if (btn && t !== 'admin-workspace') {
                     btn.classList.remove('bg-brand-500', 'text-slate-950', 'font-bold');
                     btn.classList.add('text-slate-400', 'font-semibold');
                 }
@@ -931,7 +931,7 @@
             const activeSec = document.getElementById('tab-section-' + tabName);
             const activeBtn = document.getElementById('dtab-' + tabName);
             if (activeSec) activeSec.classList.remove('hidden');
-            if (activeBtn && tabName !== 'admin-workspace' && tabName !== 'admin-workspace-link') {
+            if (activeBtn && tabName !== 'admin-workspace') {
                 activeBtn.classList.remove('text-slate-400', 'font-semibold');
                 activeBtn.classList.add('bg-brand-500', 'text-slate-950', 'font-bold');
             }
