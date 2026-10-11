@@ -238,7 +238,7 @@
                 <p class="text-xs text-slate-400">Nur • Professional Contact Lens Marketplace (RM)</p>
             </div>
         </div>
-        <div class="flex items-center space-x-3" id="header-nav-actions"><span class="text-xs text-slate-400">Please Sign In or Register</span></div>
+        <div class="flex items-center space-x-3" id="header-nav-actions"><span class="text-xs text-slate-400">Please Sign In with Google</span></div>
     </header>
 
     <main id="app-wrapper" class="w-full max-w-7xl flex-1 flex flex-col items-center justify-center transition-all duration-300 relative">
@@ -256,37 +256,18 @@
 
         <!-- ================= PAGE 1: AUTHENTICATION ================= -->
         <div id="page-auth" class="w-full max-w-md mx-auto py-10">
-            <div class="bg-slate-900/90 p-8 rounded-3xl border border-slate-800 space-y-6 shadow-2xl">
-                <div class="text-center space-y-2">
-                    <div class="w-12 h-12 bg-brand-500/20 rounded-2xl mx-auto flex items-center justify-center text-brand-400 text-xl font-bold">
-                        <i class="fa-solid fa-lock"></i>
-                    </div>
-                    <h3 id="auth-form-title" class="text-xl font-bold text-white">Sign In to Sweetopia Shop</h3>
-                    <p id="auth-form-subtitle" class="text-xs text-slate-400">Customer or Administrator Access</p>
+            <div class="bg-slate-900/90 p-8 rounded-3xl border border-slate-800 space-y-6 shadow-2xl text-center">
+                <div class="w-12 h-12 bg-brand-500/20 rounded-2xl mx-auto flex items-center justify-center text-brand-400 text-xl font-bold">
+                    <i class="fa-solid fa-lock"></i>
                 </div>
-
-                <div class="grid grid-cols-2 gap-2 bg-slate-950 p-1.5 rounded-2xl border border-slate-800">
-                    <button type="button" onclick="setAuthModeTab('signin')" id="tab-auth-signin" class="py-2.5 text-xs font-bold rounded-xl bg-brand-500 text-slate-950 transition-all">Sign In</button>
-                    <button type="button" onclick="setAuthModeTab('signup')" id="tab-auth-signup" class="py-2.5 text-xs font-semibold rounded-xl text-slate-400 hover:text-white transition-all">Customer Sign Up</button>
+                <div class="space-y-2">
+                    <h3 class="text-xl font-bold text-white">Sign In to Sweetopia Shop</h3>
+                    <p class="text-xs text-slate-400">Customer or Administrator Access via Google</p>
                 </div>
-
-                <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-300 mb-1">Email Address</label>
-                        <input type="email" id="auth-email" required="" placeholder="user@example.com" class="w-full bg-slate-950 border border-slate-700 text-xs text-white rounded-xl p-3 focus:outline-none focus:border-brand-500">
-                    </div>
-                    <div>
-                        <div class="flex justify-between items-center mb-1">
-                            <label class="text-xs font-bold text-slate-300">Password</label>
-                            <button type="button" onclick="openForgotPassword()" class="text-[11px] text-brand-400 hover:underline">Forgot Password?</button>
-                        </div>
-                        <input type="password" id="auth-password" required="" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-700 text-xs text-white rounded-xl p-3 focus:outline-none focus:border-brand-500">
-                    </div>
-
-                    <button type="submit" id="auth-submit-btn" class="w-full bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold py-3.5 rounded-xl text-xs shadow-lg shadow-brand-500/20 transition-all">
-                        Sign In to Dashboard
-                    </button>
-                </form>
+                <button type="button" onclick="handleGoogleSignIn()" class="w-full bg-white hover:bg-slate-100 text-slate-900 font-bold py-3.5 rounded-xl text-xs shadow-lg transition-all flex items-center justify-center space-x-3">
+                    <i class="fa-brands fa-google text-base text-red-500"></i>
+                    <span>Sign In with Google</span>
+                </button>
             </div>
         </div>
 
@@ -667,31 +648,11 @@
             </div>
         </div>
 
-        <!-- ================= FORGOT PASSWORD MODAL ================= -->
-        <div id="forgot-modal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-2 sm:p-6">
-            <div class="w-full max-w-md bg-slate-900 rounded-3xl border border-slate-700 overflow-hidden shadow-2xl flex flex-col p-6 space-y-4">
-                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                    <h3 class="text-sm font-bold text-white">Reset Password</h3>
-                    <button onclick="closeForgotPassword()" class="w-8 h-8 rounded-xl bg-slate-800 flex items-center justify-center text-slate-300 hover:text-white">
-                        <i class="fa-solid fa-xmark text-xs"></i>
-                    </button>
-                </div>
-                <p class="text-xs text-slate-300">Enter your email address to receive password reset instructions.</p>
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Email Address</label>
-                    <input type="email" id="forgot-email" placeholder="name@example.com" class="w-full bg-slate-950 border border-slate-700 text-xs text-white rounded-xl p-3">
-                </div>
-                <button onclick="submitForgotPassword()" class="w-full bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold py-3 rounded-xl text-xs">
-                    Send Reset Email
-                </button>
-            </div>
-        </div>
-
     </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
         import { getFirestore, collection, doc, setDoc, deleteDoc, getDoc, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
 
         // Register Service Worker for PWA Installability
@@ -749,7 +710,6 @@
         let allOrders = [];
 
         let currentUser = null;
-        let authMode = 'signin';
         let currentSelectedProduct = null;
         let pendingOrderId = null;
         const ADMIN_EMAIL = "yeegummy@gmail.com";
@@ -757,8 +717,7 @@
 
         window.switchPage = switchPage;
         window.switchTab = switchTab;
-        window.setAuthModeTab = setAuthModeTab;
-        window.handleAuthSubmit = handleAuthSubmit;
+        window.handleGoogleSignIn = handleGoogleSignIn;
         window.handleSignOut = handleSignOut;
         window.filterCatalog = filterCatalog;
         window.filterStoreProducts = filterStoreProducts;
@@ -782,9 +741,6 @@
         window.resetAdminProductForm = resetAdminProductForm;
         window.deleteAdminOrder = deleteAdminOrder;
         window.exportInvoicesToCSV = exportInvoicesToCSV;
-        window.openForgotPassword = openForgotPassword;
-        window.closeForgotPassword = closeForgotPassword;
-        window.submitForgotPassword = submitForgotPassword;
         window.showToast = showToast;
 
         document.addEventListener('DOMContentLoaded', async () => {
@@ -891,7 +847,7 @@
             if (pageName === 'auth') {
                 pageAuth.classList.remove('hidden');
                 pageDashboard.classList.add('hidden');
-                navActions.innerHTML = `<span class="text-xs text-slate-400">Please Sign In or Register</span>`;
+                navActions.innerHTML = `<span class="text-xs text-slate-400">Please Sign In with Google</span>`;
             } else {
                 pageAuth.classList.add('hidden');
                 pageDashboard.classList.remove('hidden');
@@ -949,57 +905,18 @@
             }
         }
 
-        function setAuthModeTab(mode) {
-            authMode = mode;
-            const btnIn = document.getElementById('tab-auth-signin');
-            const btnUp = document.getElementById('tab-auth-signup');
-            const title = document.getElementById('auth-form-title');
-            const submitBtn = document.getElementById('auth-submit-btn');
-
-            if (mode === 'signup') {
-                btnUp.className = "py-2.5 text-xs font-bold rounded-xl bg-brand-500 text-slate-950 transition-all";
-                btnIn.className = "py-2.5 text-xs font-semibold rounded-xl text-slate-400 hover:text-white transition-all";
-                title.innerText = "Create Sweetopia Shop Account";
-                submitBtn.innerText = "Register New Account";
-            } else {
-                btnIn.className = "py-2.5 text-xs font-bold rounded-xl bg-brand-500 text-slate-950 transition-all";
-                btnUp.className = "py-2.5 text-xs font-semibold rounded-xl text-slate-400 hover:text-white transition-all";
-                title.innerText = "Sign In to Sweetopia Shop";
-                submitBtn.innerText = "Sign In to Dashboard";
-            }
-        }
-
-        async function handleAuthSubmit(event) {
-            event.preventDefault();
-            const email = document.getElementById('auth-email').value.trim();
-            const password = document.getElementById('auth-password').value;
-
+        async function handleGoogleSignIn() {
             if (!auth) {
                 showToast("Error", "Firebase auth unavailable.", true);
                 return;
             }
-
             try {
-                if (authMode === 'signup') {
-                    const cred = await createUserWithEmailAndPassword(auth, email, password);
-                    await sendEmailVerification(cred.user);
-                    showToast("Verification Email Sent", `Check your inbox at ${email}.`);
-                    await signOut(auth);
-                    setAuthModeTab('signin');
-                } else {
-                    const cred = await signInWithEmailAndPassword(auth, email, password);
-                    currentUser = cred.user;
-                    updateUIAfterLogin(currentUser);
-                    showToast("Signed In Successfully", `Welcome to Sweetopia Shop!`);
-                }
+                const provider = new GoogleAuthProvider();
+                const cred = await signInWithPopup(auth, provider);
+                currentUser = cred.user;
+                updateUIAfterLogin(currentUser);
+                showToast("Signed In Successfully", `Welcome to Sweetopia Shop!`);
             } catch (err) {
-                if (err.code === 'auth/email-already-in-use' && authMode === 'signup') {
-                    const cred = await signInWithEmailAndPassword(auth, email, password);
-                    currentUser = cred.user;
-                    updateUIAfterLogin(currentUser);
-                    showToast("Signed In", `Welcome back!`);
-                    return;
-                }
                 showToast("Auth Error", err.message, true);
             }
         }
@@ -1518,15 +1435,6 @@
             link.click();
             document.body.removeChild(link);
             showToast("Exported", "Invoices CSV downloaded.");
-        }
-
-        function openForgotPassword() { document.getElementById('forgot-modal').classList.remove('opacity-0', 'pointer-events-none'); }
-        function closeForgotPassword() { document.getElementById('forgot-modal').classList.add('opacity-0', 'pointer-events-none'); }
-        async function submitForgotPassword() {
-            const email = document.getElementById('forgot-email').value;
-            if (auth && email) await sendPasswordResetEmail(auth, email);
-            closeForgotPassword();
-            showToast("Password Reset", `Instructions sent to ${email}.`);
         }
 
         function showToast(title, msg, isError = false) {
