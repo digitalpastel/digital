@@ -752,8 +752,14 @@
         let authMode = 'signin';
         let currentSelectedProduct = null;
         let pendingOrderId = null;
-        const ADMIN_EMAIL = "yeegummy@gmail.com";
+        
+        const ADMIN_EMAILS = ["yeegummy@gmail.com", "nur@brandworkz.co", "nurzuraysha@gmail.com"];
         const TOYYIBPAY_URL = "https://toyyibpay.com/brandworks";
+
+        function isAdminUser(email) {
+            if (!email) return false;
+            return ADMIN_EMAILS.map(e => e.toLowerCase()).includes(email.toLowerCase());
+        }
 
         window.switchPage = switchPage;
         window.switchTab = switchTab;
@@ -814,13 +820,20 @@
                 onAuthStateChanged(auth, async (user) => {
                     if (user && !user.isAnonymous) {
                         currentUser = user;
+                        localStorage.setItem('sweetopia_logged_in_email', user.email);
                         await loadCustomerCartFromFirestore(user.uid);
                         updateUIAfterLogin(user);
                     } else {
-                        currentUser = null;
-                        cart = [];
-                        updateCartBadge();
-                        switchPage('auth');
+                        const savedEmail = localStorage.getItem('sweetopia_logged_in_email');
+                        if (savedEmail) {
+                            currentUser = { email: savedEmail };
+                            updateUIAfterLogin(currentUser);
+                        } else {
+                            currentUser = null;
+                            cart = [];
+                            updateCartBadge();
+                            switchPage('auth');
+                        }
                     }
                 });
             }
@@ -895,7 +908,7 @@
             } else {
                 pageAuth.classList.add('hidden');
                 pageDashboard.classList.remove('hidden');
-                if (currentUser && currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+                if (currentUser && isAdminUser(currentUser.email)) {
                     const savedTab = sessionStorage.getItem('sweetopia_active_tab') || 'admin-workspace';
                     const savedSubTab = sessionStorage.getItem('sweetopia_admin_subtab') || 'stock';
                     switchTab(savedTab, false);
@@ -910,7 +923,7 @@
         }
 
         function switchTab(tabName, saveState = true) {
-            if (tabName === 'admin-workspace' && (!currentUser || currentUser.email.toLowerCase() !== ADMIN_EMAIL.toLowerCase())) {
+            if (tabName === 'admin-workspace' && (!currentUser || !isAdminUser(currentUser.email))) {
                 return;
             }
 
@@ -942,7 +955,7 @@
             }
             if (tabName === 'cart') renderCartItems();
             if (tabName === 'customer-dashboard') renderCustomerOrders();
-            if (tabName === 'admin-workspace' && currentUser && currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+            if (tabName === 'admin-workspace' && currentUser && isAdminUser(currentUser.email)) {
                 renderAdminProductsList();
                 renderAdminPowerStockCheckboxes();
                 renderAdminOrdersList();
@@ -989,6 +1002,7 @@
                 } else {
                     const cred = await signInWithEmailAndPassword(auth, email, password);
                     currentUser = cred.user;
+                    localStorage.setItem('sweetopia_logged_in_email', currentUser.email);
                     updateUIAfterLogin(currentUser);
                     showToast("Signed In Successfully", `Welcome to Sweetopia Shop!`);
                 }
@@ -996,6 +1010,7 @@
                 if (err.code === 'auth/email-already-in-use' && authMode === 'signup') {
                     const cred = await signInWithEmailAndPassword(auth, email, password);
                     currentUser = cred.user;
+                    localStorage.setItem('sweetopia_logged_in_email', currentUser.email);
                     updateUIAfterLogin(currentUser);
                     showToast("Signed In", `Welcome back!`);
                     return;
@@ -1005,7 +1020,7 @@
         }
 
         function updateUIAfterLogin(user) {
-            const isAdmin = user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+            const isAdmin = isAdminUser(user.email);
             const customerNavBar = document.getElementById('customer-nav-bar');
             const adminNavBar = document.getElementById('admin-nav-bar');
 
@@ -1021,7 +1036,8 @@
                     switchAdminSubTab(savedSubTab, false);
                 }
             } else {
-                document.getElementById('user-email-display').innerText = user.email;
+                const emailDisp = document.getElementById('user-email-display');
+                if(emailDisp) emailDisp.innerText = user.email;
                 customerNavBar.classList.remove('hidden');
                 adminNavBar.classList.add('hidden');
                 switchPage('dashboard');
@@ -1034,6 +1050,7 @@
         async function handleSignOut() {
             if (!auth) return;
             sessionStorage.clear();
+            localStorage.removeItem('sweetopia_logged_in_email');
             await signOut(auth);
             currentUser = null;
             cart = [];
@@ -1231,7 +1248,7 @@
             const container = document.getElementById('customer-orders-list');
             if (!container) return;
             const userEmail = currentUser ? currentUser.email : "";
-            const userOrders = allOrders.filter(o => o.customer === userEmail || userEmail === ADMIN_EMAIL);
+            const userOrders = allOrders.filter(o => o.customer === userEmail || isAdminUser(userEmail));
 
             if (userOrders.length === 0) {
                 container.innerHTML = '<p class="text-xs text-slate-400 text-center py-8">No approved purchase invoices found in your dashboard.</p>';
