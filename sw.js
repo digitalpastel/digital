@@ -1,6 +1,6 @@
 const CACHE_NAME = 'sweetopia-v1';
 const ASSETS_TO_CACHE = [
-  './sweetopiashoptest.html',
+  './sweetopiashop.html',
   './manifest.json'
 ];
 
