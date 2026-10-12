@@ -794,6 +794,15 @@
         window.showToast = showToast;
 
         document.addEventListener('DOMContentLoaded', async () => {
+            // Synchronously check localStorage first to prevent premature reset to Page 1 on refresh
+            const savedEmail = localStorage.getItem('sweetopia_logged_in_email');
+            if (savedEmail) {
+                currentUser = { email: savedEmail };
+                updateUIAfterLogin(currentUser);
+            } else {
+                switchPage('auth');
+            }
+
             if (db) {
                 try {
                     const snap = await getDocs(collection(db, "lumilens_products"));
@@ -823,17 +832,11 @@
                         localStorage.setItem('sweetopia_logged_in_email', user.email);
                         await loadCustomerCartFromFirestore(user.uid);
                         updateUIAfterLogin(user);
-                    } else {
-                        const savedEmail = localStorage.getItem('sweetopia_logged_in_email');
-                        if (savedEmail) {
-                            currentUser = { email: savedEmail };
-                            updateUIAfterLogin(currentUser);
-                        } else {
-                            currentUser = null;
-                            cart = [];
-                            updateCartBadge();
-                            switchPage('auth');
-                        }
+                    } else if (!savedEmail) {
+                        currentUser = null;
+                        cart = [];
+                        updateCartBadge();
+                        switchPage('auth');
                     }
                 });
             }
