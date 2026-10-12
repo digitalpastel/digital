@@ -794,7 +794,27 @@
         window.showToast = showToast;
 
         document.addEventListener('DOMContentLoaded', async () => {
-            // Synchronously check localStorage first to prevent premature reset to Page 1 on refresh
+            // Set up auth state change listener early so Firebase can initialize session if available
+            if (auth) {
+                onAuthStateChanged(auth, async (user) => {
+                    if (user && !user.isAnonymous) {
+                        currentUser = user;
+                        localStorage.setItem('sweetopia_logged_in_email', user.email);
+                        await loadCustomerCartFromFirestore(user.uid);
+                        updateUIAfterLogin(user);
+                    } else {
+                        const savedEmail = localStorage.getItem('sweetopia_logged_in_email');
+                        if (!savedEmail) {
+                            currentUser = null;
+                            cart = [];
+                            updateCartBadge();
+                            switchPage('auth');
+                        }
+                    }
+                });
+            }
+
+            // Synchronously check localStorage for persistence fallback
             const savedEmail = localStorage.getItem('sweetopia_logged_in_email');
             if (savedEmail) {
                 currentUser = { email: savedEmail };
@@ -824,22 +844,6 @@
             initFirestoreListeners();
             onAdminPowerRangeChange();
             initSlideshow();
-
-            if (auth) {
-                onAuthStateChanged(auth, async (user) => {
-                    if (user && !user.isAnonymous) {
-                        currentUser = user;
-                        localStorage.setItem('sweetopia_logged_in_email', user.email);
-                        await loadCustomerCartFromFirestore(user.uid);
-                        updateUIAfterLogin(user);
-                    } else if (!savedEmail) {
-                        currentUser = null;
-                        cart = [];
-                        updateCartBadge();
-                        switchPage('auth');
-                    }
-                });
-            }
         });
 
         function initFirestoreListeners() {
@@ -1277,7 +1281,7 @@
                     </div>
                     <div class="border-t border-slate-800/80 pt-2 flex justify-between items-center text-xs">
                         <span class="text-slate-400">Total Amount (RM)</span>
-                        <span class="text-base font-extrabold text-brand-400">RM ${o.total}</span>
+                        <span class="base font-extrabold text-brand-400">RM ${o.total}</span>
                     </div>
                 </div>
             `).join('');
