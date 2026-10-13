@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sweetopia Shop - Sign In & Register</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0b1120;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4 text-slate-100">
+
+    <!-- TOP HEADER -->
+    <header class="absolute top-0 w-full max-w-7xl mx-auto flex items-center justify-between p-6 border-b border-slate-800">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-2xl bg-brand-500 flex items-center justify-center text-slate-950 font-extrabold text-xl shadow-lg shadow-brand-500/20">
+                <i class="fa-solid fa-eye"></i>
+            </div>
+            <div>
+                <h1 class="text-lg font-extrabold tracking-tight text-white">Sweetopia <span class="text-brand-400">Shop</span></h1>
+                <p class="text-xs text-slate-400">Nur • Professional Contact Lens Marketplace (RM)</p>
+            </div>
+        </div>
+        <div>
+            <span class="text-xs text-slate-400">Please Sign In or Register</span>
+        </div>
+    </header>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 text-white px-5 py-3 rounded-2xl shadow-2xl border border-slate-700 flex items-center space-x-3 transition-all duration-300 transform opacity-0 pointer-events-none -translate-y-4">
+        <div class="w-8 h-8 rounded-full bg-brand-500 flex items-center justify-center text-slate-950 font-bold">
+            <i class="fa-solid fa-check text-xs"></i>
+        </div>
+        <div>
+            <p id="toast-title" class="text-xs font-bold">Notice</p>
+            <p id="toast-msg" class="text-xs text-slate-300">Action completed.</p>
+        </div>
+    </div>
+
+    <!-- ================= PAGE 1: AUTHENTICATION ================= -->
+    <main class="w-full max-w-md mx-auto py-10">
+        <div class="bg-slate-900/90 p-8 rounded-3xl border border-slate-800 space-y-6 shadow-2xl">
+            <div class="text-center space-y-2">
+                <div class="w-12 h-12 bg-brand-500/20 rounded-2xl mx-auto flex items-center justify-center text-brand-400 text-xl font-bold">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <h3 id="auth-form-title" class="text-xl font-bold text-white">Sign In to Sweetopia Shop</h3>
+                <p id="auth-form-subtitle" class="text-xs text-slate-400">Customer or Administrator Access</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 bg-slate-950 p-1.5 rounded-2xl border border-slate-800">
+                <button type="button" onclick="setAuthModeTab('signin')" id="tab-auth-signin" class="py-2.5 text-xs font-bold rounded-xl bg-brand-500 text-slate-950 transition-all">Sign In</button>
+                <button type="button" onclick="setAuthModeTab('signup')" id="tab-auth-signup" class="py-2.5 text-xs font-semibold rounded-xl text-slate-400 hover:text-white transition-all">Customer Sign Up</button>
+            </div>
+
+            <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Email Address</label>
+                    <input type="email" id="auth-email" required placeholder="user@example.com" class="w-full bg-slate-950 border border-slate-700 text-xs text-white rounded-xl p-3 focus:outline-none focus:border-brand-500">
+                </div>
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="text-xs font-bold text-slate-300">Password</label>
+                        <button type="button" onclick="openForgotPassword()" class="text-[11px] text-brand-400 hover:underline">Forgot Password?</button>
+                    </div>
+                    <input type="password" id="auth-password" required placeholder="••••••••" class="w-full bg-slate-950 border border-slate-700 text-xs text-white rounded-xl p-3 focus:outline-none focus:border-brand-500">
+                </div>
+
+                <button type="submit" id="auth-submit-btn" class="w-full bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold py-3.5 rounded-xl text-xs shadow-lg shadow-brand-500/20 transition-all">
+                    Sign In to Dashboard
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <!-- ================= FORGOT PASSWORD MODAL ================= -->
+    <div id="forgot-modal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-4">
+        <div class="w-full max-w-md bg-slate-900 rounded-3xl border border-slate-700 overflow-hidden shadow-2xl flex flex-col p-6 space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="text-sm font-bold text-white">Reset Password</h3>
+                <button onclick="closeForgotPassword()" class="w-8 h-8 rounded-xl bg-slate-800 flex items-center justify-center text-slate-300 hover:text-white">
+                    <i class="fa-solid fa-xmark text-xs"></i>
+                </button>
+            </div>
+            <p class="text-xs text-slate-300">Enter your email address to receive password reset instructions.</p>
+            <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1">Email Address</label>
+                <input type="email" id="forgot-email" placeholder="name@example.com" class="w-full bg-slate-950 border border-slate-700 text-xs text-white rounded-xl p-3">
+            </div>
+            <button onclick="submitForgotPassword()" class="w-full bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold py-3 rounded-xl text-xs">
+                Send Reset Email
+            </button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB3Gcqiv-hJIs7p4dPqEAo2_WyRAlENEkk",
+            authDomain: "sweeetopialens.firebaseapp.com",
+            projectId: "sweeetopialens",
+            storageBucket: "sweeetopialens.firebasestorage.app",
+            messagingSenderId: "524168545709",
+            appId: "1:524168545709:web:7e52448f1cd3964f858d24"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        let authMode = 'signin';
+
+        window.setAuthModeTab = function(mode) {
+            authMode = mode;
+            const btnIn = document.getElementById('tab-auth-signin');
+            const btnUp = document.getElementById('tab-auth-signup');
+            const title = document.getElementById('auth-form-title');
+            const submitBtn = document.getElementById('auth-submit-btn');
+
+            if (mode === 'signup') {
+                btnUp.className = "py-2.5 text-xs font-bold rounded-xl bg-brand-500 text-slate-950 transition-all";
+                btnIn.className = "py-2.5 text-xs font-semibold rounded-xl text-slate-400 hover:text-white transition-all";
+                title.innerText = "Create Sweetopia Shop Account";
+                submitBtn.innerText = "Register New Account";
+            } else {
+                btnIn.className = "py-2.5 text-xs font-bold rounded-xl bg-brand-500 text-slate-950 transition-all";
+                btnUp.className = "py-2.5 text-xs font-semibold rounded-xl text-slate-400 hover:text-white transition-all";
+                title.innerText = "Sign In to Sweetopia Shop";
+                submitBtn.innerText = "Sign In to Dashboard";
+            }
+        };
+
+        window.handleAuthSubmit = async function(event) {
+            event.preventDefault();
+            const email = document.getElementById('auth-email').value.trim();
+            const password = document.getElementById('auth-password').value;
+
+            try {
+                if (authMode === 'signup') {
+                    const cred = await createUserWithEmailAndPassword(auth, email, password);
+                    await sendEmailVerification(cred.user);
+                    showToast("Verification Email Sent", `Check your inbox at ${email}.`);
+                    setAuthModeTab('signin');
+                } else {
+                    await signInWithEmailAndPassword(auth, email, password);
+                    showToast("Signed In Successfully", `Welcome to Sweetopia Shop!`);
+                    // Redirect or load dashboard here
+                }
+            } catch (err) {
+                showToast("Auth Error", err.message, true);
+            }
+        };
+
+        window.openForgotPassword = function() {
+            document.getElementById('forgot-modal').classList.remove('opacity-0', 'pointer-events-none');
+        };
+
+        window.closeForgotPassword = function() {
+            document.getElementById('forgot-modal').classList.add('opacity-0', 'pointer-events-none');
+        };
+
+        window.submitForgotPassword = async function() {
+            const email = document.getElementById('forgot-email').value;
+            if (email) {
+                await sendPasswordResetEmail(auth, email);
+                closeForgotPassword();
+                showToast("Password Reset", `Instructions sent to ${email}.`);
+            }
+        };
+
+        function showToast(title, msg, isError = false) {
+            const t = document.getElementById('toast');
+            document.getElementById('toast-title').innerText = title;
+            document.getElementById('toast-msg').innerText = msg;
+            t.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-4');
+            t.classList.add('opacity-100', 'translate-y-0');
+            setTimeout(() => {
+                t.classList.remove('opacity-100', 'translate-y-0');
+                t.classList.add('opacity-0', 'pointer-events-none', '-translate-y-4');
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
