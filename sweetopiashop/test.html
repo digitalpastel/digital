@@ -12,6 +12,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -263,13 +264,24 @@
             <div class="relative z-20 w-full lg:w-1/2 p-8 sm:p-12 flex flex-col justify-between bg-transparent">
                 <div>
                     <!-- Top Brand / Logo pill -->
-                    <div class="inline-flex items-center px-4 py-1.5 rounded-full border border-white/30 text-xs font-semibold text-slate-800 bg-white/20 mb-8 backdrop-blur-sm shadow-sm">
+                    <div class="inline-flex items-center px-4 py-1.5 rounded-full border border-white/30 text-xs font-semibold text-slate-800 bg-white/20 mb-6 backdrop-blur-sm shadow-sm">
                         Sweetopia Shop
                     </div>
 
                     <div class="space-y-2 mb-6">
                         <h2 id="auth-form-title" class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Create an account</h2>
                         <p id="auth-form-subtitle" class="text-xs sm:text-sm text-slate-600 font-medium">Customer or Administrator Access</p>
+                    </div>
+
+                    <!-- Firebase Auth Active Notice Banner -->
+                    <div class="bg-black/10 border border-black/10 rounded-xl p-4 mb-6 flex items-start gap-3 backdrop-blur-sm">
+                        <div class="text-[#65a30d] mt-0.5 shrink-0">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="shield-check" aria-hidden="true" class="lucide lucide-shield-check animate-pulse h-[18px] w-[18px]"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg>
+                        </div>
+                        <div>
+                          <p class="text-xs font-semibold text-black">Firebase Authentication Active</p>
+                          <p class="text-[10px] text-black/80 mt-0.5 leading-relaxed">Sign in or sign up with your real email and password to securely load your workspace data.</p>
+                        </div>
                     </div>
 
                     <!-- Mode Toggle Tabs / Buttons -->
@@ -896,6 +908,10 @@
         window.showToast = showToast;
 
         document.addEventListener('DOMContentLoaded', async () => {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+
             const savedEmail = localStorage.getItem('sweetopia_logged_in_email');
             
             if (savedEmail) {
