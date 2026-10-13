@@ -67,6 +67,18 @@
     <!-- ================= PAGE 1: AUTHENTICATION ================= -->
     <main class="w-full max-w-md mx-auto py-10">
         <div class="bg-slate-900/90 p-8 rounded-3xl border border-slate-800 space-y-6 shadow-2xl">
+            
+            <!-- Firebase Authentication Active Banner -->
+            <div class="bg-[#181818] border border-white/5 rounded-xl p-4 flex items-start gap-3">
+                <div class="text-[#D4AF37] mt-0.5 shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="animate-pulse h-[18px] w-[18px]"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg>
+                </div>
+                <div>
+                    <p class="text-xs font-semibold text-white">Firebase Authentication Active</p>
+                    <p class="text-[10px] text-gray-400 mt-0.5 leading-relaxed">Sign in or sign up with your real email and password to securely load your workspace data.</p>
+                </div>
+            </div>
+
             <div class="text-center space-y-2">
                 <div class="w-12 h-12 bg-brand-500/20 rounded-2xl mx-auto flex items-center justify-center text-brand-400 text-xl font-bold">
                     <i class="fa-solid fa-lock"></i>
@@ -172,7 +184,7 @@
                 } else {
                     await signInWithEmailAndPassword(auth, email, password);
                     showToast("Signed In Successfully", `Welcome to Sweetopia Shop!`);
-                    // Redirect or load dashboard here
+                    // Add your redirection or workspace loading logic here upon successful login
                 }
             } catch (err) {
                 showToast("Auth Error", err.message, true);
