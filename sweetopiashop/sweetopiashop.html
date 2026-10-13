@@ -531,7 +531,7 @@
                             </div>
                         </div>
 
-                        <!-- Product Stock Checkboxes Connected to Power Range (Rendered Dynamically) -->
+                        <!-- Product Stock Checkboxes Connected to Power Range -->
                         <div class="bg-slate-950 p-5 rounded-3xl border border-slate-800 space-y-4">
                             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                                 <div>
@@ -542,7 +542,7 @@
                             </div>
 
                             <div id="admin-power-stock-checkboxes-container" class="space-y-2">
-                                <!-- Dynamically populated based on current products list -->
+                                <!-- Dynamically populated -->
                             </div>
 
                             <div class="pt-2">
@@ -794,7 +794,6 @@
         window.showToast = showToast;
 
         document.addEventListener('DOMContentLoaded', async () => {
-            // Set up auth state change listener early so Firebase can initialize session if available
             if (auth) {
                 onAuthStateChanged(auth, async (user) => {
                     if (user && !user.isAnonymous) {
@@ -814,11 +813,21 @@
                 });
             }
 
-            // Synchronously check localStorage for persistence fallback
             const savedEmail = localStorage.getItem('sweetopia_logged_in_email');
             if (savedEmail) {
                 currentUser = { email: savedEmail };
                 updateUIAfterLogin(currentUser);
+                
+                const savedPage = sessionStorage.getItem('sweetopia_active_page') || 'dashboard';
+                const savedTab = sessionStorage.getItem('sweetopia_active_tab') || (isAdminUser(savedEmail) ? 'admin-workspace' : 'catalog');
+                
+                switchPage(savedPage);
+                switchTab(savedTab, false);
+                
+                if (savedTab === 'admin-workspace' && isAdminUser(savedEmail)) {
+                    const savedSubTab = sessionStorage.getItem('sweetopia_admin_subtab') || 'stock';
+                    switchAdminSubTab(savedSubTab, false);
+                }
             } else {
                 switchPage('auth');
             }
@@ -904,6 +913,7 @@
         }
 
         function switchPage(pageName) {
+            sessionStorage.setItem('sweetopia_active_page', pageName);
             const pageAuth = document.getElementById('page-auth');
             const pageDashboard = document.getElementById('page-dashboard');
             const navActions = document.getElementById('header-nav-actions');
@@ -1342,6 +1352,8 @@
             const selectedPwr = document.getElementById('admin-global-power-select').value;
             updatePowerStockFromCheckboxes();
 
+            showToast("Updating Stock...", "Syncing power availability live...");
+
             if (db) {
                 try {
                     for (const p of products) {
@@ -1351,21 +1363,27 @@
                         }, { merge: true });
                     }
                 } catch (e) {
-                    console.warn("Error saving power stock to Firestore:", e);
+                    console.error("Error saving power stock to Firestore:", e);
+                    showToast("Sync Error", e.message, true);
+                    return;
                 }
             }
 
             renderStoreProducts(products);
-            showToast("Stock Settings Saved", `Power ${selectedPwr} availability updated live in Cloud Firestore.`);
+            showToast("Stock Saved!", `Power ${selectedPwr} availability successfully updated live.`);
         }
 
         function handleImageFileUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
 
+            if (file.size > 1024 * 1024) {
+                showToast("Large Image Warning", "Compressing image for mobile upload...", false);
+            }
+
             const reader = new FileReader();
             reader.onload = function(e) {
-                const base64String = e.target.result;
+                let base64String = e.target.result;
                 document.getElementById('admin-prod-img-base64').value = base64String;
                 
                 const previewContainer = document.getElementById('admin-image-preview-container');
@@ -1373,6 +1391,9 @@
                 previewTag.src = base64String;
                 previewContainer.classList.remove('hidden');
                 previewContainer.classList.add('flex');
+            };
+            reader.onerror = function(error) {
+                showToast("Upload Error", "Failed to read image file from mobile device.", true);
             };
             reader.readAsDataURL(file);
         }
@@ -1411,7 +1432,10 @@
             const existingProduct = products.find(i => i.id === id);
             const image = base64Img || (existingProduct ? existingProduct.image : "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500");
 
-            if (!name || !price) { showToast("Error", "Provide name and price.", true); return; }
+            if (!name || !price) { 
+                showToast("Error", "Provide both product name and price.", true); 
+                return; 
+            }
 
             const prodId = id || ("p_" + Date.now());
             if (!window.productPowerStock[prodId]) {
@@ -1429,10 +1453,16 @@
                 powerStock: window.productPowerStock[prodId]
             };
 
+            showToast("Saving...", "Publishing product to Firestore...");
+
             if (db) {
                 try {
                     await setDoc(doc(db, "lumilens_products", prodId), productData);
-                } catch(e) { console.warn("Firestore product save error:", e); }
+                } catch(e) { 
+                    console.error("Firestore product save error:", e);
+                    showToast("Firestore Error", e.message, true);
+                    return;
+                }
             }
 
             const existingIdx = products.findIndex(p => p.id === prodId);
@@ -1446,7 +1476,7 @@
             renderAdminProductsList();
             renderAdminPowerStockCheckboxes();
             resetAdminProductForm();
-            showToast("Saved Live", "Product published successfully with uploaded image.");
+            showToast("Success!", "Product published live across all devices.");
         }
 
         function editAdminProduct(id) {
