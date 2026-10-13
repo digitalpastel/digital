@@ -794,26 +794,9 @@
         window.showToast = showToast;
 
         document.addEventListener('DOMContentLoaded', async () => {
-            if (auth) {
-                onAuthStateChanged(auth, async (user) => {
-                    if (user && !user.isAnonymous) {
-                        currentUser = user;
-                        localStorage.setItem('sweetopia_logged_in_email', user.email);
-                        await loadCustomerCartFromFirestore(user.uid);
-                        updateUIAfterLogin(user);
-                    } else {
-                        const savedEmail = localStorage.getItem('sweetopia_logged_in_email');
-                        if (!savedEmail) {
-                            currentUser = null;
-                            cart = [];
-                            updateCartBadge();
-                            switchPage('auth');
-                        }
-                    }
-                });
-            }
-
             const savedEmail = localStorage.getItem('sweetopia_logged_in_email');
+            
+            // Immediately restore UI state from storage if present, bypassing Firebase async delay
             if (savedEmail) {
                 currentUser = { email: savedEmail };
                 updateUIAfterLogin(currentUser);
@@ -830,6 +813,26 @@
                 }
             } else {
                 switchPage('auth');
+            }
+
+            // Attach auth listener after synchronous restoration
+            if (auth) {
+                onAuthStateChanged(auth, async (user) => {
+                    if (user && !user.isAnonymous) {
+                        currentUser = user;
+                        localStorage.setItem('sweetopia_logged_in_email', user.email);
+                        await loadCustomerCartFromFirestore(user.uid);
+                        updateUIAfterLogin(user);
+                    } else {
+                        // Only sign out if there is genuinely no local session backup
+                        if (!localStorage.getItem('sweetopia_logged_in_email')) {
+                            currentUser = null;
+                            cart = [];
+                            updateCartBadge();
+                            switchPage('auth');
+                        }
+                    }
+                });
             }
 
             if (db) {
