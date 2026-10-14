@@ -141,11 +141,14 @@
             </div>
         </div>
 
-        <!-- ================= PAGE 1: AUTHENTICATION (RESPONSIVE GLASS CARD) ================= -->
-        <div id="page-auth" class="w-full max-w-[1280px] mx-auto min-h-[620px] relative flex flex-col lg:flex-row items-stretch justify-between overflow-hidden rounded-[2.5xl] border border-white/20 shadow-2xl bg-white/0 backdrop-blur-md">
+        <!-- ================= PAGE 1: AUTHENTICATION (PHONE-ONLY GLASS CARD FOR MOBILE, WIDESCREEN SPLIT FOR DESKTOP) ================= -->
+        <div id="page-auth" class="w-full max-w-[1280px] mx-auto min-h-[620px] relative flex flex-col lg:flex-row items-center lg:items-stretch justify-center lg:justify-between overflow-hidden rounded-[2.5xl] border border-white/20 shadow-2xl bg-transparent">
             
+            <!-- Dark Background Overlay for Mobile Phone View -->
+            <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm pointer-events-none lg:hidden"></div>
+
             <!-- Left Side: Transparent Glass Form Container -->
-            <div class="relative z-20 w-full lg:w-1/2 p-6 sm:p-12 flex flex-col justify-between bg-transparent">
+            <div class="relative z-20 w-full max-w-md lg:max-w-none lg:w-1/2 p-6 sm:p-12 flex flex-col justify-between bg-white/70 lg:bg-transparent backdrop-blur-md lg:backdrop-blur-none border border-white/40 lg:border-none rounded-3xl lg:rounded-none shadow-2xl lg:shadow-none my-auto">
                 <div>
                     <div class="inline-flex items-center px-4 py-1.5 rounded-full border border-slate-400/30 text-xs font-semibold text-slate-800 bg-white/40 mb-6 backdrop-blur-sm">
                         Sweetopia Shop
@@ -202,7 +205,7 @@
                 </div>
             </div>
 
-            <!-- Right Side: Transparent Wrapper with Photo Card -->
+            <!-- Right Side: Transparent Wrapper with Photo Card (Desktop Only) -->
             <div class="relative z-20 hidden lg:flex w-full lg:w-1/2 p-4 sm:p-6 items-center justify-center bg-transparent">
                 <div class="relative w-full h-[480px] sm:h-[540px] rounded-[32px] overflow-hidden shadow-2xl border border-white/20 backdrop-blur-md">
                     <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" alt="team workspace collaboration" class="w-full h-full object-cover">
@@ -1998,7 +2001,7 @@
                 };
             });
 
-            startAutoPlay();
+            startAutoPay();
         }
     </script>
 
