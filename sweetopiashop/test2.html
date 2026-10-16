@@ -111,30 +111,6 @@
             .no-print { display: none !important; }
             .invoice-a4-page { box-shadow: none; margin: 0; width: 100%; height: 100%; }
         }
-
-        /* Cat Ears for Chat Header */
-        .cat-ear-left, .cat-ear-right {
-            position: absolute;
-            top: -14px;
-            width: 0;
-            height: 0;
-            border-left: 10px solid transparent;
-            border-right: 10px solid transparent;
-            border-bottom: 16px solid #65a30d;
-            z-index: 10;
-        }
-        .cat-ear-left { left: 18px; transform: rotate(-15deg); }
-        .cat-ear-right { right: 18px; transform: rotate(15deg); }
-        .cat-ear-left-inner, .cat-ear-right-inner {
-            position: absolute;
-            top: 3px;
-            left: -6px;
-            width: 0;
-            height: 0;
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-bottom: 11px solid #ecfccb;
-        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-start p-2 sm:p-6 text-slate-800">
@@ -167,7 +143,9 @@
 
         <!-- ================= PAGE 1: AUTHENTICATION ================= -->
         <div id="page-auth" class="w-full max-w-[1280px] mx-auto min-h-[620px] relative flex flex-col lg:flex-row items-center lg:items-stretch justify-center lg:justify-between overflow-hidden rounded-[2.5xl] border border-white/20 shadow-2xl bg-transparent">
+
             <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm pointer-events-none lg:hidden"></div>
+
             <div class="relative z-20 w-full max-w-md lg:max-w-none lg:w-1/2 p-6 sm:p-12 flex flex-col justify-between bg-white/70 lg:bg-transparent backdrop-blur-md lg:backdrop-blur-none border border-white/40 lg:border-none rounded-3xl lg:rounded-none shadow-2xl lg:shadow-none my-auto">
                 <div>
                     <div class="inline-flex items-center px-4 py-1.5 rounded-full border border-slate-400/30 text-xs font-semibold text-slate-800 bg-white/40 mb-6 backdrop-blur-sm">
@@ -234,7 +212,7 @@
         </div>
 
         <!-- ================= PAGE 2: DASHBOARD & STORE CATALOG ================= -->
-        <div id="page-dashboard" class="w-full max-w-[1280px] flex flex-col bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xl hidden">
+        <div id="page-dashboard" class="w-full max-w-[1280px] flex flex-col bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xl hidden relative">
 
             <!-- CUSTOMER NAVIGATION BAR -->
             <div id="customer-nav-bar" class="px-6 md:px-10 py-4 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-4">
@@ -276,6 +254,7 @@
             <!-- 5-PHOTO SLIDESHOW -->
             <section class="expert-slideshow-section">
                 <div class="expert-slideshow-wrapper">
+                    <!-- Slide 1 -->
                     <div class="expert-slide">
                         <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&amp;fit=crop&amp;w=1600&amp;q=80" alt="Premium Colored Contact Lenses">
                         <div class="expert-slide-caption">
@@ -284,6 +263,7 @@
                             <a href="#store-product-grid" class="expert-btn">Explore Lenses</a>
                         </div>
                     </div>
+                    <!-- Slide 2 -->
                     <div class="expert-slide">
                         <img src="https://images.unsplash.com/photo-1583946099066-764f2537f136?auto=format&amp;fit=crop&amp;w=1600&amp;q=80" alt="Crystal Clear Vision Lenses">
                         <div class="expert-slide-caption">
@@ -292,6 +272,7 @@
                             <a href="#store-product-grid" class="expert-btn">Shop Ready Stock</a>
                         </div>
                     </div>
+                    <!-- Slide 3 -->
                     <div class="expert-slide">
                         <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&amp;fit=crop&amp;w=1600&amp;q=80" alt="Mystic Grey and Natural Shades">
                         <div class="expert-slide-caption">
@@ -300,6 +281,7 @@
                             <a href="#store-product-grid" class="expert-btn">View Collection</a>
                         </div>
                     </div>
+                    <!-- Slide 4 -->
                     <div class="expert-slide active">
                         <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&amp;fit=crop&amp;w=1600&amp;q=80" alt="Emerald Green Elegance">
                         <div class="expert-slide-caption">
@@ -308,6 +290,7 @@
                             <a href="#store-product-grid" class="expert-btn">Discover Colors</a>
                         </div>
                     </div>
+                    <!-- Slide 5 -->
                     <div class="expert-slide">
                         <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&amp;fit=crop&amp;w=1600&amp;q=80" alt="ToyyibPay Secure Checkout">
                         <div class="expert-slide-caption">
@@ -376,20 +359,6 @@
                             <input type="text" id="checkout-phone" placeholder="012-3456789" class="w-full bg-white border border-slate-300 text-xs text-slate-900 rounded-xl p-3 focus:outline-none focus:border-[#65a30d]">
                         </div>
 
-                        <div class="space-y-2 pt-2 border-t border-slate-200">
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Select Payment / Delivery Option</label>
-                            <div class="flex items-center space-x-6">
-                                <label class="flex items-center space-x-2 cursor-pointer text-xs font-semibold text-slate-800">
-                                    <input type="checkbox" id="chk-cod" onchange="onPaymentMethodChange('cod')" class="w-4 h-4 text-[#65a30d] accent-[#65a30d] rounded border-slate-300">
-                                    <span>Cash on Delivery (COD)</span>
-                                </label>
-                                <label class="flex items-center space-x-2 cursor-pointer text-xs font-semibold text-slate-800">
-                                    <input type="checkbox" id="chk-shipping" onchange="onPaymentMethodChange('shipping')" class="w-4 h-4 text-[#65a30d] accent-[#65a30d] rounded border-slate-300">
-                                    <span>Courier Shipping (FPX Online)</span>
-                                </label>
-                            </div>
-                        </div>
-
                         <div class="space-y-2 pt-3 border-t border-slate-200">
                             <div class="flex justify-between text-xs text-slate-600">
                                 <span>Subtotal (Lens items)</span>
@@ -405,12 +374,8 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                            <button onclick="processOrderCheckout('COD')" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3.5 rounded-2xl text-center shadow-md text-xs transition-all flex items-center justify-center space-x-2">
-                                <i class="fa-solid fa-hand-holding-dollar"></i>
-                                <span>CONFIRM &amp; ORDER (COD)</span>
-                            </button>
-                            <button onclick="processOrderCheckout('FPX')" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-2xl text-center shadow-lg shadow-blue-600/20 text-xs transition-all flex items-center justify-center space-x-2">
+                        <div class="pt-2">
+                            <button onclick="processOrderCheckout()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-2xl text-center shadow-lg shadow-blue-600/20 text-xs transition-all flex items-center justify-center space-x-2">
                                 <i class="fa-solid fa-credit-card"></i>
                                 <span>PAY VIA TOYYIBPAY FPX</span>
                             </button>
@@ -568,11 +533,11 @@
                         <div id="admin-products-list" class="space-y-2 max-h-56 overflow-y-auto"></div>
                     </div>
 
-                    <!-- ADMIN SUB-TAB 3: ORDERS -->
+                    <!-- ADMIN SUB-TAB 3: ORDERS & TRACKING -->
                     <div id="adm-sub-section-orders" class="hidden space-y-4">
                         <div class="flex items-center justify-between">
                             <h4 class="text-xs font-bold text-slate-900">Customer Invoices &amp; Shipment Tracking Management</h4>
-                            <p class="text-[11px] text-slate-500">Assign tracking numbers and complete orders.</p>
+                            <p class="text-[11px] text-slate-500">Assign tracking numbers, save and publish to customer dashboards.</p>
                         </div>
                         <div id="admin-all-orders-list" class="space-y-3 max-h-96 overflow-y-auto pr-2">
                             <p class="text-xs text-slate-500 text-center py-6">No invoices recorded in database.</p>
@@ -581,19 +546,108 @@
                 </div>
 
             </div>
+
+            <!-- ================= PAGE 2 CHAT WIDGET ================= -->
+            <div id="page2-chat-widget-container" class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+                <!-- Chat Window Box with Larger Green Cat Ears -->
+                <div class="sweetopia-kawaii-window relative w-80 sm:w-96 bg-white rounded-3xl shadow-2xl border border-[#ecfccb] overflow-visible flex flex-col mb-4 transition-all duration-300 transform h-[500px] opacity-100 scale-100" id="sweetopiaChatWindow">
+                    <!-- Larger Green Cat Ears Styles & Elements -->
+                    <style>
+                        .cat-ear-left-green, .cat-ear-right-green {
+                            position: absolute;
+                            top: -24px;
+                            width: 0;
+                            height: 0;
+                            border-left: 16px solid transparent;
+                            border-right: 16px solid transparent;
+                            border-bottom: 26px solid #65a30d;
+                            z-index: 10;
+                        }
+                        .cat-ear-left-green { left: 16px; transform: rotate(-15deg); }
+                        .cat-ear-right-green { right: 16px; transform: rotate(15deg); }
+                        .cat-ear-left-inner-green, .cat-ear-right-inner-green {
+                            position: absolute;
+                            top: 4px;
+                            left: -10px;
+                            width: 0;
+                            height: 0;
+                            border-left: 10px solid transparent;
+                            border-right: 10px solid transparent;
+                            border-bottom: 18px solid #ecfccb;
+                        }
+                    </style>
+                    <div class="cat-ear-left-green"><div class="cat-ear-left-inner-green"></div></div>
+                    <div class="cat-ear-right-green"><div class="cat-ear-right-inner-green"></div></div>
+
+                    <!-- Chat Header -->
+                    <div class="bg-gradient-to-r from-[#65a30d] to-[#4d7c0f] text-white px-4 py-3.5 rounded-t-3xl flex items-center justify-between shadow-md relative z-10">
+                        <div class="flex items-center space-x-2.5">
+                            <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center font-bold text-sm border border-white/30">
+                                <i class="fa-solid fa-headset text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold">Sweetopia Live Support</h4>
+                                <p class="text-[10px] text-lime-100 flex items-center" id="support-status-indicator">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-300 inline-block mr-1"></span> Online Support
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="clearCurrentChatHistory()" id="chat-delete-history-btn" class="text-[10px] bg-white/20 hover:bg-white/30 text-white px-2 py-1 rounded-lg transition" title="Delete Chat History">Clear</button>
+                            <button onclick="toggleChatPopup()" class="w-7 h-7 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition">
+                                <i class="fa-solid fa-xmark text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Admin Session Selector & Active Registered Customer Dropdown -->
+                    <div id="admin-chat-session-bar" class="bg-[#f7fee7] px-3 py-2.5 border-b border-[#ecfccb] flex items-center justify-between text-[11px] hidden">
+                        <span class="font-bold text-[#4d7c0f]">Select User:</span>
+                        <div class="flex items-center space-x-2">
+                            <select id="admin-active-chat-user" onchange="switchAdminChatSession()" class="bg-white border border-[#84cc16] rounded-lg px-2 py-1 text-slate-800 font-semibold focus:outline-none max-w-[170px]">
+                                <option value="">No Active Chats</option>
+                            </select>
+                            <button onclick="adminDeleteSelectedChatSession()" class="bg-red-50 hover:bg-red-100 text-red-600 px-2 py-1 rounded-lg font-bold border border-red-200 transition" title="Delete entire conversation">Delete</button>
+                        </div>
+                    </div>
+
+                    <!-- Chat Messages Body -->
+                    <div id="chat-messages-box" class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/50 text-xs">
+                        <div class="text-center text-slate-400 py-10">
+                            <i class="fa-solid fa-heart text-2xl text-lime-500 mb-2"></i>
+                            <p class="text-xs">Welcome to Sweetopia Chat! Leave a message for our support admin. Your chat history is saved offline/online.</p>
+                        </div>
+                    </div>
+
+                    <!-- Chat Input Footer -->
+                    <div class="p-3 bg-white border-t border-slate-100 flex items-center space-x-2 rounded-b-3xl">
+                        <input type="text" id="chat-input-text" onkeypress="handleChatKeypress(event)" placeholder="Type a message..." class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#65a30d]">
+                        <button onclick="sendChatMessage()" class="w-10 h-10 rounded-xl bg-[#65a30d] hover:bg-[#4d7c0f] text-white flex items-center justify-center shadow-md transition shrink-0">
+                            <i class="fa-solid fa-paper-plane text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Green Floating Toggle Bubble -->
+                <button onclick="toggleChatPopup()" class="w-14 h-14 rounded-full bg-gradient-to-r from-[#65a30d] to-[#4d7c0f] hover:from-[#4d7c0f] hover:to-[#3f6212] text-white shadow-2xl flex items-center justify-center text-xl transition-all transform hover:scale-105 border-2 border-white relative group">
+                    <i class="fa-solid fa-comments"></i>
+                    <span id="chat-unread-badge" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-extrabold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-md hidden">0</span>
+                </button>
+            </div>
+
         </div>
 
-        <!-- ================= PRODUCT IMAGE ZOOM MODAL ================= -->
+        <!-- PRODUCT IMAGE ZOOM MODAL -->
         <div id="screen-image-zoom" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-4">
             <div class="relative w-[1080px] max-w-full h-[1080px] max-h-[90vh] bg-black rounded-3xl overflow-hidden shadow-2xl flex items-center justify-center border border-white/10">
-                <button onclick="closeImageZoomModal()" class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/25 hover:bg-white/50 text-white flex items-center justify-center transition backdrop-blur-sm" aria-label="Close">
+                <button onclick="closeImageZoomModal()" class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/20 hover:bg-white/40 text-white flex items-center justify-center transition backdrop-blur-sm" aria-label="Close">
                     <i class="fa-solid fa-xmark text-sm"></i>
                 </button>
                 <img id="zoom-modal-img" src="" alt="Product Fullsize View" class="w-full h-full object-contain p-2">
             </div>
         </div>
 
-        <!-- ================= PRODUCT DETAIL MODAL ================= -->
+        <!-- PRODUCT DETAIL MODAL -->
         <div id="screen-detail" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-2 sm:p-6">
             <div class="w-full max-w-xl bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
                 <div class="px-6 py-4 flex items-center justify-between border-b border-slate-200">
@@ -627,25 +681,72 @@
             </div>
         </div>
 
-        <!-- ================= ORDER DETAILS INSPECT MODAL ================= -->
-        <div id="order-details-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-4">
-            <div class="w-full max-w-lg bg-white rounded-3xl border border-slate-200 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-                <div class="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
-                    <div>
-                        <h3 class="text-sm font-bold text-slate-900">Order Detailed Information</h3>
-                        <p id="modal-inspect-id" class="text-[10px] font-mono font-bold text-[#65a30d]"></p>
+        <!-- ADMIN ORDER DETAILS MODAL -->
+        <div id="admin-order-detail-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-4">
+            <div class="w-full max-w-lg bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+                <div class="px-6 py-4 bg-slate-100 border-b border-slate-200 flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-xs">
+                            <i class="fa-solid fa-user-check"></i>
+                        </div>
+                        <h3 class="text-sm font-bold text-slate-900">Customer &amp; Order Details</h3>
                     </div>
-                    <button onclick="closeOrderDetailsModal()" class="w-8 h-8 rounded-xl bg-slate-200 flex items-center justify-center text-slate-700 hover:bg-slate-300">
+                    <button onclick="closeAdminOrderDetailModal()" class="w-8 h-8 rounded-xl bg-slate-200 flex items-center justify-center text-slate-700 hover:bg-slate-300">
                         <i class="fa-solid fa-xmark text-xs"></i>
                     </button>
                 </div>
-                <div id="modal-inspect-body" class="p-6 overflow-y-auto space-y-4 text-xs">
-                    <!-- Dynamic details inserted here -->
+                <div class="p-6 overflow-y-auto space-y-4 text-xs">
+                    <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 font-semibold">Order ID:</span>
+                            <span id="adm-detail-order-id" class="font-mono font-bold text-[#65a30d]"></span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 font-semibold">Order Date:</span>
+                            <span id="adm-detail-order-date" class="font-medium text-slate-700"></span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 font-semibold">Status:</span>
+                            <span id="adm-detail-order-status" class="px-2 py-0.5 rounded text-[10px] font-bold bg-white text-blue-600 border border-blue-200"></span>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
+                        <h4 class="font-bold text-slate-900 border-b border-slate-200 pb-1.5 flex items-center gap-1.5">
+                            <i class="fa-solid fa-address-card text-[#65a30d]"></i>
+                            <span>Customer Information</span>
+                        </h4>
+                        <div>
+                            <span class="text-slate-400 block text-[10px] uppercase font-bold">Customer Full Name</span>
+                            <p id="adm-detail-name" class="font-bold text-slate-900 text-sm mt-0.5"></p>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block text-[10px] uppercase font-bold">Registered Account Email</span>
+                            <p id="adm-detail-email" class="font-semibold text-amber-700 text-xs mt-0.5"></p>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block text-[10px] uppercase font-bold">Phone Number</span>
+                            <p id="adm-detail-phone" class="font-medium text-slate-800 text-xs mt-0.5"></p>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block text-[10px] uppercase font-bold">Billing &amp; Delivery Address</span>
+                            <p id="adm-detail-address" class="text-slate-700 text-xs mt-0.5 leading-relaxed bg-white p-3 rounded-xl border border-slate-200"></p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2">
+                        <h4 class="font-bold text-slate-900 border-b border-slate-200 pb-1.5">Purchased Items</h4>
+                        <div id="adm-detail-items-list" class="space-y-1.5"></div>
+                        <div class="border-t border-slate-200 pt-2 flex justify-between font-bold text-slate-900">
+                            <span>Total (RM):</span>
+                            <span id="adm-detail-total" class="text-[#65a30d]">RM 0.00</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- ================= TOYYIBPAY REDIRECT CONFIRMATION MODAL ================= -->
+        <!-- TOYYIBPAY REDIRECT CONFIRMATION MODAL -->
         <div id="fpx-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-2 sm:p-6">
             <div class="w-full max-w-md bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-2xl flex flex-col p-6 space-y-4 text-center">
                 <div class="w-14 h-14 bg-blue-50 rounded-2xl mx-auto flex items-center justify-center text-blue-600 text-2xl font-bold border border-blue-100">
@@ -665,7 +766,7 @@
             </div>
         </div>
 
-        <!-- ================= FORGOT PASSWORD MODAL ================= -->
+        <!-- FORGOT PASSWORD MODAL -->
         <div id="forgot-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-2 sm:p-6">
             <div class="w-full max-w-md bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-2xl flex flex-col p-6 space-y-4">
                 <div class="flex items-center justify-between border-b border-slate-200 pb-3">
@@ -685,7 +786,7 @@
             </div>
         </div>
 
-        <!-- ================= A4 INVOICE PNG DOWNLOAD MODAL ================= -->
+        <!-- A4 INVOICE PNG DOWNLOAD MODAL -->
         <div id="invoice-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-4 overflow-y-auto">
             <div class="relative w-full max-w-3xl bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[95vh]">
                 <div class="px-6 py-4 bg-slate-100 border-b border-slate-200 flex items-center justify-between no-print">
@@ -771,50 +872,6 @@
 
     </main>
 
-    <!-- ================= FLOATING AI CHATBOX ================= -->
-    <div id="ai-chat-container" class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
-        <div id="ai-chat-window" class="w-80 sm:w-96 bg-white rounded-3xl border border-slate-200 shadow-2xl overflow-hidden mb-4 hidden flex flex-col transition-all duration-300 transform scale-95 opacity-0">
-            <!-- Chat Header with Cat Ears -->
-            <div class="relative bg-[#65a30d] text-white px-4 py-3 flex items-center justify-between">
-                <!-- Cat Ears -->
-                <div class="cat-ear-left"><div class="cat-ear-left-inner"></div></div> 
-                <div class="cat-ear-right"><div class="cat-ear-right-inner"></div></div>
-
-                <div class="flex items-center space-x-2 z-20">
-                    <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center font-bold text-xs">
-                        <i class="fa-solid fa-robot"></i>
-                    </div>
-                    <div>
-                        <h4 class="text-xs font-bold">Sweetopia Assistant</h4>
-                        <p class="text-[10px] text-white/80">Online • Ready to help</p>
-                    </div>
-                </div>
-                <button onclick="toggleAiChat()" class="w-7 h-7 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition z-20">
-                    <i class="fa-solid fa-xmark text-xs"></i>
-                </button>
-            </div>
-
-            <div id="ai-chat-messages" class="p-4 h-72 overflow-y-auto space-y-3 bg-slate-50 text-xs">
-                <div class="flex items-start space-x-2">
-                    <div class="w-6 h-6 rounded-full bg-[#65a30d] text-white flex items-center justify-center text-[10px] shrink-0 font-bold">AI</div>
-                    <div class="bg-white p-3 rounded-2xl border border-slate-200 text-slate-700 shadow-sm max-w-[80%]">
-                        Hello! Welcome to Sweetopia Shop. How can I assist you with our contact lenses or order tracking today?
-                    </div>
-                </div>
-            </div>
-            <div class="p-3 bg-white border-t border-slate-200 flex items-center space-x-2">
-                <input type="text" id="ai-chat-input" onkeypress="handleAiChatKeypress(event)" placeholder="Ask a question..." class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-[#65a30d]">
-                <button onclick="sendAiChatMessage()" class="w-9 h-9 rounded-xl bg-[#65a30d] hover:bg-[#4d7c0f] text-white flex items-center justify-center transition shadow-sm">
-                    <i class="fa-solid fa-paper-plane text-xs"></i>
-                </button>
-            </div>
-        </div>
-
-        <button onclick="toggleAiChat()" id="ai-chat-toggle-btn" class="w-14 h-14 rounded-full bg-[#65a30d] hover:bg-[#4d7c0f] text-white shadow-2xl flex items-center justify-center text-xl transition transform hover:scale-105">
-            <i class="fa-solid fa-comments"></i>
-        </button>
-    </div>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
@@ -822,7 +879,7 @@
 
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW registration failed:', err));
+                navigator.serviceWorker.register('./sw.js').catch(err => console.log('Service Worker registration failed:', err));
             });
         }
 
@@ -866,27 +923,7 @@
         });
 
         let cart = [];
-        // Fake / default mock order so it's always visible in Admin & Customer dashboards
-        let allOrders = [
-            {
-                id: "261009SWTEST",
-                customer: "nur@brandworkz.co",
-                customerName: "Zuraysha",
-                customerAddress: "Miri, Sarawak",
-                customerPhone: "0123456789",
-                paymentOption: "Shipping",
-                items: [
-                    { id: "p1", name: "HAZEL NATURAL", brand: "Sweetopia Lens", price: "25.00", qty: 1, pwr: "-2.00", image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500" }
-                ],
-                subtotal: "25.00",
-                shippingFee: "0.00",
-                total: "25.00",
-                status: "Completed Purchase by ToyyibPay (Paid & Verified)",
-                trackingNumber: "pending",
-                date: "10/16/2026, 12:00:00 AM",
-                timestamp: "2026-10-16T00:00:00.000Z"
-            }
-        ];
+        let allOrders = [];
         let currentUser = null;
         let authMode = 'signin';
         let currentSelectedProduct = null;
@@ -894,6 +931,12 @@
 
         const ADMIN_EMAILS = ["yeegummy@gmail.com", "nur@brandworkz.co", "nurzuraysha@gmail.com"];
         const TOYYIBPAY_URL = "https://toyyibpay.com/brandworks";
+
+        // Chat widget state
+        let chatMessages = [];
+        let activeChatSessionUser = null;
+        let presenceMap = {};
+        let userSessionsMap = {};
 
         function isAdminUser(email) {
             if (!email) return false;
@@ -915,47 +958,17 @@
         };
 
         window.continueAsGuest = function() {
-            currentUser = { email: "guest@sweetopiashop.my", isGuest: true };
+            let guestId = localStorage.getItem('sweetopia_guest_id');
+            if (!guestId) {
+                guestId = 'Guest_' + Math.floor(1000 + Math.random() * 9000);
+                localStorage.setItem('sweetopia_guest_id', guestId);
+            }
+            currentUser = { email: `${guestId}@sweetopiashop.my`, isGuest: true, guestId: guestId };
             updateUIAfterLogin(currentUser);
             switchPage('dashboard');
             switchTab('catalog');
             showToast("Guest Mode", "Browsing store as guest.");
-        };
-
-        let isChatOpen = false;
-        window.toggleAiChat = function() {
-            isChatOpen = !isChatOpen;
-            const win = document.getElementById('ai-chat-window');
-            if (isChatOpen) {
-                win.classList.remove('hidden');
-                setTimeout(() => {
-                    win.classList.remove('scale-95', 'opacity-0');
-                    win.classList.add('scale-100', 'opacity-100');
-                }, 10);
-            } else {
-                win.classList.remove('scale-100', 'opacity-100');
-                win.classList.add('scale-95', 'opacity-0');
-                setTimeout(() => { win.classList.add('hidden'); }, 300);
-            }
-        };
-
-        window.handleAiChatKeypress = function(e) { if (e.key === 'Enter') sendAiChatMessage(); };
-
-        window.sendAiChatMessage = function() {
-            const input = document.getElementById('ai-chat-input');
-            const msg = input.value.trim();
-            if (!msg) return;
-
-            const container = document.getElementById('ai-chat-messages');
-            container.innerHTML += `<div class="flex items-start justify-end space-x-2"><div class="bg-[#65a30d] text-white p-3 rounded-2xl shadow-sm max-w-[80%]">${msg}</div></div>`;
-            input.value = "";
-            container.scrollTop = container.scrollHeight;
-
-            setTimeout(() => {
-                let reply = "Thank you for reaching out! You can browse our contact lenses in the catalog, select your power, and checkout securely via ToyyibPay FPX or COD.";
-                container.innerHTML += `<div class="flex items-start space-x-2"><div class="w-6 h-6 rounded-full bg-[#65a30d] text-white flex items-center justify-center text-[10px] shrink-0 font-bold">AI</div><div class="bg-white p-3 rounded-2xl border border-slate-200 text-slate-700 shadow-sm max-w-[80%]">${reply}</div></div>`;
-                container.scrollTop = container.scrollHeight;
-            }, 600);
+            updatePresence(currentUser.email, true);
         };
 
         window.switchPage = switchPage;
@@ -974,7 +987,6 @@
         window.changeQty = changeQty;
         window.removeFromCart = removeFromCart;
         window.clearCart = clearCart;
-        window.onPaymentMethodChange = onPaymentMethodChange;
         window.processOrderCheckout = processOrderCheckout;
         window.confirmToyyibPayRedirect = confirmToyyibPayRedirect;
         window.closeToyyibPayModal = closeToyyibPayModal;
@@ -988,8 +1000,9 @@
         window.deleteAdminProduct = deleteAdminProduct;
         window.resetAdminProductForm = resetAdminProductForm;
         window.deleteAdminOrder = deleteAdminOrder;
-        window.adminSaveTracking = adminSaveTracking;
-        window.adminCompleteDelivery = adminCompleteDelivery;
+        window.openAdminOrderDetail = openAdminOrderDetail;
+        window.closeAdminOrderDetailModal = closeAdminOrderDetailModal;
+        window.adminSaveAndPublishTracking = adminSaveAndPublishTracking;
         window.exportInvoicesToCSV = exportInvoicesToCSV;
         window.openForgotPassword = openForgotPassword;
         window.closeForgotPassword = closeForgotPassword;
@@ -997,12 +1010,18 @@
         window.openInvoiceModal = openInvoiceModal;
         window.closeInvoiceModal = closeInvoiceModal;
         window.downloadInvoiceAsPNG = downloadInvoiceAsPNG;
-        window.openOrderDetailsModal = openOrderDetailsModal;
-        window.closeOrderDetailsModal = closeOrderDetailsModal;
         window.showToast = showToast;
 
+        // Chat Widget functions
+        window.toggleChatPopup = toggleChatPopup;
+        window.sendChatMessage = sendChatMessage;
+        window.handleChatKeypress = handleChatKeypress;
+        window.clearCurrentChatHistory = clearCurrentChatHistory;
+        window.switchAdminChatSession = switchAdminChatSession;
+        window.adminDeleteSelectedChatSession = adminDeleteSelectedChatSession;
+
         document.addEventListener('DOMContentLoaded', async () => {
-            if (typeof lucide !== 'undefined') lucide.createIcons();
+            if (typeof lucide !== 'undefined') { lucide.createIcons(); }
             const savedEmail = localStorage.getItem('sweetopia_logged_in_email');
 
             if (savedEmail) {
@@ -1012,15 +1031,13 @@
                 const savedTab = sessionStorage.getItem('sweetopia_active_tab') || (isAdminUser(savedEmail) ? 'admin-workspace' : 'catalog');
                 switchPage(savedPage);
                 switchTab(savedTab, false);
+                if (savedTab === 'admin-workspace' && isAdminUser(savedEmail)) {
+                    const savedSubTab = sessionStorage.getItem('sweetopia_admin_subtab') || 'stock';
+                    switchAdminSubTab(savedSubTab, false);
+                }
+                updatePresence(savedEmail, true);
             } else {
                 switchPage('auth');
-            }
-
-            const urlParams = new URLSearchParams(window.location.search);
-            const statusId = urlParams.get('status_id');
-            const orderIdParam = urlParams.get('order_id') || urlParams.get('billcode');
-            if (statusId === '1' && orderIdParam) {
-                verifyAndMarkPaidToyyibPayOrder(orderIdParam);
             }
 
             if (auth) {
@@ -1030,30 +1047,56 @@
                         localStorage.setItem('sweetopia_logged_in_email', user.email);
                         await loadCustomerCartFromFirestore(user.uid);
                         updateUIAfterLogin(user);
+                        updatePresence(user.email, true);
+                    } else {
+                        if (!localStorage.getItem('sweetopia_logged_in_email')) {
+                            currentUser = null;
+                            cart = [];
+                            updateCartBadge();
+                            switchPage('auth');
+                        }
                     }
                 });
+            }
+
+            if (db) {
+                try {
+                    const snap = await getDocs(collection(db, "lumilens_products"));
+                    if (snap.empty) {
+                        for (const p of products) {
+                            const initialPowerStock = {};
+                            powersList.forEach(pw => initialPowerStock[pw] = true);
+                            await setDoc(doc(db, "lumilens_products", p.id), { ...p, powerStock: initialPowerStock });
+                        }
+                    }
+                } catch(e) { console.warn("Seeding initial products error:", e); }
             }
 
             renderStoreProducts(products);
             renderAdminProductsList();
             renderAdminPowerStockCheckboxes();
             initFirestoreListeners();
+            initChatListeners();
             onAdminPowerRangeChange();
             initSlideshow();
+
+            setInterval(() => {
+                if (currentUser && currentUser.email) {
+                    updatePresence(currentUser.email, true);
+                }
+            }, 30000);
         });
 
-        async function verifyAndMarkPaidToyyibPayOrder(orderId) {
-            if (!db) return;
+        async function updatePresence(email, isOnline) {
+            if (!db || !email) return;
             try {
-                const orderRef = doc(db, "lumilens_orders", orderId);
-                const orderSnap = await getDoc(orderRef);
-                if (orderSnap.exists()) {
-                    const orderData = orderSnap.data();
-                    orderData.status = "Completed Purchase by ToyyibPay (Paid & Verified)";
-                    await setDoc(orderRef, orderData, { merge: true });
-                    showToast("Payment Verified!", `Funds successfully received via ToyyibPay FPX for Order ${orderId}.`);
-                }
-            } catch(e) { console.warn("Verification error:", e); }
+                const userKey = email.replace(/[^a-zA-Z0-9]/g, '_');
+                await setDoc(doc(db, "lumilens_presence", userKey), {
+                    email: email,
+                    isOnline: isOnline,
+                    lastSeen: new Date().toISOString()
+                }, { merge: true });
+            } catch(e) { console.warn("Presence sync error:", e); }
         }
 
         function initFirestoreListeners() {
@@ -1064,59 +1107,315 @@
                     snapshot.forEach(docSnap => {
                         const data = { id: docSnap.id, ...docSnap.data() };
                         loaded.push(data);
-                        if (data.powerStock) window.productPowerStock[data.id] = data.powerStock;
+                        if (data.powerStock) {
+                            window.productPowerStock[data.id] = data.powerStock;
+                        } else if (!window.productPowerStock[data.id]) {
+                            window.productPowerStock[data.id] = {};
+                            powersList.forEach(pw => window.productPowerStock[data.id][pw] = true);
+                        }
                     });
                     products = loaded;
                 }
                 renderStoreProducts(products);
                 renderAdminProductsList();
                 renderAdminPowerStockCheckboxes();
-            });
+            }, (err) => { console.warn("Products sync error:", err); });
 
             onSnapshot(collection(db, "lumilens_orders"), (snapshot) => {
                 const loadedOrders = [];
-                snapshot.forEach(docSnap => { loadedOrders.push({ id: docSnap.id, ...docSnap.data() }); });
-                // Keep the default fake test order if snapshot is empty or doesn't have it yet
-                if (!loadedOrders.some(o => o.id === "261009SWTEST")) {
-                    loadedOrders.push({
-                        id: "261009SWTEST",
-                        customer: "nur@brandworkz.co",
-                        customerName: "Zuraysha",
-                        customerAddress: "Miri, Sarawak",
-                        customerPhone: "0123456789",
-                        paymentOption: "Shipping",
-                        items: [
-                            { id: "p1", name: "HAZEL NATURAL", brand: "Sweetopia Lens", price: "25.00", qty: 1, pwr: "-2.00", image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500" }
-                        ],
-                        subtotal: "25.00",
-                        shippingFee: "0.00",
-                        total: "25.00",
-                        status: "Completed Purchase by ToyyibPay (Paid & Verified)",
-                        trackingNumber: "pending",
-                        date: "10/16/2026, 12:00:00 AM",
-                        timestamp: "2026-10-16T00:00:00.000Z"
-                    });
-                }
+                snapshot.forEach(docSnap => {
+                    loadedOrders.push({ id: docSnap.id, ...docSnap.data() });
+                });
                 allOrders = loadedOrders.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
                 renderAdminOrdersList();
                 renderCustomerOrders();
-            });
+            }, (err) => { console.warn("Orders sync error:", err); });
+        }
+
+        // ================= CHAT WIDGET REALTIME & PRESENCE SYSTEM =================
+        function initChatListeners() {
+            if (!db) return;
+
+            // Presence listener
+            onSnapshot(collection(db, "lumilens_presence"), (snapshot) => {
+                const now = Date.now();
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    const lastSeenTime = new Date(data.lastSeen || 0).getTime();
+                    // Active if updated in the last 60 seconds
+                    const isReallyOnline = data.isOnline && (now - lastSeenTime < 60000);
+                    presenceMap[data.email] = isReallyOnline;
+                });
+                updateAdminChatUserDropdown();
+            }, (err) => console.warn("Presence listen error:", err));
+
+            // Chats collection listener
+            onSnapshot(collection(db, "lumilens_chats"), (snapshot) => {
+                userSessionsMap = {};
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    const user = data.userEmail || data.user;
+                    if (user) {
+                        userSessionsMap[user] = data.messages || [];
+                    }
+                });
+
+                updateAdminChatUserDropdown();
+                renderActiveChatMessages();
+            }, (err) => console.warn("Chat listen error:", err));
+        }
+
+        function updateAdminChatUserDropdown() {
+            const select = document.getElementById('admin-active-chat-user');
+            if (!select) return;
+
+            // Include users with messages + registered users from orders
+            const knownUsersSet = new Set(Object.keys(userSessionsMap));
+            allOrders.forEach(o => { if (o.customer) knownUsersSet.add(o.customer); });
+
+            const userList = Array.from(knownUsersSet).filter(u => !isAdminUser(u));
+
+            if (userList.length === 0) {
+                select.innerHTML = '<option value="">No Active Chats</option>';
+                return;
+            }
+
+            const currentVal = select.value || activeChatSessionUser;
+            select.innerHTML = userList.map(u => {
+                const isOnline = !!presenceMap[u];
+                const statusSymbol = isOnline ? '🟢' : '🔘';
+                const statusText = isOnline ? 'Online' : 'Offline';
+                const isGuest = u.toLowerCase().startsWith('guest_') || u.toLowerCase().includes('guest');
+                const label = `${statusSymbol} ${u} (${isGuest ? 'Guest' : 'Customer'} - ${statusText})`;
+                return `<option value="${u}" ${u === currentVal ? 'selected' : ''}>${label}</option>`;
+            }).join('');
+
+            if (!activeChatSessionUser && userList.length > 0) {
+                activeChatSessionUser = select.value || userList[0];
+                renderActiveChatMessages();
+            }
+        }
+
+        function renderActiveChatMessages() {
+            const container = document.getElementById('chat-messages-box');
+            if (!container) return;
+
+            let targetUser = currentUser?.email;
+            if (currentUser && isAdminUser(currentUser.email)) {
+                targetUser = activeChatSessionUser || document.getElementById('admin-active-chat-user')?.value;
+            }
+
+            if (!targetUser) {
+                container.innerHTML = `
+                    <div class="text-center text-slate-400 py-10">
+                        <i class="fa-solid fa-comments text-2xl text-lime-500 mb-2"></i>
+                        <p class="text-xs">No active conversation selected.</p>
+                    </div>`;
+                return;
+            }
+
+            const msgs = userSessionsMap[targetUser] || [];
+
+            if (msgs.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center text-slate-400 py-10">
+                        <i class="fa-solid fa-heart text-2xl text-lime-500 mb-2"></i>
+                        <p class="text-xs">Chatting with <b class="text-slate-700">${targetUser}</b>.<br>Leave a message to start conversation.</p>
+                    </div>`;
+                return;
+            }
+
+            container.innerHTML = msgs.map(m => {
+                const isMe = m.sender === currentUser?.email;
+                const isAdmin = m.isAdmin;
+                return `
+                    <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
+                        <span class="text-[9px] text-slate-400 mb-0.5 px-1">${m.senderName || m.sender} • ${m.time || ''}</span>
+                        <div class="max-w-[80%] rounded-2xl px-3.5 py-2 text-xs shadow-sm ${isMe ? 'bg-[#65a30d] text-white rounded-tr-none' : (isAdmin ? 'bg-amber-100 text-amber-950 border border-amber-200 rounded-tl-none' : 'bg-white text-slate-800 border border-slate-200 rounded-tl-none')}">
+                            ${m.text}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function toggleChatPopup() {
+            const win = document.getElementById('sweetopiaChatWindow');
+            if (win.classList.contains('hidden')) {
+                win.classList.remove('hidden');
+                setTimeout(() => {
+                    win.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+                    win.classList.add('opacity-100', 'scale-100');
+                }, 10);
+                renderActiveChatMessages();
+            } else {
+                win.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+                win.classList.remove('opacity-100', 'scale-100');
+                setTimeout(() => win.classList.add('hidden'), 200);
+            }
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById('chat-input-text');
+            const text = input.value.trim();
+            if (!text) return;
+
+            if (!currentUser) {
+                showToast("Sign In Required", "Please sign in or continue as guest to chat.", true);
+                return;
+            }
+
+            const isAdmin = isAdminUser(currentUser.email);
+            let targetSessionUser = currentUser.email;
+
+            if (isAdmin) {
+                const select = document.getElementById('admin-active-chat-user');
+                targetSessionUser = activeChatSessionUser || select.value;
+                if (!targetSessionUser) {
+                    showToast("No User Selected", "Select a customer or guest from the dropdown to reply.", true);
+                    return;
+                }
+            }
+
+            const newMsg = {
+                id: 'msg_' + Date.now(),
+                sender: currentUser.email,
+                senderName: isAdmin ? 'Admin Support' : (currentUser.guestId || currentUser.email.split('@')[0]),
+                text: text,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                timestamp: new Date().toISOString(),
+                isAdmin: isAdmin
+            };
+
+            const existingMsgs = userSessionsMap[targetSessionUser] || [];
+            existingMsgs.push(newMsg);
+            userSessionsMap[targetSessionUser] = existingMsgs;
+
+            input.value = '';
+            renderActiveChatMessages();
+
+            if (db) {
+                try {
+                    const docKey = targetSessionUser.replace(/[^a-zA-Z0-9]/g, '_');
+                    await setDoc(doc(db, "lumilens_chats", docKey), {
+                        userEmail: targetSessionUser,
+                        messages: existingMsgs,
+                        lastUpdated: new Date().toISOString()
+                    }, { merge: true });
+                } catch(e) { console.warn("Firestore chat send error:", e); }
+            }
+        }
+
+        function handleChatKeypress(event) {
+            if (event.key === 'Enter') {
+                sendChatMessage();
+            }
+        }
+
+        function switchAdminChatSession() {
+            const select = document.getElementById('admin-active-chat-user');
+            if (select) {
+                activeChatSessionUser = select.value;
+                renderActiveChatMessages();
+            }
+        }
+
+        async function adminDeleteSelectedChatSession() {
+            const select = document.getElementById('admin-active-chat-user');
+            const targetUser = activeChatSessionUser || select?.value;
+            if (!targetUser) return;
+
+            if (confirm(`Delete entire chat conversation with ${targetUser}?`)) {
+                delete userSessionsMap[targetUser];
+                if (db) {
+                    try {
+                        const docKey = targetUser.replace(/[^a-zA-Z0-9]/g, '_');
+                        await deleteDoc(doc(db, "lumilens_chats", docKey));
+                    } catch(e) { console.warn(e); }
+                }
+                activeChatSessionUser = null;
+                updateAdminChatUserDropdown();
+                renderActiveChatMessages();
+                showToast("Chat Deleted", `Conversation with ${targetUser} deleted.`);
+            }
+        }
+
+        async function clearCurrentChatHistory() {
+            let targetUser = currentUser?.email;
+            if (currentUser && isAdminUser(currentUser.email)) {
+                targetUser = activeChatSessionUser || document.getElementById('admin-active-chat-user')?.value;
+            }
+            if (!targetUser) return;
+
+            userSessionsMap[targetUser] = [];
+            renderActiveChatMessages();
+
+            if (db) {
+                try {
+                    const docKey = targetUser.replace(/[^a-zA-Z0-9]/g, '_');
+                    await setDoc(doc(db, "lumilens_chats", docKey), {
+                        userEmail: targetUser,
+                        messages: [],
+                        lastUpdated: new Date().toISOString()
+                    });
+                } catch(e) { console.warn(e); }
+            }
+            showToast("Chat Cleared", "Messages cleared.");
+        }
+
+        // ================= ADMIN ORDER DETAILS MODAL =================
+        function openAdminOrderDetail(orderId) {
+            const order = allOrders.find(o => o.id === orderId);
+            if (!order) return;
+
+            document.getElementById('adm-detail-order-id').innerText = order.id;
+            document.getElementById('adm-detail-order-date').innerText = order.date || 'N/A';
+            document.getElementById('adm-detail-order-status').innerText = order.status || 'Pending';
+            document.getElementById('adm-detail-name').innerText = order.customerName || 'N/A';
+            document.getElementById('adm-detail-email').innerText = order.customer || 'N/A';
+            document.getElementById('adm-detail-phone').innerText = order.customerPhone || 'N/A';
+            document.getElementById('adm-detail-address').innerText = order.customerAddress || 'N/A';
+            document.getElementById('adm-detail-total').innerText = 'RM ' + (order.total || '0.00');
+
+            const itemsContainer = document.getElementById('adm-detail-items-list');
+            itemsContainer.innerHTML = (order.items || []).map(i => `
+                <div class="flex justify-between items-center bg-white p-2.5 rounded-xl border border-slate-200">
+                    <div>
+                        <span class="font-bold text-slate-900">${i.name}</span>
+                        <span class="text-[10px] text-slate-500 block">Power: ${i.pwr} • Qty: ${i.qty}</span>
+                    </div>
+                    <span class="font-bold text-[#65a30d]">RM ${(parseFloat(i.price) * i.qty).toFixed(2)}</span>
+                </div>
+            `).join('');
+
+            const modal = document.getElementById('admin-order-detail-modal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.classList.add('opacity-100');
+        }
+
+        function closeAdminOrderDetailModal() {
+            const modal = document.getElementById('admin-order-detail-modal');
+            modal.classList.remove('opacity-100');
+            modal.classList.add('opacity-0', 'pointer-events-none');
         }
 
         async function loadCustomerCartFromFirestore(uid) {
             if (!db || !uid) return;
             try {
                 const cartDoc = await getDoc(doc(db, "lumilens_carts", uid));
-                cart = cartDoc.exists() ? (cartDoc.data().items || []) : [];
+                if (cartDoc.exists()) { cart = cartDoc.data().items || []; }
+                else { cart = []; }
                 updateCartBadge();
-            } catch (e) { console.warn("Cart load error:", e); }
+            } catch (e) { console.warn("Error loading cart from Firestore:", e); }
         }
 
         async function saveCustomerCartToFirestore() {
-            if (!db || !currentUser || currentUser.isGuest) return;
+            if (!db || !currentUser || currentUser.isAnonymous || currentUser.isGuest) return;
             try {
                 await setDoc(doc(db, "lumilens_carts", currentUser.uid), { items: cart, updatedAt: new Date().toISOString() });
-            } catch (e) { console.warn("Cart save error:", e); }
+            } catch (e) { console.warn("Error saving cart to Firestore:", e); }
         }
 
         function switchPage(pageName) {
@@ -1132,14 +1431,21 @@
             } else {
                 pageAuth.classList.add('hidden');
                 pageDashboard.classList.remove('hidden');
-                const savedTab = sessionStorage.getItem('sweetopia_active_tab') || (isAdminUser(currentUser?.email) ? 'admin-workspace' : 'catalog');
-                switchTab(savedTab, false);
+                if (currentUser && isAdminUser(currentUser.email)) {
+                    const savedTab = sessionStorage.getItem('sweetopia_active_tab') || 'admin-workspace';
+                    const savedSubTab = sessionStorage.getItem('sweetopia_admin_subtab') || 'stock';
+                    switchTab(savedTab, false);
+                    if(savedTab === 'admin-workspace') { switchAdminSubTab(savedSubTab, false); }
+                } else {
+                    const savedTab = sessionStorage.getItem('sweetopia_active_tab') || 'catalog';
+                    switchTab(savedTab, false);
+                }
             }
         }
 
         function switchTab(tabName, saveState = true) {
             if (tabName === 'admin-workspace' && (!currentUser || !isAdminUser(currentUser.email))) return;
-            if (saveState) sessionStorage.setItem('sweetopia_active_tab', tabName);
+            if (saveState) { sessionStorage.setItem('sweetopia_active_tab', tabName); }
 
             ['catalog', 'cart', 'customer-dashboard', 'admin-workspace'].forEach(t => {
                 const sec = document.getElementById('tab-section-' + t);
@@ -1159,7 +1465,7 @@
                 activeBtn.classList.add('bg-[#65a30d]', 'text-white', 'font-bold');
             }
 
-            if (tabName === 'catalog') filterCatalog('all', document.getElementById('cat-btn-all'));
+            if (tabName === 'catalog') { filterCatalog('all', document.getElementById('cat-btn-all')); }
             if (tabName === 'cart') renderCartItems();
             if (tabName === 'customer-dashboard') renderCustomerOrders();
             if (tabName === 'admin-workspace' && currentUser && isAdminUser(currentUser.email)) {
@@ -1193,7 +1499,8 @@
             event.preventDefault();
             const email = document.getElementById('auth-email').value.trim();
             const password = document.getElementById('auth-password').value;
-            if (!auth) return;
+
+            if (!auth) { showToast("Error", "Firebase auth unavailable.", true); return; }
 
             try {
                 if (authMode === 'signup') {
@@ -1224,15 +1531,37 @@
 
         function updateUIAfterLogin(user) {
             const isAdmin = isAdminUser(user.email);
-            document.getElementById('customer-nav-bar').classList.toggle('hidden', isAdmin);
-            document.getElementById('admin-nav-bar').classList.toggle('hidden', !isAdmin);
-            switchPage('dashboard');
-            switchTab(isAdmin ? 'admin-workspace' : 'catalog', false);
-            if (!isAdmin) document.getElementById('user-email-display').innerText = user.email;
+            const customerNavBar = document.getElementById('customer-nav-bar');
+            const adminNavBar = document.getElementById('admin-nav-bar');
+            const adminChatSessionBar = document.getElementById('admin-chat-session-bar');
+
+            if (isAdmin) {
+                customerNavBar.classList.add('hidden');
+                adminNavBar.classList.remove('hidden');
+                if (adminChatSessionBar) adminChatSessionBar.classList.remove('hidden');
+                switchPage('dashboard');
+                const savedTab = sessionStorage.getItem('sweetopia_active_tab') || 'admin-workspace';
+                const savedSubTab = sessionStorage.getItem('sweetopia_admin_subtab') || 'stock';
+                switchTab(savedTab, false);
+                if(savedTab === 'admin-workspace') { switchAdminSubTab(savedSubTab, false); }
+            } else {
+                const emailDisp = document.getElementById('user-email-display');
+                if(emailDisp) emailDisp.innerText = user.email;
+                customerNavBar.classList.remove('hidden');
+                adminNavBar.classList.add('hidden');
+                if (adminChatSessionBar) adminChatSessionBar.classList.add('hidden');
+                switchPage('dashboard');
+                switchTab(sessionStorage.getItem('sweetopia_active_tab') || 'catalog', false);
+            }
+            updateAdminChatUserDropdown();
+            renderActiveChatMessages();
         }
 
         async function handleSignOut() {
-            if (auth && !currentUser?.isGuest) await signOut(auth);
+            if (currentUser && currentUser.email) {
+                await updatePresence(currentUser.email, false);
+            }
+            if (auth && !currentUser?.isGuest) { await signOut(auth); }
             sessionStorage.clear();
             localStorage.removeItem('sweetopia_logged_in_email');
             currentUser = null;
@@ -1249,9 +1578,10 @@
                 grid.innerHTML = '<p class="col-span-full text-center text-xs text-slate-500 py-8">No products found.</p>';
                 return;
             }
+
             grid.innerHTML = list.map(p => `
                 <div class="bg-white rounded-3xl p-4 border border-slate-200 flex flex-col justify-between group hover:border-[#65a30d] transition-all shadow-sm hover:shadow-md">
-                    <div class="relative w-full h-44 rounded-2xl bg-slate-100 overflow-hidden flex items-center justify-center mb-3 border border-slate-150 cursor-pointer" onclick="openImageZoomModal('${p.image}')">
+                    <div class="relative w-full h-44 rounded-2xl bg-slate-100 overflow-hidden flex items-center justify-center mb-3 border border-slate-150 cursor-pointer" onclick="openImageZoomModal('${p.image}')" title="Click to view fullsize image">
                         <span class="absolute top-2.5 left-2.5 bg-[#65a30d] text-white text-[9px] font-extrabold px-2 py-0.5 rounded uppercase z-10 shadow-sm">${p.badge || 'In Stock'}</span>
                         <img src="${p.image}" class="w-36 h-36 object-cover group-hover:scale-105 transition-transform" onerror="this.src='https://placehold.co/200x200/f1f5f9/65a30d?text=Lens'">
                     </div>
@@ -1272,7 +1602,8 @@
                 b.className = "cat-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 shrink-0 border border-slate-200";
             });
             if (btn) btn.className = "cat-btn px-4 py-2 rounded-xl text-xs font-bold bg-[#65a30d] text-white shrink-0 shadow-sm";
-            renderStoreProducts(cat === 'all' ? products : products.filter(p => p.category === cat));
+            if (cat === 'all') renderStoreProducts(products);
+            else renderStoreProducts(products.filter(p => p.category === cat));
         }
 
         function filterStoreProducts() {
@@ -1281,14 +1612,17 @@
         }
 
         function openImageZoomModal(imgUrl) {
-            document.getElementById('zoom-modal-img').src = imgUrl;
+            const zoomImg = document.getElementById('zoom-modal-img');
+            zoomImg.src = imgUrl;
             const modal = document.getElementById('screen-image-zoom');
             modal.classList.remove('opacity-0', 'pointer-events-none');
             modal.classList.add('opacity-100');
         }
 
         function openImageZoomModalFromDetail() {
-            if (currentSelectedProduct?.image) openImageZoomModal(currentSelectedProduct.image);
+            if (currentSelectedProduct && currentSelectedProduct.image) {
+                openImageZoomModal(currentSelectedProduct.image);
+            }
         }
 
         function closeImageZoomModal() {
@@ -1307,9 +1641,11 @@
             document.getElementById('detail-category').innerText = currentSelectedProduct.category.toUpperCase() + ' CONTACT LENS';
 
             const pwrMap = window.productPowerStock[currentSelectedProduct.id] || {};
-            document.getElementById('detail-pwr').innerHTML = powersList.map(pwr => {
+            const pwrSelect = document.getElementById('detail-pwr');
+            pwrSelect.innerHTML = powersList.map(pwr => {
                 const avail = pwrMap[pwr] !== false;
-                return `<option value="${pwr}" ${!avail ? 'disabled class="text-red-500 bg-slate-50"' : ''}>PWR ${pwr === "0.00" ? "0.00 (No Power)" : pwr} ${avail ? '(In Stock)' : '(SOLD OUT)'}</option>`;
+                const displayLabel = pwr === "0.00" ? "0.00 (No Power)" : pwr;
+                return `<option value="${pwr}" ${!avail ? 'disabled class="text-red-500 bg-slate-50"' : ''}>PWR ${displayLabel} ${avail ? '(In Stock)' : '(SOLD OUT)'}</option>`;
             }).join('');
 
             document.getElementById('screen-detail').classList.remove('opacity-0', 'pointer-events-none');
@@ -1323,7 +1659,7 @@
 
         async function addCurrentProductToCart() {
             if (!currentUser || currentUser.isGuest) {
-                showToast("Sign In Required", "Please sign in or register an account.", true);
+                showToast("Sign In Required", "Please sign in or register an account to add items to cart.", true);
                 closeProductDetail();
                 switchPage('auth');
                 return;
@@ -1331,6 +1667,12 @@
 
             if (!currentSelectedProduct) return;
             const pwr = document.getElementById('detail-pwr').value;
+            const pwrMap = window.productPowerStock[currentSelectedProduct.id] || {};
+            if (pwrMap[pwr] === false) {
+                showToast("Sold Out", `Power ${pwr} for ${currentSelectedProduct.name} is currently out of stock.`, true);
+                return;
+            }
+
             const existing = cart.find(i => i.id === currentSelectedProduct.id && i.pwr === pwr);
             if (existing) { existing.qty += 1; }
             else { cart.push({ ...currentSelectedProduct, pwr, qty: 1 }); }
@@ -1343,22 +1685,28 @@
 
         function updateCartBadge() {
             const count = cart.reduce((s, i) => s + i.qty, 0);
-            if (document.getElementById('header-cart-count')) document.getElementById('header-cart-count').innerText = count;
-            if (document.getElementById('cart-title-count')) document.getElementById('cart-title-count').innerText = count;
+            const headerCartElem = document.getElementById('header-cart-count');
+            if (headerCartElem) headerCartElem.innerText = count;
+
+            const titleElem = document.getElementById('cart-title-count');
+            if (titleElem) titleElem.innerText = count;
         }
 
         function calculateCartTotals() {
             const totalPairs = cart.reduce((s, i) => s + i.qty, 0);
             const subtotal = totalPairs * 25.0;
-            let shippingFee = (totalPairs === 1 || totalPairs > 10) ? 5.0 : 0.0;
-            return { totalPairs, subtotal, shippingFee, grandTotal: subtotal + shippingFee };
+            let shippingFee = totalPairs === 1 ? 5.0 : (totalPairs >= 2 && totalPairs <= 10 ? 0.0 : 5.0);
+            const grandTotal = subtotal + shippingFee;
+            return { totalPairs, subtotal, shippingFee, grandTotal };
         }
 
         function renderCartItems() {
             if (!currentUser || currentUser.isGuest) {
+                showToast("Sign In Required", "Please sign in or register to view your cart.", true);
                 switchPage('auth');
                 return;
             }
+
             const container = document.getElementById('cart-items-container');
             const formBox = document.getElementById('checkout-form-box');
             if (cart.length === 0) {
@@ -1367,9 +1715,10 @@
                 return;
             }
             formBox.classList.remove('hidden');
+
             container.innerHTML = cart.map((item, idx) => `
                 <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex items-center space-x-4 shadow-sm">
-                    <img src="${item.image}" class="w-14 h-14 rounded-xl object-cover border border-slate-200">
+                    <img src="${item.image}" class="w-14 h-14 rounded-xl object-cover border border-slate-200" onerror="this.src='https://placehold.co/100x100/f1f5f9/65a30d?text=Lens'">
                     <div class="flex-1">
                         <h4 class="text-sm font-bold text-slate-900">${item.name}</h4>
                         <p class="text-xs text-slate-500">Power: ${item.pwr} • RM ${item.price} / pair</p>
@@ -1382,12 +1731,7 @@
                     <button onclick="removeFromCart(${idx})" class="text-slate-400 hover:text-red-600"><i class="fa-solid fa-trash"></i></button>
                 </div>
             `).join('');
-            updateCheckoutDisplay();
-        }
 
-        function onPaymentMethodChange(type) {
-            if (type === 'cod' && document.getElementById('chk-cod').checked) document.getElementById('chk-shipping').checked = false;
-            if (type === 'shipping' && document.getElementById('chk-shipping').checked) document.getElementById('chk-cod').checked = false;
             updateCheckoutDisplay();
         }
 
@@ -1420,129 +1764,93 @@
             await saveCustomerCartToFirestore();
         }
 
-        async function processOrderCheckout(method) {
+        async function processOrderCheckout() {
             if (!currentUser || currentUser.isGuest) {
+                showToast("Sign In Required", "Please sign in or register to complete your purchase.", true);
                 switchPage('auth');
                 return;
             }
+
             if (cart.length === 0) return;
 
             const name = document.getElementById('checkout-name').value.trim();
             const address = document.getElementById('checkout-address').value.trim();
             const phone = document.getElementById('checkout-phone').value.trim();
-            const chkCod = document.getElementById('chk-cod').checked;
-            const chkShipping = document.getElementById('chk-shipping').checked;
 
-            if (!name || !address || !phone || (!chkCod && !chkShipping)) {
-                showToast("Missing Information", "Please fill in delivery details and select a payment option.", true);
+            if (!name || !address || !phone) {
+                showToast("Missing Information", "Please fill in your name, delivery address, and phone number.", true);
                 return;
             }
 
             const totals = calculateCartTotals();
-            const randomCode = Array.from({length: 5}, () => "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[Math.floor(Math.random() * 26)]).join('');
+            const alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const randomCode = Array.from({length: 5}, () => alphabets[Math.floor(Math.random() * alphabets.length)]).join('');
             pendingOrderId = `261009SW${randomCode}`;
 
-            const statusLabel = method === 'FPX' ? "Pending ToyyibPay FPX Payment" : "Completed Purchase by COD";
+            const registeredEmail = currentUser.email;
 
             const newOrder = {
                 id: pendingOrderId,
-                customer: currentUser.email,
+                customer: registeredEmail,
                 customerName: name,
                 customerAddress: address,
                 customerPhone: phone,
-                paymentOption: method === 'FPX' ? "Shipping" : "COD",
+                paymentOption: "ToyyibPay FPX",
                 items: [...cart],
                 subtotal: totals.subtotal.toFixed(2),
                 shippingFee: totals.shippingFee.toFixed(2),
                 total: totals.grandTotal.toFixed(2),
-                status: statusLabel,
+                status: "Pending Invoice, Please Complete Payment",
                 trackingNumber: "pending",
                 date: new Date().toLocaleString(),
                 timestamp: new Date().toISOString()
             };
 
             if (db) {
-                try { await setDoc(doc(db, "lumilens_orders", pendingOrderId), newOrder); } catch(e) { console.warn(e); }
+                try {
+                    await setDoc(doc(db, "lumilens_orders", pendingOrderId), newOrder);
+                } catch(e) { console.warn("Firestore order write error:", e); }
             }
 
-            if (method === 'FPX') {
-                document.getElementById('fpx-modal-order-id').innerText = pendingOrderId;
-                document.getElementById('fpx-modal').classList.remove('opacity-0', 'pointer-events-none');
-            } else {
-                cart = [];
-                updateCartBadge();
-                await saveCustomerCartToFirestore();
-                switchTab('customer-dashboard');
-                showToast("COD Order Placed", `Order ID ${pendingOrderId} sent to admin.`);
-            }
+            document.getElementById('fpx-modal-order-id').innerText = pendingOrderId;
+            document.getElementById('fpx-modal').classList.remove('opacity-0', 'pointer-events-none');
         }
 
         async function confirmToyyibPayRedirect() {
+            if (db && pendingOrderId) {
+                try {
+                    const orderRef = doc(db, "lumilens_orders", pendingOrderId);
+                    const orderSnap = await getDoc(orderRef);
+                    if (orderSnap.exists()) {
+                        const orderData = orderSnap.data();
+                        orderData.status = "Completed Purchase by FPX";
+                        await setDoc(orderRef, orderData, { merge: true });
+                    }
+                } catch(e) { console.warn("Error updating order status on redirect:", e); }
+            }
             cart = [];
             updateCartBadge();
             await saveCustomerCartToFirestore();
-            const redirectUrl = `${TOYYIBPAY_URL}?order_id=${pendingOrderId}&amount=${document.getElementById('cart-total').innerText}`;
-            window.location.href = redirectUrl;
+            window.location.href = TOYYIBPAY_URL;
         }
 
         async function closeToyyibPayModal() {
             document.getElementById('fpx-modal').classList.add('opacity-0', 'pointer-events-none');
             switchTab('customer-dashboard');
-            showToast("Order Generated", `Order ID ${pendingOrderId} created. Awaiting ToyyibPay bank verification.`);
+            showToast("Invoice Pending", `Order ID ${pendingOrderId} created. Please complete payment via ToyyibPay FPX.`);
         }
 
-        window.openOrderDetailsModal = function(orderId) {
-            const order = allOrders.find(o => o.id === orderId);
-            if (!order) return;
-
-            document.getElementById('modal-inspect-id').innerText = "Order ID: " + order.id;
-            const container = document.getElementById('modal-inspect-body');
-
-            container.innerHTML = `
-                <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200 space-y-1">
-                    <p><b>Recipient:</b> ${order.customerName}</p>
-                    <p><b>Email:</b> ${order.customer}</p>
-                    <p><b>Phone:</b> ${order.customerPhone}</p>
-                    <p><b>Address:</b> ${order.customerAddress}</p>
-                    <p><b>Date & Time:</b> ${order.date}</p>
-                    <p><b>Status:</b> <span class="text-blue-600 font-bold">${order.status}</span></p>
-                    <p><b>Tracking Number:</b> <span class="font-mono text-amber-600 font-bold">${order.trackingNumber || 'Pending'}</span></p>
-                </div>
-                <h4 class="font-bold text-slate-900 border-b border-slate-200 pb-1">Ordered Items & Prescriptions</h4>
-                <div class="space-y-3">
-                    ${(order.items || []).map(i => `
-                        <div class="flex items-center space-x-3 bg-slate-50 p-3 rounded-2xl border border-slate-200">
-                            <img src="${i.image}" class="w-12 h-12 rounded-xl object-cover border border-slate-200">
-                            <div class="flex-1">
-                                <h5 class="font-bold text-slate-900">${i.name}</h5>
-                                <p class="text-slate-500">Brand: ${i.brand || 'Sweetopia Lens'}</p>
-                                <p class="text-slate-600 font-semibold">Prescription Power (PWR): ${i.pwr === "0.00" ? "0.00 (No Power)" : i.pwr}</p>
-                            </div>
-                            <div class="text-right">
-                                <p class="font-bold text-slate-800">x${i.qty}</p>
-                                <p class="text-[#65a30d] font-extrabold">RM ${(parseFloat(i.price) * i.qty).toFixed(2)}</p>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-                <div class="border-t border-slate-200 pt-3 flex justify-between items-center text-sm font-bold">
-                    <span>Grand Total:</span>
-                    <span class="text-[#65a30d]">RM ${order.total}</span>
-                </div>
-            `;
-
-            document.getElementById('order-details-modal').classList.remove('opacity-0', 'pointer-events-none');
-        };
-
-        window.closeOrderDetailsModal = function() {
-            document.getElementById('order-details-modal').classList.add('opacity-0', 'pointer-events-none');
-        };
-
         function renderCustomerOrders() {
-            if (!currentUser || currentUser.isGuest) return;
+            if (!currentUser || currentUser.isGuest) {
+                showToast("Sign In Required", "Please sign in or register to view your orders.", true);
+                switchPage('auth');
+                return;
+            }
+
             const container = document.getElementById('customer-orders-list');
             if (!container) return;
-            const userOrders = allOrders.filter(o => o.customer === currentUser.email || isAdminUser(currentUser.email));
+            const userEmail = currentUser.email;
+            const userOrders = allOrders.filter(o => o.customer === userEmail || isAdminUser(userEmail));
 
             if (userOrders.length === 0) {
                 container.innerHTML = '<p class="text-xs text-slate-500 text-center py-8">No approved purchase invoices found in your dashboard.</p>';
@@ -1551,37 +1859,33 @@
 
             container.innerHTML = userOrders.map(o => {
                 const trackingDisplay = (!o.trackingNumber || o.trackingNumber === 'pending') ? 'pending' : o.trackingNumber;
-                const isPaidFPX = o.status.includes('ToyyibPay') && !o.status.includes('Pending');
+                const isPaid = o.status === "Completed Purchase by FPX";
+                const badgeClass = isPaid ? "bg-emerald-50 text-emerald-600 border border-emerald-200" : "bg-amber-50 text-amber-600 border border-amber-200";
+
                 return `
                     <div class="bg-slate-50 p-5 rounded-3xl border border-slate-200 space-y-3 shadow-sm">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-200 pb-3">
                             <div>
-                                <div class="flex items-center space-x-2">
-                                    <span class="text-xs font-extrabold text-[#65a30d] font-mono">Order ID: ${o.id}</span>
-                                    <span class="text-[10px] bg-slate-200 text-slate-700 px-2 py-0.5 rounded font-medium">${o.date}</span>
-                                </div>
-                                <p class="text-[10px] text-slate-500 mt-0.5">Recipient: ${o.customerName} (${o.paymentOption})</p>
+                                <span class="text-xs font-extrabold text-[#65a30d] font-mono">Order ID: ${o.id}</span>
+                                <p class="text-[10px] text-slate-500 mt-0.5">${o.date} • Recipient: ${o.customerName || o.customer}</p>
                             </div>
                             <div class="flex items-center space-x-2">
-                                <button onclick="openOrderDetailsModal('${o.id}')" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold px-3 py-1 rounded-xl text-[10px] shadow-sm">
-                                    View Ordered
-                                </button>
-                                <span class="bg-blue-50 text-blue-600 border border-blue-200 text-[10px] font-bold px-3 py-1 rounded-xl">${o.status}</span>
-                                ${isPaidFPX ? `
-                                    <button onclick="openInvoiceModal('${o.id}')" class="bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold px-3 py-1 rounded-xl text-[10px] flex items-center space-x-1 shadow-sm">
-                                        <i class="fa-solid fa-file-arrow-down"></i>
-                                        <span>Get Invoice / PNG</span>
-                                    </button>
-                                ` : ''}
+                                <span class="${badgeClass} text-[10px] font-bold px-3 py-1 rounded-xl">${o.status}</span>
+                                ${isPaid ? `
+                                <button onclick="openInvoiceModal('${o.id}')" class="bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold px-3 py-1 rounded-xl text-[10px] flex items-center space-x-1 shadow-sm">
+                                    <i class="fa-solid fa-file-arrow-down"></i>
+                                    <span>View / PNG Invoice</span>
+                                </button>` : ''}
                             </div>
                         </div>
                         <div class="text-[11px] text-slate-600">
-                            <p><b>Billing Address:</b> ${o.customerAddress}</p>
-                            <p><b>Phone:</b> ${o.customerPhone}</p>
+                            <p><b>Billing Address:</b> ${o.customerAddress || 'N/A'}</p>
+                            <p><b>Phone:</b> ${o.customerPhone || 'N/A'}</p>
+                            <p><b>User Email:</b> ${o.customer}</p>
                             <p><b>Tracking Number:</b> <span class="font-mono text-amber-600 font-bold">${trackingDisplay}</span></p>
                         </div>
                         <div class="space-y-2 pt-1 border-t border-slate-200">
-                            ${(o.items || []).map(i => `
+                             ${(o.items || []).map(i => `
                                 <div class="flex justify-between text-xs text-slate-700">
                                     <span>${i.name} (PWR ${i.pwr}) x${i.qty}</span>
                                     <span class="font-bold">RM ${(parseFloat(i.price) * i.qty).toFixed(2)}</span>
@@ -1589,7 +1893,7 @@
                             `).join('')}
                         </div>
                         <div class="border-t border-slate-200 pt-2 flex justify-between items-center text-xs">
-                            <span class="text-slate-500">Shipping: ${parseFloat(o.shippingFee) > 0 ? 'RM ' + o.shippingFee : 'FREE'}</span>
+                            <span class="text-slate-500">Shipping Fee: RM ${o.shippingFee || '0.00'}</span>
                             <span class="text-base font-extrabold text-[#65a30d]">Total: RM ${o.total}</span>
                         </div>
                     </div>
@@ -1599,64 +1903,82 @@
 
         function openInvoiceModal(orderId) {
             const order = allOrders.find(o => o.id === orderId);
-            if (!order || (!order.status.includes('ToyyibPay') && !order.status.includes('FPX'))) return;
+            if (!order) return;
 
             document.getElementById('inv-modal-id').innerText = "Order ID: " + order.id;
             document.getElementById('inv-modal-date').innerText = "Date: " + order.date;
-            document.getElementById('inv-modal-name').innerText = order.customerName;
-            document.getElementById('inv-modal-address').innerText = order.customerAddress;
-            document.getElementById('inv-modal-phone').innerText = "Phone: " + order.customerPhone;
+            document.getElementById('inv-modal-name').innerText = order.customerName || "Customer Name";
+            document.getElementById('inv-modal-address').innerText = order.customerAddress || "Delivery Address";
+            document.getElementById('inv-modal-phone').innerText = "Phone: " + (order.customerPhone || "N/A");
             document.getElementById('inv-modal-email').innerText = "Email: " + order.customer;
-            document.getElementById('inv-modal-tracking').innerText = "Tracking Number: " + order.trackingNumber;
+            document.getElementById('inv-modal-tracking').innerText = "Tracking Number: " + (order.trackingNumber || "pending");
 
-            document.getElementById('inv-modal-items-tbody').innerHTML = (order.items || []).map(i => `
+            const tbody = document.getElementById('inv-modal-items-tbody');
+            tbody.innerHTML = (order.items || []).map(i => `
                 <tr class="border-b border-slate-100">
-                    <td class="p-3"><b>${i.name}</b><br><span class="text-[10px] text-slate-500">Power: ${i.pwr}</span></td>
+                    <td class="p-3">
+                        <b>${i.name}</b><br>
+                        <span class="text-[10px] text-slate-500">Power: ${i.pwr}</span>
+                    </td>
                     <td class="p-3 text-right">${i.qty}</td>
                     <td class="p-3 text-right">RM ${i.price}</td>
                     <td class="p-3 text-right font-bold">RM ${(parseFloat(i.price) * i.qty).toFixed(2)}</td>
                 </tr>
             `).join('');
 
-            document.getElementById('inv-modal-subtotal').innerText = "RM " + order.subtotal;
-            document.getElementById('inv-modal-shipping').innerText = parseFloat(order.shippingFee) > 0 ? ("RM " + order.shippingFee) : "FREE";
-            document.getElementById('inv-modal-grandtotal').innerText = "RM " + order.total;
+            document.getElementById('inv-modal-subtotal').innerText = "RM " + (order.subtotal || "0.00");
+            document.getElementById('inv-modal-shipping').innerText = "RM " + (order.shippingFee || "0.00");
+            document.getElementById('inv-modal-grandtotal').innerText = "RM " + (order.total || "0.00");
 
             document.getElementById('invoice-modal').classList.remove('opacity-0', 'pointer-events-none');
         }
 
-        function closeInvoiceModal() { document.getElementById('invoice-modal').classList.add('opacity-0', 'pointer-events-none'); }
+        function closeInvoiceModal() {
+            document.getElementById('invoice-modal').classList.add('opacity-0', 'pointer-events-none');
+        }
 
         function downloadInvoiceAsPNG() {
-            html2canvas(document.getElementById('invoice-printable-area'), { scale: 2, useCORS: true }).then(canvas => {
+            const element = document.getElementById('invoice-printable-area');
+            html2canvas(element, { scale: 2, useCORS: true }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = `Sweetopia_Shop_Invoice_A4.png`;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
-                showToast("PNG Downloaded", "Invoice saved.");
+                showToast("PNG Downloaded", "A4 invoice downloaded as high-res PNG.");
+            }).catch(err => {
+                showToast("Download Error", "Could not render PNG.", true);
             });
         }
 
         function switchAdminSubTab(sub, saveState = true) {
-            if (saveState) sessionStorage.setItem('sweetopia_admin_subtab', sub);
+            if (saveState) { sessionStorage.setItem('sweetopia_admin_subtab', sub); }
             ['stock', 'products', 'orders'].forEach(s => {
-                document.getElementById('adm-sub-section-' + s).classList.toggle('hidden', s !== sub);
-                document.getElementById('adm-sub-' + s).className = s === sub ? "px-4 py-2 rounded-xl text-xs font-bold bg-amber-500 text-slate-950 shadow-sm" : "px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200";
+                const sec = document.getElementById('adm-sub-section-' + s);
+                const btn = document.getElementById('adm-sub-' + s);
+                if(sec) sec.classList.add('hidden');
+                if(btn) btn.className = "px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200";
             });
+            const targetSec = document.getElementById('adm-sub-section-' + sub);
+            const targetBtn = document.getElementById('adm-sub-' + sub);
+            if(targetSec) targetSec.classList.remove('hidden');
+            if(targetBtn) targetBtn.className = "px-4 py-2 rounded-xl text-xs font-bold bg-amber-500 text-slate-950 shadow-sm";
         }
 
         function renderAdminPowerStockCheckboxes() {
             const container = document.getElementById('admin-power-stock-checkboxes-container');
             if (!container) return;
-            const selectedPwr = document.getElementById('admin-global-power-select').value;
+            const selectedPwr = document.getElementById('admin-global-power-select') ? document.getElementById('admin-global-power-select').value : "0.00";
 
             container.innerHTML = products.map(p => {
-                if (!window.productPowerStock[p.id]) window.productPowerStock[p.id] = {};
+                if (!window.productPowerStock[p.id]) {
+                    window.productPowerStock[p.id] = {};
+                    powersList.forEach(pw => window.productPowerStock[p.id][pw] = true);
+                }
                 const isAvailable = window.productPowerStock[p.id][selectedPwr] !== false;
                 return `
-                    <label class="flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-100 cursor-pointer border border-slate-200 bg-white">
-                        <span class="text-xs text-slate-700 font-medium">${p.name}</span>
-                        <input type="checkbox" id="power-cb-${p.id}" ${isAvailable ? 'checked' : ''} class="w-4 h-4 accent-[#65a30d] cursor-pointer" onchange="updatePowerStockFromCheckboxes()">
+                    <label class="flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-100 cursor-pointer transition-colors group border border-slate-200 bg-white">
+                        <span class="text-xs text-slate-700 font-medium group-hover:text-slate-900">${p.name}</span>
+                        <input type="checkbox" id="power-cb-${p.id}" ${isAvailable ? 'checked' : ''} class="lens-checkbox w-4 h-4 rounded border-slate-300 bg-slate-50 text-[#65a30d] focus:ring-[#65a30d]/30 accent-[#65a30d] cursor-pointer" onchange="updatePowerStockFromCheckboxes()">
                     </label>
                 `;
             }).join('');
@@ -1676,14 +1998,19 @@
         }
 
         async function saveAdminStockSettings() {
+            const selectedPwr = document.getElementById('admin-global-power-select').value;
             updatePowerStockFromCheckboxes();
+            showToast("Updating Stock...", "Syncing power availability live...");
+
             if (db) {
-                for (const p of products) {
-                    await setDoc(doc(db, "lumilens_products", p.id), { ...p, powerStock: window.productPowerStock[p.id] }, { merge: true });
-                }
+                try {
+                    for (const p of products) {
+                        await setDoc(doc(db, "lumilens_products", p.id), { ...p, powerStock: window.productPowerStock[p.id] }, { merge: true });
+                    }
+                } catch (e) { showToast("Sync Error", e.message, true); return; }
             }
             renderStoreProducts(products);
-            showToast("Stock Saved!", "Power availability updated live.");
+            showToast("Stock Saved!", `Power ${selectedPwr} availability successfully updated live.`);
         }
 
         function handleImageFileUpload(event) {
@@ -1691,10 +2018,13 @@
             if (!file) return;
             const reader = new FileReader();
             reader.onload = function(e) {
-                document.getElementById('admin-prod-img-base64').value = e.target.result;
-                document.getElementById('admin-image-preview-tag').src = e.target.result;
-                document.getElementById('admin-image-preview-container').classList.remove('hidden');
-                document.getElementById('admin-image-preview-container').classList.add('flex');
+                let base64String = e.target.result;
+                document.getElementById('admin-prod-img-base64').value = base64String;
+                const previewContainer = document.getElementById('admin-image-preview-container');
+                const previewTag = document.getElementById('admin-image-preview-tag');
+                previewTag.src = base64String;
+                previewContainer.classList.remove('hidden');
+                previewContainer.classList.add('flex');
             };
             reader.readAsDataURL(file);
         }
@@ -1702,13 +2032,14 @@
         function renderAdminProductsList() {
             const list = document.getElementById('admin-products-list');
             if (!list) return;
+            if (products.length === 0) { list.innerHTML = '<p class="text-xs text-slate-500 text-center py-4">No products found.</p>'; return; }
             list.innerHTML = products.map(p => `
                 <div class="flex items-center justify-between bg-white p-3 rounded-2xl border border-slate-200 shadow-sm">
                     <div class="flex items-center space-x-3">
-                        <img src="${p.image}" class="w-10 h-10 rounded-xl object-cover border border-slate-200">
+                        <img src="${p.image}" class="w-10 h-10 rounded-xl object-cover border border-slate-200" onerror="this.src='https://placehold.co/100x100/f1f5f9/65a30d?text=Lens'">
                         <div>
                             <h5 class="text-xs font-bold text-slate-900">${p.name}</h5>
-                            <p class="text-[10px] text-slate-500">RM ${p.price} • ${p.category}</p>
+                            <p class="text-[10px] text-slate-500"><b class="text-[#65a30d]">${p.brand || 'Sweetopia Lens'}</b> • RM ${p.price} • ${p.category}</p>
                         </div>
                     </div>
                     <div class="flex items-center space-x-2">
@@ -1726,22 +2057,33 @@
             const price = document.getElementById('admin-prod-price').value.trim();
             const category = document.getElementById('admin-prod-cat').value;
             const base64Img = document.getElementById('admin-prod-img-base64').value;
+            const existingProduct = products.find(i => i.id === id);
+            const image = base64Img || (existingProduct ? existingProduct.image : "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500");
 
-            if (!name || !price) { showToast("Error", "Provide name and price.", true); return; }
+            if (!name || !price) { showToast("Error", "Provide both product name and price.", true); return; }
 
             const prodId = id || ("p_" + Date.now());
-            const productData = {
-                id: prodId, name, brand, price, category,
-                image: base64Img || "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500",
-                badge: "In Stock",
-                powerStock: window.productPowerStock[prodId] || {}
-            };
+            if (!window.productPowerStock[prodId]) {
+                window.productPowerStock[prodId] = {};
+                powersList.forEach(pw => window.productPowerStock[prodId][pw] = true);
+            }
 
-            if (db) await setDoc(doc(db, "lumilens_products", prodId), productData);
+            const productData = { id: prodId, name, brand, price, category, image, badge: "In Stock", powerStock: window.productPowerStock[prodId] };
+
+            if (db) {
+                try { await setDoc(doc(db, "lumilens_products", prodId), productData); }
+                catch(e) { showToast("Firestore Error", e.message, true); return; }
+            }
+
+            const existingIdx = products.findIndex(p => p.id === prodId);
+            if (existingIdx >= 0) products[existingIdx] = productData;
+            else products.push(productData);
+
             renderStoreProducts(products);
             renderAdminProductsList();
+            renderAdminPowerStockCheckboxes();
             resetAdminProductForm();
-            showToast("Success!", "Product published.");
+            showToast("Success!", "Product published live across all devices.");
         }
 
         function editAdminProduct(id) {
@@ -1753,18 +2095,24 @@
             document.getElementById('admin-prod-price').value = p.price;
             document.getElementById('admin-prod-cat').value = p.category;
             document.getElementById('admin-prod-img-base64').value = p.image;
-            document.getElementById('admin-image-preview-tag').src = p.image;
-            document.getElementById('admin-image-preview-container').classList.remove('hidden');
-            document.getElementById('admin-image-preview-container').classList.add('flex');
+            if (p.image) {
+                const previewContainer = document.getElementById('admin-image-preview-container');
+                const previewTag = document.getElementById('admin-image-preview-tag');
+                previewTag.src = p.image;
+                previewContainer.classList.remove('hidden');
+                previewContainer.classList.add('flex');
+            }
+            document.getElementById('admin-form-title').innerText = `Edit: ${p.name}`;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         async function deleteAdminProduct(id) {
-            if (db) await deleteDoc(doc(db, "lumilens_products", String(id)));
+            if (db) { try { await deleteDoc(doc(db, "lumilens_products", String(id))); } catch(e) { console.warn(e); } }
             products = products.filter(i => i.id != id);
             renderStoreProducts(products);
             renderAdminProductsList();
-            showToast("Deleted", "Product removed.");
+            renderAdminPowerStockCheckboxes();
+            showToast("Deleted", "Product removed live.");
         }
 
         function resetAdminProductForm() {
@@ -1775,6 +2123,8 @@
             document.getElementById('admin-prod-file').value = "";
             document.getElementById('admin-prod-img-base64').value = "";
             document.getElementById('admin-image-preview-container').classList.add('hidden');
+            document.getElementById('admin-image-preview-container').classList.remove('flex');
+            document.getElementById('admin-form-title').innerText = "Add New Product";
         }
 
         function renderAdminOrdersList() {
@@ -1789,26 +2139,25 @@
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-200 pb-3">
                         <div>
                             <div class="flex items-center space-x-2">
-                                <span class="text-xs font-bold text-amber-600 font-mono">Order ID: ${o.id}</span>
-                                <span class="text-[10px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-medium">${o.date}</span>
+                                <span class="text-xs font-bold text-amber-600 font-mono">${o.id}</span>
+                                <span class="text-[10px] text-slate-400 font-mono">(${o.date})</span>
                                 <span class="text-[9px] bg-blue-50 text-blue-600 border border-blue-200 px-2 py-0.5 rounded">${o.status}</span>
                             </div>
-                            <p class="text-[11px] text-slate-700 mt-1"><b>${o.customerName}</b> (${o.customer}) • Total: <b>RM ${o.total}</b> (${o.paymentOption})</p>
-                            <p class="text-[10px] text-slate-500">Address: ${o.customerAddress} | Phone: ${o.customerPhone}</p>
-                        </div>
-                        <div>
-                            <button onclick="openOrderDetailsModal('${o.id}')" class="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-3 py-1 rounded-xl text-xs border border-slate-200">
-                                View Ordered
-                            </button>
+                            <p class="text-[11px] text-slate-700 mt-1"><b>Recipient:</b> ${o.customerName || 'Customer'} • Total: <b>RM ${o.total}</b></p>
+                            <p class="text-[10px] text-slate-500"><b>Billing Address:</b> ${o.customerAddress} | <b>Phone:</b> ${o.customerPhone} | <b>User signed up email:</b> <span class="text-amber-600 font-semibold">${o.customer}</span></p>
                         </div>
                     </div>
                     <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-1">
                         <div class="flex items-center space-x-2 w-full sm:w-auto flex-1">
                             <input type="text" id="track-input-${o.id}" value="${o.trackingNumber === 'pending' ? '' : (o.trackingNumber || '')}" placeholder="Enter tracking number" class="bg-slate-50 border border-slate-300 text-xs rounded-xl px-3 py-2 w-full sm:w-64">
-                            <button onclick="adminSaveTracking('${o.id}')" class="bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold px-3 py-2 rounded-xl text-xs shrink-0">Save & Publish</button>
+                            <button onclick="adminSaveAndPublishTracking('${o.id}')" class="bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold px-4 py-2 rounded-xl text-xs shrink-0 shadow-sm">Save and Publish</button>
                         </div>
                         <div class="flex items-center space-x-2">
-                            <button onclick="adminCompleteDelivery('${o.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded-xl text-xs">Complete Delivered</button>
+                            <!-- Order details button placed above / beside trash action -->
+                            <button onclick="openAdminOrderDetail('${o.id}')" class="bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold px-3 py-2 rounded-xl text-xs border border-amber-300 flex items-center space-x-1.5 shadow-sm transition">
+                                <i class="fa-solid fa-circle-info text-amber-700"></i>
+                                <span>Order Details</span>
+                            </button>
                             <button onclick="deleteAdminOrder('${o.id}')" class="w-8 h-8 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 flex items-center justify-center"><i class="fa-solid fa-trash text-xs"></i></button>
                         </div>
                     </div>
@@ -1816,35 +2165,29 @@
             `).join('');
         }
 
-        async function adminSaveTracking(orderId) {
+        async function adminSaveAndPublishTracking(orderId) {
             const trackVal = document.getElementById(`track-input-${orderId}`).value.trim();
             const order = allOrders.find(o => o.id === orderId);
             if (!order) return;
             order.trackingNumber = trackVal || "pending";
             order.status = trackVal ? `Shipped (${trackVal})` : order.status;
 
-            if (db) await setDoc(doc(db, "lumilens_orders", orderId), order, { merge: true });
+            if (db) {
+                try {
+                    await setDoc(doc(db, "lumilens_orders", orderId), order, { merge: true });
+                } catch(e) { console.warn("Firestore tracking update error:", e); }
+            }
             renderAdminOrdersList();
             renderCustomerOrders();
-            showToast("Tracking Published", `Tracking number published and updated to customer dashboard.`);
-        }
-
-        async function adminCompleteDelivery(orderId) {
-            const order = allOrders.find(o => o.id === orderId);
-            if (!order) return;
-            order.status = "Completed & Delivered";
-            if (db) await setDoc(doc(db, "lumilens_orders", orderId), order, { merge: true });
-            renderAdminOrdersList();
-            renderCustomerOrders();
-            showToast("Completed", `Order marked as delivered.`);
+            showToast("Published Live", `Tracking number saved & published to customer dashboard for order ${orderId}.`);
         }
 
         async function deleteAdminOrder(orderId) {
-            if (db) await deleteDoc(doc(db, "lumilens_orders", orderId));
+            if (db) { try { await deleteDoc(doc(db, "lumilens_orders", orderId)); } catch(e) { console.warn(e); } }
             allOrders = allOrders.filter(o => o.id !== orderId);
             renderAdminOrdersList();
             renderCustomerOrders();
-            showToast("Deleted", "Order removed.");
+            showToast("Invoice Deleted", `Order ${orderId} removed from client dashboards.`);
         }
 
         function exportInvoicesToCSV() {
@@ -1852,11 +2195,11 @@
             allOrders.forEach(o => { csv += `"${o.id}","${o.customer}","${o.total}","${o.status}","${o.trackingNumber}","${o.date}"\n`; });
             const link = document.createElement("a");
             link.href = encodeURI("data:text/csv;charset=utf-8," + csv);
-            link.download = `Sweetopia_Shop_Invoices.csv`;
+            link.download = `Sweetopia_Shop_Invoices_${new Date().toISOString().slice(0,10)}.csv`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            showToast("Exported", "CSV downloaded.");
+            showToast("Exported", "Invoices CSV downloaded.");
         }
 
         function openForgotPassword() { document.getElementById('forgot-modal').classList.remove('opacity-0', 'pointer-events-none'); }
@@ -1901,10 +2244,11 @@
             function nextSlide() { showSlide((currentIndex + 1) % slides.length); }
             function prevSlide() { showSlide((currentIndex - 1 + slides.length) % slides.length); }
             function startAutoPlay() { clearInterval(slideInterval); slideInterval = setInterval(nextSlide, 5000); }
+            function resetAutoPlay() { clearInterval(slideInterval); startAutoPlay(); }
 
-            if (nextBtn) nextBtn.onclick = (e) => { e.preventDefault(); nextSlide(); startAutoPlay(); };
-            if (prevBtn) prevBtn.onclick = (e) => { e.preventDefault(); prevSlide(); startAutoPlay(); };
-            dots.forEach((dot, i) => { dot.onclick = (e) => { e.preventDefault(); showSlide(i); startAutoPlay(); }; });
+            if (nextBtn) { nextBtn.onclick = (e) => { e.preventDefault(); nextSlide(); resetAutoPlay(); }; }
+            if (prevBtn) { prevBtn.onclick = (e) => { e.preventDefault(); prevSlide(); resetAutoPlay(); }; }
+            dots.forEach((dot, i) => { dot.onclick = (e) => { e.preventDefault(); showSlide(i); resetAutoPlay(); }; });
             startAutoPlay();
         }
     </script>
