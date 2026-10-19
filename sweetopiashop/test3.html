@@ -142,132 +142,44 @@
         </div>
 
         <!-- ================= PAGE 1: AUTHENTICATION ================= -->
-        <div id="page-auth" class="w-full max-w-[1280px] mx-auto min-h-[620px] relative flex flex-col lg:flex-row items-center lg:items-stretch justify-center lg:justify-between overflow-hidden rounded-[2.5rem] border-0 lg:border lg:border-white/20 lg:shadow-2xl bg-transparent">
+        <div id="page-auth" class="w-full max-w-[1280px] mx-auto min-h-[620px] relative flex flex-col lg:flex-row items-center lg:items-stretch justify-center lg:justify-between overflow-hidden rounded-[2.5xl] border border-white/20 shadow-2xl bg-transparent p-4 sm:p-6 lg:p-0">
 
-            <!-- ================= MOBILE DEVICE MODE ONLY (< lg) ================= -->
-            <div class="block lg:hidden w-full py-4">
-                <!-- Phone Hardware Mockup Chassis -->
-                <div class="relative mx-auto w-full max-w-[390px] min-h-[760px] bg-slate-900 rounded-[50px] p-3 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.55)] border-4 border-slate-700/70 ring-1 ring-white/10">
-                    
-                    <!-- Side Hardware Buttons -->
-                    <div class="absolute -left-4 top-24 w-1 h-10 bg-slate-600 rounded-l-md"></div>
-                    <div class="absolute -left-4 top-38 w-1 h-12 bg-slate-600 rounded-l-md"></div>
-                    <div class="absolute -right-4 top-28 w-1 h-16 bg-slate-600 rounded-r-md"></div>
+            <!-- Mobile Background Image & Dim Overlay (Visible only on mobile/tablet) -->
+            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" alt="background workspace" class="block lg:hidden absolute inset-0 w-full h-full object-cover pointer-events-none">
+            <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm pointer-events-none lg:hidden"></div>
 
-                    <!-- Inner Mobile Screen with Customer Background -->
-                    <div class="relative w-full h-full min-h-[734px] rounded-[40px] overflow-hidden flex flex-col justify-between bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&amp;fit=crop&amp;w=800&amp;q=80');">
-                        
-                        <!-- Dark Backdrop Overlay -->
-                        <div class="absolute inset-0 bg-slate-955/50 backdrop-blur-[2px] pointer-events-none"></div>
-
-                        <!-- Mobile Status Bar & Dynamic Island -->
-                        <div class="relative z-30 pt-3 px-6 flex justify-between items-center text-white text-[11px] font-semibold tracking-tight">
-                            <span>9:41</span>
-                            <div class="w-24 h-5 bg-black rounded-full flex items-center justify-center space-x-1.5 shadow-inner">
-                                <div class="w-2.5 h-2.5 rounded-full bg-slate-900 border border-slate-700"></div>
-                                <div class="w-2 h-2 rounded-full bg-slate-800"></div>
-                            </div>
-                            <div class="flex items-center space-x-1.5 text-[10px]">
-                                <i class="fa-solid fa-signal"></i>
-                                <i class="fa-solid fa-wifi"></i>
-                                <i class="fa-solid fa-battery-full text-xs"></i>
-                            </div>
-                        </div>
-
-                        <!-- Mobile Glass Card Container -->
-                        <div class="relative z-20 p-4 sm:p-5 my-auto">
-                            <div class="bg-white/85 backdrop-blur-md border border-white/60 p-5 rounded-3xl shadow-2xl text-slate-800">
-                                <div class="inline-flex items-center px-3 py-1 rounded-full border border-slate-400/30 text-[10px] font-bold text-slate-800 bg-white/60 mb-4 backdrop-blur-sm shadow-sm">
-                                    Sweetopia Shop
-                                </div>
-                                <div class="space-y-1 mb-4">
-                                    <h2 id="auth-form-title-mobile" class="text-xl font-extrabold text-slate-900 tracking-tight">Create an account</h2>
-                                    <p id="auth-form-subtitle-mobile" class="text-[11px] text-slate-600 font-medium">Customer or Administrator Access</p>
-                                </div>
-
-                                <div class="bg-black/5 border border-black/10 rounded-xl p-3 mb-4 flex items-start gap-2.5 backdrop-blur-sm">
-                                    <div class="text-[#65a30d] mt-0.5 shrink-0">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-check animate-pulse"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg>
-                                    </div>
-                                    <div>
-                                        <p class="text-[11px] font-semibold text-black">Firebase Authentication Active</p>
-                                        <p class="text-[9.5px] text-black/80 mt-0.5 leading-relaxed">Sign in or sign up with real credentials to load workspace data.</p>
-                                    </div>
-                                </div>
-
-                                <div class="grid grid-cols-2 gap-1 bg-black/5 p-1 rounded-xl border border-black/5 mb-4 backdrop-blur-sm">
-                                    <button type="button" onclick="setAuthModeTab('signin')" id="tab-auth-signin-mobile" class="py-2 text-xs font-bold rounded-lg bg-[#65a30d] text-white transition-all shadow-sm">Sign In</button>
-                                    <button type="button" onclick="setAuthModeTab('signup')" id="tab-auth-signup-mobile" class="py-2 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all">Customer Sign Up</button>
-                                </div>
-
-                                <form onsubmit="handleAuthSubmit(event)" class="space-y-3">
-                                    <div>
-                                        <label class="block text-[11px] font-semibold text-slate-700 mb-1">Email address</label>
-                                        <input type="email" id="auth-email-mobile" required="" placeholder="name@example.com" oninput="syncAuthInputs('email', this.value)" class="w-full bg-white/70 border border-white/60 text-xs text-slate-900 placeholder:text-slate-500 rounded-xl px-3 py-2.5 focus:outline-none focus:border-[#65a30d] shadow-sm backdrop-blur-sm">
-                                    </div>
-                                    <div>
-                                        <div class="flex justify-between items-center mb-1">
-                                            <label class="text-[11px] font-semibold text-slate-700">Password</label>
-                                            <button type="button" onclick="openForgotPassword()" class="text-[10px] text-[#65a30d] font-bold hover:underline">Forgot?</button>
-                                        </div>
-                                        <div class="relative">
-                                            <input type="password" id="auth-password-mobile" required="" placeholder="••••••••" oninput="syncAuthInputs('password', this.value)" class="w-full bg-white/70 border border-white/60 text-xs text-slate-900 placeholder:text-slate-500 rounded-xl px-3 py-2.5 pr-9 focus:outline-none focus:border-[#65a30d] shadow-sm backdrop-blur-sm">
-                                            <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-800 focus:outline-none">
-                                                <i class="fa-solid fa-eye text-xs mobile-eye-icon" id="password-toggle-icon-mobile"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <button type="submit" id="auth-submit-btn-mobile" class="w-full bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold py-3 rounded-xl text-xs shadow-md transition-all mt-1">
-                                        Sign In To Dashboard
-                                    </button>
-                                    <div class="text-center pt-0.5">
-                                        <button type="button" onclick="continueAsGuest()" class="text-[10px] text-slate-600 font-semibold hover:text-slate-900 transition-colors">
-                                            <i class="fa-solid fa-arrow-left mr-1"></i> Continue as guest
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-
-                        <!-- Home Indicator Bar -->
-                        <div class="relative z-30 pb-3 flex justify-center">
-                            <div class="w-32 h-1 bg-white/60 rounded-full"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ================= DESKTOP LAYOUT (lg:flex - PRESERVED EXACTLY) ================= -->
-            <div class="relative z-20 hidden lg:flex w-full lg:w-1/2 p-6 sm:p-12 flex-col justify-between bg-transparent my-auto">
+            <!-- Glass Card Container (Mobile-optimized styling, clean layout on Desktop) -->
+            <div class="relative z-10 w-full max-w-md lg:max-w-none lg:w-1/2 bg-white/70 lg:bg-transparent backdrop-blur-md lg:backdrop-blur-none border border-white/40 lg:border-none p-6 sm:p-8 lg:p-12 rounded-3xl lg:rounded-none shadow-2xl lg:shadow-none text-slate-800 my-auto flex flex-col justify-between">
                 <div>
                     <div class="inline-flex items-center px-4 py-1.5 rounded-full border border-slate-400/30 text-xs font-semibold text-slate-800 bg-white/40 mb-6 backdrop-blur-sm">
                         Sweetopia Shop
                     </div>
-                    <div class="space-y-2 mb-6">
-                        <h2 id="auth-form-title" class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Create an account</h2>
-                        <p id="auth-form-subtitle" class="text-xs sm:text-sm text-slate-600 font-medium">Customer or Administrator Access</p>
+
+                    <div class="space-y-1 mb-6">
+                        <h2 id="auth-form-title" class="text-2xl lg:text-4xl font-extrabold text-slate-900 tracking-tight">Create an account</h2>
+                        <p id="auth-form-subtitle" class="text-xs lg:text-sm text-slate-600 font-medium">Customer or Administrator Access</p>
                     </div>
 
-                    <div class="bg-black/10 border border-black/10 rounded-xl p-4 mb-6 flex items-start gap-3 backdrop-blur-sm">
+                    <!-- Firebase Auth Active Notice Banner -->
+                    <div class="bg-black/5 border border-black/10 rounded-xl p-3 mb-5 flex items-start gap-2.5 backdrop-blur-sm">
                         <div class="text-[#65a30d] mt-0.5 shrink-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-check animate-pulse h-[18px] w-[18px]"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-check animate-pulse"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg>
                         </div>
                         <div>
-                            <p class="text-xs font-semibold text-black">Firebase Authentication Active</p>
-                            <p class="text-[10px] text-black/80 mt-0.5 leading-relaxed">Sign in or sign up with your real email and password to securely load your workspace data.</p>
+                            <p class="text-xs font-semibold text-slate-900">Firebase Authentication Active</p>
+                            <p class="text-[10px] text-slate-600 mt-0.5 leading-relaxed">Sign in or sign up with your real email and password.</p>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-1.5 bg-black/5 p-1 rounded-xl border border-black/5 mb-6 backdrop-blur-sm">
-                        <button type="button" onclick="setAuthModeTab('signin')" id="tab-auth-signin" class="py-2.5 text-xs font-bold rounded-lg bg-[#65a30d] text-white transition-all shadow">Sign In</button>
-                        <button type="button" onclick="setAuthModeTab('signup')" id="tab-auth-signup" class="py-2.5 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all">Customer Sign Up</button>
+                    <div class="grid grid-cols-2 gap-1 bg-black/5 p-1 rounded-xl border border-black/5 mb-5 backdrop-blur-sm">
+                        <button type="button" onclick="setAuthModeTab('signin')" id="tab-auth-signin" class="py-2 text-xs font-bold rounded-lg bg-[#65a30d] text-white transition-all shadow-sm">Sign In</button>
+                        <button type="button" onclick="setAuthModeTab('signup')" id="tab-auth-signup" class="py-2 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all">Sign Up</button>
                     </div>
 
                     <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-4">
                         <div>
                             <label class="block text-xs font-semibold text-slate-700 mb-1.5">Email address</label>
-                            <input type="email" id="auth-email" required="" placeholder="name@example.com" oninput="syncAuthInputs('email', this.value)" class="w-full bg-white/30 border border-white/40 text-xs text-slate-900 placeholder:text-slate-500 rounded-xl px-4 py-3 focus:outline-none focus:border-[#65a30d] shadow-sm backdrop-blur-md">
+                            <input type="email" id="auth-email" required="" placeholder="name@example.com" class="w-full bg-white/30 border border-white/40 text-xs text-slate-900 placeholder:text-slate-500 rounded-xl px-4 py-3 focus:outline-none focus:border-[#65a30d] shadow-sm backdrop-blur-md">
                         </div>
                         <div>
                             <div class="flex justify-between items-center mb-1.5">
@@ -275,25 +187,26 @@
                                 <button type="button" onclick="openForgotPassword()" class="text-[11px] text-[#65a30d] font-bold hover:underline">Forgot?</button>
                             </div>
                             <div class="relative">
-                                <input type="password" id="auth-password" required="" placeholder="••••••••" oninput="syncAuthInputs('password', this.value)" class="w-full bg-white/30 border border-white/40 text-xs text-slate-900 placeholder:text-slate-500 rounded-xl px-4 py-3 pr-10 focus:outline-none focus:border-[#65a30d] shadow-sm backdrop-blur-md">
+                                <input type="password" id="auth-password" required="" placeholder="••••••••" class="w-full bg-white/30 border border-white/40 text-xs text-slate-900 placeholder:text-slate-500 rounded-xl px-4 py-3 pr-10 focus:outline-none focus:border-[#65a30d] shadow-sm backdrop-blur-md">
                                 <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-800 focus:outline-none">
                                     <i id="password-toggle-icon" class="fa-solid fa-eye text-xs"></i>
                                 </button>
                             </div>
                         </div>
 
-                        <button type="submit" id="auth-submit-btn" class="w-full bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold py-3.5 rounded-xl text-xs sm:text-sm shadow-md transition-all mt-2">
+                        <button type="submit" id="auth-submit-btn" class="w-full bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold py-3.5 rounded-xl text-xs shadow-md transition-all mt-2">
                             Sign In To Dashboard
                         </button>
                         <div class="text-center pt-1">
                             <button type="button" onclick="continueAsGuest()" class="text-[11px] text-slate-600 font-semibold hover:text-slate-900 transition-colors">
                                 <i class="fa-solid fa-arrow-left mr-1"></i> Continue as guest
                             </button>
-                        </div>                        
+                        </div>
                     </form>
                 </div>
             </div>
 
+            <!-- Desktop Side Panel Banner (Only visible on lg screens) -->
             <div class="relative z-20 hidden lg:flex w-full lg:w-1/2 p-4 sm:p-6 items-center justify-center bg-transparent">
                 <div class="relative w-full h-[480px] sm:h-[540px] rounded-[32px] overflow-hidden shadow-2xl border border-white/20 backdrop-blur-md">
                     <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" alt="team workspace collaboration" class="w-full h-full object-cover">
@@ -644,6 +557,7 @@
             <div id="page2-chat-widget-container" class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
                 <!-- Chat Window Box with Larger Green Cat Ears -->
                 <div class="sweetopia-kawaii-window relative w-80 sm:w-96 bg-white rounded-3xl shadow-2xl border border-[#ecfccb] overflow-visible flex flex-col mb-4 transition-all duration-300 transform h-[500px] opacity-100 scale-100" id="sweetopiaChatWindow">
+                    <!-- Larger Green Cat Ears Styles & Elements -->
                     <style>
                         .cat-ear-left-green, .cat-ear-right-green {
                             position: absolute;
@@ -1035,38 +949,17 @@
             return ADMIN_EMAILS.map(e => e.toLowerCase()).includes(email.toLowerCase());
         }
 
-        window.syncAuthInputs = function(field, val) {
-            if (field === 'email') {
-                const desk = document.getElementById('auth-email');
-                const mob = document.getElementById('auth-email-mobile');
-                if (desk && desk.value !== val) desk.value = val;
-                if (mob && mob.value !== val) mob.value = val;
-            } else if (field === 'password') {
-                const desk = document.getElementById('auth-password');
-                const mob = document.getElementById('auth-password-mobile');
-                if (desk && desk.value !== val) desk.value = val;
-                if (mob && mob.value !== val) mob.value = val;
-            }
-        };
-
         window.togglePasswordVisibility = function() {
             const pwdInput = document.getElementById('auth-password');
-            const pwdInputMob = document.getElementById('auth-password-mobile');
             const icon = document.getElementById('password-toggle-icon');
-            const iconMob = document.getElementById('password-toggle-icon-mobile');
-
-            const isCurrentlyPassword = (pwdInput && pwdInput.type === 'password') || (pwdInputMob && pwdInputMob.type === 'password');
-
-            if (isCurrentlyPassword) {
-                if (pwdInput) pwdInput.type = 'text';
-                if (pwdInputMob) pwdInputMob.type = 'text';
-                if (icon) { icon.classList.remove('fa-eye'); icon.classList.add('fa-eye-slash'); }
-                if (iconMob) { iconMob.classList.remove('fa-eye'); iconMob.classList.add('fa-eye-slash'); }
+            if (pwdInput.type === 'password') {
+                pwdInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
             } else {
-                if (pwdInput) pwdInput.type = 'password';
-                if (pwdInputMob) pwdInputMob.type = 'password';
-                if (icon) { icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); }
-                if (iconMob) { iconMob.classList.remove('fa-eye-slash'); iconMob.classList.add('fa-eye'); }
+                pwdInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
             }
         };
 
@@ -1249,17 +1142,20 @@
         function initChatListeners() {
             if (!db) return;
 
+            // Presence listener
             onSnapshot(collection(db, "lumilens_presence"), (snapshot) => {
                 const now = Date.now();
                 snapshot.forEach(docSnap => {
                     const data = docSnap.data();
                     const lastSeenTime = new Date(data.lastSeen || 0).getTime();
+                    // Active if updated in the last 60 seconds
                     const isReallyOnline = data.isOnline && (now - lastSeenTime < 60000);
                     presenceMap[data.email] = isReallyOnline;
                 });
                 updateAdminChatUserDropdown();
             }, (err) => console.warn("Presence listen error:", err));
 
+            // Chats collection listener
             onSnapshot(collection(db, "lumilens_chats"), (snapshot) => {
                 userSessionsMap = {};
                 snapshot.forEach(docSnap => {
@@ -1588,43 +1484,26 @@
             authMode = mode;
             const btnIn = document.getElementById('tab-auth-signin');
             const btnUp = document.getElementById('tab-auth-signup');
-            const btnInMob = document.getElementById('tab-auth-signin-mobile');
-            const btnUpMob = document.getElementById('tab-auth-signup-mobile');
             const title = document.getElementById('auth-form-title');
-            const titleMob = document.getElementById('auth-form-title-mobile');
             const submitBtn = document.getElementById('auth-submit-btn');
-            const submitBtnMob = document.getElementById('auth-submit-btn-mobile');
 
             if (mode === 'signup') {
-                if (btnUp) btnUp.className = "py-2.5 text-xs font-bold rounded-lg bg-[#65a30d] text-white transition-all shadow";
-                if (btnIn) btnIn.className = "py-2.5 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all";
-                if (btnUpMob) btnUpMob.className = "py-2 text-xs font-bold rounded-lg bg-[#65a30d] text-white transition-all shadow-sm";
-                if (btnInMob) btnInMob.className = "py-2 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all";
-                if (title) title.innerText = "Create an account";
-                if (titleMob) titleMob.innerText = "Create an account";
-                if (submitBtn) submitBtn.innerText = "Submit";
-                if (submitBtnMob) submitBtnMob.innerText = "Submit";
+                btnUp.className = "py-2 text-xs font-bold rounded-lg bg-[#65a30d] text-white transition-all shadow-sm";
+                btnIn.className = "py-2 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all";
+                title.innerText = "Create an account";
+                submitBtn.innerText = "Submit";
             } else {
-                if (btnIn) btnIn.className = "py-2.5 text-xs font-bold rounded-lg bg-[#65a30d] text-white transition-all shadow";
-                if (btnUp) btnUp.className = "py-2.5 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all";
-                if (btnInMob) btnInMob.className = "py-2 text-xs font-bold rounded-lg bg-[#65a30d] text-white transition-all shadow-sm";
-                if (btnUpMob) btnUpMob.className = "py-2 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all";
-                if (title) title.innerText = "Sign In to Sweetopia Shop";
-                if (titleMob) titleMob.innerText = "Sign In to Sweetopia Shop";
-                if (submitBtn) submitBtn.innerText = "Submit";
-                if (submitBtnMob) submitBtnMob.innerText = "Submit";
+                btnIn.className = "py-2 text-xs font-bold rounded-lg bg-[#65a30d] text-white transition-all shadow-sm";
+                btnUp.className = "py-2 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all";
+                title.innerText = "Sign In to Sweetopia Shop";
+                submitBtn.innerText = "Submit";
             }
         }
 
         async function handleAuthSubmit(event) {
             event.preventDefault();
-            const deskEmail = document.getElementById('auth-email')?.value.trim();
-            const mobEmail = document.getElementById('auth-email-mobile')?.value.trim();
-            const email = deskEmail || mobEmail || '';
-
-            const deskPassword = document.getElementById('auth-password')?.value;
-            const mobPassword = document.getElementById('auth-password-mobile')?.value;
-            const password = deskPassword || mobPassword || '';
+            const email = document.getElementById('auth-email').value.trim();
+            const password = document.getElementById('auth-password').value;
 
             if (!auth) { showToast("Error", "Firebase auth unavailable.", true); return; }
 
