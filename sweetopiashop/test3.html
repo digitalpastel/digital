@@ -142,40 +142,35 @@
         </div>
 
         <!-- ================= PAGE 1: AUTHENTICATION ================= -->
-        <div id="page-auth" class="w-full max-w-[1280px] mx-auto min-h-[620px] relative flex flex-col lg:flex-row items-center lg:items-stretch justify-center lg:justify-between overflow-hidden rounded-[2.5xl] border border-white/20 shadow-2xl bg-cover bg-center lg:bg-none" style="background-image: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80');">
+        <div id="page-auth" class="w-full max-w-[1280px] mx-auto min-h-[620px] relative flex flex-col md:flex-row items-center md:items-stretch justify-center md:justify-between overflow-hidden rounded-[2.5xl] border border-white/20 shadow-2xl bg-transparent">
 
-            <!-- Mobile background blur & dim overlay (hidden on desktop) -->
-            <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm pointer-events-none lg:hidden"></div>
+            <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm pointer-events-none md:hidden"></div>
 
-            <!-- Form Card: Glass Card on Mobile, Left-column on Desktop -->
-            <div class="relative z-10 w-full max-w-md lg:max-w-none lg:w-1/2 p-6 sm:p-8 lg:p-12 flex flex-col justify-between bg-white/70 lg:bg-transparent backdrop-blur-md lg:backdrop-blur-none border border-white/40 lg:border-none rounded-3xl lg:rounded-none shadow-2xl lg:shadow-none my-auto text-slate-800">
+            <div class="relative z-20 w-full max-w-md md:max-w-none md:w-1/2 p-6 sm:p-12 flex flex-col justify-between bg-white/70 md:bg-transparent backdrop-blur-md md:backdrop-blur-none border border-white/40 md:border-none rounded-3xl md:rounded-none shadow-2xl md:shadow-none my-auto">
                 <div>
                     <div class="inline-flex items-center px-4 py-1.5 rounded-full border border-slate-400/30 text-xs font-semibold text-slate-800 bg-white/40 mb-6 backdrop-blur-sm">
                         Sweetopia Shop
                     </div>
-                    <div class="space-y-1 lg:space-y-2 mb-5 lg:mb-6">
+                    <div class="space-y-2 mb-6">
                         <h2 id="auth-form-title" class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Create an account</h2>
                         <p id="auth-form-subtitle" class="text-xs sm:text-sm text-slate-600 font-medium">Customer or Administrator Access</p>
                     </div>
 
-                    <!-- Notice Banner -->
-                    <div class="bg-black/5 lg:bg-black/10 border border-black/10 rounded-xl p-3 lg:p-4 mb-5 lg:mb-6 flex items-start gap-2.5 lg:gap-3 backdrop-blur-sm">
+                    <div class="bg-black/10 border border-black/10 rounded-xl p-4 mb-6 flex items-start gap-3 backdrop-blur-sm">
                         <div class="text-[#65a30d] mt-0.5 shrink-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-check"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-check animate-pulse h-[18px] w-[18px]"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg>
                         </div>
                         <div>
-                            <p class="text-xs font-semibold text-slate-900">Firebase Authentication Active</p>
-                            <p class="text-[10px] text-slate-600 mt-0.5 leading-relaxed">Sign in or sign up with your real email and password to securely load your workspace data.</p>
+                            <p class="text-xs font-semibold text-black">Firebase Authentication Active</p>
+                            <p class="text-[10px] text-black/80 mt-0.5 leading-relaxed">Sign in or sign up with your real email and password to securely load your workspace data.</p>
                         </div>
                     </div>
 
-                    <!-- Tabs -->
-                    <div class="grid grid-cols-2 gap-1 lg:gap-1.5 bg-black/5 p-1 rounded-xl border border-black/5 mb-5 lg:mb-6 backdrop-blur-sm">
-                        <button type="button" onclick="setAuthModeTab('signin')" id="tab-auth-signin" class="py-2.5 text-xs font-bold rounded-lg bg-[#65a30d] text-white transition-all shadow-sm">Sign In</button>
+                    <div class="grid grid-cols-2 gap-1.5 bg-black/5 p-1 rounded-xl border border-black/5 mb-6 backdrop-blur-sm">
+                        <button type="button" onclick="setAuthModeTab('signin')" id="tab-auth-signin" class="py-2.5 text-xs font-bold rounded-lg bg-[#65a30d] text-white transition-all shadow">Sign In</button>
                         <button type="button" onclick="setAuthModeTab('signup')" id="tab-auth-signup" class="py-2.5 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all">Customer Sign Up</button>
                     </div>
 
-                    <!-- Auth Form -->
                     <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-4">
                         <div>
                             <label class="block text-xs font-semibold text-slate-700 mb-1.5">Email address</label>
@@ -206,8 +201,7 @@
                 </div>
             </div>
 
-            <!-- Right-side container on desktop (hidden on mobile) -->
-            <div class="relative z-20 hidden lg:flex w-full lg:w-1/2 p-4 sm:p-6 items-center justify-center bg-transparent">
+            <div class="relative z-20 hidden md:flex w-full md:w-1/2 p-4 sm:p-6 items-center justify-center bg-transparent">
                 <div class="relative w-full h-[480px] sm:h-[540px] rounded-[32px] overflow-hidden shadow-2xl border border-white/20 backdrop-blur-md">
                     <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" alt="team workspace collaboration" class="w-full h-full object-cover">
                     <button type="button" onclick="continueAsGuest()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-slate-800 hover:bg-white shadow-lg transition" aria-label="Close">
