@@ -63,7 +63,17 @@
             width: 100%;
             height: 520px;
         }
-        @media (max-width: 992px) { .expert-slideshow-wrapper { height: 380px; } }
+        @media (max-width: 992px) { 
+            .expert-slideshow-wrapper { height: 360px; } 
+            .expert-slide-caption h2 { font-size: 1.6rem !important; }
+            .expert-slide-caption p { font-size: 0.95rem !important; }
+        }
+        @media (max-width: 640px) { 
+            .expert-slideshow-wrapper { height: 320px; } 
+            .expert-slide-caption { margin-left: 4% !important; padding: 0 10px !important; }
+            .expert-slide-caption h2 { font-size: 1.35rem !important; margin-bottom: 6px !important; }
+            .expert-slide-caption p { font-size: 0.85rem !important; margin-bottom: 12px !important; }
+        }
 
         .expert-slide {
             position: absolute;
@@ -76,11 +86,11 @@
         .expert-slide img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
         .expert-slide::after {
             content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.55) 100%);
+            background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.65) 100%);
             z-index: 2;
         }
         .expert-slide-caption {
-            position: relative; z-index: 3; max-width: 700px; margin-left: 8%; padding: 0 20px; color: #ffffff; text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+            position: relative; z-index: 3; max-width: 700px; margin-left: 8%; padding: 0 20px; color: #ffffff; text-shadow: 0 2px 8px rgba(0,0,0,0.6);
         }
         .expert-slide-caption h2 { font-size: 2.5rem; font-weight: 700; margin-bottom: 12px; line-height: 1.2; }
         .expert-slide-caption p { font-size: 1.2rem; margin-bottom: 20px; opacity: 0.95; }
@@ -91,14 +101,14 @@
 
         .expert-slide-btn {
             position: absolute; top: 50%; transform: translateY(-50%);
-            background: rgba(255, 255, 255, 0.7); color: #0f172a; border: none; width: 48px; height: 48px; cursor: pointer; z-index: 20; font-size: 20px; border-radius: 50%;
+            background: rgba(255, 255, 255, 0.7); color: #0f172a; border: none; width: 44px; height: 44px; cursor: pointer; z-index: 20; font-size: 18px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center; transition: background 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
         .expert-slide-btn:hover { background: #ffffff; }
-        .expert-slide-prev { left: 20px; }
-        .expert-slide-next { right: 20px; }
-        .expert-slide-dots { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 20; }
-        .expert-dot { width: 12px; height: 12px; background: rgba(255, 255, 255, 0.5); border-radius: 50%; cursor: pointer; transition: background 0.3s ease, transform 0.3s ease; }
+        .expert-slide-prev { left: 16px; }
+        .expert-slide-next { right: 16px; }
+        .expert-slide-dots { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 20; }
+        .expert-dot { width: 10px; height: 10px; background: rgba(255, 255, 255, 0.5); border-radius: 50%; cursor: pointer; transition: background 0.3s ease, transform 0.3s ease; }
         .expert-dot.active { background: #ffffff; transform: scale(1.2); }
 
         /* A4 Invoice Preview Container styling for PNG export */
@@ -119,304 +129,26 @@
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-start p-0 md:p-6 text-slate-800">
 
-    <!-- ========================================================================= -->
-    <!-- 1. MOBILE PHONE VIEW (Strictly for mobile viewports, hidden on desktop/PC) -->
-    <!-- ========================================================================= -->
-    <div id="mobile-viewport-root" class="block md:hidden w-full sm:max-w-[430px] h-screen sm:h-[880px] bg-slate-900 sm:rounded-[40px] shadow-2xl overflow-hidden relative flex flex-col border border-slate-800 my-auto">
+<body class="min-h-screen flex flex-col items-center justify-start p-3 sm:p-4 md:p-6 text-slate-800">
 
-        <!-- Notification Banner / Modal -->
-        <div id="mobile-toast" class="absolute top-12 left-1/2 -translate-x-1/2 z-50 bg-slate-900/90 text-white px-5 py-3 rounded-2xl shadow-2xl border border-slate-700 flex items-center space-x-3 transition-all duration-300 opacity-0 pointer-events-none transform -translate-y-4">
-            <div class="w-8 h-8 rounded-full bg-brand-500 flex items-center justify-center text-white">
-                <i class="fa-solid fa-check text-sm"></i>
-            </div>
-            <div>
-                <p id="mobile-toast-title" class="text-xs font-bold">Success</p>
-                <p id="mobile-toast-msg" class="text-xs text-slate-300">Item added successfully</p>
-            </div>
+    <!-- GLOBAL NOTIFICATION TOAST -->
+    <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 text-white px-5 py-3 rounded-2xl shadow-2xl border border-slate-700 flex items-center space-x-3 transition-all duration-300 transform opacity-0 pointer-events-none -translate-y-4">
+        <div id="toast-icon-wrapper" class="w-8 h-8 rounded-full bg-[#65a30d] flex items-center justify-center text-white font-bold shrink-0">
+            <i class="fa-solid fa-check text-xs"></i>
         </div>
-
-        <!-- ONBOARDING SCREEN -->
-        <div id="screen-onboarding" class="absolute inset-0 z-40 bg-slate-950 flex flex-col justify-between overflow-hidden transition-transform duration-500">
-            <div class="absolute inset-0">
-                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" alt="Model" class="w-full h-full object-cover opacity-60 scale-105">
-                <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
-            </div>
-
-            <div class="relative z-10 px-8 pt-6 flex justify-between items-center text-white text-xs font-semibold"></div>
-
-            <div class="relative z-10 flex-1 flex flex-col justify-end p-6 pb-12">
-                <div class="glass-card p-6 rounded-3xl bg-slate-900/80 backdrop-blur-md border border-slate-700/60 text-white shadow-2xl mb-4">
-                    <div class="inline-flex items-center px-4 py-1.5 rounded-full border border-slate-400/30 text-xs font-semibold text-slate-100 bg-white/20 mb-6 backdrop-blur-sm">
-                        Sweetopia Shop
-                    </div>
-                    <div class="space-y-1 mb-6">
-                        <h2 id="mobile-auth-title" class="text-2xl font-extrabold text-white tracking-tight">Create an account</h2>
-                        <p id="mobile-auth-subtitle" class="text-xs text-slate-300 font-medium">Customer or Administrator Access</p>
-                    </div>
-                    <div class="bg-white/5 border border-white/10 rounded-xl p-3 mb-5 flex items-start gap-2.5 backdrop-blur-sm">
-                        <div class="text-[#65a30d] mt-0.5 shrink-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-check"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg>
-                        </div>
-                        <div>
-                            <p class="text-xs font-semibold text-white">Firebase Authentication Active</p>
-                            <p class="text-[10px] text-slate-300 mt-0.5 leading-relaxed">Sign in or sign up with your real email and password.</p>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-1 bg-black/40 p-1 rounded-xl border border-white/10 mb-5 backdrop-blur-sm">
-                        <button type="button" onclick="setAuthModeTab('signin')" id="mobile-tab-auth-signin" class="py-2 text-xs font-bold rounded-lg bg-[#65a30d] text-white transition-all shadow-sm">Sign In</button>
-                        <button type="button" onclick="setAuthModeTab('signup')" id="mobile-tab-auth-signup" class="py-2 text-xs font-semibold rounded-lg text-slate-300 hover:text-white transition-all">Sign Up</button>
-                    </div>
-                    <form onsubmit="handleAuthSubmit(event)" class="space-y-4">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Email address</label>
-                            <input type="email" id="mobile-auth-email" required="" placeholder="name@example.com" class="w-full bg-slate-800/80 border border-slate-700 text-xs text-white placeholder:text-slate-400 rounded-xl px-4 py-3 focus:outline-none focus:border-[#65a30d] shadow-sm">
-                        </div>
-                        <div>
-                            <div class="flex justify-between items-center mb-1.5">
-                                <label class="text-xs font-semibold text-slate-300">Password</label>
-                                <button type="button" onclick="openForgotPassword()" class="text-[11px] text-[#65a30d] font-bold hover:underline">Forgot?</button>
-                            </div>
-                            <div class="relative">
-                                <input type="password" id="mobile-auth-password" required="" placeholder="••••••••" class="w-full bg-slate-800/80 border border-slate-700 text-xs text-white placeholder:text-slate-400 rounded-xl px-4 py-3 pr-10 focus:outline-none focus:border-[#65a30d] shadow-sm">
-                                <button type="button" onclick="togglePasswordVisibilityMobile()" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white focus:outline-none">
-                                    <i id="mobile-password-toggle-icon" class="fa-solid fa-eye text-xs"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <button type="submit" id="mobile-auth-submit-btn" class="w-full bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold py-3.5 rounded-xl text-xs shadow-md transition-all mt-2">
-                            Sign In To Dashboard
-                        </button>
-                        <div class="text-center pt-1">
-                            <button type="button" onclick="continueAsGuest()" class="text-[11px] text-slate-300 font-semibold hover:text-white transition-colors">
-                                <i class="fa-solid fa-arrow-left mr-1"></i> Continue as guest
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+        <div>
+            <p id="toast-title" class="text-xs font-bold">Sweetopia</p>
+            <p id="toast-msg" class="text-xs text-slate-300">Message content</p>
         </div>
-
-        <!-- MAIN APP CONTAINER -->
-        <div id="main-app" class="flex-1 flex flex-col bg-slate-900 text-white overflow-hidden relative">
-            <div class="px-6 pt-6 pb-2 flex justify-between items-center text-white text-xs font-semibold shrink-0 z-30 bg-slate-900">
-                <span>Sweetopia</span>
-                <div class="flex items-center space-x-1.5">
-                    <i class="fa-solid fa-signal text-[10px]"></i>
-                    <i class="fa-solid fa-wifi text-[10px]"></i>
-                    <i class="fa-solid fa-battery-full text-xs"></i>
-                </div>
-            </div>
-
-            <!-- TAB 1: HOME SCREEN -->
-            <div id="tab-home" class="flex-1 flex flex-col overflow-y-auto hide-scrollbar pb-24">
-                <div class="px-6 pt-3">
-                    <div class="bg-gradient-to-r from-brand-600/30 to-emerald-900/50 rounded-3xl p-5 border border-brand-500/30 relative overflow-hidden flex items-center">
-                        <div class="flex-1 z-10">
-                            <span class="text-[10px] uppercase tracking-wider font-extrabold bg-brand-500/30 text-brand-300 px-2.5 py-1 rounded-full inline-block mb-2">New Launch</span>
-                            <h2 class="text-lg font-bold text-white mb-1">Crystal Clear with 1-Day Moist!</h2>
-                            <p class="text-xs text-slate-300 mb-3">Breathable comfort all day long, nationwide shipping.</p>
-                            <button onclick="openProductDetail('p2')" class="bg-brand-500 hover:bg-brand-400 text-slate-950 font-bold text-xs px-4 py-2.5 rounded-xl shadow-md transition-all">
-                                Get It Now
-                            </button>
-                        </div>
-                        <div class="w-28 h-28 shrink-0 relative flex items-center justify-center">
-                            <img src="https://images.unsplash.com/photo-1583946099066-764f2537f136?auto=format&amp;fit=crop&amp;q=80&amp;w=400" alt="Lens Box" class="w-24 h-24 object-cover rounded-2xl shadow-xl border border-white/10">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="px-6 mt-4">
-                    <div class="relative flex items-center">
-                        <i class="fa-solid fa-magnifying-glass absolute left-4 text-slate-400 text-sm"></i>
-                        <input type="text" id="mobile-store-search" oninput="filterMobileStoreProducts()" placeholder="Search color, monthly, daily..." class="w-full bg-slate-800 text-xs text-white placeholder-slate-400 pl-11 pr-12 py-3.5 rounded-2xl border border-slate-700/60 focus:outline-none focus:border-brand-500 transition-all">
-                    </div>
-
-                    <div class="flex items-center space-x-2 mt-4 overflow-x-auto hide-scrollbar pb-1">
-                        <button onclick="filterMobileCategory('all', this)" class="mobile-cat-btn px-5 py-2 rounded-xl text-xs font-bold bg-brand-500 text-slate-950 shrink-0 transition-all shadow-md shadow-brand-500/20">All</button>
-                        <button onclick="filterMobileCategory('3 Months Disposable', this)" class="mobile-cat-btn px-5 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 shrink-0 transition-all">3 Months</button>
-                        <button onclick="filterMobileCategory('1 Month Disposable', this)" class="mobile-cat-btn px-5 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 shrink-0 transition-all">1 Month</button>
-                        <button onclick="filterMobileCategory('1 Day Disposable', this)" class="mobile-cat-btn px-5 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 shrink-0 transition-all">1 Day</button>
-                    </div>
-                </div>
-
-                <!-- Product Grid (Dynamic via JS) -->
-                <div id="mobile-product-grid" class="px-6 mt-5 grid grid-cols-2 gap-4"></div>
-            </div>
-
-            <!-- TAB 2: CART SCREEN -->
-            <div id="tab-cart" class="flex-1 flex flex-col overflow-y-auto hide-scrollbar pb-24 hidden">
-                <div class="px-6 pt-3 pb-2 flex items-center justify-between border-b border-slate-800">
-                    <h2 class="text-base font-bold text-white">Shopping Cart (<span id="mobile-cart-count-label">0</span>)</h2>
-                    <button onclick="clearCart()" class="text-xs text-slate-400 hover:text-red-400">Clear all</button>
-                </div>
-                <div id="mobile-cart-items-container" class="px-6 mt-4 space-y-3 flex-1">
-                    <p class="text-xs text-slate-400 text-center py-10">Your cart is empty.</p>
-                </div>
-
-                <div class="px-6 mt-4 shrink-0">
-                    <div class="bg-slate-800/90 p-4 rounded-2xl border border-slate-700 space-y-2 mb-4">
-                        <div class="flex justify-between text-xs text-slate-400">
-                            <span>Subtotal</span>
-                            <span id="mobile-cart-subtotal">RM 0.00</span>
-                        </div>
-                        <div class="flex justify-between text-xs text-slate-400">
-                            <span>Shipping Fee</span>
-                            <span id="mobile-cart-shipping" class="text-brand-400 font-bold">RM 0.00</span>
-                        </div>
-                        <div class="border-t border-slate-700 pt-2 flex justify-between text-sm font-bold text-white">
-                            <span>Total</span>
-                            <span id="mobile-cart-total" class="text-brand-400">RM 0.00</span>
-                        </div>
-                    </div>
-                    <button onclick="switchTab('cart');" class="w-full bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold py-3.5 rounded-2xl text-center shadow-lg shadow-brand-500/20 text-xs transition-all">
-                        CHECKOUT / FPX PAYMENT
-                    </button>
-                </div>
-            </div>
-
-            <!-- TAB 3: FAVOURITES SCREEN -->
-            <div id="tab-favourites" class="flex-1 flex flex-col overflow-y-auto hide-scrollbar pb-24 hidden">
-                <div class="px-6 pt-3 pb-2 border-b border-slate-800">
-                    <h2 class="text-base font-bold text-white">My Wishlist</h2>
-                </div>
-                <div class="px-6 mt-4 grid grid-cols-2 gap-4" id="mobile-wishlist-container">
-                    <div class="bg-slate-800/80 rounded-3xl p-3 border border-slate-700 flex flex-col justify-between">
-                        <div class="w-full h-32 rounded-2xl bg-slate-900/60 flex items-center justify-center overflow-hidden mb-3">
-                            <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&amp;fit=crop&amp;q=80&amp;w=400" alt="Lens" class="w-28 h-28 object-cover">
-                        </div>
-                        <div>
-                            <p class="text-[10px] text-slate-400 mb-0.5">Vivid Series</p>
-                            <h3 class="text-xs font-bold text-white mb-2 truncate">EMERALD GREEN</h3>
-                            <div class="flex items-center justify-between">
-                                <span class="text-xs font-extrabold text-brand-400">RM 25.00</span>
-                                <button onclick="openProductDetail('p3')" class="w-7 h-7 bg-brand-500 text-slate-950 rounded-lg flex items-center justify-center text-xs font-bold">
-                                    <i class="fa-solid fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 4: ACCOUNT SCREEN -->
-            <div id="tab-account" class="flex-1 flex flex-col overflow-y-auto hide-scrollbar pb-24 px-6 pt-3 hidden">
-                <div class="flex items-center space-x-4 bg-slate-800/80 p-4 rounded-3xl border border-slate-700 mb-5">
-                    <div class="w-14 h-14 rounded-full bg-brand-500/20 border-2 border-brand-500 flex items-center justify-center text-brand-400 text-xl font-bold">
-                        <i class="fa-regular fa-user"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-sm font-bold text-white" id="mobile-profile-name">Customer Account</h3>
-                        <p class="text-xs text-slate-400" id="mobile-profile-email">guest@sweetopiashop.my</p>
-                        <span class="inline-block mt-1 text-[10px] bg-brand-500/20 text-brand-400 px-2 py-0.5 rounded font-bold">Active Member</span>
-                    </div>
-                </div>
-
-                <div class="space-y-2">
-                    <div onclick="switchMobileTab('cart')" class="bg-slate-800/60 p-4 rounded-2xl border border-slate-700/60 flex items-center justify-between cursor-pointer hover:bg-slate-800">
-                        <div class="flex items-center space-x-3">
-                            <i class="fa-solid fa-box text-brand-400"></i>
-                            <span class="text-xs font-semibold">My Cart &amp; Orders</span>
-                        </div>
-                        <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
-                    </div>
-                    <div onclick="handleSignOut()" class="bg-red-500/10 p-4 rounded-2xl border border-red-500/20 flex items-center justify-between cursor-pointer hover:bg-red-500/20 text-red-400">
-                        <div class="flex items-center space-x-3">
-                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                            <span class="text-xs font-semibold">Sign Out / Exit Guest</span>
-                        </div>
-                        <i class="fa-solid fa-chevron-right text-xs"></i>
-                    </div>
-                </div>
-            </div>
-
-            <!-- BOTTOM NAVIGATION BAR -->
-            <div class="absolute bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-lg border-t border-slate-800 px-6 py-3 flex justify-between items-center z-30">
-                <button onclick="switchMobileTab('home', this)" class="mobile-nav-btn flex flex-col items-center space-y-1 text-brand-400">
-                    <i class="fa-solid fa-house text-sm"></i>
-                    <span class="text-[10px] font-bold">Home</span>
-                </button>
-                <button onclick="switchMobileTab('cart', this)" class="mobile-nav-btn flex flex-col items-center space-y-1 text-slate-400 hover:text-white">
-                    <i class="fa-solid fa-cart-shopping text-sm"></i>
-                    <span class="text-[10px] font-semibold">Cart</span>
-                </button>
-                <button onclick="switchMobileTab('favourites', this)" class="mobile-nav-btn flex flex-col items-center space-y-1 text-slate-400 hover:text-white">
-                    <i class="fa-regular fa-heart text-sm"></i>
-                    <span class="text-[10px] font-semibold">Favourites</span>
-                </button>
-                <button onclick="switchMobileTab('account', this)" class="mobile-nav-btn flex flex-col items-center space-y-1 text-slate-400 hover:text-white">
-                    <i class="fa-regular fa-user text-sm"></i>
-                    <span class="text-[10px] font-semibold">Account</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- PRODUCT DETAIL SCREEN (SLIDE-OVER FOR MOBILE) -->
-        <div id="mobile-screen-detail" class="absolute inset-0 z-50 bg-slate-900 flex flex-col translate-y-full transition-transform duration-300">
-            <div class="px-6 pt-6 pb-3 flex items-center justify-between border-b border-slate-800">
-                <button onclick="closeProductDetailMobile()" class="w-9 h-9 rounded-xl bg-slate-800 flex items-center justify-center text-slate-300 hover:text-white">
-                    <i class="fa-solid fa-arrow-left text-xs"></i>
-                </button>
-                <h3 class="text-sm font-bold text-white">Product Detail</h3>
-                <button class="w-9 h-9 rounded-xl bg-slate-800 flex items-center justify-center text-slate-300 hover:text-red-400">
-                    <i class="fa-regular fa-heart text-xs"></i>
-                </button>
-            </div>
-
-            <div class="flex-1 overflow-y-auto hide-scrollbar pb-24">
-                <div class="w-full h-72 bg-gradient-to-b from-slate-800/50 to-slate-900 flex items-center justify-center relative p-6">
-                    <img id="mobile-detail-img" src="" alt="Detail" class="w-56 h-56 object-cover rounded-3xl shadow-2xl border border-white/10">
-                </div>
-
-                <div class="px-6 pt-4">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <p id="mobile-detail-category" class="text-[10px] text-brand-400 font-semibold mb-1">Monthly Colored Lens</p>
-                            <h2 id="mobile-detail-title" class="text-lg font-extrabold text-white">HAZEL NATURAL</h2>
-                        </div>
-                        <span class="text-xs bg-slate-800 text-slate-300 px-2.5 py-1 rounded-xl">Ready Stock</span>
-                    </div>
-
-                    <div class="flex items-center space-x-3 mt-3">
-                        <span id="mobile-detail-price" class="text-base font-extrabold text-brand-400">RM 25.00</span>
-                    </div>
-
-                    <div class="mt-5">
-                        <p class="text-xs font-bold text-slate-300 mb-2">Prescription (PWR 0.00 to -8.00)</p>
-                        <select id="mobile-detail-pwr" class="w-full bg-slate-800 border border-slate-700 text-xs text-white rounded-xl p-3 focus:outline-none focus:border-brand-500"></select>
-                    </div>
-
-                    <div class="mt-6 border-b border-slate-800 flex space-x-6">
-                        <button class="pb-2 text-xs font-bold text-brand-400 border-b-2 border-brand-500">Description</button>
-                    </div>
-                    <div class="mt-4 text-xs text-slate-400 leading-relaxed">
-                        High-quality color contact lenses designed for comfort, ultra-moist wear, and striking natural beauty.
-                    </div>
-                </div>
-            </div>
-
-            <div class="absolute bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-lg border-t border-slate-800 p-4 flex items-center space-x-3 z-30">
-                <button onclick="addCurrentProductToCartMobile()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-white font-bold py-3.5 rounded-2xl text-xs text-center border border-slate-700 transition-all">
-                    Add to Cart
-                </button>
-                <button onclick="addCurrentProductToCartMobile(); switchMobileTab('cart')" class="flex-1 bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold py-3.5 rounded-2xl text-xs text-center shadow-lg shadow-brand-500/20 transition-all">
-                    Order Now
-                </button>
-            </div>
-        </div>
-
     </div>
 
-    <!-- ========================================================================= -->
-    <!-- 2. DESKTOP SITE / PC VIEW (Completely preserved, displays on >= 768px screens) -->
-    <!-- ========================================================================= -->
-    <div id="desktop-viewport-root" class="hidden md:flex flex-col w-full max-w-[1280px] mx-auto items-center justify-start">
+    <!-- MAIN APP WRAPPER (Unified for Desktop and Mobile) -->
+    <div id="desktop-viewport-root" class="flex flex-col w-full max-w-[1280px] mx-auto items-center justify-start">
 
         <!-- TOP HEADER -->
-        <header class="w-full max-w-[1280px] mx-auto flex flex-col sm:flex-row items-center justify-between pb-4 mb-6 border-b border-slate-200 gap-4">
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchPage('catalog')">
+        <header class="w-full max-w-[1280px] mx-auto flex flex-col sm:flex-row items-center justify-between pb-4 mb-4 md:mb-6 border-b border-slate-200 gap-3">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchPage('dashboard'); switchTab('catalog');">
                 <div class="w-10 h-10 rounded-2xl bg-transparent flex items-center justify-center text-white font-extrabold text-xl overflow-hidden">
                     <img src="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png" alt="Sweetopia Logo" class="w-full h-full object-cover">
                 </div>
@@ -424,24 +156,15 @@
                     <h1 class="text-lg font-extrabold tracking-tight text-[#19a8ea]">Sweetopia <span class="text-[#65a30d]">Shop</span></h1>
                 </div>
             </div>
-            <div class="flex items-center space-x-3" id="header-nav-actions"><span class="text-xs text-slate-500">Please Sign In or Register</span></div>
+            <div class="flex items-center space-x-3" id="header-nav-actions">
+                <span class="text-xs text-slate-500">Please Sign In or Register</span>
+            </div>
         </header>
 
         <main id="app-wrapper" class="w-full max-w-[1280px] flex-1 flex flex-col items-center justify-center transition-all duration-300 relative">
 
-            <!-- TOAST NOTIFICATION (DESKTOP) -->
-            <div id="toast" class="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl border border-slate-700 flex items-center space-x-3 transition-all duration-300 transform opacity-0 pointer-events-none -translate-y-4">
-                <div id="toast-icon-wrapper" class="w-8 h-8 rounded-full bg-[#65a30d] flex items-center justify-center text-white font-bold">
-                    <i class="fa-solid fa-check text-xs"></i>
-                </div>
-                <div>
-                    <p id="toast-title" class="text-xs font-bold">Signed Out</p>
-                    <p id="toast-msg" class="text-xs text-slate-300">Successfully logged out.</p>
-                </div>
-            </div>
-
             <!-- PAGE 1: AUTHENTICATION -->
-            <div id="page-auth" class="w-full max-w-[1280px] mx-auto min-h-[620px] relative flex flex-col md:flex-row items-center md:items-stretch justify-center md:justify-between overflow-hidden rounded-[2.5xl] border border-slate-200 shadow-xl bg-white">
+            <div id="page-auth" class="w-full max-w-[1280px] mx-auto min-h-[620px] relative flex flex-col md:flex-row items-center md:items-stretch justify-center md:justify-between overflow-hidden rounded-[2.5rem] border border-slate-200 shadow-xl bg-white">
                 <div class="relative z-20 w-full max-w-md md:max-w-none md:w-1/2 p-6 sm:p-12 flex flex-col justify-between bg-white rounded-3xl md:rounded-none my-auto">
                     <div>
                         <div class="inline-flex items-center px-4 py-1.5 rounded-full border border-slate-200 text-xs font-semibold text-slate-800 bg-slate-50 mb-6">
@@ -458,7 +181,7 @@
                             </div>
                             <div>
                                 <p class="text-xs font-semibold text-slate-900">Firebase Authentication Active</p>
-                                <p class="text-[10px] text-slate-600 mt-0.5 leading-relaxed">Sign in or sign up with your real email and password to securely load your workspace data.</p>
+                                <p class="text-[10px] text-slate-600 mt-0.5 leading-relaxed">Sign in with your email and password to securely access your customer or admin workspace.</p>
                             </div>
                         </div>
 
@@ -492,7 +215,7 @@
                                 <button type="button" onclick="continueAsGuest()" class="text-[11px] text-slate-600 font-semibold hover:text-slate-900 transition-colors">
                                     <i class="fa-solid fa-arrow-left mr-1"></i> Continue as guest
                                 </button>
-                            </div>                        
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -507,39 +230,39 @@
                 </div>
             </div>
 
-            <!-- PAGE 2: DASHBOARD & STORE CATALOG -->
+            <!-- PAGE 2: DASHBOARD & STORE CATALOG (SAME AS PC VIEW ACROSS ALL DEVICES) -->
             <div id="page-dashboard" class="w-full max-w-[1280px] flex flex-col bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xl hidden relative">
 
                 <!-- CUSTOMER NAVIGATION BAR -->
-                <div id="customer-nav-bar" class="px-6 md:px-10 py-4 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-4">
-                    <div class="flex items-center space-x-2">
-                        <button onclick="switchTab('catalog')" id="dtab-catalog" class="dtab-btn px-4 py-2 rounded-xl text-xs transition-all bg-[#65a30d] text-white font-bold shadow-sm">Store Catalog</button>
-                        <button onclick="switchTab('cart')" class="bg-white hover:bg-slate-100 text-slate-800 font-bold px-4 py-2.5 rounded-xl text-xs border border-slate-200 transition-all flex items-center space-x-2 shadow-sm">
+                <div id="customer-nav-bar" class="px-4 sm:px-6 md:px-10 py-4 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
+                    <div class="flex items-center space-x-2 overflow-x-auto hide-scrollbar w-full sm:w-auto pb-1 sm:pb-0">
+                        <button onclick="switchTab('catalog')" id="dtab-catalog" class="dtab-btn px-4 py-2 rounded-xl text-xs transition-all bg-[#65a30d] text-white font-bold shadow-sm shrink-0">Store Catalog</button>
+                        <button onclick="switchTab('cart')" class="bg-white hover:bg-slate-100 text-slate-800 font-bold px-4 py-2.5 rounded-xl text-xs border border-slate-200 transition-all flex items-center space-x-2 shadow-sm shrink-0">
                             <i class="fa-solid fa-cart-shopping text-[#65a30d]"></i>
                             <span>Cart (<span id="header-cart-count">0</span>)</span>
                         </button>
-                        <button onclick="switchTab('customer-dashboard')" id="dtab-customer-dashboard" class="dtab-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all">My Orders &amp; Invoices</button>
+                        <button onclick="switchTab('customer-dashboard')" id="dtab-customer-dashboard" class="dtab-btn px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all shrink-0">My Orders &amp; Invoices</button>
                     </div>
-                    <div class="flex items-center space-x-3">
-                        <span id="user-email-display" class="text-xs text-slate-700 font-semibold">guest@sweetopiashop.my</span>
-                        <button onclick="handleSignOut()" class="bg-red-50 hover:bg-red-100 text-red-600 font-bold px-3 py-2 rounded-xl text-xs border border-red-200 transition-all">
-                            Sign In / Exit Guest
+                    <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto space-x-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200">
+                        <span id="user-email-display" class="text-xs text-slate-700 font-semibold truncate max-w-[200px]">guest@sweetopiashop.my</span>
+                        <button onclick="handleSignOut()" class="bg-red-50 hover:bg-red-100 text-red-600 font-bold px-3 py-2 rounded-xl text-xs border border-red-200 transition-all shrink-0">
+                            Sign Out
                         </button>
                     </div>
                 </div>
 
                 <!-- ADMIN NAVIGATION BAR -->
-                <div id="admin-nav-bar" class="px-6 md:px-10 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between gap-4 hidden">
-                    <div class="flex items-center space-x-2">
-                        <button onclick="switchTab('admin-workspace')" id="dtab-admin-workspace" class="dtab-btn px-4 py-2 rounded-xl text-xs font-bold bg-amber-500 text-slate-950 transition-all flex items-center space-x-1.5 shadow-sm">
+                <div id="admin-nav-bar" class="px-4 sm:px-6 md:px-10 py-4 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3 hidden">
+                    <div class="flex items-center space-x-2 overflow-x-auto hide-scrollbar w-full sm:w-auto">
+                        <button onclick="switchTab('admin-workspace')" id="dtab-admin-workspace" class="dtab-btn px-4 py-2 rounded-xl text-xs font-bold bg-amber-500 text-slate-950 transition-all flex items-center space-x-1.5 shadow-sm shrink-0">
                             <i class="fa-solid fa-shield-halved"></i>
                             <span>Admin Workspace Control Center</span>
                         </button>
-                        <button onclick="switchTab('catalog')" class="px-4 py-2 rounded-xl text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 transition-all shadow-sm">
+                        <button onclick="switchTab('catalog')" class="px-4 py-2 rounded-xl text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 transition-all shadow-sm shrink-0">
                             View Store Catalog
                         </button>
                     </div>
-                    <div class="flex items-center space-x-3">
+                    <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto space-x-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200">
                         <span id="admin-email-display" class="text-xs text-amber-600 font-bold">Admin Workspace</span>
                         <button onclick="handleSignOut()" class="bg-red-50 hover:bg-red-100 text-red-600 font-bold px-3 py-2 rounded-xl text-xs border border-red-200 transition-all">
                             Sign Out
@@ -547,11 +270,11 @@
                     </div>
                 </div>
 
-                <!-- 5-PHOTO SLIDESHOW -->
+                <!-- 5-PHOTO SLIDESHOW (Always displayed on Page 2 for mobile and PC) -->
                 <section class="expert-slideshow-section">
                     <div class="expert-slideshow-wrapper">
                         <!-- Slide 1 -->
-                        <div class="expert-slide">
+                        <div class="expert-slide active">
                             <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&amp;fit=crop&amp;w=1600&amp;q=80" alt="Premium Colored Contact Lenses">
                             <div class="expert-slide-caption">
                                 <h2>Welcome to Sweetopia Shop</h2>
@@ -578,7 +301,7 @@
                             </div>
                         </div>
                         <!-- Slide 4 -->
-                        <div class="expert-slide active">
+                        <div class="expert-slide">
                             <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&amp;fit=crop&amp;w=1600&amp;q=80" alt="Emerald Green Elegance">
                             <div class="expert-slide-caption">
                                 <h2>Vibrant Emerald &amp; Sapphire Shades</h2>
@@ -600,20 +323,20 @@
                         <button type="button" class="expert-slide-btn expert-slide-next" aria-label="Next Slide">❯</button>
 
                         <div class="expert-slide-dots">
-                            <span class="expert-dot" data-slide="0"></span>
+                            <span class="expert-dot active" data-slide="0"></span>
                             <span class="expert-dot" data-slide="1"></span>
                             <span class="expert-dot" data-slide="2"></span>
-                            <span class="expert-dot active" data-slide="3"></span>
+                            <span class="expert-dot" data-slide="3"></span>
                             <span class="expert-dot" data-slide="4"></span>
                         </div>
                     </div>
                 </section>
 
-                <div class="p-6 md:p-10 min-h-[550px]">
+                <div class="p-4 sm:p-6 md:p-10 min-h-[550px]">
                     <!-- TAB 1: CATALOG -->
                     <div id="tab-section-catalog" class="space-y-6">
                         <div class="flex flex-col md:flex-row items-center justify-between gap-4 pb-4 border-b border-slate-200">
-                            <div class="flex items-center space-x-2 overflow-x-auto pb-2 w-full md:w-auto">
+                            <div class="flex items-center space-x-2 overflow-x-auto pb-2 w-full md:w-auto hide-scrollbar">
                                 <button onclick="filterCatalog('all', this)" id="cat-btn-all" class="cat-btn px-4 py-2 rounded-xl text-xs font-bold bg-[#65a30d] text-white shrink-0 shadow-sm">All Lenses</button>
                                 <button onclick="filterCatalog('3 Months Disposable', this)" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 shrink-0 border border-slate-200">3 Months Disposable</button>
                                 <button onclick="filterCatalog('1 Month Disposable', this)" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 shrink-0 border border-slate-200">1 Month Disposable</button>
@@ -625,7 +348,7 @@
                             </div>
                         </div>
 
-                        <div id="store-product-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+                        <div id="store-product-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"></div>
                     </div>
 
                     <!-- TAB 2: CART & CHECKOUT FORM -->
@@ -687,15 +410,14 @@
                             </div>
                             <span class="text-xs bg-[#f7fee7] text-[#65a30d] border border-[#ecfccb] px-3 py-1.5 rounded-xl font-bold">Active Shopper</span>
                         </div>
-
                         <div id="customer-orders-list" class="space-y-4"></div>
                     </div>
 
                     <!-- TAB 4: ADMIN WORKSPACE -->
                     <div id="tab-section-admin-workspace" class="hidden space-y-6">
-                        <div class="flex items-center justify-between pb-4 border-b border-slate-200 bg-amber-50 p-4 rounded-2xl border border-amber-200">
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 border-b border-slate-200 bg-amber-50 p-4 rounded-2xl border border-amber-200 gap-3">
                             <div class="flex items-center space-x-3">
-                                <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center text-amber-600">
+                                <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center text-amber-600 shrink-0">
                                     <i class="fa-solid fa-shield-halved text-lg"></i>
                                 </div>
                                 <div>
@@ -703,26 +425,26 @@
                                     <p class="text-xs text-slate-600">Firestore Real-time sync for stock, live products, and order shipments.</p>
                                 </div>
                             </div>
-                            <button onclick="exportInvoicesToCSV()" class="bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold px-4 py-2.5 rounded-xl text-xs flex items-center space-x-2 shadow-md">
+                            <button onclick="exportInvoicesToCSV()" class="bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold px-4 py-2.5 rounded-xl text-xs flex items-center space-x-2 shadow-md shrink-0">
                                 <i class="fa-solid fa-file-csv"></i>
                                 <span>Export Invoices CSV</span>
                             </button>
                         </div>
 
-                        <div class="flex space-x-2 border-b border-slate-200 pb-3">
-                            <button onclick="switchAdminSubTab('stock')" id="adm-sub-stock" class="px-4 py-2 rounded-xl text-xs font-bold bg-amber-500 text-slate-950 shadow-sm">Editable Power Stock &amp; Brands</button>
-                            <button onclick="switchAdminSubTab('products')" id="adm-sub-products" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200">Manage Products</button>
-                            <button onclick="switchAdminSubTab('orders')" id="adm-sub-orders" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200">Orders &amp; Tracking Management</button>
+                        <div class="flex space-x-2 border-b border-slate-200 pb-3 overflow-x-auto hide-scrollbar">
+                            <button onclick="switchAdminSubTab('stock')" id="adm-sub-stock" class="px-4 py-2 rounded-xl text-xs font-bold bg-amber-500 text-slate-950 shadow-sm shrink-0">Editable Power Stock &amp; Brands</button>
+                            <button onclick="switchAdminSubTab('products')" id="adm-sub-products" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200 shrink-0">Manage Products</button>
+                            <button onclick="switchAdminSubTab('orders')" id="adm-sub-orders" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200 shrink-0">Orders &amp; Tracking Management</button>
                         </div>
 
                         <!-- ADMIN SUB-TAB 1: POWER STOCK -->
                         <div id="adm-sub-section-stock" class="space-y-6">
-                            <div class="bg-slate-50 p-5 rounded-3xl border border-slate-200 space-y-4 shadow-sm">
+                            <div class="bg-slate-50 p-4 sm:p-5 rounded-3xl border border-slate-200 space-y-4 shadow-sm">
                                 <div class="flex items-center justify-between">
                                     <h4 class="text-xs font-bold text-slate-900">Select Prescription Power Range (0.00 to -8.00)</h4>
                                     <span class="text-[10px] text-[#65a30d] font-bold">Power Selector</span>
                                 </div>
-                                <div class="max-h-60 overflow-y-auto pr-2">
+                                <div>
                                     <select id="admin-global-power-select" onchange="onAdminPowerRangeChange()" class="w-full bg-white border border-slate-300 text-xs text-[#65a30d] font-bold rounded-xl p-3 focus:outline-none focus:border-[#65a30d] cursor-pointer shadow-sm">
                                         <option value="0.00">0.00 (No Power)</option>
                                         <option value="-0.25">-0.25</option>
@@ -761,7 +483,7 @@
                                 </div>
                             </div>
 
-                            <div class="bg-slate-50 p-5 rounded-3xl border border-slate-200 space-y-4 shadow-sm">
+                            <div class="bg-slate-50 p-4 sm:p-5 rounded-3xl border border-slate-200 space-y-4 shadow-sm">
                                 <div class="flex items-center justify-between border-b border-slate-200 pb-3">
                                     <div>
                                         <h4 class="text-xs font-bold text-slate-900">Manage Product Availability for Selected Power</h4>
@@ -841,9 +563,9 @@
                     </div>
                 </div>
 
-                <!-- CHAT WIDGET -->
-                <div id="page2-chat-widget-container" class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
-                    <div class="sweetopia-kawaii-window relative w-80 sm:w-96 bg-white rounded-3xl shadow-2xl border border-[#ecfccb] overflow-visible flex flex-col mb-4 transition-all duration-300 transform h-[500px] opacity-100 scale-100" id="sweetopiaChatWindow">
+                <!-- PRESERVED CHAT WIDGET -->
+                <div id="page2-chat-widget-container" class="fixed bottom-4 sm:bottom-6 right-4 sm:right-6 z-50 flex flex-col items-end">
+                    <div class="sweetopia-kawaii-window relative w-[calc(100vw-2rem)] sm:w-96 max-w-sm bg-white rounded-3xl shadow-2xl border border-[#ecfccb] overflow-visible flex flex-col mb-4 transition-all duration-300 transform h-[460px] sm:h-[500px] opacity-100 scale-100" id="sweetopiaChatWindow">
                         <style>
                             .cat-ear-left-green, .cat-ear-right-green {
                                 position: absolute;
@@ -933,7 +655,7 @@
                 </div>
             </div>
 
-            <!-- PRODUCT DETAIL MODAL (DESKTOP) -->
+            <!-- PRODUCT DETAIL MODAL -->
             <div id="screen-detail" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-2 sm:p-6">
                 <div class="w-full max-w-xl bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
                     <div class="px-6 py-4 flex items-center justify-between border-b border-slate-200">
@@ -1087,7 +809,7 @@
                             </button>
                         </div>
                     </div>
-                    <div class="flex-1 overflow-y-auto p-6 bg-slate-50 flex justify-center">
+                    <div class="flex-1 overflow-y-auto p-4 sm:p-6 bg-slate-50 flex justify-center">
                         <div id="invoice-printable-area" class="invoice-a4-page">
                             <div class="flex justify-between border-b-2 border-slate-200 pb-6 mb-6">
                                 <div>
@@ -1155,13 +877,14 @@
                     </div>
                 </div>
             </div>
+
         </main>
     </div>
 
-    <!-- SCRIPT LOGIC (BRIDGED FOR BOTH DESKTOP AND MOBILE MODES) -->
+    <!-- SCRIPT LOGIC (BRIDGED FOR DESKTOP & MOBILE WITH AUTO-ADMIN FOR yeegummy@gmail.com) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
+        import { getAuth, signInWithCustomToken, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
         import { getFirestore, collection, doc, setDoc, deleteDoc, getDoc, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
 
         if ('serviceWorker' in navigator) {
@@ -1226,25 +949,12 @@
 
         function isAdminUser(email) {
             if (!email) return false;
-            return ADMIN_EMAILS.map(e => e.toLowerCase()).includes(email.toLowerCase());
+            return ADMIN_EMAILS.map(e => e.toLowerCase()).includes(email.trim().toLowerCase());
         }
 
         window.togglePasswordVisibility = function() {
             const pwdInput = document.getElementById('auth-password');
             const icon = document.getElementById('password-toggle-icon');
-            if (!pwdInput) return;
-            if (pwdInput.type === 'password') {
-                pwdInput.type = 'text';
-                icon?.classList.replace('fa-eye', 'fa-eye-slash');
-            } else {
-                pwdInput.type = 'password';
-                icon?.classList.replace('fa-eye-slash', 'fa-eye');
-            }
-        };
-
-        window.togglePasswordVisibilityMobile = function() {
-            const pwdInput = document.getElementById('mobile-auth-password');
-            const icon = document.getElementById('mobile-password-toggle-icon');
             if (!pwdInput) return;
             if (pwdInput.type === 'password') {
                 pwdInput.type = 'text';
@@ -1269,128 +979,7 @@
             updatePresence(currentUser.email, true);
         };
 
-        // Mobile specific functions
-        window.switchMobileTab = function(tab, btn) {
-            ['home', 'cart', 'favourites', 'account'].forEach(t => {
-                document.getElementById('tab-' + t)?.classList.add('hidden');
-            });
-            document.getElementById('tab-' + tab)?.classList.remove('hidden');
-
-            document.querySelectorAll('.mobile-nav-btn').forEach(b => {
-                b.classList.remove('text-brand-400');
-                b.classList.add('text-slate-400');
-            });
-            if (btn) {
-                btn.classList.add('text-brand-400');
-                btn.classList.remove('text-slate-400');
-            }
-            if (tab === 'cart') renderMobileCartItems();
-        };
-
-        window.filterMobileCategory = function(cat, btn) {
-            document.querySelectorAll('.mobile-cat-btn').forEach(b => {
-                b.className = "mobile-cat-btn px-5 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 shrink-0 transition-all";
-            });
-            if (btn) btn.className = "mobile-cat-btn px-5 py-2 rounded-xl text-xs font-bold bg-brand-500 text-slate-950 shrink-0 transition-all shadow-md shadow-brand-500/20";
-            if (cat === 'all') renderMobileProducts(products);
-            else renderMobileProducts(products.filter(p => p.category === cat));
-        };
-
-        window.filterMobileStoreProducts = function() {
-            const q = document.getElementById('mobile-store-search').value.toLowerCase();
-            renderMobileProducts(products.filter(p => p.name.toLowerCase().includes(q)));
-        };
-
-        function renderMobileProducts(list) {
-            const grid = document.getElementById('mobile-product-grid');
-            if (!grid) return;
-            if (list.length === 0) {
-                grid.innerHTML = '<p class="col-span-full text-center text-xs text-slate-400 py-6">No products found.</p>';
-                return;
-            }
-            grid.innerHTML = list.map(p => `
-                <div onclick="openProductDetail('${p.id}')" class="bg-slate-800/80 rounded-3xl p-3 border border-slate-700/50 flex flex-col justify-between relative group cursor-pointer hover:border-brand-500/50 transition-all">
-                    <div class="absolute top-3 left-3 z-10 bg-brand-500 text-slate-950 text-[9px] font-extrabold px-2 py-0.5 rounded-md uppercase">${p.badge || 'New'}</div>
-                    <div class="w-full h-32 rounded-2xl bg-slate-900/60 flex items-center justify-center overflow-hidden mb-3">
-                        <img src="${p.image}" alt="${p.name}" class="w-28 h-28 object-cover group-hover:scale-105 transition-transform duration-300">
-                    </div>
-                    <div>
-                        <p class="text-[10px] text-slate-400 mb-0.5">${p.category}</p>
-                        <h3 class="text-xs font-bold text-white mb-2 truncate">${p.name}</h3>
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-extrabold text-brand-400">RM ${p.price}</span>
-                            <span class="text-[10px] bg-slate-700 text-slate-300 px-2 py-0.5 rounded-md font-semibold">Select</span>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        window.closeProductDetailMobile = function() {
-            document.getElementById('mobile-screen-detail')?.classList.add('translate-y-full');
-        };
-
-        window.addCurrentProductToCartMobile = async function() {
-            if (!currentUser || currentUser.isGuest) {
-                showToast("Sign In Required", "Please sign in or register to add items to cart.", true);
-                window.closeProductDetailMobile();
-                document.getElementById('screen-onboarding')?.classList.remove('translate-y-full', 'pointer-events-none');
-                return;
-            }
-            if (!currentSelectedProduct) return;
-            const pwr = document.getElementById('mobile-detail-pwr').value;
-            const pwrMap = window.productPowerStock[currentSelectedProduct.id] || {};
-            if (pwrMap[pwr] === false) {
-                showToast("Sold Out", `Power ${pwr} is sold out.`, true);
-                return;
-            }
-            const existing = cart.find(i => i.id === currentSelectedProduct.id && i.pwr === pwr);
-            if (existing) { existing.qty += 1; }
-            else { cart.push({ ...currentSelectedProduct, pwr, qty: 1 }); }
-
-            updateCartBadge();
-            renderMobileCartItems();
-            await saveCustomerCartToFirestore();
-            window.closeProductDetailMobile();
-            showToast("Added to Cart", `${currentSelectedProduct.name} (PWR ${pwr}) added.`);
-        };
-
-        function renderMobileCartItems() {
-            const container = document.getElementById('mobile-cart-items-container');
-            if (!container) return;
-            if (cart.length === 0) {
-                container.innerHTML = '<p class="text-xs text-slate-400 text-center py-10">Your cart is empty.</p>';
-                document.getElementById('mobile-cart-subtotal').innerText = 'RM 0.00';
-                document.getElementById('mobile-cart-shipping').innerText = 'RM 0.00';
-                document.getElementById('mobile-cart-total').innerText = 'RM 0.00';
-                return;
-            }
-            const totals = calculateCartTotals();
-            document.getElementById('mobile-cart-subtotal').innerText = 'RM ' + totals.subtotal.toFixed(2);
-            document.getElementById('mobile-cart-shipping').innerText = totals.shippingFee === 0 ? 'FREE' : ('RM ' + totals.shippingFee.toFixed(2));
-            document.getElementById('mobile-cart-total').innerText = 'RM ' + totals.grandTotal.toFixed(2);
-
-            container.innerHTML = cart.map((item, idx) => `
-                <div class="bg-slate-800/80 p-3 rounded-2xl border border-slate-700 flex items-center space-x-3">
-                    <img src="${item.image}" class="w-16 h-16 rounded-xl object-cover bg-slate-900">
-                    <div class="flex-1">
-                        <h4 class="text-xs font-bold text-white">${item.name}</h4>
-                        <p class="text-[10px] text-slate-400">PWR: ${item.pwr} • RM ${item.price}</p>
-                        <span class="text-xs font-extrabold text-brand-400">RM ${(parseFloat(item.price) * item.qty).toFixed(2)}</span>
-                    </div>
-                    <div class="flex flex-col items-end space-y-2">
-                        <button onclick="removeFromCart(${idx})" class="text-slate-500 hover:text-red-400 text-xs"><i class="fa-solid fa-trash"></i></button>
-                        <div class="flex items-center space-x-2 bg-slate-900 px-2 py-1 rounded-lg text-xs font-bold">
-                            <button onclick="changeQty(${idx}, -1)" class="text-slate-400 hover:text-white">-</button>
-                            <span>${item.qty}</span>
-                            <button onclick="changeQty(${idx}, 1)" class="text-slate-400 hover:text-white">+</button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Desktop window exposures
+        // UI Routing & Management
         window.switchPage = switchPage;
         window.switchTab = switchTab;
         window.setAuthModeTab = setAuthModeTab;
@@ -1443,10 +1032,11 @@
             const savedEmail = localStorage.getItem('sweetopia_logged_in_email');
 
             if (savedEmail) {
-                currentUser = { email: savedEmail };
+                currentUser = { email: savedEmail, isGuest: false };
                 updateUIAfterLogin(currentUser);
                 const savedPage = sessionStorage.getItem('sweetopia_active_page') || 'dashboard';
-                const savedTab = sessionStorage.getItem('sweetopia_active_tab') || (isAdminUser(savedEmail) ? 'admin-workspace' : 'catalog');
+                const defaultTab = isAdminUser(savedEmail) ? 'admin-workspace' : 'catalog';
+                const savedTab = sessionStorage.getItem('sweetopia_active_tab') || defaultTab;
                 switchPage(savedPage);
                 switchTab(savedTab, false);
                 if (savedTab === 'admin-workspace' && isAdminUser(savedEmail)) {
@@ -1491,7 +1081,6 @@
             }
 
             renderStoreProducts(products);
-            renderMobileProducts(products);
             renderAdminProductsList();
             renderAdminPowerStockCheckboxes();
             initFirestoreListeners();
@@ -1536,7 +1125,6 @@
                     products = loaded;
                 }
                 renderStoreProducts(products);
-                renderMobileProducts(products);
                 renderAdminProductsList();
                 renderAdminPowerStockCheckboxes();
             }, (err) => { console.warn("Products sync error:", err); });
@@ -1804,7 +1392,6 @@
                 if (cartDoc.exists()) { cart = cartDoc.data().items || []; }
                 else { cart = []; }
                 updateCartBadge();
-                renderMobileCartItems();
             } catch (e) { console.warn("Error loading cart:", e); }
         }
 
@@ -1825,11 +1412,9 @@
                 pageAuth?.classList.remove('hidden');
                 pageDashboard?.classList.add('hidden');
                 if (navActions) navActions.innerHTML = `<span class="text-xs text-slate-500">Please Sign In or Register</span>`;
-                document.getElementById('screen-onboarding')?.classList.remove('translate-y-full', 'pointer-events-none');
             } else {
                 pageAuth?.classList.add('hidden');
                 pageDashboard?.classList.remove('hidden');
-                document.getElementById('screen-onboarding')?.classList.add('translate-y-full', 'pointer-events-none');
 
                 if (currentUser && isAdminUser(currentUser.email)) {
                     const savedTab = sessionStorage.getItem('sweetopia_active_tab') || 'admin-workspace';
@@ -1879,32 +1464,24 @@
             authMode = mode;
             const btnIn = document.getElementById('tab-auth-signin');
             const btnUp = document.getElementById('tab-auth-signup');
-            const mBtnIn = document.getElementById('mobile-tab-auth-signin');
-            const mBtnUp = document.getElementById('mobile-tab-auth-signup');
 
             if (mode === 'signup') {
                 if (btnUp) btnUp.className = "py-2.5 text-xs font-bold rounded-lg bg-[#65a30d] text-white transition-all shadow";
                 if (btnIn) btnIn.className = "py-2.5 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all";
-                if (mBtnUp) mBtnUp.className = "py-2 text-xs font-bold rounded-lg bg-[#65a30d] text-white transition-all shadow-sm";
-                if (mBtnIn) mBtnIn.className = "py-2 text-xs font-semibold rounded-lg text-slate-300 hover:text-white transition-all";
                 document.getElementById('auth-form-title').innerText = "Create an account";
-                document.getElementById('mobile-auth-title').innerText = "Create an account";
             } else {
                 if (btnIn) btnIn.className = "py-2.5 text-xs font-bold rounded-lg bg-[#65a30d] text-white transition-all shadow";
                 if (btnUp) btnUp.className = "py-2.5 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all";
-                if (mBtnIn) mBtnIn.className = "py-2 text-xs font-bold rounded-lg bg-[#65a30d] text-white transition-all shadow-sm";
-                if (mBtnUp) mBtnUp.className = "py-2 text-xs font-semibold rounded-lg text-slate-300 hover:text-white transition-all";
                 document.getElementById('auth-form-title').innerText = "Sign In to Sweetopia Shop";
-                document.getElementById('mobile-auth-title').innerText = "Sign In to Sweetopia Shop";
             }
         }
 
         async function handleAuthSubmit(event) {
             event.preventDefault();
-            const emailInput = document.getElementById('auth-email') || document.getElementById('mobile-auth-email');
-            const pwdInput = document.getElementById('auth-password') || document.getElementById('mobile-auth-password');
-            const email = (emailInput?.value || document.getElementById('mobile-auth-email')?.value || '').trim();
-            const password = pwdInput?.value || document.getElementById('mobile-auth-password')?.value;
+            const emailInput = document.getElementById('auth-email');
+            const pwdInput = document.getElementById('auth-password');
+            const email = (emailInput?.value || '').trim();
+            const password = pwdInput?.value;
 
             if (!auth) { showToast("Error", "Firebase auth unavailable.", true); return; }
 
@@ -1945,6 +1522,9 @@
                 customerNavBar?.classList.add('hidden');
                 adminNavBar?.classList.remove('hidden');
                 adminChatSessionBar?.classList.remove('hidden');
+                const adminDisp = document.getElementById('admin-email-display');
+                if (adminDisp) adminDisp.innerText = `Admin (${user.email})`;
+                
                 switchPage('dashboard');
                 const savedTab = sessionStorage.getItem('sweetopia_active_tab') || 'admin-workspace';
                 const savedSubTab = sessionStorage.getItem('sweetopia_admin_subtab') || 'stock';
@@ -1959,10 +1539,6 @@
                 switchPage('dashboard');
                 switchTab(sessionStorage.getItem('sweetopia_active_tab') || 'catalog', false);
             }
-
-            document.getElementById('screen-onboarding')?.classList.add('translate-y-full', 'pointer-events-none');
-            const mEmail = document.getElementById('mobile-profile-email');
-            if (mEmail) mEmail.innerText = user.email;
 
             updateAdminChatUserDropdown();
             renderActiveChatMessages();
@@ -2046,7 +1622,6 @@
             currentSelectedProduct = products.find(p => p.id == id);
             if (!currentSelectedProduct) return;
 
-            // Desktop modal setup
             document.getElementById('detail-title').innerText = currentSelectedProduct.name;
             document.getElementById('detail-price').innerText = 'RM ' + currentSelectedProduct.price;
             document.getElementById('detail-img').src = currentSelectedProduct.image;
@@ -2060,17 +1635,6 @@
                 return `<option value="${pwr}" ${!avail ? 'disabled class="text-red-500 bg-slate-50"' : ''}>PWR ${displayLabel} ${avail ? '(In Stock)' : '(SOLD OUT)'}</option>`;
             }).join('');
             pwrSelect.innerHTML = pwrOptions;
-
-            // Mobile slide-over setup
-            const mTitle = document.getElementById('mobile-detail-title');
-            if (mTitle) {
-                mTitle.innerText = currentSelectedProduct.name;
-                document.getElementById('mobile-detail-price').innerText = 'RM ' + currentSelectedProduct.price;
-                document.getElementById('mobile-detail-img').src = currentSelectedProduct.image;
-                document.getElementById('mobile-detail-category').innerText = currentSelectedProduct.category;
-                document.getElementById('mobile-detail-pwr').innerHTML = pwrOptions;
-                document.getElementById('mobile-screen-detail').classList.remove('translate-y-full');
-            }
 
             document.getElementById('screen-detail')?.classList.remove('opacity-0', 'pointer-events-none');
             document.getElementById('screen-detail')?.classList.add('opacity-100');
@@ -2102,7 +1666,6 @@
             else { cart.push({ ...currentSelectedProduct, pwr, qty: 1 }); }
 
             updateCartBadge();
-            renderMobileCartItems();
             await saveCustomerCartToFirestore();
             closeProductDetail();
             showToast("Added to Cart", `${currentSelectedProduct.name} (PWR ${pwr}) added.`);
@@ -2115,9 +1678,6 @@
 
             const titleElem = document.getElementById('cart-title-count');
             if (titleElem) titleElem.innerText = count;
-
-            const mCount = document.getElementById('mobile-cart-count-label');
-            if (mCount) mCount.innerText = count;
         }
 
         function calculateCartTotals() {
@@ -2175,7 +1735,6 @@
             if (cart[idx].qty <= 0) cart.splice(idx, 1);
             updateCartBadge();
             renderCartItems();
-            renderMobileCartItems();
             await saveCustomerCartToFirestore();
         }
 
@@ -2183,7 +1742,6 @@
             cart.splice(idx, 1);
             updateCartBadge();
             renderCartItems();
-            renderMobileCartItems();
             await saveCustomerCartToFirestore();
         }
 
@@ -2191,7 +1749,6 @@
             cart = [];
             updateCartBadge();
             renderCartItems();
-            renderMobileCartItems();
             await saveCustomerCartToFirestore();
         }
 
@@ -2261,7 +1818,6 @@
             }
             cart = [];
             updateCartBadge();
-            renderMobileCartItems();
             await saveCustomerCartToFirestore();
             window.location.href = TOYYIBPAY_URL;
         }
@@ -2388,12 +1944,12 @@
                 const sec = document.getElementById('adm-sub-section-' + s);
                 const btn = document.getElementById('adm-sub-' + s);
                 if(sec) sec.classList.add('hidden');
-                if(btn) btn.className = "px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200";
+                if(btn) btn.className = "px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200 shrink-0";
             });
             const targetSec = document.getElementById('adm-sub-section-' + sub);
             const targetBtn = document.getElementById('adm-sub-' + sub);
             if(targetSec) targetSec.classList.remove('hidden');
-            if(targetBtn) targetBtn.className = "px-4 py-2 rounded-xl text-xs font-bold bg-amber-500 text-slate-950 shadow-sm";
+            if(targetBtn) targetBtn.className = "px-4 py-2 rounded-xl text-xs font-bold bg-amber-500 text-slate-950 shadow-sm shrink-0";
         }
 
         function renderAdminPowerStockCheckboxes() {
@@ -2442,7 +1998,6 @@
                 } catch (e) { showToast("Sync Error", e.message, true); return; }
             }
             renderStoreProducts(products);
-            renderMobileProducts(products);
             showToast("Stock Saved!", `Power ${selectedPwr} availability updated.`);
         }
 
@@ -2513,7 +2068,6 @@
             else products.push(productData);
 
             renderStoreProducts(products);
-            renderMobileProducts(products);
             renderAdminProductsList();
             renderAdminPowerStockCheckboxes();
             resetAdminProductForm();
@@ -2544,7 +2098,6 @@
             if (db) { try { await deleteDoc(doc(db, "lumilens_products", String(id))); } catch(e) { console.warn(e); } }
             products = products.filter(i => i.id != id);
             renderStoreProducts(products);
-            renderMobileProducts(products);
             renderAdminProductsList();
             renderAdminPowerStockCheckboxes();
             showToast("Deleted", "Product removed.");
@@ -2646,28 +2199,20 @@
         }
 
         function showToast(title, msg, isError = false) {
-            // Trigger Desktop toast
             const t = document.getElementById('toast');
             if (t) {
                 document.getElementById('toast-title').innerText = title;
                 document.getElementById('toast-msg').innerText = msg;
+                const iconWrapper = document.getElementById('toast-icon-wrapper');
+                if (iconWrapper) {
+                    iconWrapper.className = `w-8 h-8 rounded-full flex items-center justify-center text-white font-bold shrink-0 ${isError ? 'bg-red-500' : 'bg-[#65a30d]'}`;
+                    iconWrapper.innerHTML = `<i class="fa-solid ${isError ? 'fa-triangle-exclamation' : 'fa-check'} text-xs"></i>`;
+                }
                 t.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-4');
                 t.classList.add('opacity-100', 'translate-y-0');
                 setTimeout(() => {
                     t.classList.remove('opacity-100', 'translate-y-0');
                     t.classList.add('opacity-0', 'pointer-events-none', '-translate-y-4');
-                }, 4000);
-            }
-            // Trigger Mobile toast
-            const mt = document.getElementById('mobile-toast');
-            if (mt) {
-                document.getElementById('mobile-toast-title').innerText = title;
-                document.getElementById('mobile-toast-msg').innerText = msg;
-                mt.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-4');
-                mt.classList.add('opacity-100', 'translate-y-0');
-                setTimeout(() => {
-                    mt.classList.remove('opacity-100', 'translate-y-0');
-                    mt.classList.add('opacity-0', 'pointer-events-none', '-translate-y-4');
                 }, 4000);
             }
         }
