@@ -228,7 +228,7 @@
             <!-- PAGE 2: DASHBOARD & STORE CATALOG -->
             <div id="page-dashboard" class="w-full max-w-[1280px] flex flex-col bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xl relative">
 
-                <!-- CUSTOMER NAVIGATION BAR (Customer View) -->
+                <!-- CUSTOMER NAVIGATION BAR -->
                 <div id="customer-nav-bar" class="px-4 sm:px-6 md:px-10 py-4 bg-slate-50 border-b border-slate-200 hidden flex-wrap items-center justify-between gap-3">
                     <div class="flex items-center space-x-2 overflow-x-auto hide-scrollbar w-full sm:w-auto pb-1 sm:pb-0">
                         <button onclick="switchTab('catalog')" id="dtab-catalog" class="dtab-btn bg-white hover:bg-slate-100 text-slate-800 font-bold px-4 py-2.5 rounded-xl text-xs border border-slate-200 transition-all flex items-center space-x-2 shadow-sm shrink-0">
@@ -260,7 +260,7 @@
                     </div>
                 </div>
 
-                <!-- ADMIN NAVIGATION BAR -->
+                <!-- ADMIN NAVIGATION BAR (Desktop Only) -->
                 <div id="admin-nav-bar" class="md:flex px-4 sm:px-6 md:px-10 py-4 bg-slate-50 border-b border-slate-200 flex-wrap items-center justify-between gap-3">
                     <div class="flex items-center space-x-3 overflow-x-auto hide-scrollbar w-full sm:w-auto pb-3">
                         <button onclick="switchTab('catalog')" id="dtab-admin-catalog" class="px-5 py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 text-white transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] shrink-0 flex items-center space-x-2">
@@ -1811,6 +1811,37 @@
             return ADMIN_EMAILS.map(e => e.toLowerCase()).includes(email.trim().toLowerCase());
         }
 
+        /* STRICT MOBILE BOTTOM NAV ENFORCEMENT */
+        function enforceMobileNavForRole() {
+            const mobNav = document.getElementById('mobile-bottom-nav');
+            const mobNavCart = document.getElementById('mob-nav-cart');
+            const mobNavFav = document.getElementById('mob-nav-favourites');
+            const mobAccountText = document.getElementById('mob-nav-account-text');
+            const mobAccountIcon = document.getElementById('mob-nav-account-icon');
+
+            const isAdmin = currentUser && isAdminUser(currentUser.email);
+
+            if (mobNav) {
+                if (isAdmin) {
+                    // Strictly hide Cart and Favourites for Admin on Mobile
+                    if (mobNavCart) mobNavCart.style.setProperty('display', 'none', 'important');
+                    if (mobNavFav) mobNavFav.style.setProperty('display', 'none', 'important');
+                    mobNav.classList.remove('justify-between');
+                    mobNav.classList.add('justify-around');
+                    if (mobAccountText) mobAccountText.innerText = "Admin Panel";
+                    if (mobAccountIcon) mobAccountIcon.className = "fa-solid fa-shield-halved text-sm";
+                } else {
+                    // Show all options for customers & guests
+                    if (mobNavCart) mobNavCart.style.removeProperty('display');
+                    if (mobNavFav) mobNavFav.style.removeProperty('display');
+                    mobNav.classList.remove('justify-around');
+                    mobNav.classList.add('justify-between');
+                    if (mobAccountText) mobAccountText.innerText = "Dashboard";
+                    if (mobAccountIcon) mobAccountIcon.className = "fa-regular fa-user text-sm";
+                }
+            }
+        }
+
         window.toggleCustomerSection = function(sectionKey) {
             const content = document.getElementById(`content-customer-${sectionKey}`);
             const chevron = document.getElementById(`chevron-${sectionKey}`);
@@ -1956,6 +1987,7 @@
                             switchPage('auth');
                         }
                     }
+                    enforceMobileNavForRole();
                 });
             }
 
@@ -1988,6 +2020,7 @@
             initSlideshow();
             renderCustomerVouchersUI();
             renderAdminVoucherCustomerDropdowns();
+            enforceMobileNavForRole();
 
             setInterval(() => {
                 if (currentUser && currentUser.email) {
@@ -2371,6 +2404,7 @@
                     switchTab(savedTab, false);
                 }
             }
+            enforceMobileNavForRole();
         }
 
         function switchTab(tabName, saveState = true) {
@@ -2442,6 +2476,8 @@
                 renderAdminOrdersList();
                 renderAdminVoucherCustomerDropdowns();
             }
+
+            enforceMobileNavForRole();
         }
 
         function setAuthModeTab(mode) {
@@ -2505,27 +2541,6 @@
             const mobAccountText = document.getElementById('mob-nav-account-text');
             const mobAccountIcon = document.getElementById('mob-nav-account-icon');
 
-            // Admin vs Customer Mobile Bottom Nav Bar configuration
-            const mobNav = document.getElementById('mobile-bottom-nav');
-            const mobNavCart = document.getElementById('mob-nav-cart');
-            const mobNavFav = document.getElementById('mob-nav-favourites');
-
-            if (mobNav) {
-                if (isAdmin) {
-                    // Hide Cart & Favourites for Admin on Mobile
-                    if (mobNavCart) mobNavCart.classList.add('hidden');
-                    if (mobNavFav) mobNavFav.classList.add('hidden');
-                    mobNav.classList.remove('justify-between');
-                    mobNav.classList.add('justify-around');
-                } else {
-                    // Keep Cart & Favourites for Customers & Guests
-                    if (mobNavCart) mobNavCart.classList.remove('hidden');
-                    if (mobNavFav) mobNavFav.classList.remove('hidden');
-                    mobNav.classList.remove('justify-around');
-                    mobNav.classList.add('justify-between');
-                }
-            }
-
             const detailAddToCartBox = document.getElementById('detail-add-to-cart-box');
             if (detailAddToCartBox) {
                 if (isAdmin) {
@@ -2574,6 +2589,7 @@
                 switchTab(sessionStorage.getItem('sweetopia_active_tab') || 'catalog', false);
             }
 
+            enforceMobileNavForRole();
             updateAdminChatUserDropdown();
             renderActiveChatMessages();
             window.renderDeliveryAddresses();
@@ -2596,16 +2612,7 @@
             cart = [];
             updateCartBadge();
 
-            // Reset bottom nav bar to default 4-item view upon sign out
-            const mobNav = document.getElementById('mobile-bottom-nav');
-            const mobNavCart = document.getElementById('mob-nav-cart');
-            const mobNavFav = document.getElementById('mob-nav-favourites');
-            if (mobNav) {
-                mobNav.classList.remove('justify-around');
-                mobNav.classList.add('justify-between');
-                mobNavCart?.classList.remove('hidden');
-                mobNavFav?.classList.remove('hidden');
-            }
+            enforceMobileNavForRole();
 
             switchPage('auth');
             showToast("Signed Out", "Successfully logged out.");
