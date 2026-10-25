@@ -131,16 +131,17 @@
         .heart-slider-track {
             position: relative;
             width: 100%;
-            height: 26px;
+            height: 30px;
             background: #ffffff;
             border-radius: 9999px;
-            box-shadow: 0 4px 12px rgba(244, 114, 182, 0.15), inset 0 2px 4px rgba(0,0,0,0.03);
+            box-shadow: 0 3px 10px rgba(244, 114, 182, 0.18), inset 0 2px 4px rgba(0,0,0,0.04);
             border: 2px solid #fce7f3;
             display: flex;
             align-items: center;
-            padding: 0 4px;
-            touch-action: pan-y;
+            cursor: pointer;
+            touch-action: none;
             user-select: none;
+            -webkit-user-select: none;
         }
         .heart-slider-inner-groove {
             position: absolute;
@@ -150,27 +151,35 @@
             background: linear-gradient(180deg, #fbcfe8 0%, #f472b6 100%);
             border-radius: 9999px;
             opacity: 0.65;
+            pointer-events: none;
         }
         .heart-slider-thumb {
             position: absolute;
-            left: 3px;
-            width: 32px;
-            height: 32px;
+            left: 2px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
             background: radial-gradient(circle at 35% 35%, #fb7185, #e11d48 70%, #be123c 100%);
-            box-shadow: 0 6px 14px rgba(225, 29, 72, 0.45), 0 1px 3px rgba(0,0,0,0.2), inset 0 2px 4px rgba(255,255,255,0.7);
+            box-shadow: 0 4px 10px rgba(225, 29, 72, 0.5), inset 0 2px 4px rgba(255,255,255,0.7);
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
+            cursor: grab;
             z-index: 10;
-            transition: transform 0.05s ease-out;
             touch-action: none;
+            -webkit-touch-callout: none;
+        }
+        .heart-slider-thumb:active {
+            cursor: grabbing;
+            transform: translateY(-50%) scale(1.08);
         }
         .heart-slider-thumb i {
             color: #ffffff;
             font-size: 13px;
-            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.25));
+            pointer-events: none;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
         }
     </style>
 </head>
@@ -402,10 +411,10 @@
                                 <button onclick="filterCatalog('1 Day Disposable', this)" class="cat-btn px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 shrink-0 border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all">1 Day Disposable</button>
                             </div>
                             
-                            <!-- Search Area Container (Includes Mobile Heart Slider above Search Bar) -->
+                            <!-- Search Area Container (Includes Mobile Heart Slider directly above Bunny Search Bar) -->
                             <div class="relative w-full md:w-72 flex flex-col gap-2">
                                 <!-- Mobile Only Heart Slider (Scrolls Category Buttons to the right) -->
-                                <div id="heart-category-slider-wrapper" class="block md:hidden w-full pt-1 pb-2">
+                                <div id="heart-category-slider-wrapper" class="block md:hidden w-full pt-1 pb-1">
                                     <div class="heart-slider-track" id="heart-slider-track">
                                         <div class="heart-slider-inner-groove"></div>
                                         <div class="heart-slider-thumb" id="heart-slider-thumb">
@@ -1958,7 +1967,7 @@
             }
         };
 
-        /* MOBILE HEART SLIDER LOGIC */
+        /* ROBUST MOBILE HEART SLIDER LOGIC */
         function initHeartCategorySlider() {
             const track = document.getElementById('heart-slider-track');
             const thumb = document.getElementById('heart-slider-thumb');
@@ -1967,71 +1976,77 @@
             if (!track || !thumb || !scrollContainer) return;
 
             let isDragging = false;
-            let startX = 0;
-            let currentX = 0;
 
-            function updateThumbPositionFromScroll() {
+            function syncThumbFromScroll() {
                 if (isDragging) return;
                 const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
-                if (maxScroll <= 0) {
-                    thumb.style.left = '3px';
+                const maxThumbX = track.clientWidth - thumb.offsetWidth - 4;
+                if (maxScroll <= 0 || maxThumbX <= 0) {
+                    thumb.style.left = '2px';
                     return;
                 }
-                const scrollRatio = scrollContainer.scrollLeft / maxScroll;
-                const maxThumbX = track.clientWidth - thumb.clientWidth - 6;
-                const thumbX = Math.max(0, Math.min(maxThumbX, scrollRatio * maxThumbX));
-                thumb.style.left = `${thumbX + 3}px`;
+                const ratio = scrollContainer.scrollLeft / maxScroll;
+                const newX = Math.max(2, Math.min(maxThumbX + 2, 2 + (ratio * maxThumbX)));
+                thumb.style.left = `${newX}px`;
             }
 
-            function setScrollFromThumb(clientX) {
-                const rect = track.getBoundingClientRect();
-                const maxThumbX = track.clientWidth - thumb.clientWidth - 6;
-                let offsetX = clientX - rect.left - (thumb.clientWidth / 2);
+            function handleSliderDrag(clientX) {
+                const trackRect = track.getBoundingClientRect();
+                const maxThumbX = track.clientWidth - thumb.offsetWidth - 4;
+                if (maxThumbX <= 0) return;
+
+                let offsetX = clientX - trackRect.left - (thumb.offsetWidth / 2);
                 offsetX = Math.max(0, Math.min(maxThumbX, offsetX));
-                thumb.style.left = `${offsetX + 3}px`;
+                thumb.style.left = `${offsetX + 2}px`;
 
                 const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
                 if (maxScroll > 0) {
-                    const scrollRatio = offsetX / maxThumbX;
-                    scrollContainer.scrollLeft = scrollRatio * maxScroll;
+                    const ratio = offsetX / maxThumbX;
+                    scrollContainer.scrollLeft = ratio * maxScroll;
                 }
             }
 
-            // Pointer & Touch Events
-            function onPointerDown(e) {
+            // Pointer (Mouse / Touch) Events
+            track.addEventListener('pointerdown', (e) => {
                 isDragging = true;
-                setScrollFromThumb(e.clientX || (e.touches && e.touches[0].clientX));
-                document.addEventListener('pointermove', onPointerMove);
-                document.addEventListener('pointerup', onPointerUp);
-                document.addEventListener('touchmove', onTouchMove, { passive: false });
-                document.addEventListener('touchend', onPointerUp);
-            }
+                thumb.setPointerCapture?.(e.pointerId);
+                handleSliderDrag(e.clientX);
+            });
 
-            function onPointerMove(e) {
+            track.addEventListener('pointermove', (e) => {
                 if (!isDragging) return;
-                setScrollFromThumb(e.clientX);
-            }
+                handleSliderDrag(e.clientX);
+            });
 
-            function onTouchMove(e) {
-                if (!isDragging || !e.touches || !e.touches[0]) return;
-                e.preventDefault();
-                setScrollFromThumb(e.touches[0].clientX);
-            }
-
-            function onPointerUp() {
+            const stopDrag = (e) => {
+                if (!isDragging) return;
                 isDragging = false;
-                document.removeEventListener('pointermove', onPointerMove);
-                document.removeEventListener('pointerup', onPointerUp);
-                document.removeEventListener('touchmove', onTouchMove);
-                document.removeEventListener('touchend', onPointerUp);
-            }
+                if (e.pointerId) thumb.releasePointerCapture?.(e.pointerId);
+            };
 
-            track.addEventListener('pointerdown', onPointerDown);
-            thumb.addEventListener('touchstart', (e) => { isDragging = true; }, { passive: true });
-            scrollContainer.addEventListener('scroll', updateThumbPositionFromScroll, { passive: true });
+            track.addEventListener('pointerup', stopDrag);
+            track.addEventListener('pointercancel', stopDrag);
 
-            window.addEventListener('resize', updateThumbPositionFromScroll);
-            setTimeout(updateThumbPositionFromScroll, 200);
+            // Native Touch Listeners with non-passive cancel for mobile compatibility
+            track.addEventListener('touchstart', (e) => {
+                if (!e.touches || !e.touches[0]) return;
+                isDragging = true;
+                handleSliderDrag(e.touches[0].clientX);
+            }, { passive: true });
+
+            track.addEventListener('touchmove', (e) => {
+                if (!isDragging || !e.touches || !e.touches[0]) return;
+                e.preventDefault(); // Prevents vertical page scroll while dragging the heart
+                handleSliderDrag(e.touches[0].clientX);
+            }, { passive: false });
+
+            track.addEventListener('touchend', () => { isDragging = false; }, { passive: true });
+            track.addEventListener('touchcancel', () => { isDragging = false; }, { passive: true });
+
+            scrollContainer.addEventListener('scroll', syncThumbFromScroll, { passive: true });
+
+            window.addEventListener('resize', syncThumbFromScroll);
+            setTimeout(syncThumbFromScroll, 300);
         }
 
         window.switchPage = switchPage;
