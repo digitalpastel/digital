@@ -107,24 +107,54 @@
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Cute Pink Scrollbar CSS */
+        /* Exact Horizontal Scrollbar Matching Reference Image with Left & Right Buttons */
         .cute-h-scrollbar {
-            scrollbar-width: thin;
-            scrollbar-color: #f472b6 #fdf4ff;
+            scrollbar-width: thin !important;
+            scrollbar-color: #d946ef #edd7f5 !important;
         }
         .cute-h-scrollbar::-webkit-scrollbar {
-            height: 8px;
+            height: 11px !important;
+            display: block !important;
         }
         .cute-h-scrollbar::-webkit-scrollbar-track {
-            background: #fdf4ff;
-            border-radius: 9999px;
+            background-color: #edd7f5 !important;
+            border-radius: 9999px !important;
+            margin: 0 4px !important;
         }
         .cute-h-scrollbar::-webkit-scrollbar-thumb {
-            background: #f472b6;
-            border-radius: 9999px;
+            background: linear-gradient(90deg, #d946ef 0%, #c026d3 100%) !important;
+            border-radius: 9999px !important;
+            border: 1px solid #a21caf !important;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45) !important;
         }
         .cute-h-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #ec4899;
+            background: linear-gradient(90deg, #c026d3 0%, #a21caf 100%) !important;
+        }
+
+        /* Left Arrow Button (<) */
+        .cute-h-scrollbar::-webkit-scrollbar-button:single-button:horizontal:decrement {
+            display: block !important;
+            width: 14px !important;
+            height: 11px !important;
+            background-color: transparent !important;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%231e1b4b' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'><polyline points='15 18 9 12 15 6'/></svg>") !important;
+            background-repeat: no-repeat !important;
+            background-size: 7px !important;
+            background-position: center !important;
+            cursor: pointer !important;
+        }
+
+        /* Right Arrow Button (>) */
+        .cute-h-scrollbar::-webkit-scrollbar-button:single-button:horizontal:increment {
+            display: block !important;
+            width: 14px !important;
+            height: 11px !important;
+            background-color: transparent !important;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%231e1b4b' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'><polyline points='9 18 15 12 9 6'/></svg>") !important;
+            background-repeat: no-repeat !important;
+            background-size: 7px !important;
+            background-position: center !important;
+            cursor: pointer !important;
         }
 
         /* Slideshow Container */
@@ -2767,7 +2797,6 @@
             if (filterValue === 'all') {
                 renderStoreProducts(products);
             } else {
-                // Filters by category OR by brand
                 renderStoreProducts(products.filter(p => p.category === filterValue || p.brand === filterValue));
             }
         }
