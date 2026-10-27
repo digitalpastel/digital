@@ -43,7 +43,7 @@
             color-scheme: light !important;
             supported-color-schemes: light !important;
         }
-        
+
         /* Force vertical scrollbar to always exist and remain visible */
         html, body {
             overflow-y: scroll !important;
@@ -291,10 +291,107 @@
             color: #1e3a8a;
             letter-spacing: 0.5px;
         }
+
+        /* Retro Comic Pink-Purple Image Frame Window Modal */
+        .pink-purple-window-container {
+            position: relative;
+            width: 482px;
+            max-width: calc(100vw - 2rem);
+            background: linear-gradient(135deg, #ec4899 0%, #a855f7 100%);
+            border: 4px solid #000;
+            box-shadow: 8px 8px 0px #000;
+            padding: 15px;
+            box-sizing: border-box;
+            border-radius: 4px;
+            margin-top: 36px;
+        }
+
+        .pink-purple-window-tab {
+            position: absolute;
+            top: -39px;
+            left: -4px;
+            width: 140px;
+            height: 36px;
+            background: linear-gradient(135deg, #ec4899 0%, #c026d3 100%);
+            border: 4px solid #000;
+            border-bottom: none;
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+            box-sizing: border-box;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+
+        .pink-purple-close-btn {
+            width: 24px;
+            height: 24px;
+            background: #ff4081;
+            border: 3px solid #000;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #000;
+            font-weight: 900;
+            font-size: 16px;
+            line-height: 1;
+            cursor: pointer;
+            box-shadow: 2px 2px 0px #000;
+            transition: transform 0.1s ease;
+        }
+        .pink-purple-close-btn:active {
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0px #000;
+        }
+
+        .pink-purple-dropzone {
+            width: 100%;
+            height: 440px;
+            max-height: 65vh;
+            background: #ffffff;
+            border: 4px solid #000;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        .pink-purple-dropzone img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            background: #ffffff;
+        }
     </style>
 </head>
 
 <body class="min-h-screen flex flex-col items-center justify-start p-3 sm:p-4 md:p-6 text-slate-800">
+
+    <!-- TOP ANDROID APP DOWNLOAD & SHORTCUT BANNER -->
+    <div id="app-download-banner" class="w-full max-w-[1280px] mb-3 bg-slate-900 text-white px-3.5 sm:px-4 py-2.5 rounded-2xl flex items-center justify-between border border-slate-700 shadow-md transition-all">
+        <div class="flex items-center space-x-2.5 sm:space-x-3 overflow-hidden">
+            <div class="w-8 h-8 rounded-xl overflow-hidden shrink-0 bg-white/10 p-0.5 border border-white/20">
+                <img src="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png" onerror="this.src='https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png'" alt="SweetopiaLens Icon" class="w-full h-full object-cover rounded-lg">
+            </div>
+            <div class="truncate">
+                <p class="text-xs sm:text-sm font-bold tracking-tight text-white truncate">SweetopiaLens Mobile for Android</p>
+                <p class="text-[10px] text-slate-400">Install web app shortcut for direct access</p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-2 shrink-0 ml-2">
+            <button type="button" onclick="triggerAppInstallShortcut()" class="bg-[#65a30d] hover:bg-[#4d7c0f] active:scale-95 text-white text-[11px] sm:text-xs font-bold px-3 py-1.5 rounded-xl shadow transition flex items-center gap-1.5">
+                <i class="fa-solid fa-download text-[10px]"></i>
+                <span>Download</span>
+            </button>
+            <button type="button" onclick="document.getElementById('app-download-banner').style.display='none'" class="w-7 h-7 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition" aria-label="Dismiss banner">
+                <i class="fa-solid fa-xmark text-xs"></i>
+            </button>
+        </div>
+    </div>
 
     <!-- GLOBAL NOTIFICATION TOAST -->
     <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 text-white px-5 py-3 rounded-2xl shadow-2xl border border-slate-700 flex items-center space-x-3 transition-all duration-300 transform opacity-0 pointer-events-none -translate-y-4">
@@ -523,7 +620,7 @@
                                 <button onclick="filterCatalog('Western Eyes', this)" class="cat-btn px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 shrink-0 border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all">Western Eyes</button>
                                 <button onclick="filterCatalog('Mill Creek', this)" class="cat-btn px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 shrink-0 border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all">Mill Creek</button>
                             </div>
-                            
+
                             <!-- Rabbit Search Bar -->
                             <div class="relative w-full md:w-72">
                                 <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
@@ -1099,7 +1196,7 @@
                         <p class="text-xs font-bold text-slate-700 tracking-wide mb-3">
                             ToyyibPay is registered with SSM
                         </p>
-                        
+
                         <!-- ToyyibPay FPX Badge Widget -->
                         <div class="toyyibpay-widget">
                             <div class="toyyibpay-header">
@@ -1205,13 +1302,18 @@
                 </div>
             </div>
 
-            <!-- PRODUCT IMAGE ZOOM MODAL -->
-            <div id="screen-image-zoom" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-4">
-                <div class="relative w-[1080px] max-w-full h-[1080px] max-h-[90vh] bg-black rounded-3xl overflow-hidden shadow-2xl flex items-center justify-center border border-white/10">
-                    <button onclick="closeImageZoomModal()" class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/20 hover:bg-white/40 text-white flex items-center justify-center transition backdrop-blur-sm" aria-label="Close">
-                        <i class="fa-solid fa-xmark text-sm"></i>
-                    </button>
-                    <img id="zoom-modal-img" src="" alt="Product Fullsize View" class="w-full h-full object-contain p-2">
+            <!-- PRODUCT IMAGE ZOOM MODAL (PINK-PURPLE RETRO WINDOW FRAME) -->
+            <div id="screen-image-zoom" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-4" onclick="closeImageZoomModal()">
+                <div class="pink-purple-window-container" onclick="event.stopPropagation()">
+                    <!-- Top Tab with Retro Round Button Pin -->
+                    <div class="pink-purple-window-tab">
+                        <div class="pink-purple-close-btn" onclick="closeImageZoomModal()" title="Close Frame">&times;</div>
+                    </div>
+
+                    <!-- Inner White Dropzone Frame with Image -->
+                    <div class="pink-purple-dropzone">
+                        <img id="zoom-modal-img" src="" alt="Enlarged Product View">
+                    </div>
                 </div>
             </div>
 
@@ -1238,12 +1340,49 @@
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-2">Select Prescription (NO PWR 0.00)(PWR -0.25 to -8.00)</label>
-                            <select id="detail-pwr" class="w-full bg-slate-50 border border-slate-300 text-xs text-slate-900 rounded-xl p-3 focus:outline-none focus:border-[#65a30d] shadow-sm"></select>
+                            <!-- Clickable trigger button that opens the Prescription Picker Modal -->
+                            <button type="button" onclick="openPrescriptionPickerModal()" class="w-full bg-slate-50 border border-slate-300 hover:border-[#65a30d] text-xs text-slate-900 rounded-xl p-3 shadow-sm flex items-center justify-between transition group">
+                                <span id="detail-pwr-display" class="font-bold text-[#65a30d]">PWR 0.00 (No Power)</span>
+                                <span class="text-slate-400 group-hover:text-slate-700 text-xs flex items-center gap-1.5 font-medium">
+                                    <span>Choose</span>
+                                    <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                                </span>
+                            </button>
+                            <!-- Hidden input to store chosen power value -->
+                            <input type="hidden" id="detail-pwr" value="0.00">
                         </div>
                     </div>
                     <div id="detail-add-to-cart-box" class="p-4 border-t border-slate-200 flex space-x-3 bg-slate-50 hidden">
                         <button onclick="addCurrentProductToCart()" class="flex-1 bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold py-3.5 rounded-2xl text-xs shadow-lg shadow-[#65a30d]/20 transition-all">
                             Add to Cart (RM)
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL DROPDOWN: SELECT PRESCRIPTION POWER (WITH 'X' CLOSE BUTTON) -->
+            <div id="screen-prescription-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-4">
+                <div class="w-full max-w-lg bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-2xl flex flex-col max-h-[85vh] animate-in fade-in zoom-in-95 duration-200">
+                    <div class="px-5 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+                        <div>
+                            <h3 class="text-sm font-bold text-slate-900">Select Prescription Power</h3>
+                            <p class="text-[11px] text-slate-500 mt-0.5">Choose your contact lens power range (0.00 to -8.00)</p>
+                        </div>
+                        <!-- 'x' Close button for Prescription Modal -->
+                        <button type="button" onclick="closePrescriptionPickerModal()" class="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-700 flex items-center justify-center transition shadow-xs" aria-label="Close prescription modal">
+                            <i class="fa-solid fa-xmark text-sm"></i>
+                        </button>
+                    </div>
+
+                    <div class="p-4 overflow-y-auto">
+                        <div id="prescription-options-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                            <!-- Populated dynamically via renderPrescriptionOptions() -->
+                        </div>
+                    </div>
+
+                    <div class="p-3.5 bg-slate-50 border-t border-slate-200 flex justify-end">
+                        <button type="button" onclick="closePrescriptionPickerModal()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl text-xs font-bold transition">
+                            Cancel
                         </button>
                     </div>
                 </div>
@@ -1507,6 +1646,26 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
         import { getAuth, signInWithCustomToken, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
         import { getFirestore, collection, doc, setDoc, deleteDoc, getDoc, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
+
+        let deferredInstallPrompt = null;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredInstallPrompt = e;
+        });
+
+        window.triggerAppInstallShortcut = async function() {
+            if (deferredInstallPrompt) {
+                deferredInstallPrompt.prompt();
+                const { outcome } = await deferredInstallPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    showToast("Installing App", "Adding SweetopiaLens to your home screen shortcut!");
+                    document.getElementById('app-download-banner').style.display = 'none';
+                }
+                deferredInstallPrompt = null;
+            } else {
+                showToast("Install Shortcut", "Tap your browser menu (⋮) and tap 'Install app' or 'Add to Home screen'.");
+            }
+        };
 
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
@@ -1878,7 +2037,7 @@
 
                     ${isAdmin ? '' : `
                     <button onclick="event.stopPropagation(); toggleWishlist(this, '${p.id}');" class="absolute top-2 sm:top-4 right-2 sm:right-4 z-20 w-7 h-7 sm:w-8 sm:h-8 bg-slate-900/60 rounded-full flex items-center justify-center text-slate-300 hover:text-red-400 transition-all shadow">
-                        <i class="${isFav ? 'fa-solid fa-heart text-red-500' : 'fa-regular fa-heart'} text-xs"></i>
+                        <i class="${favouritesList.includes(p.id) ? 'fa-solid fa-heart text-red-500' : 'fa-regular fa-heart'} text-xs"></i>
                     </button>`}
 
                     <div>
@@ -1895,11 +2054,13 @@
                                 </svg>
                             </div>
                         </div>
+
                         <div class="cursor-pointer" onclick="openProductDetail('${p.id}')">
                             <p class="text-[9px] sm:text-[10px] text-fuchsia-600 uppercase mb-0.5 sm:mb-1 font-black truncate">${p.brand || 'Molicon'} • ${p.category}</p>
                             <h3 class="text-xs sm:text-sm font-black text-slate-900 mb-1 sm:mb-2 line-clamp-1">${p.name}</h3>
                         </div>
                     </div>
+
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between pt-2 sm:pt-3 border-t-2 border-slate-100 gap-1.5 sm:gap-0">
                         <span class="text-xs sm:text-sm font-black text-fuchsia-600">RM ${p.price}</span>
                         <button onclick="openProductDetail('${p.id}')" class="text-[9px] sm:text-[10px] bg-pink-400 text-white border-2 border-black px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl font-black shadow-[0_2px_0_0_#1e1b4b] sm:shadow-[0_3px_0_0_#1e1b4b] active:translate-y-0.5 active:shadow-none transition-all text-center">Select Power</button>
@@ -2111,6 +2272,63 @@
             } else {
                 switchTab('customer-dashboard', true);
             }
+        };
+
+        /* MODAL DROPDOWN FOR SELECT PRESCRIPTION POWER LOGIC */
+        function renderPrescriptionOptions() {
+            const container = document.getElementById('prescription-options-grid');
+            if (!container || !currentSelectedProduct) return;
+
+            const pwrMap = window.productPowerStock[currentSelectedProduct.id] || {};
+            const currentSelectedPwr = document.getElementById('detail-pwr').value || "0.00";
+
+            container.innerHTML = powersList.map(pwr => {
+                const isAvail = pwrMap[pwr] !== false;
+                const isSelected = pwr === currentSelectedPwr;
+                const displayLabel = pwr === "0.00" ? "0.00 (No Power)" : pwr;
+
+                if (!isAvail) {
+                    return `
+                        <button type="button" disabled class="p-2.5 rounded-xl border border-dashed border-red-200 bg-red-50/50 text-slate-400 opacity-60 text-left cursor-not-allowed">
+                            <span class="block text-xs font-mono font-bold line-through">PWR ${pwr}</span>
+                            <span class="text-[9px] text-red-500 font-bold block mt-0.5">SOLD OUT</span>
+                        </button>
+                    `;
+                }
+
+                return `
+                    <button type="button" onclick="selectPrescriptionPower('${pwr}')" class="p-2.5 rounded-xl border text-left transition-all ${isSelected ? 'border-[#65a30d] bg-[#f7fee7] ring-2 ring-[#84cc16]/50' : 'border-slate-200 bg-white hover:border-[#65a30d] hover:bg-slate-50'}">
+                        <span class="block text-xs font-mono font-extrabold ${isSelected ? 'text-[#4d7c0f]' : 'text-slate-800'}">PWR ${displayLabel}</span>
+                        <span class="text-[9px] font-bold text-emerald-600 block mt-0.5 flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> In Stock
+                        </span>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        window.openPrescriptionPickerModal = function() {
+            renderPrescriptionOptions();
+            const modal = document.getElementById('screen-prescription-modal');
+            modal?.classList.remove('opacity-0', 'pointer-events-none');
+            modal?.classList.add('opacity-100');
+        };
+
+        window.closePrescriptionPickerModal = function() {
+            const modal = document.getElementById('screen-prescription-modal');
+            modal?.classList.remove('opacity-100');
+            modal?.classList.add('opacity-0', 'pointer-events-none');
+        };
+
+        window.selectPrescriptionPower = function(pwr) {
+            const input = document.getElementById('detail-pwr');
+            const display = document.getElementById('detail-pwr-display');
+            if (input) input.value = pwr;
+            if (display) {
+                const label = pwr === "0.00" ? "0.00 (No Power)" : pwr;
+                display.innerText = `PWR ${label}`;
+            }
+            window.closePrescriptionPickerModal();
         };
 
         window.switchPage = switchPage;
@@ -2849,7 +3067,7 @@
 
                         ${isAdmin ? '' : `
                         <button onclick="event.stopPropagation(); toggleWishlist(this, '${p.id}');" class="absolute top-2 sm:top-4 right-2 sm:right-4 z-20 w-7 h-7 sm:w-8 sm:h-8 bg-slate-900/60 rounded-full flex items-center justify-center text-slate-300 hover:text-red-400 transition-all shadow">
-                            <i class="${isFav ? 'fa-solid fa-heart text-red-500' : 'fa-regular fa-heart'} text-xs"></i>
+                            <i class="${favouritesList.includes(p.id) ? 'fa-solid fa-heart text-red-500' : 'fa-regular fa-heart'} text-xs"></i>
                         </button>`}
 
                         <div>
@@ -2866,7 +3084,7 @@
                                     </svg>
                                 </div>
                             </div>
-                            
+
                             <div class="cursor-pointer" onclick="openProductDetail('${p.id}')">
                                 <p class="text-[9px] sm:text-[10px] text-fuchsia-600 uppercase mb-0.5 sm:mb-1 font-black truncate">${p.brand || 'Molicon'} • ${p.category}</p>
                                 <h3 class="text-xs sm:text-sm font-black text-slate-900 mb-1 sm:mb-2 line-clamp-1">${p.name}</h3>
@@ -2887,7 +3105,7 @@
                 b.className = "cat-btn px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 shrink-0 border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all";
             });
             if (btn) btn.className = "cat-btn px-5 py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 text-white shrink-0 border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all";
-            
+
             if (filterValue === 'all') {
                 renderStoreProducts(products);
             } else {
@@ -2930,13 +3148,10 @@
             document.getElementById('detail-category').innerText = currentSelectedProduct.category.toUpperCase() + ' CONTACT LENS';
 
             const pwrMap = window.productPowerStock[currentSelectedProduct.id] || {};
-            const pwrSelect = document.getElementById('detail-pwr');
-            const pwrOptions = powersList.map(pwr => {
-                const avail = pwrMap[pwr] !== false;
-                const displayLabel = pwr === "0.00" ? "0.00 (No Power)" : pwr;
-                return `<option value="${pwr}" ${!avail ? 'disabled class="text-red-500 bg-slate-50"' : ''}>PWR ${displayLabel} ${avail ? '(In Stock)' : '(SOLD OUT)'}</option>`;
-            }).join('');
-            pwrSelect.innerHTML = pwrOptions;
+            let defaultPwr = pwrMap["0.00"] !== false ? "0.00" : (powersList.find(pw => pwrMap[pw] !== false) || "0.00");
+            document.getElementById('detail-pwr').value = defaultPwr;
+            const label = defaultPwr === "0.00" ? "0.00 (No Power)" : defaultPwr;
+            document.getElementById('detail-pwr-display').innerText = `PWR ${label}`;
 
             document.getElementById('screen-detail')?.classList.remove('opacity-0', 'pointer-events-none');
             document.getElementById('screen-detail')?.classList.add('opacity-100');
