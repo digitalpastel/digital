@@ -296,6 +296,28 @@
 
 <body class="min-h-screen flex flex-col items-center justify-start p-3 sm:p-4 md:p-6 text-slate-800">
 
+    <!-- TOP ANDROID APP DOWNLOAD & SHORTCUT BANNER -->
+    <div id="app-download-banner" class="w-full max-w-[1280px] mb-3 bg-slate-900 text-white px-3.5 sm:px-4 py-2.5 rounded-2xl flex items-center justify-between border border-slate-700 shadow-md transition-all">
+        <div class="flex items-center space-x-2.5 sm:space-x-3 overflow-hidden">
+            <div class="w-8 h-8 rounded-xl overflow-hidden shrink-0 bg-white/10 p-0.5 border border-white/20">
+                <img src="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png" onerror="this.src='https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png'" alt="SweetopiaLens Icon" class="w-full h-full object-cover rounded-lg">
+            </div>
+            <div class="truncate">
+                <p class="text-xs sm:text-sm font-bold tracking-tight text-white truncate">SweetopiaLens Mobile for Android</p>
+                <p class="text-[10px] text-slate-400">Install web app shortcut for direct access</p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-2 shrink-0 ml-2">
+            <button type="button" onclick="triggerAppInstallShortcut()" class="bg-[#65a30d] hover:bg-[#4d7c0f] active:scale-95 text-white text-[11px] sm:text-xs font-bold px-3 py-1.5 rounded-xl shadow transition flex items-center gap-1.5">
+                <i class="fa-solid fa-download text-[10px]"></i>
+                <span>Download</span>
+            </button>
+            <button type="button" onclick="document.getElementById('app-download-banner').style.display='none'" class="w-7 h-7 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition" aria-label="Dismiss banner">
+                <i class="fa-solid fa-xmark text-xs"></i>
+            </button>
+        </div>
+    </div>
+
     <!-- GLOBAL NOTIFICATION TOAST -->
     <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 text-white px-5 py-3 rounded-2xl shadow-2xl border border-slate-700 flex items-center space-x-3 transition-all duration-300 transform opacity-0 pointer-events-none -translate-y-4">
         <div id="toast-icon-wrapper" class="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold shrink-0 bg-[#65a30d]"><i class="fa-solid fa-check text-xs"></i></div>
@@ -307,35 +329,6 @@
 
     <!-- MAIN APP WRAPPER -->
     <div id="desktop-viewport-root" class="flex flex-col w-full max-w-[1280px] mx-auto items-center justify-start pb-16 md:pb-0">
-
-        <!-- SWEETOPIALENS MOBILE FOR ANDROID DOWNLOAD TOP BANNER -->
-        <aside id="app-download-header-banner" class="w-full bg-[#0d1117] text-white px-3 sm:px-4 py-2.5 rounded-2xl mb-4 border border-[#30363d] flex items-center justify-between gap-3 shadow-md" aria-label="Mobile app download notification">
-            <div class="flex items-center space-x-2.5 min-w-0">
-                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-800 overflow-hidden flex items-center justify-center shrink-0 border border-slate-700">
-                    <img src="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png" 
-                         srcset="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashop/sweetopiashopappicon192.png 192w, https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png 512w" 
-                         sizes="32px" 
-                         alt="SweetopiaLens App Icon" 
-                         class="w-full h-full object-cover">
-                </div>
-                <span class="text-xs sm:text-sm font-semibold tracking-tight text-slate-100 truncate">
-                    SweetopiaLens Mobile for Android
-                </span>
-            </div>
-            <div class="flex items-center space-x-2 shrink-0">
-                <a href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png" 
-                   download="SweetopiaLens.apk" 
-                   class="bg-[#21262d] hover:bg-[#30363d] text-white text-xs font-semibold px-3 py-1.5 rounded-lg border border-[#363b42] transition-colors shadow-sm">
-                    Download
-                </a>
-                <button type="button" 
-                        onclick="document.getElementById('app-download-header-banner').style.display='none'" 
-                        class="text-[#388bfd] hover:text-[#58a6ff] w-7 h-7 flex items-center justify-center rounded-md transition-colors" 
-                        aria-label="Dismiss app download banner">
-                    <i class="fa-solid fa-xmark text-sm"></i>
-                </button>
-            </div>
-        </aside>
 
         <!-- TOP HEADER -->
         <header class="w-full max-w-[1280px] mx-auto flex flex-col sm:flex-row items-center justify-between pb-4 mb-4 md:mb-6 border-b border-slate-200 gap-3">
@@ -1574,6 +1567,26 @@
         import { getAuth, signInWithCustomToken, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
         import { getFirestore, collection, doc, setDoc, deleteDoc, getDoc, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
 
+        let deferredInstallPrompt = null;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredInstallPrompt = e;
+        });
+
+        window.triggerAppInstallShortcut = async function() {
+            if (deferredInstallPrompt) {
+                deferredInstallPrompt.prompt();
+                const { outcome } = await deferredInstallPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    showToast("Installing App", "Adding SweetopiaLens to your home screen shortcut!");
+                    document.getElementById('app-download-banner').style.display = 'none';
+                }
+                deferredInstallPrompt = null;
+            } else {
+                showToast("Install Shortcut", "Tap your browser menu (⋮) and tap 'Install app' or 'Add to Home screen'.");
+            }
+        };
+
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js').catch(err => console.log('Service Worker registration failed:', err));
@@ -1936,9 +1949,7 @@
 
             const isAdmin = currentUser && isAdminUser(currentUser.email);
 
-            grid.innerHTML = favProducts.map(p => {
-                const isFav = favouritesList.includes(p.id);
-                return `
+            grid.innerHTML = favProducts.map(p => `
                 <div class="bg-white rounded-2xl sm:rounded-[2rem] p-2.5 sm:p-4 border-2 border-black flex flex-col justify-between group hover:border-fuchsia-600 transition-all shadow-[0_4px_0_0_#1e1b4b] sm:shadow-[0_5px_0_0_#1e1b4b] relative mt-2 sm:mt-4">
                     <div class="absolute -top-3 sm:-top-4 -left-2 sm:-left-3 z-20 pointer-events-none drop-shadow-sm transform -rotate-12">
                         <svg class="w-6 h-6 sm:w-10 sm:h-10 text-pink-500 fill-current filter drop-shadow" viewBox="0 0 24 24"><path d="M12 2c-2 0-4 1.5-4 3.5 0 1.2.6 2.3 1.5 3-2.5.8-4.5 3-4.5 5.5 0 2.8 2.2 5 5 5 1 0 2-.3 2.8-.8.8.5 1.8.8 2.8.8 2.8 0 5-2.2 5-5 0-2.5-2-4.7-4.5-5.5.9-.7 1.5-1.8 1.5-3C16 3.5 14 2 12 2z"></path></svg>
@@ -1946,7 +1957,7 @@
 
                     ${isAdmin ? '' : `
                     <button onclick="event.stopPropagation(); toggleWishlist(this, '${p.id}');" class="absolute top-2 sm:top-4 right-2 sm:right-4 z-20 w-7 h-7 sm:w-8 sm:h-8 bg-slate-900/60 rounded-full flex items-center justify-center text-slate-300 hover:text-red-400 transition-all shadow">
-                        <i class="${isFav ? 'fa-solid fa-heart text-red-500' : 'fa-regular fa-heart'} text-xs"></i>
+                        <i class="${favouritesList.includes(p.id) ? 'fa-solid fa-heart text-red-500' : 'fa-regular fa-heart'} text-xs"></i>
                     </button>`}
 
                     <div>
@@ -1973,8 +1984,7 @@
                         <button onclick="openProductDetail('${p.id}')" class="text-[9px] sm:text-[10px] bg-pink-400 text-white border-2 border-black px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl font-black shadow-[0_2px_0_0_#1e1b4b] sm:shadow-[0_3px_0_0_#1e1b4b] active:translate-y-0.5 active:shadow-none transition-all text-center">Select Power</button>
                     </div>
                 </div>
-            `;
-            }).join('');
+            `).join('');
         }
 
         window.renderDeliveryAddresses = function() {
@@ -3056,7 +3066,6 @@
             document.getElementById('detail-category').innerText = currentSelectedProduct.category.toUpperCase() + ' CONTACT LENS';
 
             const pwrMap = window.productPowerStock[currentSelectedProduct.id] || {};
-            // Set default power to 0.00 if in stock, else find first available power
             let defaultPwr = pwrMap["0.00"] !== false ? "0.00" : (powersList.find(pw => pwrMap[pw] !== false) || "0.00");
             document.getElementById('detail-pwr').value = defaultPwr;
             const label = defaultPwr === "0.00" ? "0.00 (No Power)" : defaultPwr;
