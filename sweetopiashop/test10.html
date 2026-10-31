@@ -373,7 +373,7 @@
                             Sweetopia Shop
                         </div>
                         <div class="space-y-2 mb-6">
-                            <h2 id="auth-form-title" class="text-2xl sm:4xl font-extrabold text-slate-900 tracking-tight">Create an account</h2>
+                            <h2 id="auth-form-title" class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Create an account</h2>
                             <p id="auth-form-subtitle" class="text-xs sm:text-sm text-slate-600 font-medium">Customer or Administrator Access</p>
                         </div>
 
@@ -609,7 +609,6 @@
                                 <input type="text" id="checkout-phone" placeholder="012-3456789" class="w-full bg-white border border-slate-300 text-xs text-slate-900 rounded-xl p-3 focus:outline-none focus:border-[#65a30d]">
                             </div>
 
-                            <!-- VOUCHER/DISCOUNT SECTION IN CART -->
                             <div class="discount-section pt-3 border-t border-slate-200 space-y-2">
                                 <h3 class="title-voucher text-xs font-bold text-slate-800">Vouchers or discount code</h3>
 
@@ -626,7 +625,7 @@
                                         <button type="button" class="btn btn-outline-secondary apply-voucher bg-slate-800 hover:bg-slate-900 text-white font-bold px-4 py-2.5 rounded-xl text-xs transition" onclick="applyVoucherCode()">Apply</button>
                                     </div>
                                 </div>
-                                <small class="voucher-error text-red-500 text-[11px] block" id="voucher-error-msg"></small>
+                                <small class="voucher-error text-red-500 text-[11px] block font-medium" id="voucher-error-msg"></small>
                             </div>
 
                             <div class="space-y-2 pt-3 border-t border-slate-200">
@@ -705,7 +704,7 @@
                             </div>
                         </div>
 
-                        <!-- VOUCHERS IN DASHBOARD -->
+                        <!-- VOUCHERS -->
                         <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
                             <div class="flex items-center justify-between">
                                 <h4 class="text-xs font-bold text-slate-700">My Available Vouchers:</h4>
@@ -1251,9 +1250,12 @@
             <!-- PRODUCT IMAGE ZOOM MODAL (PINK-PURPLE RETRO WINDOW FRAME) -->
             <div id="screen-image-zoom" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-4" onclick="closeImageZoomModal()">
                 <div class="pink-purple-window-container" onclick="event.stopPropagation()">
+                    <!-- Top Tab with Retro Round Button Pin -->
                     <div class="pink-purple-window-tab">
                         <div class="pink-purple-close-btn" onclick="closeImageZoomModal()" title="Close Frame">&times;</div>
                     </div>
+
+                    <!-- Inner White Dropzone Frame with Image -->
                     <div class="pink-purple-dropzone">
                         <img id="zoom-modal-img" src="" alt="Enlarged Product View">
                     </div>
@@ -1283,6 +1285,7 @@
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-2">Select Prescription (NO PWR 0.00)(PWR -0.25 to -8.00)</label>
+                            <!-- Clickable trigger button that opens the Prescription Picker Modal -->
                             <button type="button" onclick="openPrescriptionPickerModal()" class="w-full bg-slate-50 border border-slate-300 hover:border-[#65a30d] text-xs text-slate-900 rounded-xl p-3 shadow-sm flex items-center justify-between transition group">
                                 <span id="detail-pwr-display" class="font-bold text-[#65a30d]">PWR 0.00 (No Power)</span>
                                 <span class="text-slate-400 group-hover:text-slate-700 text-xs flex items-center gap-1.5 font-medium">
@@ -1290,6 +1293,7 @@
                                     <i class="fa-solid fa-chevron-down text-[10px]"></i>
                                 </span>
                             </button>
+                            <!-- Hidden input to store chosen power value -->
                             <input type="hidden" id="detail-pwr" value="0.00">
                         </div>
                     </div>
@@ -1301,7 +1305,7 @@
                 </div>
             </div>
 
-            <!-- MODAL DROPDOWN: SELECT PRESCRIPTION POWER -->
+            <!-- MODAL DROPDOWN: SELECT PRESCRIPTION POWER (WITH 'X' CLOSE BUTTON) -->
             <div id="screen-prescription-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-4">
                 <div class="w-full max-w-lg bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-2xl flex flex-col max-h-[85vh] animate-in fade-in zoom-in-95 duration-200">
                     <div class="px-5 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
@@ -1309,13 +1313,16 @@
                             <h3 class="text-sm font-bold text-slate-900">Select Prescription Power</h3>
                             <p class="text-[11px] text-slate-500 mt-0.5">Choose your contact lens power range (0.00 to -8.00)</p>
                         </div>
+                        <!-- 'x' Close button for Prescription Modal -->
                         <button type="button" onclick="closePrescriptionPickerModal()" class="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-700 flex items-center justify-center transition shadow-xs" aria-label="Close prescription modal">
                             <i class="fa-solid fa-xmark text-sm"></i>
                         </button>
                     </div>
 
                     <div class="p-4 overflow-y-auto">
-                        <div id="prescription-options-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-2"></div>
+                        <div id="prescription-options-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                            <!-- Populated dynamically via renderPrescriptionOptions() -->
+                        </div>
                     </div>
 
                     <div class="p-3.5 bg-slate-50 border-t border-slate-200 flex justify-end">
@@ -1707,6 +1714,15 @@
             }
         }
 
+        // Helper: retrieve the active, non-expired vouchers assigned specifically to current customer
+        function getCustomerActiveVouchers() {
+            if (!currentUser || !currentUser.email) return [];
+            const userKey = currentUser.email.toLowerCase();
+            const list = assignedVouchersMap[userKey] || [];
+            const todayStr = new Date().toISOString().split('T')[0];
+            return list.filter(v => !v.used && (!v.expiresAt || v.expiresAt >= todayStr));
+        }
+
         function loadSavedAddresses() {
             try {
                 const stored = localStorage.getItem('sweetopia_saved_addresses');
@@ -1806,6 +1822,7 @@
                 code: code,
                 discount: VALID_VOUCHERS[code] || 0.00,
                 expiresAt: expiryDate,
+                used: false,
                 publishedAt: new Date().toISOString()
             };
 
@@ -1823,6 +1840,7 @@
         function renderAdminVoucherCustomerDropdowns() {
             const knownUsersSet = new Set(Object.keys(userSessionsMap));
             allOrders.forEach(o => { if (o.customer) knownUsersSet.add(o.customer); });
+            if (currentUser && currentUser.email) knownUsersSet.add(currentUser.email);
             const userList = Array.from(knownUsersSet).filter(u => !isAdminUser(u));
 
             ['code1', 'code2', 'code3', 'code4', 'code5'].forEach(codeId => {
@@ -1847,20 +1865,21 @@
             const cartSelect = document.getElementById('cart-assigned-voucher-select');
             const cartDropdownContainer = document.getElementById('cart-assigned-voucher-dropdown-container');
 
-            if (!currentUser || currentUser.isGuest) {
+            if (!currentUser) {
                 if (noState) noState.classList.remove('hidden');
                 if (availState) availState.classList.add('hidden');
                 if (cartDropdownContainer) cartDropdownContainer.classList.add('hidden');
                 return;
             }
 
-            const userEmail = (currentUser.email || '').toLowerCase();
-            const userVouchers = assignedVouchersMap[userEmail] || [];
+            const userVouchers = getCustomerActiveVouchers();
 
             if (userVouchers.length === 0) {
                 if (noState) noState.classList.remove('hidden');
                 if (availState) availState.classList.add('hidden');
                 if (cartDropdownContainer) cartDropdownContainer.classList.add('hidden');
+                if (select) select.innerHTML = '<option value="">-- No available voucher --</option>';
+                if (cartSelect) cartSelect.innerHTML = '<option value="">-- No available voucher --</option>';
             } else {
                 if (noState) noState.classList.add('hidden');
                 if (availState) {
@@ -1870,7 +1889,7 @@
 
                 let optionsHtml = '<option value="">-- Choose your available code --</option>';
                 userVouchers.forEach(v => {
-                    optionsHtml += `<option value="${v.code}">${v.code} (-RM${v.discount.toFixed(2)}) • Exp: ${v.expiresAt || '2026-12-31'}</option>`;
+                    optionsHtml += `<option value="${v.code}">${v.code} (-RM${Number(v.discount).toFixed(2)}) • Exp: ${v.expiresAt || '2026-12-31'}</option>`;
                 });
 
                 if (select) select.innerHTML = optionsHtml;
@@ -1921,7 +1940,7 @@
             }
         };
 
-        /* CORE VOUCHER CHECK & CONNECTION LOGIC */
+        /* Connected Voucher Validation Logic */
         window.applyVoucherCode = function() {
             const input = document.getElementById('voucher-code-input');
             const errorMsg = document.getElementById('voucher-error-msg');
@@ -1932,50 +1951,27 @@
                 return;
             }
 
-            // Check if user is logged in
-            if (!currentUser || currentUser.isGuest) {
+            // Customer must have active vouchers received in their dashboard
+            const activeVouchers = getCustomerActiveVouchers();
+            const matchedVoucher = activeVouchers.find(v => v.code.toUpperCase() === codeVal);
+
+            // Exact requested requirement:
+            // If typing the code at cart, and no voucher available in dashboard or not active, display exact notice:
+            if (!matchedVoucher) {
                 appliedVoucher = null;
-                if (errorMsg) errorMsg.innerText = "cannot use the voucher because it not available or not active";
+                const noticeText = "cannot use the voucher because it not available or not active";
+                if (errorMsg) errorMsg.innerText = noticeText;
                 updateCheckoutDisplay();
-                showToast("Voucher Not Available", "cannot use the voucher because it not available or not active", true);
+                showToast("Voucher Not Available", noticeText, true);
                 return;
             }
 
-            const userEmail = (currentUser.email || '').toLowerCase();
-            const customerVouchers = assignedVouchersMap[userEmail] || [];
-
-            // Verify voucher is published by admin to this customer
-            const foundVoucher = customerVouchers.find(v => v.code.toUpperCase() === codeVal);
-
-            if (!foundVoucher) {
-                appliedVoucher = null;
-                if (errorMsg) errorMsg.innerText = "cannot use the voucher because it not available or not active";
-                updateCheckoutDisplay();
-                showToast("Voucher Inactive", "cannot use the voucher because it not available or not active", true);
-                return;
-            }
-
-            // Verify if voucher has expired
-            if (foundVoucher.expiresAt) {
-                const today = new Date().toISOString().split('T')[0];
-                if (today > foundVoucher.expiresAt) {
-                    appliedVoucher = null;
-                    if (errorMsg) errorMsg.innerText = "cannot use the voucher because it not available or not active";
-                    updateCheckoutDisplay();
-                    showToast("Voucher Expired", "cannot use the voucher because it not available or not active", true);
-                    return;
-                }
-            }
-
-            // Code is valid and actively assigned to customer
-            const discAmount = parseFloat(foundVoucher.discount || VALID_VOUCHERS[codeVal] || 0.00);
+            // Voucher is verified as available and assigned to this customer by admin
+            const discAmount = parseFloat(matchedVoucher.discount) || VALID_VOUCHERS[codeVal] || 0.00;
             appliedVoucher = { code: codeVal, discount: discAmount };
             if (errorMsg) errorMsg.innerText = "";
-            showToast("Voucher Applied!", `Code ${codeVal} applied (-RM${discAmount.toFixed(2)})`);
+            showToast("Voucher Applied!", `Voucher ${codeVal} successfully applied (-RM ${discAmount.toFixed(2)})`);
             updateCheckoutDisplay();
-
-            const cartSelect = document.getElementById('cart-assigned-voucher-select');
-            if (cartSelect) cartSelect.value = codeVal;
         };
 
         function renderFavouritesGrid() {
@@ -2014,6 +2010,7 @@
                         <div class="relative w-full h-32 sm:h-44 rounded-xl sm:rounded-2xl bg-pink-50 overflow-hidden flex items-center justify-center mb-2 sm:mb-3 border-2 border-black cursor-pointer group/frame" onclick="openImageZoomModal('${p.image}')" title="Click to view fullsize image">
                             <span class="absolute top-1.5 sm:top-2.5 left-1.5 sm:left-2.5 bg-fuchsia-500 text-white text-[8px] sm:text-[9px] font-black px-1.5 sm:px-2 py-0.5 rounded-full border border-black uppercase z-10 shadow-sm">${p.badge || 'In Stock'}</span>
                             <img src="${p.image}" class="w-24 h-24 sm:w-36 sm:h-36 object-cover group-hover:scale-105 transition-transform" onerror="this.src='https://placehold.co/200x200/f1f5f9/65a30d?text=Lens'">
+                            <!-- Resize/Expand Image Icon at Bottom Right Corner -->
                             <div class="absolute bottom-1.5 sm:bottom-2.5 right-1.5 sm:right-2.5 z-20 w-6 h-6 sm:w-7 sm:h-7 bg-white/90 hover:bg-white text-slate-900 rounded-lg border-2 border-black flex items-center justify-center shadow-[0_2px_0_0_#1e1b4b] transition-transform hover:scale-110" title="Expand Fullsize Image">
                                 <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                     <polyline points="15 3 21 3 21 9"></polyline>
@@ -2156,6 +2153,7 @@
             return ADMIN_EMAILS.map(e => e.toLowerCase()).includes(email.trim().toLowerCase());
         }
 
+        /* STRICT MOBILE BOTTOM NAV ENFORCEMENT */
         function enforceMobileNavForRole() {
             const mobNav = document.getElementById('mobile-bottom-nav');
             const mobNavCart = document.getElementById('mob-nav-cart');
@@ -2184,6 +2182,7 @@
             }
         }
 
+        /* TOGGLE ACCORDION SECTION ON CLICK */
         window.toggleCustomerSection = function(sectionKey) {
             const content = document.getElementById(`content-customer-${sectionKey}`);
             const chevron = document.getElementById(`chevron-${sectionKey}`);
@@ -2241,6 +2240,7 @@
             }
         };
 
+        /* MODAL DROPDOWN FOR SELECT PRESCRIPTION POWER LOGIC */
         function renderPrescriptionOptions() {
             const container = document.getElementById('prescription-options-grid');
             if (!container || !currentSelectedProduct) return;
@@ -2932,6 +2932,7 @@
             }
             currentUser = null;
             cart = [];
+            appliedVoucher = null;
             localStorage.removeItem('sweetopia_logged_in_email');
             sessionStorage.removeItem('sweetopia_active_page');
             sessionStorage.removeItem('sweetopia_active_tab');
@@ -3009,6 +3010,7 @@
                         <div class="relative w-full h-32 sm:h-44 rounded-xl sm:rounded-2xl bg-pink-50 overflow-hidden flex items-center justify-center mb-2 sm:mb-3 border-2 border-black cursor-pointer group/frame" onclick="openImageZoomModal('${p.image}')" title="Click to view fullsize image">
                             <span class="absolute top-1.5 sm:top-2.5 left-1.5 sm:left-2.5 bg-fuchsia-500 text-white text-[8px] sm:text-[9px] font-black px-1.5 sm:px-2 py-0.5 rounded-full border border-black uppercase z-10 shadow-sm">${p.badge || 'In Stock'}</span>
                             <img src="${p.image}" class="w-24 h-24 sm:w-36 sm:h-36 object-cover group-hover:scale-105 transition-transform" onerror="this.src='https://placehold.co/200x200/f1f5f9/65a30d?text=Lens'">
+                            <!-- Resize/Expand Image Icon at Bottom Right Corner -->
                             <div class="absolute bottom-1.5 sm:bottom-2.5 right-1.5 sm:right-2.5 z-20 w-6 h-6 sm:w-7 sm:h-7 bg-white/90 hover:bg-white text-slate-900 rounded-lg border-2 border-black flex items-center justify-center shadow-[0_2px_0_0_#1e1b4b] transition-transform hover:scale-110" title="Expand Fullsize Image">
                                 <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                     <polyline points="15 3 21 3 21 9"></polyline>
@@ -3194,6 +3196,7 @@
 
         async function clearCart() {
             cart = [];
+            appliedVoucher = null;
             await saveCustomerCartToFirestore();
             updateCartBadge();
             renderCartItems();
@@ -3275,6 +3278,20 @@
                 timestamp: dateStr
             };
 
+            // Mark voucher as used once applied in order
+            if (appliedVoucher && currentUser && currentUser.email) {
+                const userKey = currentUser.email.toLowerCase();
+                if (assignedVouchersMap[userKey]) {
+                    const idx = assignedVouchersMap[userKey].findIndex(v => v.code === appliedVoucher.code && !v.used);
+                    if (idx !== -1) {
+                        assignedVouchersMap[userKey][idx].used = true;
+                        assignedVouchersMap[userKey][idx].usedAt = new Date().toISOString();
+                        await syncAssignedVouchersStorage();
+                        renderCustomerVouchersUI();
+                    }
+                }
+            }
+
             if (db) {
                 try {
                     await setDoc(doc(db, "lumilens_orders", orderId), newOrder);
@@ -3294,6 +3311,7 @@
         function confirmToyyibPayRedirect() {
             closeToyyibPayModal();
             cart = [];
+            appliedVoucher = null;
             saveCustomerCartToFirestore();
             updateCartBadge();
             renderCartItems();
