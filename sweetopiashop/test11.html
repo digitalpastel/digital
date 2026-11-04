@@ -1040,7 +1040,13 @@
                                         <p class="text-[10px] text-amber-800/80">Configure custom voucher name, prefix code SWEET[...], discount amount &amp; validity period.</p>
                                     </div>
                                 </div>
-                                <span class="bg-amber-200/70 text-amber-900 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-amber-300">Voucher Type: Product Voucher</span>
+                                <div class="flex items-center space-x-2">
+                                    <button type="button" onclick="resetNewVoucherForm()" class="bg-white hover:bg-red-50 text-red-600 border border-red-200 font-bold text-[10px] px-2.5 py-1.5 rounded-lg transition-all shadow-2xs flex items-center gap-1 cursor-pointer" title="Clear Form Fields">
+                                        <i class="fa-solid fa-trash-can text-xs"></i>
+                                        <span>Clear</span>
+                                    </button>
+                                    <span class="bg-amber-200/70 text-amber-900 text-[10px] font-bold px-2.5 py-1 rounded-full border border-amber-300">Voucher Type: Product Voucher</span>
+                                </div>
                             </div>
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -1074,6 +1080,51 @@
                                 </div>
                             </div>
 
+                            <!-- VOUCHER DISPLAY & APPLICABLE PRODUCTS SECTION -->
+                            <div class="mt-4 pt-3.5 border-t border-amber-200 space-y-3 bg-white/70 p-3.5 rounded-xl border border-amber-200">
+                                <h3 class="text-xs font-extrabold text-amber-950 uppercase tracking-wide flex items-center gap-1.5">
+                                    <i class="fa-solid fa-layer-group text-amber-700"></i>
+                                    <span>Voucher Display &amp; Applicable Products</span>
+                                </h3>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <!-- Voucher Display Setting -->
+                                    <div class="space-y-1.5">
+                                        <label class="block text-[10px] font-bold text-slate-700 uppercase">Voucher Display Setting</label>
+                                        <div class="flex flex-col space-y-2 pt-1 text-xs text-slate-800">
+                                            <label class="inline-flex items-center space-x-2 cursor-pointer font-semibold">
+                                                <input type="radio" name="voucher-display-setting" value="all" checked onchange="onVoucherDisplaySettingChange(this)" class="w-4 h-4 text-amber-600 focus:ring-amber-500 border-slate-300">
+                                                <span>Display on all pages</span>
+                                            </label>
+                                            <label class="inline-flex items-center space-x-2 cursor-pointer font-semibold">
+                                                <input type="radio" name="voucher-display-setting" value="none" onchange="onVoucherDisplaySettingChange(this)" class="w-4 h-4 text-amber-600 focus:ring-amber-500 border-slate-300">
+                                                <span>Do not display</span>
+                                            </label>
+                                        </div>
+                                        <p id="voucher-display-hint" class="text-[11px] text-slate-500 italic pt-1 leading-snug">
+                                            Your voucher will not be displayed on any pages but you may share the voucher code with the users.
+                                        </p>
+                                    </div>
+
+                                    <!-- Applicable Products -->
+                                    <div class="space-y-1.5">
+                                        <div class="flex items-center justify-between">
+                                            <label class="block text-[10px] font-bold text-slate-700 uppercase">Applicable Products</label>
+                                            <span id="applicable-products-count" class="text-[10px] text-amber-900 font-bold bg-amber-100 px-2 py-0.5 rounded-md">All Products</span>
+                                        </div>
+                                        <div>
+                                            <button type="button" onclick="openApplicableProductsModal()" class="px-3.5 py-2 bg-white hover:bg-amber-100/70 border-2 border-amber-600 text-amber-900 font-bold text-xs rounded-xl shadow-xs transition flex items-center gap-1.5 cursor-pointer">
+                                                <i class="fa-solid fa-plus text-xs"></i>
+                                                <span>Add Products</span>
+                                            </button>
+                                        </div>
+                                        <div id="applicable-products-tags" class="flex flex-wrap gap-1.5 pt-1.5 max-h-20 overflow-y-auto">
+                                            <span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md border border-slate-200">Applies to all products by default</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- Customer Assignment & Publish Button -->
                             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-2 border-t border-amber-200">
                                 <div class="flex items-center gap-2 flex-1 max-w-md">
@@ -1083,10 +1134,16 @@
                                     </select>
                                 </div>
 
-                                <button type="button" onclick="createAndPublishCustomVoucher()" class="bg-amber-600 hover:bg-amber-700 active:scale-95 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer shrink-0">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
-                                    <span>Create &amp; Publish Voucher</span>
-                                </button>
+                                <div class="flex items-center gap-2">
+                                    <button type="button" onclick="resetNewVoucherForm()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs px-3.5 py-2.5 rounded-xl transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer shrink-0">
+                                        <i class="fa-solid fa-plus text-xs"></i>
+                                        <span>Add New Voucher</span>
+                                    </button>
+                                    <button type="button" onclick="createAndPublishCustomVoucher()" class="bg-amber-600 hover:bg-amber-700 active:scale-95 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer shrink-0">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                                        <span>Create &amp; Publish Voucher</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
@@ -1131,13 +1188,19 @@
                         <!-- VOUCHERS PRESETS -->
                         <div class="bg-amber-50/70 p-4 rounded-2xl border border-amber-200 space-y-3">
                             <div class="flex items-center justify-between">
-                                <h4 class="text-xs font-bold text-amber-900">Active Voucher Code Presets (Admin View):</h4>
-                                <span class="bg-amber-200/60 text-amber-900 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-amber-300">Limit: 1 use per customer</span>
+                                <div class="flex items-center gap-2">
+                                    <h4 class="text-xs font-bold text-amber-900">Active Voucher Code Presets (Admin View):</h4>
+                                    <span class="bg-amber-200/60 text-amber-900 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-amber-300">Limit: 1 use per customer</span>
+                                </div>
+                                <button type="button" onclick="clearAllAssignedVouchers()" class="text-[10px] text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 border border-red-200 px-2.5 py-1 rounded-lg font-bold flex items-center gap-1 transition-all" title="Clear All Active Vouchers">
+                                    <i class="fa-solid fa-trash-can text-xs"></i>
+                                    <span>Clear All Vouchers</span>
+                                </button>
                             </div>
 
-                            <div class="flex flex-col gap-2.5 pt-1">
+                            <div class="flex flex-col gap-2.5 pt-1" id="admin-preset-vouchers-container">
                                 <!-- Voucher Item 1 -->
-                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 bg-white border border-amber-300 p-3 rounded-xl shadow-xs">
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 bg-white border border-amber-300 p-3 rounded-xl shadow-xs" id="admin-voucher-row-CODE1">
                                     <div class="flex items-center justify-between sm:justify-start gap-3">
                                         <span class="text-slate-800 text-xs font-mono font-bold">CODE1 (-RM1)</span>
                                         <span class="bg-slate-100 text-slate-600 text-[10px] font-medium px-2 py-0.5 rounded-md border border-slate-200">1 use max</span>
@@ -1155,11 +1218,14 @@
                                             <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
                                             Send &amp; Publish
                                         </button>
+                                        <button type="button" onclick="clearVoucherPreset('CODE1')" class="bg-red-50 hover:bg-red-100 text-red-600 p-1.5 rounded-lg border border-red-200 transition-colors shadow-xs" title="Clear CODE1">
+                                            <i class="fa-solid fa-trash-can text-xs"></i>
+                                        </button>
                                     </div>
                                 </div>
 
                                 <!-- Voucher Item 2 -->
-                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 bg-white border border-amber-300 p-3 rounded-xl shadow-xs">
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 bg-white border border-amber-300 p-3 rounded-xl shadow-xs" id="admin-voucher-row-CODE2">
                                     <div class="flex items-center justify-between sm:justify-start gap-3">
                                         <span class="text-slate-800 text-xs font-mono font-bold">CODE2 (-RM2)</span>
                                         <span class="bg-slate-100 text-slate-600 text-[10px] font-medium px-2 py-0.5 rounded-md border border-slate-200">1 use max</span>
@@ -1177,11 +1243,14 @@
                                             <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
                                             Send &amp; Publish
                                         </button>
+                                        <button type="button" onclick="clearVoucherPreset('CODE2')" class="bg-red-50 hover:bg-red-100 text-red-600 p-1.5 rounded-lg border border-red-200 transition-colors shadow-xs" title="Clear CODE2">
+                                            <i class="fa-solid fa-trash-can text-xs"></i>
+                                        </button>
                                     </div>
                                 </div>
 
                                 <!-- Voucher Item 3 -->
-                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 bg-white border border-amber-300 p-3 rounded-xl shadow-xs">
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 bg-white border border-amber-300 p-3 rounded-xl shadow-xs" id="admin-voucher-row-CODE3">
                                     <div class="flex items-center justify-between sm:justify-start gap-3">
                                         <span class="text-slate-800 text-xs font-mono font-bold">CODE3 (-RM3)</span>
                                         <span class="bg-slate-100 text-slate-600 text-[10px] font-medium px-2 py-0.5 rounded-md border border-slate-200">1 use max</span>
@@ -1199,11 +1268,14 @@
                                             <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
                                             Send &amp; Publish
                                         </button>
+                                        <button type="button" onclick="clearVoucherPreset('CODE3')" class="bg-red-50 hover:bg-red-100 text-red-600 p-1.5 rounded-lg border border-red-200 transition-colors shadow-xs" title="Clear CODE3">
+                                            <i class="fa-solid fa-trash-can text-xs"></i>
+                                        </button>
                                     </div>
                                 </div>
 
                                 <!-- Voucher Item 4 -->
-                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 bg-white border border-amber-300 p-3 rounded-xl shadow-xs">
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 bg-white border border-amber-300 p-3 rounded-xl shadow-xs" id="admin-voucher-row-CODE4">
                                     <div class="flex items-center justify-between sm:justify-start gap-3">
                                         <span class="text-slate-800 text-xs font-mono font-bold">CODE4 (-RM4)</span>
                                         <span class="bg-slate-100 text-slate-600 text-[10px] font-medium px-2 py-0.5 rounded-md border border-slate-200">1 use max</span>
@@ -1218,14 +1290,17 @@
                                             <input type="date" id="expiry-code4" value="2026-12-31" class="bg-amber-50/50 border border-amber-200 text-slate-700 text-xs px-2 py-1 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400 font-sans">
                                         </div>
                                         <button type="button" onclick="publishVoucher('CODE4')" class="bg-amber-600 hover:bg-amber-700 text-white font-medium text-xs px-3 py-1.5 rounded-lg transition-colors shadow-xs flex items-center gap-1 cursor-pointer">
-                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18-9-2zm0 0v-8"></path></svg>
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
                                             Send &amp; Publish
+                                        </button>
+                                        <button type="button" onclick="clearVoucherPreset('CODE4')" class="bg-red-50 hover:bg-red-100 text-red-600 p-1.5 rounded-lg border border-red-200 transition-colors shadow-xs" title="Clear CODE4">
+                                            <i class="fa-solid fa-trash-can text-xs"></i>
                                         </button>
                                     </div>
                                 </div>
 
                                 <!-- Voucher Item 5 -->
-                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 bg-white border border-amber-300 p-3 rounded-xl shadow-xs">
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 bg-white border border-amber-300 p-3 rounded-xl shadow-xs" id="admin-voucher-row-CODE5">
                                     <div class="flex items-center justify-between sm:justify-start gap-3">
                                         <span class="text-slate-800 text-xs font-mono font-bold">CODE5 (-RM5)</span>
                                         <span class="bg-slate-100 text-slate-600 text-[10px] font-medium px-2 py-0.5 rounded-md border border-slate-200">1 use max</span>
@@ -1242,6 +1317,9 @@
                                         <button type="button" onclick="publishVoucher('CODE5')" class="bg-amber-600 hover:bg-amber-700 text-white font-medium text-xs px-3 py-1.5 rounded-lg transition-colors shadow-xs flex items-center gap-1 cursor-pointer">
                                             <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
                                             Send &amp; Publish
+                                        </button>
+                                        <button type="button" onclick="clearVoucherPreset('CODE5')" class="bg-red-50 hover:bg-red-100 text-red-600 p-1.5 rounded-lg border border-red-200 transition-colors shadow-xs" title="Clear CODE5">
+                                            <i class="fa-solid fa-trash-can text-xs"></i>
                                         </button>
                                     </div>
                                 </div>
@@ -1672,28 +1750,42 @@
 
             <!-- MODAL DROPDOWN: SELECT PRESCRIPTION POWER (WITH 'X' CLOSE BUTTON) -->
             <div id="screen-prescription-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-4">
-                <div class="w-full max-w-lg bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-2xl flex flex-col max-h-[85vh] animate-in fade-in zoom-in-95 duration-200">
-                    <div class="px-5 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
-                        <div>
-                            <h3 class="text-sm font-bold text-slate-900">Select Prescription Power</h3>
-                            <p class="text-[11px] text-slate-500 mt-0.5">Choose your contact lens power range (0.00 to -8.00)</p>
+            <!-- APPLICABLE PRODUCTS SELECTOR MODAL FOR VOUCHER -->
+            <div id="screen-applicable-products-modal" class="fixed inset-0 z-[85] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-3 sm:p-4" onclick="closeApplicableProductsModal()">
+                <div class="w-full max-w-lg bg-white rounded-3xl border border-amber-300 overflow-hidden shadow-2xl flex flex-col max-h-[85vh] animate-in fade-in zoom-in-95 duration-200" onclick="event.stopPropagation()">
+                    <div class="px-5 py-3.5 bg-gradient-to-r from-amber-100 to-amber-200 border-b border-amber-300 flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-boxes-stacked text-amber-800 text-base"></i>
+                            <h3 class="text-xs font-bold text-slate-900">Select Applicable Products</h3>
                         </div>
-                        <!-- 'x' Close button for Prescription Modal -->
-                        <button type="button" onclick="closePrescriptionPickerModal()" class="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-700 flex items-center justify-center transition shadow-xs" aria-label="Close prescription modal">
-                            <i class="fa-solid fa-xmark text-sm"></i>
+                        <button type="button" onclick="closeApplicableProductsModal()" class="w-7 h-7 rounded-full bg-white/80 hover:bg-white text-slate-600 flex items-center justify-center transition shadow-xs">
+                            <i class="fa-solid fa-xmark text-xs"></i>
                         </button>
                     </div>
 
-                    <div class="p-4 overflow-y-auto">
-                        <div id="prescription-options-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                            <!-- Populated dynamically via renderPrescriptionOptions() -->
+                    <div class="px-4 py-2.5 bg-amber-50 border-b border-amber-200 flex items-center justify-between text-xs">
+                        <span class="text-[11px] text-slate-600">Select which products this voucher can be applied to:</span>
+                        <div class="flex items-center space-x-2">
+                            <button type="button" onclick="selectAllApplicableProducts(true)" class="text-[10px] font-bold text-amber-900 underline hover:text-amber-700">Select All</button>
+                            <span class="text-slate-300">•</span>
+                            <button type="button" onclick="selectAllApplicableProducts(false)" class="text-[10px] font-bold text-slate-600 underline hover:text-slate-800">Clear</button>
                         </div>
                     </div>
 
-                    <div class="p-3.5 bg-slate-50 border-t border-slate-200 flex justify-end">
-                        <button type="button" onclick="closePrescriptionPickerModal()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl text-xs font-bold transition">
-                            Cancel
-                        </button>
+                    <div class="p-4 overflow-y-auto space-y-2.5 max-h-72" id="applicable-products-modal-list">
+                        <!-- Populated dynamically via renderApplicableProductsModalList() -->
+                    </div>
+
+                    <div class="p-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
+                        <span id="applicable-modal-selected-summary" class="text-[11px] font-bold text-slate-700">0 products selected</span>
+                        <div class="flex space-x-2">
+                            <button type="button" onclick="closeApplicableProductsModal()" class="px-3.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl text-xs transition">
+                                Cancel
+                            </button>
+                            <button type="button" onclick="confirmApplicableProductsSelection()" class="px-4 py-1.5 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl text-xs shadow-xs transition">
+                                Apply Selection
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2206,6 +2298,10 @@
         let pendingOrderId = null;
         let adminStockCurrentPage = 1;
         const ADMIN_STOCK_ITEMS_PER_PAGE = 9;
+
+        // Selected applicable products for new custom voucher
+        let selectedApplicableProductIds = [];
+        let newVoucherDisplaySetting = 'all'; // 'all' or 'none'
 
         let appliedVoucher = null;
         const VALID_VOUCHERS = {
@@ -3128,6 +3224,15 @@
         window.cancelPendingPaymentVerification = cancelPendingPaymentVerification;
         window.onVoucherSuffixInput = onVoucherSuffixInput;
         window.createAndPublishCustomVoucher = createAndPublishCustomVoucher;
+        window.resetNewVoucherForm = resetNewVoucherForm;
+        window.clearVoucherPreset = clearVoucherPreset;
+        window.clearAllAssignedVouchers = clearAllAssignedVouchers;
+        window.onVoucherDisplaySettingChange = onVoucherDisplaySettingChange;
+        window.openApplicableProductsModal = openApplicableProductsModal;
+        window.closeApplicableProductsModal = closeApplicableProductsModal;
+        window.selectAllApplicableProducts = selectAllApplicableProducts;
+        window.confirmApplicableProductsSelection = confirmApplicableProductsSelection;
+        window.removeApplicableProductTag = removeApplicableProductTag;
         
         // Widget Chat methods & bindings
         window.toggleWidgetChat = toggleWidgetChat;
@@ -3553,6 +3658,7 @@
             initSlideshow();
             renderCustomerVouchersUI();
             renderAdminVoucherCustomerDropdowns();
+            renderApplicableProductTags();
             enforceMobileNavForRole();
 
             setInterval(() => {
@@ -3571,6 +3677,108 @@
             if (previewEl) {
                 previewEl.innerText = `Your complete voucher code is: SWEET${sanitized}`;
             }
+        }
+
+        function onVoucherDisplaySettingChange(radioEl) {
+            newVoucherDisplaySetting = radioEl ? radioEl.value : 'all';
+            const hint = document.getElementById('voucher-display-hint');
+            if (hint) {
+                if (newVoucherDisplaySetting === 'none') {
+                    hint.innerText = "Your voucher will not be displayed on any pages but you may share the voucher code with the users.";
+                    hint.className = "text-[11px] text-amber-700 font-medium italic pt-1 leading-snug";
+                } else {
+                    hint.innerText = "Your voucher will be displayed across the website pages and customer dashboard.";
+                    hint.className = "text-[11px] text-slate-500 italic pt-1 leading-snug";
+                }
+            }
+        }
+
+        function renderApplicableProductsModalList() {
+            const container = document.getElementById('applicable-products-modal-list');
+            if (!container) return;
+
+            container.innerHTML = products.map(p => {
+                const isChecked = selectedApplicableProductIds.includes(p.id);
+                return `
+                    <label class="flex items-center justify-between p-2.5 bg-white rounded-xl border border-slate-200 hover:border-amber-400 cursor-pointer transition shadow-2xs">
+                        <div class="flex items-center space-x-3">
+                            <img src="${p.image}" class="w-10 h-10 object-cover rounded-lg border border-slate-200" onerror="this.src='https://placehold.co/100x100/f1f5f9/65a30d?text=Lens'">
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-900">${p.name}</h4>
+                                <span class="text-[10px] text-slate-500">${p.brand || 'Molicon'} • RM ${p.price}</span>
+                            </div>
+                        </div>
+                        <input type="checkbox" value="${p.id}" ${isChecked ? 'checked' : ''} class="applicable-product-chk w-4 h-4 text-amber-600 rounded border-slate-300 focus:ring-amber-500" onchange="updateApplicableModalSummary()">
+                    </label>
+                `;
+            }).join('');
+            updateApplicableModalSummary();
+        }
+
+        function updateApplicableModalSummary() {
+            const checked = document.querySelectorAll('.applicable-product-chk:checked');
+            const summary = document.getElementById('applicable-modal-selected-summary');
+            if (summary) {
+                summary.innerText = `${checked.length} of ${products.length} products selected`;
+            }
+        }
+
+        function openApplicableProductsModal() {
+            renderApplicableProductsModalList();
+            const modal = document.getElementById('screen-applicable-products-modal');
+            modal?.classList.remove('opacity-0', 'pointer-events-none');
+            modal?.classList.add('opacity-100');
+        }
+
+        function closeApplicableProductsModal() {
+            const modal = document.getElementById('screen-applicable-products-modal');
+            modal?.classList.remove('opacity-100');
+            modal?.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        function selectAllApplicableProducts(select) {
+            document.querySelectorAll('.applicable-product-chk').forEach(chk => {
+                chk.checked = select;
+            });
+            updateApplicableModalSummary();
+        }
+
+        function confirmApplicableProductsSelection() {
+            const checked = document.querySelectorAll('.applicable-product-chk:checked');
+            selectedApplicableProductIds = Array.from(checked).map(c => c.value);
+            renderApplicableProductTags();
+            closeApplicableProductsModal();
+            showToast("Products Updated", `${selectedApplicableProductIds.length} applicable product(s) selected.`);
+        }
+
+        function removeApplicableProductTag(prodId) {
+            selectedApplicableProductIds = selectedApplicableProductIds.filter(id => id !== prodId);
+            renderApplicableProductTags();
+        }
+
+        function renderApplicableProductTags() {
+            const container = document.getElementById('applicable-products-tags');
+            const countBadge = document.getElementById('applicable-products-count');
+            if (!container) return;
+
+            if (selectedApplicableProductIds.length === 0) {
+                container.innerHTML = `<span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md border border-slate-200">Applies to all products by default</span>`;
+                if (countBadge) countBadge.innerText = "All Products";
+                return;
+            }
+
+            if (countBadge) countBadge.innerText = `${selectedApplicableProductIds.length} Specific Products`;
+
+            container.innerHTML = selectedApplicableProductIds.map(id => {
+                const prod = products.find(p => p.id === id);
+                const title = prod ? prod.name : id;
+                return `
+                    <span class="inline-flex items-center gap-1 text-[10px] bg-amber-100 text-amber-950 px-2 py-0.5 rounded-md border border-amber-300 font-semibold shadow-2xs">
+                        <span class="truncate max-w-[120px]">${title}</span>
+                        <button type="button" onclick="removeApplicableProductTag('${id}')" class="text-amber-800 hover:text-red-600 ml-0.5">×</button>
+                    </span>
+                `;
+            }).join('');
         }
 
         async function createAndPublishCustomVoucher() {
@@ -3616,6 +3824,8 @@
                 code: completeCode,
                 discount: discountVal,
                 voucherType: "Product Voucher",
+                displaySetting: newVoucherDisplaySetting, // 'all' or 'none'
+                applicableProductIds: [...selectedApplicableProductIds], // empty means all
                 expiresAt: expiryDate,
                 used: false,
                 publishedAt: new Date().toISOString()
@@ -3637,14 +3847,70 @@
             });
 
             // Reset inputs
-            if (nameInput) nameInput.value = '';
-            if (suffixInput) suffixInput.value = '';
-            if (discountInput) discountInput.value = '';
-            const previewEl = document.getElementById('new-voucher-preview');
-            if (previewEl) previewEl.innerText = "Your complete voucher code is: SWEET";
+            resetNewVoucherForm();
 
             renderCustomerVouchersUI();
             showToast("Voucher Created!", `Voucher ${completeCode} (-RM ${discountVal.toFixed(2)}) published to ${targetEmail}.`);
+        }
+
+        function resetNewVoucherForm() {
+            const nameInput = document.getElementById('new-voucher-name');
+            const suffixInput = document.getElementById('new-voucher-suffix');
+            const discountInput = document.getElementById('new-voucher-discount');
+            const expiryInput = document.getElementById('new-voucher-expiry');
+            const customerSelect = document.getElementById('new-voucher-customer');
+            const previewEl = document.getElementById('new-voucher-preview');
+
+            if (nameInput) nameInput.value = '';
+            if (suffixInput) suffixInput.value = '';
+            if (discountInput) discountInput.value = '';
+            if (expiryInput) expiryInput.value = '2026-12-31';
+            if (customerSelect) customerSelect.selectedIndex = 0;
+            if (previewEl) previewEl.innerText = "Your complete voucher code is: SWEET";
+
+            // Reset display settings and applicable products
+            selectedApplicableProductIds = [];
+            newVoucherDisplaySetting = 'all';
+            const allRadio = document.querySelector('input[name="voucher-display-setting"][value="all"]');
+            if (allRadio) allRadio.checked = true;
+            onVoucherDisplaySettingChange(allRadio);
+            renderApplicableProductTags();
+
+            showToast("Voucher Form Reset", "Voucher fields cleared for adding a new voucher [+]");
+        }
+
+        async function clearVoucherPreset(code) {
+            if (!confirm(`Are you sure you want to clear/delete voucher ${code}?`)) return;
+
+            // Remove from all assigned customers
+            let removedCount = 0;
+            Object.keys(assignedVouchersMap).forEach(userKey => {
+                const initialLen = assignedVouchersMap[userKey].length;
+                assignedVouchersMap[userKey] = assignedVouchersMap[userKey].filter(v => v.code !== code);
+                if (assignedVouchersMap[userKey].length < initialLen) removedCount++;
+            });
+
+            // Remove from active valid runtime dictionary
+            delete VALID_VOUCHERS[code];
+
+            // Hide/fade the preset row
+            const row = document.getElementById(`admin-voucher-row-${code}`);
+            if (row) {
+                row.classList.add('opacity-40');
+            }
+
+            await syncAssignedVouchersStorage();
+            renderCustomerVouchersUI();
+            showToast("Voucher Cleared", `Voucher ${code} cleared from records.`);
+        }
+
+        async function clearAllAssignedVouchers() {
+            if (!confirm("Are you sure you want to clear ALL assigned customer vouchers?")) return;
+
+            assignedVouchersMap = {};
+            await syncAssignedVouchersStorage();
+            renderCustomerVouchersUI();
+            showToast("All Vouchers Cleared", "All vouchers have been removed from customer accounts.");
         }
 
         function updateSupportIndicator() {
