@@ -185,29 +185,29 @@
         /* ToyyibPay Custom Footer Widget */
         .toyyibpay-widget {
             position: relative;
-            width: 260px;
+            width: 140px;
             max-width: 100%;
             background: #ffffff;
             border: 2px solid #6b21a8;
             border-radius: 16px;
-            padding: 24px 16px 14px 16px;
+            padding: 16px 8px 8px 8px;
             box-shadow: 0 4px 12px rgba(107, 33, 168, 0.12);
             font-family: 'Plus Jakarta Sans', sans-serif;
             text-align: center;
-            margin: 14px auto 0 auto;
+            margin: 10px 0 0 0;
         }
         .toyyibpay-header {
             position: absolute;
-            top: -14px;
+            top: -12px;
             left: 50%;
             transform: translateX(-50%);
             background: #6b21a8;
             color: #ffffff;
-            padding: 4px 20px;
+            padding: 2px 14px;
             border-radius: 30px;
             font-weight: 700;
-            font-size: 14px;
-            letter-spacing: -0.5px;
+            font-size: 11px;
+            letter-spacing: -0.3px;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
             white-space: nowrap;
         }
@@ -217,7 +217,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding-top: 4px;
+            padding-top: 2px;
         }
         .fpx-container {
             display: flex;
@@ -226,18 +226,19 @@
             background: #ffffff;
             border: 1px solid #e2e8f0;
             border-radius: 8px;
-            padding: 6px 20px;
+            padding: 4px 10px;
+            width: 100%;
         }
         .fpx-icon {
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 4px;
         }
-        .fpx-text {
-            font-size: 22px;
-            font-weight: 800;
-            color: #1e3a8a;
-            letter-spacing: 0.5px;
+        .fpx-logo-img {
+            max-height: 28px;
+            width: auto;
+            object-fit: contain;
         }
 
         /* Retro Comic Pink-Purple Image Frame Window Modal */
@@ -344,6 +345,15 @@
 
         .retro-progress-bar-slot.filled {
             background-color: #5a0c3f;
+        }
+
+        /* Retro Y2K Modal Typography & Utilities */
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Varela+Round&display=swap');
+        .retro-varela {
+            font-family: 'Varela Round', sans-serif;
+        }
+        .retro-title {
+            font-family: 'Press Start 2P', monospace;
         }
     </style>
 </head>
@@ -526,10 +536,14 @@
                         </button>
                     </div>
 
-                    <!-- User Email and Sign Out: always visible on both mobile and desktop -->
-                    <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto space-x-3 pt-0 border-t-0 border-slate-200">
-                        <span id="user-email-display" class="text-xs text-slate-700 font-semibold truncate max-w-[200px]">customer@gmail.com</span>
-                        <button onclick="handleSignOut()" class="px-4 py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 text-white border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all shrink-0">
+                    <!-- User Email, Notification Button, and Sign Out: always visible on both mobile and desktop -->
+                    <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto space-x-2 sm:space-x-3 pt-0 border-t-0 border-slate-200">
+                        <span id="user-email-display" class="text-xs text-slate-700 font-semibold truncate max-w-[150px] sm:max-w-[200px]">customer@gmail.com</span>
+                        <button onclick="switchTab('notification')" id="dtab-notification" class="px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] flex items-center space-x-1.5 sm:space-x-2 shrink-0">
+                            <i class="fa-solid fa-bell text-black"></i>
+                            <span>Notification (<span id="header-notification-count">0</span>)</span>
+                        </button>
+                        <button onclick="handleSignOut()" class="px-3 sm:px-4 py-2 sm:py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 text-white border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all shrink-0">
                             Sign Out
                         </button>
                     </div>
@@ -741,6 +755,30 @@
                         <div id="favourites-product-grid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6"></div>
                     </div>
 
+                    <!-- TAB: NOTIFICATION (CUSTOMER SIDE) -->
+                    <div id="tab-section-notification" class="hidden max-w-3xl mx-auto space-y-6">
+                        <div class="flex items-center justify-between pb-4 border-b border-slate-200">
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                                    <i class="fa-solid fa-bell text-black"></i>
+                                    <span>Notifications</span>
+                                </h3>
+                                <p class="text-xs text-slate-500 mt-0.5">Real-time alerts for received vouchers, admin announcements, and order tracking confirmations.</p>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button onclick="markAllNotificationsAsRead()" class="text-xs font-bold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-xl transition">
+                                    Mark Read
+                                </button>
+                                <button onclick="clearCustomerNotifications()" class="text-xs font-bold text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-xl transition">
+                                    Clear All
+                                </button>
+                            </div>
+                        </div>
+                        <div id="customer-notifications-container" class="space-y-3">
+                            <p class="text-xs text-slate-500 text-center py-10">No notifications yet.</p>
+                        </div>
+                    </div>
+
                     <!-- TAB 3: CUSTOMER DASHBOARD -->
                     <div id="tab-section-customer-dashboard" class="hidden space-y-6">
                         <div class="hidden md:flex items-center justify-between pb-4 border-b border-slate-200">
@@ -946,6 +984,44 @@
                                 <i class="fa-solid fa-file-csv"></i>
                                 <span>Export Invoices CSV</span>
                             </button>
+                        </div>
+
+                        <!-- ADMIN SEND CUSTOMER NOTIFICATION WIDGET -->
+                        <div class="flex flex-col gap-3 pb-4 border-b border-slate-200 bg-amber-50 p-4 sm:p-5 rounded-2xl border border-amber-200 shadow-sm">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center text-amber-600 shrink-0">
+                                        <i class="fa-solid fa-bell text-base"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-sm font-bold text-slate-900">Admin Send Customer Notification</h3>
+                                        <p class="text-[11px] text-slate-600">Send direct custom messages or promotional alerts to individual customer notification feeds.</p>
+                                    </div>
+                                </div>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <div class="flex items-center gap-1.5">
+                                        <label for="admin-notif-target-customer" class="text-[10px] font-semibold text-slate-500 uppercase">Assign:</label>
+                                        <select id="admin-notif-target-customer" class="admin-voucher-customer-select bg-white border border-amber-300 text-slate-700 text-xs px-2.5 py-1.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400 font-sans max-w-[200px] truncate shadow-xs">
+                                            <option value="">-- Registered Customer --</option>
+                                        </select>
+                                    </div>
+                                    <button type="button" onclick="adminSendCustomNotification()" class="bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs px-3.5 py-1.5 rounded-lg transition-colors shadow-xs flex items-center gap-1.5 cursor-pointer">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                                        <span>Send &amp; Publish</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Title & Message Box -->
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
+                                <div class="sm:col-span-1">
+                                    <label class="block text-[10px] font-semibold text-slate-500 uppercase mb-1">Notification Title:</label>
+                                    <input type="text" id="admin-notif-title" placeholder="e.g. Special Voucher / Important Notice" class="w-full bg-white border border-slate-300 text-xs text-slate-900 rounded-xl px-3 py-2 shadow-xs focus:outline-none focus:ring-2 focus:ring-amber-400">
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <label class="block text-[10px] font-semibold text-slate-500 uppercase mb-1">Message Content:</label>
+                                    <textarea id="admin-notif-message" rows="2" placeholder="Write message to customer..." class="w-full bg-white border border-slate-300 text-xs text-slate-900 rounded-xl px-3 py-2 shadow-xs focus:outline-none focus:ring-2 focus:ring-amber-400"></textarea>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- VOUCHERS PRESETS -->
@@ -1205,39 +1281,56 @@
                     </div>
                 </div>
 
-                <!-- PAGE 2 FOOTER WITH TOYYIBPAY WIDGET -->
-                <footer class="w-full border-t border-slate-200 bg-slate-50/80 mt-auto">
-                    <div class="px-4 py-8 flex flex-col items-center justify-center text-center">
-                        <p class="text-xs font-bold text-slate-700 tracking-wide mb-3">
-                            ToyyibPay is registered with SSM
-                        </p>
+                <!-- PAGE 2 FOOTER -->
+                <footer class="w-full bg-[#d8b4fe] border-t-4 border-[#7c3aed] py-6 px-6 retro-font shadow-[0_-4px_0_0_#4c1d95] mt-auto">
+                    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 items-center gap-4">
+                        
+                        <!-- Left: Social Media Icons (Y2K Chunky Style) -->
+                        <div class="flex items-center justify-center md:justify-start space-x-3">
+                            <!-- Facebook -->
+                            <a href="https://www.facebook.com/share/1C455cr2u5/" target="_blank" rel="noopener noreferrer" class="w-9 h-9 bg-[#f472b6] hover:bg-[#ec4899] text-white rounded-full border-2 border-black flex items-center justify-center shadow-[2px_2px_0_0_#000] active:translate-y-0.5 active:shadow-[0_0_0_0_#000] transition-all">
+                                <i class="fa-brands fa-facebook-f text-sm"></i>
+                            </a>
+                            <!-- Instagram -->
+                            <a href="https://www.instagram.com/sweetopialens" target="_blank" rel="noopener noreferrer" class="w-9 h-9 bg-[#fb7185] hover:bg-[#f43f5e] text-white rounded-full border-2 border-black flex items-center justify-center shadow-[2px_2px_0_0_#000] active:translate-y-0.5 active:shadow-[0_0_0_0_#000] transition-all">
+                                <i class="fa-brands fa-instagram text-sm"></i>
+                            </a>
+                            <!-- TikTok -->
+                            <a href="https://www.tiktok.com/@sweetopiashop6" target="_blank" rel="noopener noreferrer" class="w-9 h-9 bg-[#38bdf8] hover:bg-[#0ea5e9] text-white rounded-full border-2 border-black flex items-center justify-center shadow-[2px_2px_0_0_#000] active:translate-y-0.5 active:shadow-[0_0_0_0_#000] transition-all">
+                                <i class="fa-brands fa-tiktok text-sm"></i>
+                            </a>
+                        </div>
 
-                        <!-- ToyyibPay FPX Badge Widget -->
-                        <div class="toyyibpay-widget">
-                            <div class="toyyibpay-header">
-                                <span class="brand-text">toyyib<span class="pay-text">Pay</span></span>
+                        <!-- Center: Copyright Text Only (No Border/Background) -->
+                        <div class="text-center flex justify-center">
+                            <p class="text-[11px] text-[#581c87] font-extrabold tracking-wider">
+                                © Brand Works Empire 2026, all rights reserved
+                            </p>
+                        </div>
+
+                        <!-- Right: ToyyibPay Widget & Is oce Logo Side-by-Side -->
+                        <div class="flex items-center justify-center md:justify-end gap-3">
+                            <!-- ToyyibPay Widget -->
+                            <div class="bg-white border-2 border-black rounded-lg p-1.5 shadow-[2px_2px_0_0_#000] flex flex-col items-center">
+                                <div class="text-[10px] font-black text-slate-800 pb-1">
+                                    toyyib<span class="text-purple-600">Pay</span>
+                                </div>
+                                <div class="bg-[#f3e8ff] p-1 rounded border border-black flex items-center justify-center">
+                                    <img src="https://digitalpastel.github.io/digital/sweetopiashop/fpxlogo.webp" alt="FPX Logo" width="70" height="30" class="object-contain h-5">
+                                </div>
                             </div>
-                            <div class="toyyibpay-body">
-                                <div class="fpx-container">
-                                    <div class="fpx-icon">
-                                        <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600">
-                                            <polyline points="15 18 9 12 15 6"></polyline>
-                                        </svg>
-                                        <span class="fpx-text">FPX</span>
-                                        <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600">
-                                            <polyline points="9 18 15 12 9 6"></polyline>
-                                        </svg>
-                                    </div>
+
+                            <!-- Is oce / Verified Logo Frame -->
+                            <div class="bg-white border-2 border-black rounded-lg p-1.5 shadow-[2px_2px_0_0_#000] flex flex-col items-center">
+                                <div class="text-[10px] font-black text-purple-700 pb-1">
+                                    Verified
+                                </div>
+                                <div class="bg-[#f3e8ff] p-1 rounded border border-black flex items-center justify-center">
+                                    <img src="https://digitalpastel.github.io/digital/sweetopiashop/isocelogo.webp" alt="Is oce Logo" width="70" height="30" class="object-contain h-5">
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Dark Copyright Footer Bar -->
-                    <div class="w-full bg-[#111827] py-4 px-4 text-center">
-                        <p class="text-xs text-slate-300 font-medium tracking-wide">
-                            Copyright Brand Works Empire 2026, all rights reserved
-                        </p>
                     </div>
                 </footer>
 
@@ -1513,13 +1606,39 @@
                     </div>
                     <h3 class="text-lg font-bold text-slate-900">Redirecting to ToyyibPay FPX</h3>
                     <p class="text-xs text-slate-600">Order ID: <span id="fpx-modal-order-id" class="font-mono text-[#65a30d] font-bold"></span></p>
-                    <p class="text-xs text-slate-500">You are about to be securely redirected to your ToyyibPay payment link: <br><b class="text-slate-800">https://toyyibpay.com/brandworks</b></p>
+                    <p class="text-xs text-slate-500">You are about to be securely redirected to ToyyibPay with </p>
+                    <h3 class="text-lg font-bold text-slate-900">Total Amount: <span id="fpx-modal-total-amount" class="text-[#65a30d]">RM 0.00</span></h3>
+                    <p class="text-xs text-slate-500">payment link:<br><b class="text-slate-800">https://toyyibpay.com/brandworks</b></p>
                     <div class="pt-2 flex space-x-3">
                         <button onclick="confirmToyyibPayRedirect()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl text-xs shadow-sm">
                             Proceed to ToyyibPay
                         </button>
                         <button onclick="closeToyyibPayModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-3 rounded-xl text-xs border border-slate-200">
                             Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAYMENT STATUS VERIFICATION MODAL (WAITING FOR DRAWN PAYMENT) -->
+            <div id="payment-verify-modal" class="fixed inset-0 z-[75] bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+                <div class="w-full max-w-sm bg-white rounded-3xl border border-slate-200 shadow-2xl p-6 text-center space-y-4">
+                    <div class="w-12 h-12 bg-amber-50 rounded-2xl mx-auto flex items-center justify-center text-amber-600 text-xl border border-amber-200">
+                        <i class="fa-solid fa-receipt"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-slate-900">Payment Verification</h4>
+                        <p class="text-xs text-slate-500 mt-1">Did you complete the payment transaction on ToyyibPay?</p>
+                    </div>
+                    <div class="bg-slate-50 rounded-xl p-3 text-xs border border-slate-200 text-slate-600">
+                        Total Amount: <b id="verify-modal-amount" class="text-[#65a30d]">RM 0.00</b>
+                    </div>
+                    <div class="flex space-x-2 pt-2">
+                        <button type="button" onclick="finalizeCompletedPayment()" class="flex-1 bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold py-2.5 rounded-xl text-xs shadow-sm transition">
+                            Yes, Paid Full Amount
+                        </button>
+                        <button type="button" onclick="cancelPendingPaymentVerification()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs border border-slate-300 transition">
+                            Not Paid Yet
                         </button>
                     </div>
                 </div>
@@ -1542,6 +1661,50 @@
                     <button onclick="submitForgotPassword()" class="w-full bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold py-3 rounded-xl text-xs shadow-sm">
                         Send Reset Email
                     </button>
+                </div>
+            </div>
+
+            <!-- RETRO Y2K ORDER CONFIRMATION MODAL (BLURRED STORE BACKGROUND) -->
+            <div id="retro-order-success-modal" class="fixed inset-0 z-[80] bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+                <div class="w-[440px] max-w-[calc(100vw-2rem)] bg-[#d8b4fe] border-[3px] border-[#7c3aed] rounded-xl shadow-[8px_8px_0_0_#4c1d95] retro-varela overflow-hidden select-none animate-in fade-in zoom-in-95 duration-200">
+                    <!-- Window Title Bar -->
+                    <div class="bg-[#a855f7] px-3 py-2 flex justify-between items-center border-b-[3px] border-[#7c3aed]">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-white text-[10px] tracking-wider font-bold uppercase">order_success.exe</span>
+                        </div>
+                        <div class="flex space-x-1.5">
+                            <!-- Minimize Button -->
+                            <div class="w-5 h-5 bg-[#e9d5ff] border-2 border-black flex items-center justify-center text-[10px] font-bold shadow-[1px_1px_0_0_#000] cursor-pointer hover:bg-white transition-colors leading-none">_</div>
+                            <!-- Close Button -->
+                            <button type="button" onclick="handleRetroOrderSuccessClose()" class="w-5 h-5 bg-[#f472b6] border-2 border-black flex items-center justify-center text-[12px] font-bold text-white shadow-[1px_1px_0_0_#000] cursor-pointer hover:bg-[#ec4899] transition-colors leading-none">×</button>
+                        </div>
+                    </div>
+
+                    <!-- Window Inner Body -->
+                    <div class="bg-[#f3e8ff] p-5 sm:p-6 flex flex-col items-center text-center space-y-5 sm:space-y-6 m-2 border-2 border-[#9333ea] rounded-lg">
+                        <!-- Multi-colored Retro Title Blocks -->
+                        <div class="space-y-2 py-1 sm:py-2">
+                            <div class="inline-block bg-[#fef08a] border-2 border-black px-3 py-1.5 transform -rotate-1 shadow-[3px_3px_0_0_#000]">
+                                <span class="retro-title text-xs sm:text-sm font-extrabold text-[#713f12] tracking-wider">THANK YOU</span>
+                            </div>
+                            <div class="block">
+                                <span class="retro-title text-xs sm:text-sm font-extrabold text-[#f472b6] tracking-wider drop-shadow-[2px_2px_0_#000]">FOR YOUR</span>
+                            </div>
+                            <div class="inline-block bg-[#bbf7d0] border-2 border-black px-3 py-1.5 transform rotate-1 shadow-[3px_3px_0_0_#000]">
+                                <span class="retro-title text-xs sm:text-sm font-extrabold text-[#14532d] tracking-wider">ORDER!</span>
+                            </div>
+                        </div>
+
+                        <!-- Subtitle message -->
+                        <p class="text-xs font-bold text-slate-700 tracking-wide max-w-[280px] leading-relaxed">
+                            Your package is getting prepared in our digital warehouse. We'll email you tracking updates soon!
+                        </p>
+
+                        <!-- Single Action Button to Return to Store Catalog -->
+                        <button type="button" onclick="handleRetroOrderSuccessContinue()" class="w-full py-3 bg-[#f472b6] hover:bg-[#ec4899] text-white text-xs font-extrabold rounded-full border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all uppercase tracking-widest cursor-pointer">
+                            Continue Shopping
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -1850,6 +2013,7 @@
         };
 
         let assignedVouchersMap = {};
+        let notificationsMap = {};
         let favouritesList = [];
         const ADMIN_EMAILS = ["yeegummy@gmail.com", "nur@brandworkz.co", "nurzuraysha@gmail.com"];
         const TOYYIBPAY_URL = "https://toyyibpay.com/brandworks";
@@ -1868,6 +2032,218 @@
                 phone: '+6012-3456789'
             }
         ];
+
+        function calculateShippingFee(cartItems) {
+            const totalQty = (cartItems || []).reduce((acc, i) => acc + (i.qty || 0), 0);
+            if (totalQty === 0) return 0.00;
+
+            const isMoliconOnly = cartItems.length > 0 && cartItems.every(i => {
+                const brand = (i.brand || '').trim().toLowerCase();
+                if (brand === 'molicon') return true;
+                const prod = products.find(p => p.id === i.id);
+                return prod && (prod.brand || '').trim().toLowerCase() === 'molicon';
+            });
+
+            if (isMoliconOnly) {
+                // Molicon rules:
+                // Buy 1: RM5 shipping
+                // Buy 2 to 10: Free shipping (RM0)
+                // Buy > 10: RM5 shipping
+                if (totalQty === 1) {
+                    return 5.00;
+                } else if (totalQty >= 2 && totalQty <= 10) {
+                    return 0.00;
+                } else {
+                    return 5.00;
+                }
+            }
+
+            // Default standard shipping for other brands
+            return 5.00;
+        }
+
+        function loadNotifications() {
+            try {
+                const stored = localStorage.getItem('sweetopia_notifications');
+                if (stored) {
+                    notificationsMap = JSON.parse(stored);
+                }
+            } catch(e) { console.warn(e); }
+        }
+
+        async function syncNotificationsStorage() {
+            localStorage.setItem('sweetopia_notifications', JSON.stringify(notificationsMap));
+            if (db) {
+                try {
+                    await setDoc(doc(db, "lumilens_notifications", "all_notifications"), {
+                        data: notificationsMap,
+                        updatedAt: new Date().toISOString()
+                    }, { merge: true });
+                } catch(e) { console.warn("Notifications Firestore sync error:", e); }
+            }
+        }
+
+        function getCustomerNotifications() {
+            if (!currentUser || !currentUser.email) return [];
+            const userKey = currentUser.email.toLowerCase();
+            return (notificationsMap[userKey] || []).sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+        }
+
+        async function addNotificationForCustomer(targetEmail, notif) {
+            if (!targetEmail) return;
+            const userKey = targetEmail.trim().toLowerCase();
+            if (!notificationsMap[userKey]) {
+                notificationsMap[userKey] = [];
+            }
+            const fullNotif = {
+                id: 'notif_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
+                title: notif.title || 'Notification',
+                message: notif.message || '',
+                type: notif.type || 'info', // 'message' | 'voucher' | 'order' | 'info'
+                read: false,
+                timestamp: new Date().toISOString(),
+                dateStr: new Date().toLocaleString()
+            };
+            notificationsMap[userKey].unshift(fullNotif);
+            await syncNotificationsStorage();
+            renderCustomerNotificationsUI();
+        }
+
+        function updateNotificationBadge() {
+            const list = getCustomerNotifications();
+            const unreadCount = list.filter(n => !n.read).length;
+            const headerCount = document.getElementById('header-notification-count');
+            if (headerCount) headerCount.innerText = unreadCount;
+        }
+
+        function renderCustomerNotificationsUI() {
+            updateNotificationBadge();
+            const container = document.getElementById('customer-notifications-container');
+            if (!container) return;
+
+            const list = getCustomerNotifications();
+            if (list.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 bg-white rounded-2xl border border-dashed border-slate-300">
+                        <i class="fa-regular fa-bell text-3xl text-slate-300 mb-2 block"></i>
+                        <p class="text-xs font-semibold text-slate-600">No notifications yet.</p>
+                        <p class="text-[11px] text-slate-400 mt-1">You will see announcements, received coupons, and shipment tracking alerts here.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = list.map(n => {
+                let iconClass = 'fa-solid fa-bell text-black';
+                let bgBadge = 'bg-slate-100 border-slate-300';
+                if (n.type === 'voucher') {
+                    iconClass = 'fa-solid fa-ticket text-emerald-600';
+                    bgBadge = 'bg-emerald-50 border-emerald-200';
+                } else if (n.type === 'order') {
+                    iconClass = 'fa-solid fa-truck-fast text-blue-600';
+                    bgBadge = 'bg-blue-50 border-blue-200';
+                }
+
+                return `
+                    <div class="p-4 rounded-2xl border ${n.read ? 'bg-white border-slate-200' : 'bg-slate-50 border-slate-400 shadow-sm'} transition flex items-start justify-between gap-3">
+                        <div class="flex items-start space-x-3">
+                            <div class="w-9 h-9 rounded-xl ${bgBadge} border flex items-center justify-center shrink-0 mt-0.5">
+                                <i class="${iconClass} text-sm"></i>
+                            </div>
+                            <div class="space-y-1">
+                                <div class="flex items-center space-x-2">
+                                    <h4 class="text-xs font-bold text-slate-900">${n.title}</h4>
+                                    ${!n.read ? '<span class="text-[9px] bg-red-500 text-white font-extrabold px-1.5 py-0.2 rounded-full uppercase">New</span>' : ''}
+                                </div>
+                                <p class="text-xs text-slate-700 leading-relaxed font-sans whitespace-pre-line">${n.message}</p>
+                                <span class="text-[10px] text-slate-400 block pt-0.5">${n.dateStr || ''}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-1.5 shrink-0">
+                            ${!n.read ? `
+                            <button onclick="markNotificationAsRead('${n.id}')" class="text-[10px] font-bold text-slate-600 hover:text-slate-900 bg-white border border-slate-200 px-2.5 py-1 rounded-lg transition shadow-xs" title="Mark as read">
+                                Read
+                            </button>` : ''}
+                            <button onclick="deleteSingleNotification('${n.id}')" class="text-slate-400 hover:text-red-500 p-1.5 transition" title="Delete notification">
+                                <i class="fa-solid fa-trash-can text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.markNotificationAsRead = async function(notifId) {
+            if (!currentUser || !currentUser.email) return;
+            const userKey = currentUser.email.toLowerCase();
+            const list = notificationsMap[userKey] || [];
+            const item = list.find(n => n.id === notifId);
+            if (item) {
+                item.read = true;
+                await syncNotificationsStorage();
+                renderCustomerNotificationsUI();
+            }
+        };
+
+        window.markAllNotificationsAsRead = async function() {
+            if (!currentUser || !currentUser.email) return;
+            const userKey = currentUser.email.toLowerCase();
+            const list = notificationsMap[userKey] || [];
+            list.forEach(n => n.read = true);
+            await syncNotificationsStorage();
+            renderCustomerNotificationsUI();
+            showToast("Notifications Read", "All notifications marked as read.");
+        };
+
+        window.clearCustomerNotifications = async function() {
+            if (!currentUser || !currentUser.email) return;
+            if (confirm("Are you sure you want to clear all your notifications?")) {
+                const userKey = currentUser.email.toLowerCase();
+                notificationsMap[userKey] = [];
+                await syncNotificationsStorage();
+                renderCustomerNotificationsUI();
+                showToast("Cleared", "All notifications cleared.");
+            }
+        };
+
+        window.deleteSingleNotification = async function(notifId) {
+            if (!currentUser || !currentUser.email) return;
+            const userKey = currentUser.email.toLowerCase();
+            notificationsMap[userKey] = (notificationsMap[userKey] || []).filter(n => n.id !== notifId);
+            await syncNotificationsStorage();
+            renderCustomerNotificationsUI();
+        };
+
+        window.adminSendCustomNotification = async function() {
+            const select = document.getElementById('admin-notif-target-customer');
+            const targetCustomer = (select?.value || '').trim();
+            const titleInput = document.getElementById('admin-notif-title');
+            const messageInput = document.getElementById('admin-notif-message');
+
+            const title = (titleInput?.value || '').trim() || 'Message from Sweetopia Admin';
+            const message = (messageInput?.value || '').trim();
+
+            if (!targetCustomer) {
+                showToast("Select Customer", "Please select a registered customer to receive this notification.", true);
+                return;
+            }
+
+            if (!message) {
+                showToast("Message Required", "Please type a message in the message box to send.", true);
+                return;
+            }
+
+            await addNotificationForCustomer(targetCustomer, {
+                title: title,
+                message: message,
+                type: 'message'
+            });
+
+            if (titleInput) titleInput.value = '';
+            if (messageInput) messageInput.value = '';
+
+            showToast("Notification Sent!", `Direct notification sent to ${targetCustomer}.`);
+        };
 
         function loadAssignedVouchers() {
             try {
@@ -1992,10 +2368,11 @@
                 assignedVouchersMap[targetEmail] = [];
             }
 
+            const discountVal = VALID_VOUCHERS[code] || 0.00;
             const existingIdx = assignedVouchersMap[targetEmail].findIndex(v => v.code === code);
             const voucherObj = {
                 code: code,
-                discount: VALID_VOUCHERS[code] || 0.00,
+                discount: discountVal,
                 expiresAt: expiryDate,
                 used: false,
                 publishedAt: new Date().toISOString()
@@ -2008,8 +2385,16 @@
             }
 
             await syncAssignedVouchersStorage();
+
+            // Automatically notify customer of received voucher code
+            await addNotificationForCustomer(targetEmail, {
+                title: `Voucher Received: ${code}`,
+                message: `Congratulations! You have received a discount voucher ${code} (-RM ${discountVal.toFixed(2)}) valid until ${expiryDate}. Apply it at checkout!`,
+                type: 'voucher'
+            });
+
             renderCustomerVouchersUI();
-            showToast("Voucher Published!", `Successfully published ${code} to ${targetEmail}.`);
+            showToast("Voucher Published!", `Successfully published ${code} to ${targetEmail} and notified customer.`);
         };
 
         function renderAdminVoucherCustomerDropdowns() {
@@ -2018,6 +2403,7 @@
             if (currentUser && currentUser.email) knownUsersSet.add(currentUser.email);
             const userList = Array.from(knownUsersSet).filter(u => !isAdminUser(u));
 
+            // Populate voucher presets dropdowns
             ['code1', 'code2', 'code3', 'code4', 'code5'].forEach(codeId => {
                 const select = document.getElementById(`customer-${codeId}`);
                 if (!select) return;
@@ -2031,6 +2417,17 @@
 
                 select.innerHTML = optionsHtml;
             });
+
+            // Populate admin send notification target customer dropdown
+            const notifSelect = document.getElementById('admin-notif-target-customer');
+            if (notifSelect) {
+                const currentVal = notifSelect.value;
+                let optionsHtml = '<option value="">-- Registered Customer --</option>';
+                userList.forEach(u => {
+                    optionsHtml += `<option value="${u}" ${u === currentVal ? 'selected' : ''}>${u}</option>`;
+                });
+                notifSelect.innerHTML = optionsHtml;
+            }
         }
 
         window.renderCustomerVouchersUI = function() {
@@ -2509,6 +2906,10 @@
         window.closeInvoiceModal = closeInvoiceModal;
         window.downloadInvoiceAsPNG = downloadInvoiceAsPNG;
         window.showToast = showToast;
+        window.handleRetroOrderSuccessClose = handleRetroOrderSuccessClose;
+        window.handleRetroOrderSuccessContinue = handleRetroOrderSuccessContinue;
+        window.finalizeCompletedPayment = finalizeCompletedPayment;
+        window.cancelPendingPaymentVerification = cancelPendingPaymentVerification;
         window.toggleChatPopup = toggleChatPopup;
         window.sendChatMessage = sendChatMessage;
         window.handleChatKeypress = handleChatKeypress;
@@ -2521,6 +2922,7 @@
             loadSavedAddresses();
             loadFavourites();
             loadAssignedVouchers();
+            loadNotifications();
             const savedEmail = localStorage.getItem('sweetopia_logged_in_email');
 
             if (savedEmail) {
@@ -2578,6 +2980,14 @@
                         assignedVouchersMap = vSnap.data().data;
                     }
                 } catch(e) { console.warn("Reading vouchers error:", e); }
+
+                try {
+                    const nSnap = await getDoc(doc(db, "lumilens_notifications", "all_notifications"));
+                    if (nSnap.exists() && nSnap.data().data) {
+                        notificationsMap = nSnap.data().data;
+                        renderCustomerNotificationsUI();
+                    }
+                } catch(e) { console.warn("Reading notifications error:", e); }
             }
 
             renderStoreProducts(products);
@@ -2588,8 +2998,42 @@
             onAdminPowerRangeChange();
             initSlideshow();
             renderCustomerVouchersUI();
+            renderCustomerNotificationsUI();
             renderAdminVoucherCustomerDropdowns();
             enforceMobileNavForRole();
+
+            // Check URL query parameters in case customer returned via ToyyibPay callback (status_id=1 means paid)
+            const urlParams = new URLSearchParams(window.location.search);
+            const statusId = urlParams.get('status_id');
+            const billcode = urlParams.get('billcode');
+
+            if (statusId === '1' || urlParams.get('payment') === 'success') {
+                sessionStorage.removeItem('sweetopia_pending_order_id');
+                sessionStorage.removeItem('sweetopia_pending_order_total');
+                setTimeout(() => {
+                    openRetroOrderSuccessModal();
+                }, 400);
+            } else if (statusId === '2' || statusId === '3') {
+                // Payment cancelled or failed at ToyyibPay
+                sessionStorage.removeItem('sweetopia_pending_order_id');
+                sessionStorage.removeItem('sweetopia_pending_order_total');
+                showToast("Payment Incomplete", "Payment was not drawn or was cancelled.", true);
+            }
+
+            // Window focus detection: Ask customer if they actually finished drawing payment
+            window.addEventListener('focus', () => {
+                const pendingId = sessionStorage.getItem('sweetopia_pending_order_id');
+                const pendingTotal = sessionStorage.getItem('sweetopia_pending_order_total');
+                if (pendingId && pendingTotal) {
+                    const verifyModal = document.getElementById('payment-verify-modal');
+                    const amtElem = document.getElementById('verify-modal-amount');
+                    if (amtElem) amtElem.innerText = `RM ${pendingTotal}`;
+                    if (verifyModal) {
+                        verifyModal.classList.remove('opacity-0', 'pointer-events-none');
+                        verifyModal.classList.add('opacity-100');
+                    }
+                }
+            });
 
             setInterval(() => {
                 if (currentUser && currentUser.email) {
@@ -2651,6 +3095,13 @@
                     renderCustomerVouchersUI();
                 }
             }, (err) => console.warn("Voucher listen error:", err));
+
+            onSnapshot(doc(db, "lumilens_notifications", "all_notifications"), (snap) => {
+                if (snap.exists() && snap.data().data) {
+                    notificationsMap = snap.data().data;
+                    renderCustomerNotificationsUI();
+                }
+            }, (err) => console.warn("Notifications listen error:", err));
         }
 
         function initChatListeners() {
@@ -2984,12 +3435,16 @@
 
             const isAdmin = currentUser && isAdminUser(currentUser.email);
 
-            ['catalog', 'cart', 'favourites', 'customer-dashboard', 'admin-workspace'].forEach(t => {
+            ['catalog', 'cart', 'favourites', 'notification', 'customer-dashboard', 'admin-workspace'].forEach(t => {
                 const sec = document.getElementById('tab-section-' + t);
                 const btn = document.getElementById('dtab-' + t);
                 if (sec) sec.classList.add('hidden');
                 if (btn) {
-                    btn.className = "px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] flex items-center space-x-2 shrink-0";
+                    if (t === 'notification') {
+                        btn.className = "px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] flex items-center space-x-1.5 sm:space-x-2 shrink-0";
+                    } else {
+                        btn.className = "px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] flex items-center space-x-2 shrink-0";
+                    }
                 }
             });
 
@@ -2998,7 +3453,11 @@
 
             const activeBtn = document.getElementById('dtab-' + tabName);
             if (activeBtn) {
-                activeBtn.className = "px-5 py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 text-white transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] flex items-center space-x-2 shrink-0";
+                if (tabName === 'notification') {
+                    activeBtn.className = "px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 text-white transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] flex items-center space-x-1.5 sm:space-x-2 shrink-0";
+                } else {
+                    activeBtn.className = "px-5 py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 text-white transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] flex items-center space-x-2 shrink-0";
+                }
             }
 
             const adminCatBtn = document.getElementById('dtab-admin-catalog');
@@ -3036,6 +3495,7 @@
 
             if (tabName === 'cart') { renderCartItems(); }
             if (tabName === 'favourites') { renderFavouritesGrid(); }
+            if (tabName === 'notification') { renderCustomerNotificationsUI(); }
             if (tabName === 'customer-dashboard') { renderCustomerOrders(); window.renderDeliveryAddresses(); renderCustomerVouchersUI(); }
             if (tabName === 'admin-workspace') { renderAdminOrdersList(); renderAdminProductsList(); renderAdminPowerStockCheckboxes(); renderAdminVoucherCustomerDropdowns(); }
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -3316,6 +3776,7 @@
                 cart.push({
                     id: currentSelectedProduct.id,
                     name: currentSelectedProduct.name,
+                    brand: currentSelectedProduct.brand || "Molicon",
                     price: currentSelectedProduct.price,
                     image: currentSelectedProduct.image,
                     category: currentSelectedProduct.category,
@@ -3407,7 +3868,7 @@
             let discount = appliedVoucher ? appliedVoucher.discount : 0.00;
             if (discount > subtotal) discount = subtotal;
 
-            const shippingFee = subtotal > 0 ? 5.00 : 0.00;
+            const shippingFee = calculateShippingFee(cart);
             const total = Math.max(0, subtotal - discount) + shippingFee;
 
             const subElem = document.getElementById('cart-subtotal');
@@ -3428,7 +3889,13 @@
             }
 
             const shipElem = document.getElementById('cart-shipping-fee');
-            if (shipElem) shipElem.innerText = `RM ${shippingFee.toFixed(2)}`;
+            if (shipElem) {
+                if (shippingFee === 0.00 && subtotal > 0) {
+                    shipElem.innerHTML = `<span class="text-emerald-600 font-bold">FREE (RM 0.00)</span>`;
+                } else {
+                    shipElem.innerText = `RM ${shippingFee.toFixed(2)}`;
+                }
+            }
 
             const totElem = document.getElementById('cart-total');
             if (totElem) totElem.innerText = `RM ${total.toFixed(2)}`;
@@ -3452,7 +3919,7 @@
             const subtotal = cart.reduce((acc, i) => acc + (parseFloat(i.price) * i.qty), 0);
             let discount = appliedVoucher ? appliedVoucher.discount : 0.00;
             if (discount > subtotal) discount = subtotal;
-            const shippingFee = subtotal > 0 ? 5.00 : 0.00;
+            const shippingFee = calculateShippingFee(cart);
             const total = Math.max(0, subtotal - discount) + shippingFee;
 
             const dateStr = new Date().toISOString();
@@ -3503,6 +3970,12 @@
             renderAdminOrdersList();
 
             document.getElementById('fpx-modal-order-id').innerText = orderId;
+            const fpxModalTotalElem = document.getElementById('fpx-modal-total-amount');
+            if (fpxModalTotalElem) {
+                fpxModalTotalElem.innerText = `RM ${total.toFixed(2)}`;
+            }
+            sessionStorage.setItem('sweetopia_active_checkout_total', total.toFixed(2));
+
             const fpxModal = document.getElementById('fpx-modal');
             fpxModal?.classList.remove('opacity-0', 'pointer-events-none');
             fpxModal?.classList.add('opacity-100');
@@ -3510,20 +3983,109 @@
 
         function confirmToyyibPayRedirect() {
             closeToyyibPayModal();
-            cart = [];
-            appliedVoucher = null;
-            saveCustomerCartToFirestore();
-            updateCartBadge();
-            renderCartItems();
+            const orderTotal = sessionStorage.getItem('sweetopia_active_checkout_total') || '0.00';
+            
+            // Set pending payment verification session
+            if (pendingOrderId) {
+                sessionStorage.setItem('sweetopia_pending_order_id', pendingOrderId);
+                sessionStorage.setItem('sweetopia_pending_order_total', orderTotal);
+            }
+
             window.open(TOYYIBPAY_URL, '_blank');
-            showToast("Payment Successful!", "Redirected to ToyyibPay FPX gateway. Order placed successfully.");
-            switchTab('customer-dashboard');
         }
 
         function closeToyyibPayModal() {
             const fpxModal = document.getElementById('fpx-modal');
             fpxModal?.classList.remove('opacity-100');
             fpxModal?.classList.add('opacity-0', 'pointer-events-none');
+            sessionStorage.removeItem('sweetopia_pending_order_id');
+            sessionStorage.removeItem('sweetopia_pending_order_total');
+            sessionStorage.removeItem('sweetopia_active_checkout_total');
+        }
+
+        async function finalizeCompletedPayment() {
+            const pendingId = sessionStorage.getItem('sweetopia_pending_order_id');
+            const verifyModal = document.getElementById('payment-verify-modal');
+
+            if (verifyModal) {
+                verifyModal.classList.remove('opacity-100');
+                verifyModal.classList.add('opacity-0', 'pointer-events-none');
+            }
+
+            sessionStorage.removeItem('sweetopia_pending_order_id');
+            sessionStorage.removeItem('sweetopia_pending_order_total');
+            sessionStorage.removeItem('sweetopia_active_checkout_total');
+
+            // Clear the cart now that payment was completed
+            cart = [];
+            appliedVoucher = null;
+            await saveCustomerCartToFirestore();
+            updateCartBadge();
+            renderCartItems();
+
+            // Update order status to FPX Paid in database
+            if (pendingId) {
+                const targetOrder = allOrders.find(o => o.id === pendingId);
+                if (targetOrder) {
+                    targetOrder.status = 'Processing';
+                    targetOrder.date = new Date().toLocaleString() + ' (FPX Paid)';
+                    if (db) {
+                        try {
+                            await setDoc(doc(db, "lumilens_orders", pendingId), {
+                                status: 'Processing',
+                                date: targetOrder.date
+                            }, { merge: true });
+                        } catch(e) { console.warn(e); }
+                    }
+                    renderCustomerOrders();
+                    renderAdminOrdersList();
+                }
+            }
+
+            // Only now show the Y2K confirmation pop up
+            openRetroOrderSuccessModal();
+            showToast("Payment Confirmed", "Your payment was processed successfully!");
+        }
+
+        function cancelPendingPaymentVerification() {
+            const verifyModal = document.getElementById('payment-verify-modal');
+            if (verifyModal) {
+                verifyModal.classList.remove('opacity-100');
+                verifyModal.classList.add('opacity-0', 'pointer-events-none');
+            }
+
+            const pendingId = sessionStorage.getItem('sweetopia_pending_order_id');
+            sessionStorage.removeItem('sweetopia_pending_order_id');
+            sessionStorage.removeItem('sweetopia_pending_order_total');
+            sessionStorage.removeItem('sweetopia_active_checkout_total');
+
+            // Do NOT show the retro order success modal because customer did not pay yet
+            showToast("Payment Incomplete", "No payment was drawn. Your cart items are preserved.");
+        }
+
+        function openRetroOrderSuccessModal() {
+            const modal = document.getElementById('retro-order-success-modal');
+            if (modal) {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modal.classList.add('opacity-100');
+            }
+        }
+
+        function handleRetroOrderSuccessClose() {
+            const modal = document.getElementById('retro-order-success-modal');
+            if (modal) {
+                modal.classList.remove('opacity-100');
+                modal.classList.add('opacity-0', 'pointer-events-none');
+            }
+        }
+
+        function handleRetroOrderSuccessContinue() {
+            handleRetroOrderSuccessClose();
+            switchTab('catalog');
+            const storeCatalogElem = document.getElementById('store-product-grid');
+            if (storeCatalogElem) {
+                storeCatalogElem.scrollIntoView({ behavior: 'smooth' });
+            }
         }
 
         function renderCustomerOrders() {
@@ -3864,9 +4426,22 @@
                 } catch(e) { console.warn("Tracking save error:", e); }
             }
 
+            // If a valid tracking number was provided, notify customer with the exact required format
+            if (order && order.customer && trackingNum && trackingNum !== 'Pending') {
+                const customerDisplayName = order.customerName || order.customer.split('@')[0] || 'Customer';
+                const trackingUrl = `https://tracking.sweetopiashop.my?track=${encodeURIComponent(trackingNum)}`;
+                const messageText = `Order Confirmation: "Hi ${customerDisplayName}, your order is on its way! Track it at ${trackingUrl}."`;
+
+                await addNotificationForCustomer(order.customer, {
+                    title: `Order Shipped (${order.id})`,
+                    message: messageText,
+                    type: 'order'
+                });
+            }
+
             renderAdminOrdersList();
             renderCustomerOrders();
-            showToast("Tracking Published!", `Tracking number saved for order ${orderId}.`);
+            showToast("Tracking Published!", `Tracking number saved for order ${orderId} and customer notified.`);
         }
 
         async function deleteAdminOrder(orderId) {
