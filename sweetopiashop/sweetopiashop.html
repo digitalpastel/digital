@@ -1335,7 +1335,7 @@
                 </footer>
 
                 <!-- CHAT WIDGET -->
-                <div id="page2-chat-widget-container" class="fixed bottom-16 md:bottom-6 right-4 sm:right-6 z-40 flex flex-col items-end">
+                <div id="page2-chat-widget-container" class="fixed bottom-4 right-4 sm:right-6 z-40 flex flex-col items-end">
                     <div class="sweetopia-kawaii-window relative w-[calc(100vw-2rem)] sm:w-96 max-w-sm bg-white rounded-3xl shadow-2xl border border-[#ecfccb] overflow-visible flex flex-col mb-4 transition-all duration-300 transform h-[460px] sm:h-[500px] hidden opacity-0 scale-95 pointer-events-none" id="sweetopiaChatWindow">
                         <style>
                             .cat-ear-left-green, .cat-ear-right-green {
@@ -1364,6 +1364,7 @@
                         <div class="cat-ear-left-green"><div class="cat-ear-left-inner-green"></div></div>
                         <div class="cat-ear-right-green"><div class="cat-ear-right-inner-green"></div></div>
 
+                        <!-- Header -->
                         <div class="bg-gradient-to-r from-[#65a30d] to-[#4d7c0f] text-white px-4 py-3.5 rounded-t-3xl flex items-center justify-between shadow-md relative z-10">
                             <div class="flex items-center space-x-2.5">
                                 <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center font-bold text-sm border border-white/30">
@@ -1372,41 +1373,135 @@
                                 <div>
                                     <h4 class="text-xs font-bold">Sweetopia Live Support</h4>
                                     <p class="text-[10px] text-lime-100 flex items-center" id="support-status-indicator">
-                                        <span id="support-dot-indicator" class="w-2 h-2 rounded-full bg-slate-400 inline-block mr-1 transition-colors"></span>
-                                        <span id="support-status-text">Offline / Away</span>
+                                        <span id="support-dot-indicator" class="w-2 h-2 rounded-full bg-emerald-400 inline-block mr-1"></span>
+                                        <span id="widgetStatusText">Online &amp; Active</span>
                                     </p>
                                 </div>
                             </div>
                             <div class="flex items-center space-x-2">
-                                <button onclick="clearCurrentChatHistory()" id="chat-delete-history-btn" class="text-[10px] bg-white/20 hover:bg-white/30 text-white px-2 py-1 rounded-lg transition" title="Delete Chat History">Clear</button>
-                                <button onclick="toggleChatPopup()" class="w-7 h-7 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition">
+                                <button onclick="clearWidgetChat()" class="text-[10px] bg-white/20 hover:bg-white/30 text-white px-2 py-1 rounded-lg transition">Clear</button>
+                                <button onclick="toggleWidgetChat()" class="w-7 h-7 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition">
                                     <i class="fa-solid fa-xmark text-xs"></i>
                                 </button>
                             </div>
                         </div>
 
-                        <div id="admin-chat-session-bar" class="bg-[#f7fee7] px-3 py-2.5 border-b border-[#ecfccb] flex items-center justify-between text-[11px]">
-                            <span class="font-bold text-[#4d7c0f]">Select User:</span>
+                        <!-- Admin Session Switcher Bar -->
+                        <div id="admin-chat-session-bar" class="bg-[#f7fee7] px-3 py-2 border-b border-[#ecfccb] flex items-center justify-between text-[11px]">
+                            <span class="font-bold text-[#4d7c0f]">User Session:</span>
                             <div class="flex items-center space-x-2">
-                                <select id="admin-active-chat-user" onchange="switchAdminChatSession()" class="bg-white border border-[#84cc16] rounded-lg px-2 py-1 text-slate-800 font-semibold focus:outline-none max-w-[170px]"><option value="">No Active Chat</option></select>
-                                <button onclick="adminDeleteSelectedChatSession()" class="bg-red-50 hover:bg-red-100 text-red-600 px-2 py-1 rounded-lg font-bold border border-red-200 transition" title="Delete entire conversation">Delete</button>
+                                <select id="admin-active-chat-user" onchange="switchAdminChatSession()" class="bg-white border border-[#84cc16] rounded-lg px-2 py-1 text-slate-800 font-semibold focus:outline-none text-xs max-w-[170px]">
+                                    <option value="">No Active Chat</option>
+                                </select>
+                                <button onclick="adminDeleteSelectedChatSession()" class="bg-red-50 hover:bg-red-100 text-red-600 px-2 py-1 rounded-lg font-bold border border-red-200 transition text-[10px]" title="Delete entire conversation">Delete</button>
                             </div>
                         </div>
 
-                        <div id="chat-messages-box" class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/50 text-xs"><div class="text-center text-slate-400 py-10"><i class="fa-solid fa-comments text-2xl text-lime-500 mb-2"></i><p class="text-xs">No active conversation selected.</p></div></div>
+                        <!-- Messages Box -->
+                        <div id="widget-chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/50 text-xs">
+                            <div class="text-center text-slate-400 py-10">
+                                <i class="fa-solid fa-heart text-2xl text-lime-500 mb-2"></i>
+                                <p class="text-xs">Welcome to Sweetopia Support!<br>Ask us about colored lenses, orders, or stock availability.</p>
+                            </div>
+                        </div>
 
-                        <div class="p-3 bg-white border-t border-slate-100 flex items-center space-x-2 rounded-b-3xl">
-                            <input type="text" id="chat-input-text" onkeypress="handleChatKeypress(event)" placeholder="Type a message..." class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#65a30d]">
-                            <button onclick="sendChatMessage()" class="w-10 h-10 rounded-xl bg-[#65a30d] hover:bg-[#4d7c0f] text-white flex items-center justify-center shadow-md transition shrink-0">
-                                <i class="fa-solid fa-paper-plane text-xs"></i>
-                            </button>
+                        <!-- Footer Input & Multimedia Toolbar -->
+                        <div class="p-3 bg-white border-t border-pink-100 flex flex-col space-y-2 rounded-b-3xl">
+                            <!-- Multimedia & Sticker Toolbar Icons -->
+                            <div class="flex items-center space-x-2 sm:space-x-3 px-1 text-slate-500">
+                                <!-- Sticker Picker Toggle Button -->
+                                <button type="button" onclick="toggleStickerPicker()" class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl hover:bg-pink-100/80 hover:text-pink-600 flex items-center justify-center transition text-sm sm:text-base" title="Stickers">
+                                    <i class="fa-solid fa-face-smile"></i>
+                                </button>
+                                <!-- Image Upload Button -->
+                                <label class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl hover:bg-pink-100/80 hover:text-pink-600 flex items-center justify-center transition cursor-pointer text-sm sm:text-base" title="Upload Image">
+                                    <i class="fa-solid fa-image"></i>
+                                    <input type="file" id="imageUploadInput" accept="image/png,image/jpeg,image/jpg,image/webp" class="hidden" onchange="handleImageUpload(event)">
+                                </label>
+                                <!-- Video Upload Button -->
+                                <label class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl hover:bg-pink-100/80 hover:text-pink-600 flex items-center justify-center transition cursor-pointer text-sm sm:text-base" title="Upload Video">
+                                    <i class="fa-solid fa-video"></i>
+                                    <input type="file" id="videoUploadInput" accept="video/*,.mp4,.webm,.mov" class="hidden" onchange="handleVideoUpload(event)">
+                                </label>
+                                <!-- Product Share Button -->
+                                <button type="button" onclick="openProductSelectorModal()" class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl hover:bg-pink-100/80 hover:text-pink-600 flex items-center justify-center transition text-sm sm:text-base" title="Order / Share Product">
+                                    <i class="fa-solid fa-bag-shopping"></i>
+                                </button>
+                                <!-- Custom Upload Sticker Button -->
+                                <label class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl hover:bg-purple-100 hover:text-purple-600 flex items-center justify-center transition cursor-pointer text-sm sm:text-base" title="Upload Custom Sticker">
+                                    <i class="fa-solid fa-plus-circle text-purple-500"></i>
+                                    <input type="file" id="customStickerInput" accept="image/*" class="hidden" onchange="handleCustomStickerUpload(event)">
+                                </label>
+                            </div>
+
+                            <!-- Textarea and Send Button -->
+                            <div class="flex items-center space-x-2 bg-pink-50/70 rounded-2xl p-2 border border-pink-200 focus-within:border-pink-400 transition">
+                                <textarea id="chatInput" rows="1" placeholder="Type a message here..." class="flex-1 bg-transparent border-none focus:outline-none text-slate-700 text-xs px-2 resize-none" onkeypress="handleKeypress(event)"></textarea>
+                                <button id="sendBtn" onclick="sendTextMessage()" class="px-3.5 py-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold rounded-xl shadow-md hover:opacity-95 transition text-xs flex items-center space-x-1.5 shrink-0">
+                                    <span>Send</span>
+                                    <i class="fa-solid fa-paper-plane text-[10px]"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
-                    <button onclick="toggleChatPopup()" class="w-14 h-14 rounded-full bg-gradient-to-r from-[#65a30d] to-[#4d7c0f] hover:from-[#4d7c0f] hover:to-[#3f6212] text-white shadow-2xl flex items-center justify-center text-xl transition-all transform hover:scale-105 border-2 border-white relative group">
+                    <!-- Floating Chat Toggle Button -->
+                    <button onclick="toggleWidgetChat()" class="w-14 h-14 rounded-full bg-gradient-to-r from-[#65a30d] to-[#4d7c0f] hover:from-[#4d7c0f] hover:to-[#3f6212] text-white shadow-2xl flex items-center justify-center text-xl transition-all transform hover:scale-105 border-2 border-white relative group">
                         <i class="fa-solid fa-comments"></i>
-                        <span id="chat-unread-badge" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-extrabold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-md hidden">0</span>
+                        <span id="widget-unread-badge" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-extrabold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-md hidden">0</span>
                     </button>
+                </div>
+            </div>
+
+            <!-- SHOPEE STYLE STICKER PICKER MODAL (20 STICKER SLOTS) -->
+            <div id="screen-sticker-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-3 sm:p-4" onclick="closeStickerPicker()">
+                <div class="w-full max-w-sm bg-white rounded-3xl border border-pink-200 overflow-hidden shadow-2xl flex flex-col max-h-[85vh] animate-in fade-in zoom-in-95 duration-200" onclick="event.stopPropagation()">
+                    <div class="px-5 py-3.5 bg-gradient-to-r from-pink-100 to-purple-100 border-b border-pink-200 flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-face-smile text-pink-500 text-base"></i>
+                            <h3 class="text-xs font-bold text-slate-800">Select Sticker (20 Packs)</h3>
+                        </div>
+                        <button type="button" onclick="closeStickerPicker()" class="w-7 h-7 rounded-full bg-white/80 hover:bg-white text-slate-600 flex items-center justify-center transition shadow-xs">
+                            <i class="fa-solid fa-xmark text-xs"></i>
+                        </button>
+                    </div>
+
+                    <!-- 20 Replaceable Sticker Slots Grid -->
+                    <div class="p-3.5 overflow-y-auto max-h-72 cute-h-scrollbar">
+                        <div id="sticker-slots-grid" class="grid grid-cols-4 sm:grid-cols-5 gap-2.5">
+                            <!-- Populated dynamically with 20 placeable sticker slots -->
+                        </div>
+                    </div>
+
+                    <div class="p-2.5 bg-slate-50 border-t border-slate-100 text-center">
+                        <span class="text-[10px] text-slate-400">Click any sticker slot to post into chat</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SHOPEE STYLE PRODUCT SHARE / ORDER MODAL -->
+            <div id="screen-product-selector-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-3 sm:p-4" onclick="closeProductSelectorModal()">
+                <div class="w-full max-w-md bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-2xl flex flex-col max-h-[85vh] animate-in fade-in zoom-in-95 duration-200" onclick="event.stopPropagation()">
+                    <div class="px-5 py-3.5 bg-slate-100 border-b border-slate-200 flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-bag-shopping text-[#65a30d] text-base"></i>
+                            <h3 class="text-xs font-bold text-slate-800">Order / Share Product with Support</h3>
+                        </div>
+                        <button type="button" onclick="closeProductSelectorModal()" class="w-7 h-7 rounded-full bg-white hover:bg-slate-200 text-slate-600 flex items-center justify-center transition shadow-xs">
+                            <i class="fa-solid fa-xmark text-xs"></i>
+                        </button>
+                    </div>
+
+                    <!-- Scrollable Product List -->
+                    <div class="p-4 overflow-y-auto space-y-3 max-h-80" id="chat-product-share-list">
+                        <!-- Populated dynamically from products list -->
+                    </div>
+
+                    <div class="p-3 bg-slate-50 border-t border-slate-200 text-right">
+                        <button type="button" onclick="closeProductSelectorModal()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl text-xs font-bold transition">
+                            Cancel
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -2910,12 +3005,348 @@
         window.handleRetroOrderSuccessContinue = handleRetroOrderSuccessContinue;
         window.finalizeCompletedPayment = finalizeCompletedPayment;
         window.cancelPendingPaymentVerification = cancelPendingPaymentVerification;
-        window.toggleChatPopup = toggleChatPopup;
-        window.sendChatMessage = sendChatMessage;
-        window.handleChatKeypress = handleChatKeypress;
-        window.clearCurrentChatHistory = clearCurrentChatHistory;
+        
+        // Widget Chat methods & bindings
+        window.toggleWidgetChat = toggleWidgetChat;
+        window.clearWidgetChat = clearWidgetChat;
+        window.sendTextMessage = sendTextMessage;
+        window.handleKeypress = handleKeypress;
+        window.toggleStickerPicker = toggleStickerPicker;
+        window.closeStickerPicker = closeStickerPicker;
+        window.selectSticker = selectSticker;
+        window.handleImageUpload = handleImageUpload;
+        window.handleVideoUpload = handleVideoUpload;
+        window.handleCustomStickerUpload = handleCustomStickerUpload;
+        window.openProductSelectorModal = openProductSelectorModal;
+        window.closeProductSelectorModal = closeProductSelectorModal;
+        window.shareProductInChat = shareProductInChat;
         window.switchAdminChatSession = switchAdminChatSession;
         window.adminDeleteSelectedChatSession = adminDeleteSelectedChatSession;
+
+        // 20 Replaceable Sticker image sources (Easy to replace with your custom stickers/image codes)
+        const defaultStickerAssets = [
+            "https://placehold.co/120x120/fce7f3/db2777?text=Heart+1",
+            "https://placehold.co/120x120/fce7f3/db2777?text=Sparkle+2",
+            "https://placehold.co/120x120/ede9fe/7c3aed?text=Cat+3",
+            "https://placehold.co/120x120/ede9fe/7c3aed?text=Love+4",
+            "https://placehold.co/120x120/dbeafe/2563eb?text=Star+5",
+            "https://placehold.co/120x120/dbeafe/2563eb?text=Cool+6",
+            "https://placehold.co/120x120/dcfce7/16a34a?text=Yay+7",
+            "https://placehold.co/120x120/dcfce7/16a34a?text=Lens+8",
+            "https://placehold.co/120x120/fef3c7/d97706?text=Cute+9",
+            "https://placehold.co/120x120/fef3c7/d97706?text=Hi+10",
+            "https://placehold.co/120x120/ffe4e6/e11d48?text=Wow+11",
+            "https://placehold.co/120x120/ffe4e6/e11d48?text=Kiss+12",
+            "https://placehold.co/120x120/fae8ff/c026d3?text=Sweet+13",
+            "https://placehold.co/120x120/fae8ff/c026d3?text=Bling+14",
+            "https://placehold.co/120x120/e0e7ff/4f46e5?text=Eyes+15",
+            "https://placehold.co/120x120/e0e7ff/4f46e5?text=OK+16",
+            "https://placehold.co/120x120/ecfccb/65a30d?text=Thanks+17",
+            "https://placehold.co/120x120/ecfccb/65a30d?text=Shop+18",
+            "https://placehold.co/120x120/f1f5f9/475569?text=Bye+19",
+            "https://placehold.co/120x120/f1f5f9/475569?text=Smile+20"
+        ];
+
+        function renderStickerSlotsGrid() {
+            const grid = document.getElementById('sticker-slots-grid');
+            if (!grid) return;
+            grid.innerHTML = defaultStickerAssets.map((src, idx) => `
+                <div onclick="selectSticker('${src}')" class="p-1 rounded-2xl border-2 border-pink-100 hover:border-pink-500 bg-pink-50/50 hover:bg-white cursor-pointer transition flex items-center justify-center transform hover:scale-105 active:scale-95 group shadow-xs" title="Sticker #${idx + 1}">
+                    <img src="${src}" alt="Sticker ${idx + 1}" class="w-14 h-14 object-contain rounded-xl group-hover:drop-shadow-sm">
+                </div>
+            `).join('');
+        }
+
+        function toggleStickerPicker() {
+            const modal = document.getElementById('screen-sticker-modal');
+            if (!modal) return;
+            renderStickerSlotsGrid();
+            if (modal.classList.contains('opacity-0')) {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modal.classList.add('opacity-100');
+            } else {
+                closeStickerPicker();
+            }
+        }
+
+        function closeStickerPicker() {
+            const modal = document.getElementById('screen-sticker-modal');
+            modal?.classList.remove('opacity-100');
+            modal?.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        async function selectSticker(stickerSrc) {
+            closeStickerPicker();
+            await sendSpecialChatMessage({
+                type: 'sticker',
+                mediaUrl: stickerSrc,
+                text: 'Sent a sticker'
+            });
+        }
+
+        function handleCustomStickerUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const base64 = e.target.result;
+                await sendSpecialChatMessage({
+                    type: 'sticker',
+                    mediaUrl: base64,
+                    text: 'Sent a custom sticker'
+                });
+            };
+            reader.readAsDataURL(file);
+            event.target.value = '';
+        }
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const base64 = e.target.result;
+                await sendSpecialChatMessage({
+                    type: 'image',
+                    mediaUrl: base64,
+                    text: 'Sent an image'
+                });
+            };
+            reader.readAsDataURL(file);
+            event.target.value = '';
+        }
+
+        function handleVideoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const base64 = e.target.result;
+                await sendSpecialChatMessage({
+                    type: 'video',
+                    mediaUrl: base64,
+                    text: 'Sent a video'
+                });
+            };
+            reader.readAsDataURL(file);
+            event.target.value = '';
+        }
+
+        function openProductSelectorModal() {
+            const list = document.getElementById('chat-product-share-list');
+            if (!list) return;
+            list.innerHTML = products.map(p => `
+                <div class="flex items-center justify-between p-3 rounded-2xl border border-slate-200 bg-white hover:border-[#65a30d] transition shadow-xs">
+                    <div class="flex items-center space-x-3">
+                        <img src="${p.image}" class="w-12 h-12 object-cover rounded-xl border border-slate-200">
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-900">${p.name}</h4>
+                            <span class="text-[10px] text-slate-500">${p.brand || 'Molicon'} • RM ${p.price}</span>
+                        </div>
+                    </div>
+                    <button type="button" onclick="shareProductInChat('${p.id}')" class="px-3 py-1.5 bg-[#65a30d] hover:bg-[#4d7c0f] text-white text-xs font-bold rounded-xl shadow-xs transition">
+                        Share &amp; Inquire
+                    </button>
+                </div>
+            `).join('');
+
+            const modal = document.getElementById('screen-product-selector-modal');
+            modal?.classList.remove('opacity-0', 'pointer-events-none');
+            modal?.classList.add('opacity-100');
+        }
+
+        function closeProductSelectorModal() {
+            const modal = document.getElementById('screen-product-selector-modal');
+            modal?.classList.remove('opacity-100');
+            modal?.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        async function shareProductInChat(productId) {
+            const prod = products.find(p => p.id === productId);
+            if (!prod) return;
+            closeProductSelectorModal();
+            await sendSpecialChatMessage({
+                type: 'product',
+                productData: prod,
+                text: `Inquiring about ${prod.name} (RM ${prod.price})`
+            });
+        }
+
+        function renderActiveChatMessages() {
+            const container = document.getElementById('widget-chat-messages');
+            if (!container) return;
+
+            let targetUser = currentUser?.email;
+            if (currentUser && isAdminUser(currentUser.email)) {
+                targetUser = activeChatSessionUser || document.getElementById('admin-active-chat-user')?.value;
+            }
+
+            if (!targetUser) {
+                container.innerHTML = `<div class="text-center text-slate-400 py-10"><i class="fa-solid fa-comments text-2xl text-lime-500 mb-2"></i><p class="text-xs">No active conversation selected.</p></div>`;
+                return;
+            }
+
+            const msgs = userSessionsMap[targetUser] || [];
+            if (msgs.length === 0) {
+                container.innerHTML = `<div class="text-center text-slate-400 py-10"><i class="fa-solid fa-heart text-2xl text-lime-500 mb-2"></i><p class="text-xs">Chatting with <b class="text-slate-700">${targetUser}</b>.<br>Leave a message or sticker to start conversation.</p></div>`;
+                return;
+            }
+
+            container.innerHTML = msgs.map(m => {
+                const isMe = m.sender === currentUser?.email;
+                const isAdmin = m.isAdmin;
+
+                let mediaHtml = '';
+                if (m.type === 'sticker') {
+                    mediaHtml = `
+                        <div class="p-1">
+                            <img src="${m.mediaUrl}" alt="Sticker" class="w-24 h-24 sm:w-28 sm:h-28 object-contain">
+                        </div>
+                    `;
+                } else if (m.type === 'image') {
+                    mediaHtml = `
+                        <div class="p-1 max-w-[220px]">
+                            <img src="${m.mediaUrl}" alt="Attached Image" class="w-full h-auto rounded-xl border border-slate-200 max-h-48 object-cover cursor-pointer" onclick="openImageZoomModal('${m.mediaUrl}')">
+                        </div>
+                    `;
+                } else if (m.type === 'video') {
+                    mediaHtml = `
+                        <div class="p-1 max-w-[240px]">
+                            <video src="${m.mediaUrl}" controls class="w-full rounded-xl border border-slate-200 max-h-48 bg-black"></video>
+                        </div>
+                    `;
+                } else if (m.type === 'product' && m.productData) {
+                    const p = m.productData;
+                    mediaHtml = `
+                        <div class="p-2 bg-white rounded-xl border border-slate-200 text-slate-900 flex items-center space-x-2.5 max-w-xs shadow-xs">
+                            <img src="${p.image}" class="w-12 h-12 object-cover rounded-lg border border-slate-200 shrink-0">
+                            <div class="truncate">
+                                <span class="text-xs font-bold block truncate">${p.name}</span>
+                                <span class="text-[10px] text-fuchsia-600 font-bold block">RM ${p.price}</span>
+                                <span class="text-[9px] text-slate-500">${p.brand || 'Molicon'} • ${p.category}</span>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    mediaHtml = `<p class="whitespace-pre-line">${m.text}</p>`;
+                }
+
+                return `
+                    <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
+                        <span class="text-[9px] text-slate-400 mb-0.5 px-1">${m.senderName || m.sender} • ${m.time || ''}</span>
+                        <div class="max-w-[85%] rounded-2xl px-3 py-2 text-xs shadow-sm ${m.type === 'sticker' ? 'bg-transparent shadow-none' : (isMe ? 'bg-[#65a30d] text-white rounded-tr-none' : (isAdmin ? 'bg-amber-100 text-amber-950 border border-amber-200 rounded-tl-none' : 'bg-white text-slate-800 border border-slate-200 rounded-tl-none'))}">
+                            ${mediaHtml}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function toggleWidgetChat() {
+            const win = document.getElementById('sweetopiaChatWindow');
+            if (!win) return;
+            if (win.classList.contains('hidden')) {
+                win.classList.remove('hidden');
+                setTimeout(() => {
+                    win.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+                    win.classList.add('opacity-100', 'scale-100');
+                }, 10);
+                renderActiveChatMessages();
+                updateSupportIndicator();
+            } else {
+                win.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+                win.classList.remove('opacity-100', 'scale-100');
+                setTimeout(() => win.classList.add('hidden'), 200);
+            }
+        }
+
+        async function sendTextMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input ? input.value.trim() : '';
+            if (!text) return;
+            await sendSpecialChatMessage({ text: text, type: 'text' });
+            if (input) input.value = '';
+        }
+
+        async function sendSpecialChatMessage(msgPayload) {
+            if (!currentUser) {
+                showToast("Sign In Required", "Please sign in or continue as guest to chat.", true);
+                return;
+            }
+
+            const isAdmin = isAdminUser(currentUser.email);
+            let targetSessionUser = currentUser.email;
+
+            if (isAdmin) {
+                const select = document.getElementById('admin-active-chat-user');
+                targetSessionUser = activeChatSessionUser || select.value;
+                if (!targetSessionUser) {
+                    showToast("No User Selected", "Select a customer or guest from the dropdown to reply.", true);
+                    return;
+                }
+            }
+
+            const newMsg = {
+                id: 'msg_' + Date.now(),
+                sender: currentUser.email,
+                senderName: isAdmin ? 'Admin Support' : (currentUser.guestId || currentUser.email.split('@')[0]),
+                text: msgPayload.text || '',
+                type: msgPayload.type || 'text',
+                mediaUrl: msgPayload.mediaUrl || null,
+                productData: msgPayload.productData || null,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                timestamp: new Date().toISOString(),
+                isAdmin: isAdmin
+            };
+
+            const existingMsgs = userSessionsMap[targetSessionUser] || [];
+            existingMsgs.push(newMsg);
+            userSessionsMap[targetSessionUser] = existingMsgs;
+
+            renderActiveChatMessages();
+
+            if (db) {
+                try {
+                    const docKey = targetSessionUser.replace(/[^a-zA-Z0-9]/g, '_');
+                    await setDoc(doc(db, "lumilens_chats", docKey), {
+                        userEmail: targetSessionUser,
+                        messages: existingMsgs,
+                        lastUpdated: new Date().toISOString()
+                    }, { merge: true });
+                } catch(e) { console.warn("Firestore chat send error:", e); }
+            }
+        }
+
+        function handleKeypress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendTextMessage();
+            }
+        }
+
+        async function clearWidgetChat() {
+            let targetUser = currentUser?.email;
+            if (currentUser && isAdminUser(currentUser.email)) {
+                targetUser = activeChatSessionUser || document.getElementById('admin-active-chat-user')?.value;
+            }
+            if (!targetUser) return;
+
+            userSessionsMap[targetUser] = [];
+            renderActiveChatMessages();
+
+            if (db) {
+                try {
+                    const docKey = targetUser.replace(/[^a-zA-Z0-9]/g, '_');
+                    await setDoc(doc(db, "lumilens_chats", docKey), {
+                        userEmail: targetUser,
+                        messages: [],
+                        lastUpdated: new Date().toISOString()
+                    });
+                } catch(e) { console.warn(e); }
+            }
+            showToast("Chat Cleared", "Messages cleared.");
+        }
 
         document.addEventListener('DOMContentLoaded', async () => {
             if (typeof lucide !== 'undefined') { lucide.createIcons(); }
@@ -3185,41 +3616,6 @@
                 renderActiveChatMessages();
             }
             updateSupportIndicator();
-        }
-
-        function renderActiveChatMessages() {
-            const container = document.getElementById('chat-messages-box');
-            if (!container) return;
-
-            let targetUser = currentUser?.email;
-            if (currentUser && isAdminUser(currentUser.email)) {
-                targetUser = activeChatSessionUser || document.getElementById('admin-active-chat-user')?.value;
-            }
-
-            if (!targetUser) {
-                container.innerHTML = `<div class="text-center text-slate-400 py-10"><i class="fa-solid fa-comments text-2xl text-lime-500 mb-2"></i><p class="text-xs">No active conversation selected.</p></div>`;
-                return;
-            }
-
-            const msgs = userSessionsMap[targetUser] || [];
-            if (msgs.length === 0) {
-                container.innerHTML = `<div class="text-center text-slate-400 py-10"><i class="fa-solid fa-heart text-2xl text-lime-500 mb-2"></i><p class="text-xs">Chatting with <b class="text-slate-700">${targetUser}</b>.<br>Leave a message to start conversation.</p></div>`;
-                return;
-            }
-
-            container.innerHTML = msgs.map(m => {
-                const isMe = m.sender === currentUser?.email;
-                const isAdmin = m.isAdmin;
-                return `
-                    <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
-                        <span class="text-[9px] text-slate-400 mb-0.5 px-1">${m.senderName || m.sender} • ${m.time || ''}</span>
-                        <div class="max-w-[80%] rounded-2xl px-3.5 py-2 text-xs shadow-sm ${isMe ? 'bg-[#65a30d] text-white rounded-tr-none' : (isAdmin ? 'bg-amber-100 text-amber-950 border border-amber-200 rounded-tl-none' : 'bg-white text-slate-800 border border-slate-200 rounded-tl-none')}">
-                            ${m.text}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-            container.scrollTop = container.scrollHeight;
         }
 
         function toggleChatPopup() {
