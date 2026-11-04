@@ -504,31 +504,30 @@
             <!-- PAGE 2: DASHBOARD & STORE CATALOG -->
             <div id="page-dashboard" class="w-full max-w-[1280px] flex flex-col bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xl relative">
 
-                <!-- CUSTOMER NAVIGATION BAR (DESKTOP MODE) -->
-                <div id="customer-nav-bar" class="hidden px-4 sm:px-6 md:px-10 py-4 bg-slate-50 border-b border-slate-200 flex-wrap items-center justify-between gap-3">
-                    <div class="hidden md:flex items-center space-x-2 overflow-x-auto hide-scrollbar w-full sm:w-auto pb-1 sm:pb-0">
-                        <button onclick="switchTab('catalog')" id="dtab-catalog" class="px-5 py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 text-white transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] flex items-center space-x-2 shrink-0">
+                <!-- CUSTOMER NAVIGATION BAR (DESKTOP NAVIGATION + RESPONSIVE SIGN OUT BAR) -->
+                <div id="customer-nav-bar" class="px-4 sm:px-6 md:px-10 py-3 sm:py-4 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
+                    <!-- Nav buttons: strictly hidden on mobile phone view, visible on md+ -->
+                    <div class="hidden md:flex items-center space-x-3 overflow-x-auto hide-scrollbar w-full sm:w-auto pb-3">
+                        <button onclick="switchTab('catalog')" id="dtab-catalog" class="px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] shrink-0 flex items-center space-x-2">
                             <i class="fa-solid fa-house text-sm"></i>
                             <span>View Store Catalog</span>
                         </button>
-
-                        <button onclick="switchTab('customer-dashboard')" id="dtab-customer-dashboard" class="px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] flex items-center space-x-2 shrink-0">
+                        <button onclick="switchTab('customer-dashboard')" id="dtab-customer-dashboard" class="px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] shrink-0 flex items-center space-x-2">
                             <i class="fa-regular fa-user text-sm"></i>
                             <span>Dashboard</span>
                         </button>
-
-                        <button onclick="switchTab('favourites')" id="dtab-favourites" class="px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] flex items-center space-x-2 shrink-0">
+                        <button onclick="switchTab('favourites')" id="dtab-favourites" class="px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] shrink-0 flex items-center space-x-2">
                             <i class="fa-regular fa-heart text-xs"></i>
                             <span>Favourites (<span id="header-fav-count">0</span>)</span>
                         </button>
-
-                        <button onclick="switchTab('cart')" id="dtab-cart" class="px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] flex items-center space-x-2 shrink-0">
+                        <button onclick="switchTab('cart')" id="dtab-cart" class="px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] shrink-0 flex items-center space-x-2">
                             <i class="fa-solid fa-cart-shopping"></i>
                             <span>Cart (<span id="header-cart-count">0</span>)</span>
                         </button>
                     </div>
 
-                    <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto space-x-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200">
+                    <!-- User Email and Sign Out: always visible on both mobile and desktop -->
+                    <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto space-x-3 pt-0 border-t-0 border-slate-200">
                         <span id="user-email-display" class="text-xs text-slate-700 font-semibold truncate max-w-[200px]">customer@gmail.com</span>
                         <button onclick="handleSignOut()" class="px-4 py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 text-white border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all shrink-0">
                             Sign Out
@@ -536,9 +535,10 @@
                     </div>
                 </div>
 
-                <!-- ADMIN NAVIGATION BAR (Desktop Only - Strictly for Admins) -->
-                <div id="admin-nav-bar" class="hidden px-4 sm:px-6 md:px-10 py-4 bg-slate-50 border-b border-slate-200 flex-wrap items-center justify-between gap-3">
-                    <div class="flex items-center space-x-3 overflow-x-auto hide-scrollbar w-full sm:w-auto pb-3">
+                <!-- ADMIN NAVIGATION BAR (DESKTOP NAVIGATION + RESPONSIVE SIGN OUT BAR) -->
+                <div id="admin-nav-bar" class="hidden px-4 sm:px-6 md:px-10 py-3 sm:py-4 bg-slate-50 border-b border-slate-200 flex-wrap items-center justify-between gap-3">
+                    <!-- Nav buttons: strictly hidden on mobile phone view, visible on md+ -->
+                    <div class="hidden md:flex items-center space-x-3 overflow-x-auto hide-scrollbar w-full sm:w-auto pb-3">
                         <button onclick="switchTab('catalog')" id="dtab-admin-catalog" class="px-5 py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 text-white transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] shrink-0 flex items-center space-x-2">
                             <i class="fa-solid fa-house text-sm"></i>
                             <span>View Store Catalog</span>
@@ -550,7 +550,8 @@
                         </button>
                     </div>
 
-                    <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto space-x-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200">
+                    <!-- Admin Email and Sign Out: always visible on both mobile and desktop -->
+                    <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto space-x-3 pt-0 border-t-0 border-slate-200">
                         <span id="admin-email-display" class="text-xs text-amber-600 font-bold truncate max-w-[200px]">Admin (yeegummy@gmail.com)</span>
                         <button onclick="handleSignOut()" class="px-4 py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 text-white border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all shrink-0">
                             Sign Out
@@ -1037,7 +1038,7 @@
                                             <input type="date" id="expiry-code4" value="2026-12-31" class="bg-amber-50/50 border border-amber-200 text-slate-700 text-xs px-2 py-1 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400 font-sans">
                                         </div>
                                         <button type="button" onclick="publishVoucher('CODE4')" class="bg-amber-600 hover:bg-amber-700 text-white font-medium text-xs px-3 py-1.5 rounded-lg transition-colors shadow-xs flex items-center gap-1 cursor-pointer">
-                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18-9-2zm0 0v-8"></path></svg>
                                             Send &amp; Publish
                                         </button>
                                     </div>
@@ -1635,7 +1636,7 @@
         </main>
     </div>
 
-    <!-- MOBILE DEVICE VIEW BOTTOM NAVIGATION BAR (UNTOUCHED) -->
+    <!-- MOBILE DEVICE VIEW BOTTOM NAVIGATION BAR -->
     <div id="mobile-bottom-nav" class="md:hidden fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-lg border-t border-slate-800 px-6 py-2.5 flex justify-between items-center z-50">
         <button type="button" onclick="switchTab('catalog', true)" id="mob-nav-catalog" class="mob-nav-btn flex flex-col items-center space-y-1 text-[#84cc16]">
             <i class="fa-solid fa-house text-sm"></i>
@@ -1660,6 +1661,25 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
         import { getAuth, signInWithCustomToken, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
         import { getFirestore, collection, doc, setDoc, deleteDoc, getDoc, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
+
+        // Pre-bind critical navigation functions to window immediately to prevent ReferenceError in inline onclick handlers
+        window.switchTab = function(tabName, saveState = true) {
+            if (typeof doSwitchTab === 'function') {
+                doSwitchTab(tabName, saveState);
+            }
+        };
+
+        window.switchPage = function(pageName) {
+            if (typeof doSwitchPage === 'function') {
+                doSwitchPage(pageName);
+            }
+        };
+
+        window.handleSignOut = function() {
+            if (typeof doSignOut === 'function') {
+                doSignOut();
+            }
+        };
 
         let deferredInstallPrompt = null;
         window.addEventListener('beforeinstallprompt', (e) => {
@@ -1738,8 +1758,6 @@
 
             if (loadingIntervalTimer) clearInterval(loadingIntervalTimer);
 
-            // Progressive step loading up to bar 7-8 while waiting on network/Firestore.
-            // If the network or elements load slow, it ticks step-by-step up to bar 8.
             let current = 0;
             loadingIntervalTimer = setInterval(() => {
                 if (current < 8) {
@@ -2929,7 +2947,7 @@
             } catch (e) { console.warn("Error saving cart:", e); }
         }
 
-        function switchPage(pageName) {
+        function doSwitchPage(pageName) {
             sessionStorage.setItem('sweetopia_active_page', pageName);
             const pageAuth = document.getElementById('page-auth');
             const pageDashboard = document.getElementById('page-dashboard');
@@ -2949,17 +2967,18 @@
                 if (currentUser && isAdminUser(currentUser.email)) {
                     const savedTab = sessionStorage.getItem('sweetopia_active_tab') || 'admin-workspace';
                     const savedSubTab = sessionStorage.getItem('sweetopia_admin_subtab') || 'stock';
-                    switchTab(savedTab, false);
+                    doSwitchTab(savedTab, false);
                     if(savedTab === 'admin-workspace') { switchAdminSubTab(savedSubTab, false); }
                 } else {
                     const savedTab = sessionStorage.getItem('sweetopia_active_tab') || 'catalog';
-                    switchTab(savedTab, false);
+                    doSwitchTab(savedTab, false);
                 }
             }
             enforceMobileNavForRole();
         }
+        function switchPage(pageName) { doSwitchPage(pageName); }
 
-        function switchTab(tabName, saveState = true) {
+        function doSwitchTab(tabName, saveState = true) {
             if (tabName === 'admin-workspace' && (!currentUser || !isAdminUser(currentUser.email))) return;
             if (saveState) { sessionStorage.setItem('sweetopia_active_tab', tabName); }
 
@@ -3021,6 +3040,7 @@
             if (tabName === 'admin-workspace') { renderAdminOrdersList(); renderAdminProductsList(); renderAdminPowerStockCheckboxes(); renderAdminVoucherCustomerDropdowns(); }
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+        function switchTab(tabName, saveState = true) { doSwitchTab(tabName, saveState); }
 
         function setAuthModeTab(mode) {
             authMode = mode;
@@ -3088,8 +3108,7 @@
                 showToast("Authentication Error", err.message, true);
             }
         }
-
-        async function handleSignOut() {
+        async function doSignOut() {
             if (currentUser && currentUser.email) {
                 updatePresence(currentUser.email, false);
             }
@@ -3103,9 +3122,10 @@
             sessionStorage.removeItem('sweetopia_active_page');
             sessionStorage.removeItem('sweetopia_active_tab');
             updateCartBadge();
-            switchPage('auth');
+            doSwitchPage('auth');
             showToast("Signed Out", "You have successfully signed out.");
         }
+        function handleSignOut() { doSignOut(); }
 
         function updateUIAfterLogin(user) {
             const email = user.email || "user@sweetopiashop.my";
@@ -3131,12 +3151,13 @@
             const mobileAdminLink = document.getElementById('mobile-admin-workspace-link');
 
             if (isAdmin) {
-                // Strictly hide customer navigation bar for admin
+                // Strictly hide customer bar for admin
                 if (customerNavBar) {
                     customerNavBar.style.setProperty('display', 'none', 'important');
-                    customerNavBar.classList.remove('md:flex', 'flex');
+                    customerNavBar.classList.remove('flex');
                     customerNavBar.classList.add('hidden');
                 }
+                // Show admin bar (with email & sign out visible on mobile, navigation tabs hidden on mobile)
                 if (adminNavBar) {
                     adminNavBar.style.removeProperty('display');
                     adminNavBar.classList.remove('hidden');
@@ -3144,12 +3165,13 @@
                 }
                 if (mobileAdminLink) mobileAdminLink.classList.remove('hidden');
             } else {
-                // Show customer navigation bar for regular customers
+                // Show customer bar (with email & sign out visible on mobile, navigation tabs hidden on mobile)
                 if (customerNavBar) {
                     customerNavBar.style.removeProperty('display');
                     customerNavBar.classList.remove('hidden');
-                    customerNavBar.classList.add('hidden', 'md:flex');
+                    customerNavBar.classList.add('flex');
                 }
+                // Strictly hide admin bar for customer
                 if (adminNavBar) {
                     adminNavBar.style.setProperty('display', 'none', 'important');
                     adminNavBar.classList.remove('flex');
