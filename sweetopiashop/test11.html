@@ -504,9 +504,10 @@
             <!-- PAGE 2: DASHBOARD & STORE CATALOG -->
             <div id="page-dashboard" class="w-full max-w-[1280px] flex flex-col bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xl relative">
 
-                <!-- CUSTOMER NAVIGATION BAR (DESKTOP MODE) -->
-                <div id="customer-nav-bar" class="hidden md:flex px-4 sm:px-6 md:px-10 py-4 bg-slate-50 border-b border-slate-200 flex-wrap items-center justify-between gap-3">
-                    <div class="flex items-center space-x-3 overflow-x-auto hide-scrollbar w-full sm:w-auto pb-3">
+                <!-- CUSTOMER NAVIGATION BAR (DESKTOP NAVIGATION + RESPONSIVE SIGN OUT BAR) -->
+                <div id="customer-nav-bar" class="px-4 sm:px-6 md:px-10 py-3 sm:py-4 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
+                    <!-- Nav buttons: strictly hidden on mobile phone view, visible on md+ -->
+                    <div class="hidden md:flex items-center space-x-3 overflow-x-auto hide-scrollbar w-full sm:w-auto pb-3">
                         <button onclick="switchTab('catalog')" id="dtab-catalog" class="px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] shrink-0 flex items-center space-x-2">
                             <i class="fa-solid fa-house text-sm"></i>
                             <span>View Store Catalog</span>
@@ -525,7 +526,8 @@
                         </button>
                     </div>
 
-                    <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto space-x-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200">
+                    <!-- User Email and Sign Out: always visible on both mobile and desktop -->
+                    <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto space-x-3 pt-0 border-t-0 border-slate-200">
                         <span id="user-email-display" class="text-xs text-slate-700 font-semibold truncate max-w-[200px]">customer@gmail.com</span>
                         <button onclick="handleSignOut()" class="px-4 py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 text-white border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all shrink-0">
                             Sign Out
@@ -533,9 +535,10 @@
                     </div>
                 </div>
 
-                <!-- ADMIN NAVIGATION BAR (Desktop Only - Strictly for Admins) -->
-                <div id="admin-nav-bar" class="hidden md:flex px-4 sm:px-6 md:px-10 py-4 bg-slate-50 border-b border-slate-200 flex-wrap items-center justify-between gap-3">
-                    <div class="flex items-center space-x-3 overflow-x-auto hide-scrollbar w-full sm:w-auto pb-3">
+                <!-- ADMIN NAVIGATION BAR (DESKTOP NAVIGATION + RESPONSIVE SIGN OUT BAR) -->
+                <div id="admin-nav-bar" class="hidden px-4 sm:px-6 md:px-10 py-3 sm:py-4 bg-slate-50 border-b border-slate-200 flex-wrap items-center justify-between gap-3">
+                    <!-- Nav buttons: strictly hidden on mobile phone view, visible on md+ -->
+                    <div class="hidden md:flex items-center space-x-3 overflow-x-auto hide-scrollbar w-full sm:w-auto pb-3">
                         <button onclick="switchTab('catalog')" id="dtab-admin-catalog" class="px-5 py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 text-white transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] shrink-0 flex items-center space-x-2">
                             <i class="fa-solid fa-house text-sm"></i>
                             <span>View Store Catalog</span>
@@ -547,7 +550,8 @@
                         </button>
                     </div>
 
-                    <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto space-x-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200">
+                    <!-- Admin Email and Sign Out: always visible on both mobile and desktop -->
+                    <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto space-x-3 pt-0 border-t-0 border-slate-200">
                         <span id="admin-email-display" class="text-xs text-amber-600 font-bold truncate max-w-[200px]">Admin (yeegummy@gmail.com)</span>
                         <button onclick="handleSignOut()" class="px-4 py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 text-white border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all shrink-0">
                             Sign Out
@@ -3147,30 +3151,30 @@
             const mobileAdminLink = document.getElementById('mobile-admin-workspace-link');
 
             if (isAdmin) {
-                // Strictly hide customer navigation bar for admin on all screens
+                // Strictly hide customer bar for admin
                 if (customerNavBar) {
                     customerNavBar.style.setProperty('display', 'none', 'important');
-                    customerNavBar.classList.remove('md:flex', 'flex');
+                    customerNavBar.classList.remove('flex');
                     customerNavBar.classList.add('hidden');
                 }
-                // Show admin navigation bar only on desktop (md and up), hidden on mobile
+                // Show admin bar (with email & sign out visible on mobile, navigation tabs hidden on mobile)
                 if (adminNavBar) {
                     adminNavBar.style.removeProperty('display');
-                    adminNavBar.classList.remove('hidden', 'flex');
-                    adminNavBar.classList.add('hidden', 'md:flex');
+                    adminNavBar.classList.remove('hidden');
+                    adminNavBar.classList.add('flex');
                 }
                 if (mobileAdminLink) mobileAdminLink.classList.remove('hidden');
             } else {
-                // Show customer navigation bar only on desktop (md and up), hidden on mobile
+                // Show customer bar (with email & sign out visible on mobile, navigation tabs hidden on mobile)
                 if (customerNavBar) {
                     customerNavBar.style.removeProperty('display');
-                    customerNavBar.classList.remove('hidden', 'flex');
-                    customerNavBar.classList.add('hidden', 'md:flex');
+                    customerNavBar.classList.remove('hidden');
+                    customerNavBar.classList.add('flex');
                 }
-                // Strictly hide admin navigation bar for customers on all screens
+                // Strictly hide admin bar for customer
                 if (adminNavBar) {
                     adminNavBar.style.setProperty('display', 'none', 'important');
-                    adminNavBar.classList.remove('md:flex', 'flex');
+                    adminNavBar.classList.remove('flex');
                     adminNavBar.classList.add('hidden');
                 }
                 if (mobileAdminLink) mobileAdminLink.classList.add('hidden');
