@@ -345,6 +345,15 @@
         .retro-progress-bar-slot.filled {
             background-color: #5a0c3f;
         }
+
+        /* Retro Y2K Modal Typography & Utilities */
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Varela+Round&display=swap');
+        .retro-varela {
+            font-family: 'Varela Round', sans-serif;
+        }
+        .retro-title {
+            font-family: 'Press Start 2P', monospace;
+        }
     </style>
 </head>
 
@@ -1611,6 +1620,50 @@
                 </div>
             </div>
 
+            <!-- RETRO Y2K ORDER CONFIRMATION MODAL (BLURRED STORE BACKGROUND) -->
+            <div id="retro-order-success-modal" class="fixed inset-0 z-[80] bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+                <div class="w-[440px] max-w-[calc(100vw-2rem)] bg-[#d8b4fe] border-[3px] border-[#7c3aed] rounded-xl shadow-[8px_8px_0_0_#4c1d95] retro-varela overflow-hidden select-none animate-in fade-in zoom-in-95 duration-200">
+                    <!-- Window Title Bar -->
+                    <div class="bg-[#a855f7] px-3 py-2 flex justify-between items-center border-b-[3px] border-[#7c3aed]">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-white text-[10px] tracking-wider font-bold uppercase">order_success.exe</span>
+                        </div>
+                        <div class="flex space-x-1.5">
+                            <!-- Minimize Button -->
+                            <div class="w-5 h-5 bg-[#e9d5ff] border-2 border-black flex items-center justify-center text-[10px] font-bold shadow-[1px_1px_0_0_#000] cursor-pointer hover:bg-white transition-colors leading-none">_</div>
+                            <!-- Close Button -->
+                            <button type="button" onclick="handleRetroOrderSuccessClose()" class="w-5 h-5 bg-[#f472b6] border-2 border-black flex items-center justify-center text-[12px] font-bold text-white shadow-[1px_1px_0_0_#000] cursor-pointer hover:bg-[#ec4899] transition-colors leading-none">×</button>
+                        </div>
+                    </div>
+
+                    <!-- Window Inner Body -->
+                    <div class="bg-[#f3e8ff] p-5 sm:p-6 flex flex-col items-center text-center space-y-5 sm:space-y-6 m-2 border-2 border-[#9333ea] rounded-lg">
+                        <!-- Multi-colored Retro Title Blocks -->
+                        <div class="space-y-2 py-1 sm:py-2">
+                            <div class="inline-block bg-[#fef08a] border-2 border-black px-3 py-1.5 transform -rotate-1 shadow-[3px_3px_0_0_#000]">
+                                <span class="retro-title text-xs sm:text-sm font-extrabold text-[#713f12] tracking-wider">THANK YOU</span>
+                            </div>
+                            <div class="block">
+                                <span class="retro-title text-xs sm:text-sm font-extrabold text-[#f472b6] tracking-wider drop-shadow-[2px_2px_0_#000]">FOR YOUR</span>
+                            </div>
+                            <div class="inline-block bg-[#bbf7d0] border-2 border-black px-3 py-1.5 transform rotate-1 shadow-[3px_3px_0_0_#000]">
+                                <span class="retro-title text-xs sm:text-sm font-extrabold text-[#14532d] tracking-wider">ORDER!</span>
+                            </div>
+                        </div>
+
+                        <!-- Subtitle message -->
+                        <p class="text-xs font-bold text-slate-700 tracking-wide max-w-[280px] leading-relaxed">
+                            Your package is getting prepared in our digital warehouse. We'll email you tracking updates soon!
+                        </p>
+
+                        <!-- Single Action Button to Return to Store Catalog -->
+                        <button type="button" onclick="handleRetroOrderSuccessContinue()" class="w-full py-3 bg-[#f472b6] hover:bg-[#ec4899] text-white text-xs font-extrabold rounded-full border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all uppercase tracking-widest cursor-pointer">
+                            Continue Shopping
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <!-- A4 INVOICE PNG DOWNLOAD MODAL -->
             <div id="invoice-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-4 overflow-y-auto">
                 <div class="relative w-full max-w-3xl bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[95vh]">
@@ -2809,6 +2862,8 @@
         window.closeInvoiceModal = closeInvoiceModal;
         window.downloadInvoiceAsPNG = downloadInvoiceAsPNG;
         window.showToast = showToast;
+        window.handleRetroOrderSuccessClose = handleRetroOrderSuccessClose;
+        window.handleRetroOrderSuccessContinue = handleRetroOrderSuccessContinue;
         window.toggleChatPopup = toggleChatPopup;
         window.sendChatMessage = sendChatMessage;
         window.handleChatKeypress = handleChatKeypress;
@@ -2900,6 +2955,17 @@
             renderCustomerNotificationsUI();
             renderAdminVoucherCustomerDropdowns();
             enforceMobileNavForRole();
+
+            // Detect when customer returns from ToyyibPay payment tab/window
+            window.addEventListener('focus', () => {
+                const isAwaitingReturn = sessionStorage.getItem('sweetopia_awaiting_payment_return') === 'true';
+                if (isAwaitingReturn) {
+                    sessionStorage.removeItem('sweetopia_awaiting_payment_return');
+                    setTimeout(() => {
+                        openRetroOrderSuccessModal();
+                    }, 400);
+                }
+            });
 
             setInterval(() => {
                 if (currentUser && currentUser.email) {
@@ -3848,6 +3914,10 @@
             saveCustomerCartToFirestore();
             updateCartBadge();
             renderCartItems();
+
+            // Set session marker indicating customer went to ToyyibPay to pay
+            sessionStorage.setItem('sweetopia_awaiting_payment_return', 'true');
+
             window.open(TOYYIBPAY_URL, '_blank');
             showToast("Payment Successful!", "Redirected to ToyyibPay FPX gateway. Order placed successfully.");
             switchTab('customer-dashboard');
@@ -3857,6 +3927,34 @@
             const fpxModal = document.getElementById('fpx-modal');
             fpxModal?.classList.remove('opacity-100');
             fpxModal?.classList.add('opacity-0', 'pointer-events-none');
+            // User cancelled out of dialog, clear payment return awaiting flag
+            sessionStorage.removeItem('sweetopia_awaiting_payment_return');
+        }
+
+        function openRetroOrderSuccessModal() {
+            const modal = document.getElementById('retro-order-success-modal');
+            if (modal) {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modal.classList.add('opacity-100');
+            }
+        }
+
+        function handleRetroOrderSuccessClose() {
+            const modal = document.getElementById('retro-order-success-modal');
+            if (modal) {
+                modal.classList.remove('opacity-100');
+                modal.classList.add('opacity-0', 'pointer-events-none');
+            }
+        }
+
+        function handleRetroOrderSuccessContinue() {
+            handleRetroOrderSuccessClose();
+            // Navigate back to the Store Catalog
+            switchTab('catalog');
+            const storeCatalogElem = document.getElementById('store-product-grid');
+            if (storeCatalogElem) {
+                storeCatalogElem.scrollIntoView({ behavior: 'smooth' });
+            }
         }
 
         function renderCustomerOrders() {
