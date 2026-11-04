@@ -526,10 +526,14 @@
                         </button>
                     </div>
 
-                    <!-- User Email and Sign Out: always visible on both mobile and desktop -->
-                    <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto space-x-3 pt-0 border-t-0 border-slate-200">
-                        <span id="user-email-display" class="text-xs text-slate-700 font-semibold truncate max-w-[200px]">customer@gmail.com</span>
-                        <button onclick="handleSignOut()" class="px-4 py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 text-white border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all shrink-0">
+                    <!-- User Email, Notification Button, and Sign Out: always visible on both mobile and desktop -->
+                    <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto space-x-2 sm:space-x-3 pt-0 border-t-0 border-slate-200">
+                        <span id="user-email-display" class="text-xs text-slate-700 font-semibold truncate max-w-[150px] sm:max-w-[200px]">customer@gmail.com</span>
+                        <button onclick="switchTab('notification')" id="dtab-notification" class="px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] flex items-center space-x-1.5 sm:space-x-2 shrink-0">
+                            <i class="fa-solid fa-bell text-amber-500"></i>
+                            <span>Notification (<span id="header-notification-count">0</span>)</span>
+                        </button>
+                        <button onclick="handleSignOut()" class="px-3 sm:px-4 py-2 sm:py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 text-white border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all shrink-0">
                             Sign Out
                         </button>
                     </div>
@@ -741,6 +745,30 @@
                         <div id="favourites-product-grid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6"></div>
                     </div>
 
+                    <!-- TAB: NOTIFICATION (CUSTOMER SIDE) -->
+                    <div id="tab-section-notification" class="hidden max-w-3xl mx-auto space-y-6">
+                        <div class="flex items-center justify-between pb-4 border-b border-slate-200">
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                                    <i class="fa-solid fa-bell text-amber-500"></i>
+                                    <span>Notifications</span>
+                                </h3>
+                                <p class="text-xs text-slate-500 mt-0.5">Real-time alerts for received vouchers, admin announcements, and order tracking confirmations.</p>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button onclick="markAllNotificationsAsRead()" class="text-xs font-bold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-xl transition">
+                                    Mark Read
+                                </button>
+                                <button onclick="clearCustomerNotifications()" class="text-xs font-bold text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-xl transition">
+                                    Clear All
+                                </button>
+                            </div>
+                        </div>
+                        <div id="customer-notifications-container" class="space-y-3">
+                            <p class="text-xs text-slate-500 text-center py-10">No notifications yet.</p>
+                        </div>
+                    </div>
+
                     <!-- TAB 3: CUSTOMER DASHBOARD -->
                     <div id="tab-section-customer-dashboard" class="hidden space-y-6">
                         <div class="hidden md:flex items-center justify-between pb-4 border-b border-slate-200">
@@ -946,6 +974,44 @@
                                 <i class="fa-solid fa-file-csv"></i>
                                 <span>Export Invoices CSV</span>
                             </button>
+                        </div>
+
+                        <!-- ADMIN SEND CUSTOMER NOTIFICATION WIDGET -->
+                        <div class="flex flex-col gap-3 pb-4 border-b border-slate-200 bg-amber-50 p-4 sm:p-5 rounded-2xl border border-amber-200 shadow-sm">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center text-amber-600 shrink-0">
+                                        <i class="fa-solid fa-bell text-base"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-sm font-bold text-slate-900">Admin Send Customer Notification</h3>
+                                        <p class="text-[11px] text-slate-600">Send direct custom messages or promotional alerts to individual customer notification feeds.</p>
+                                    </div>
+                                </div>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <div class="flex items-center gap-1.5">
+                                        <label for="admin-notif-target-customer" class="text-[10px] font-semibold text-slate-500 uppercase">Assign:</label>
+                                        <select id="admin-notif-target-customer" class="admin-voucher-customer-select bg-white border border-amber-300 text-slate-700 text-xs px-2.5 py-1.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400 font-sans max-w-[200px] truncate shadow-xs">
+                                            <option value="">-- Registered Customer --</option>
+                                        </select>
+                                    </div>
+                                    <button type="button" onclick="adminSendCustomNotification()" class="bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs px-3.5 py-1.5 rounded-lg transition-colors shadow-xs flex items-center gap-1.5 cursor-pointer">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                                        <span>Send &amp; Publish</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Title & Message Box -->
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
+                                <div class="sm:col-span-1">
+                                    <label class="block text-[10px] font-semibold text-slate-500 uppercase mb-1">Notification Title:</label>
+                                    <input type="text" id="admin-notif-title" placeholder="e.g. Special Voucher / Important Notice" class="w-full bg-white border border-slate-300 text-xs text-slate-900 rounded-xl px-3 py-2 shadow-xs focus:outline-none focus:ring-2 focus:ring-amber-400">
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <label class="block text-[10px] font-semibold text-slate-500 uppercase mb-1">Message Content:</label>
+                                    <textarea id="admin-notif-message" rows="2" placeholder="Write message to customer..." class="w-full bg-white border border-slate-300 text-xs text-slate-900 rounded-xl px-3 py-2 shadow-xs focus:outline-none focus:ring-2 focus:ring-amber-400"></textarea>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- VOUCHERS PRESETS -->
@@ -1850,6 +1916,7 @@
         };
 
         let assignedVouchersMap = {};
+        let notificationsMap = {};
         let favouritesList = [];
         const ADMIN_EMAILS = ["yeegummy@gmail.com", "nur@brandworkz.co", "nurzuraysha@gmail.com"];
         const TOYYIBPAY_URL = "https://toyyibpay.com/brandworks";
@@ -1868,6 +1935,189 @@
                 phone: '+6012-3456789'
             }
         ];
+
+        function loadNotifications() {
+            try {
+                const stored = localStorage.getItem('sweetopia_notifications');
+                if (stored) {
+                    notificationsMap = JSON.parse(stored);
+                }
+            } catch(e) { console.warn(e); }
+        }
+
+        async function syncNotificationsStorage() {
+            localStorage.setItem('sweetopia_notifications', JSON.stringify(notificationsMap));
+            if (db) {
+                try {
+                    await setDoc(doc(db, "lumilens_notifications", "all_notifications"), {
+                        data: notificationsMap,
+                        updatedAt: new Date().toISOString()
+                    }, { merge: true });
+                } catch(e) { console.warn("Notifications Firestore sync error:", e); }
+            }
+        }
+
+        function getCustomerNotifications() {
+            if (!currentUser || !currentUser.email) return [];
+            const userKey = currentUser.email.toLowerCase();
+            return (notificationsMap[userKey] || []).sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+        }
+
+        async function addNotificationForCustomer(targetEmail, notif) {
+            if (!targetEmail) return;
+            const userKey = targetEmail.trim().toLowerCase();
+            if (!notificationsMap[userKey]) {
+                notificationsMap[userKey] = [];
+            }
+            const fullNotif = {
+                id: 'notif_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
+                title: notif.title || 'Notification',
+                message: notif.message || '',
+                type: notif.type || 'info', // 'message' | 'voucher' | 'order' | 'info'
+                read: false,
+                timestamp: new Date().toISOString(),
+                dateStr: new Date().toLocaleString()
+            };
+            notificationsMap[userKey].unshift(fullNotif);
+            await syncNotificationsStorage();
+            renderCustomerNotificationsUI();
+        }
+
+        function updateNotificationBadge() {
+            const list = getCustomerNotifications();
+            const unreadCount = list.filter(n => !n.read).length;
+            const headerCount = document.getElementById('header-notification-count');
+            if (headerCount) headerCount.innerText = unreadCount;
+        }
+
+        function renderCustomerNotificationsUI() {
+            updateNotificationBadge();
+            const container = document.getElementById('customer-notifications-container');
+            if (!container) return;
+
+            const list = getCustomerNotifications();
+            if (list.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 bg-white rounded-2xl border border-dashed border-slate-300">
+                        <i class="fa-regular fa-bell text-3xl text-slate-300 mb-2 block"></i>
+                        <p class="text-xs font-semibold text-slate-600">No notifications yet.</p>
+                        <p class="text-[11px] text-slate-400 mt-1">You will see announcements, received coupons, and shipment tracking alerts here.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = list.map(n => {
+                let iconClass = 'fa-solid fa-bell text-amber-500';
+                let bgBadge = 'bg-amber-50 border-amber-200';
+                if (n.type === 'voucher') {
+                    iconClass = 'fa-solid fa-ticket text-emerald-600';
+                    bgBadge = 'bg-emerald-50 border-emerald-200';
+                } else if (n.type === 'order') {
+                    iconClass = 'fa-solid fa-truck-fast text-blue-600';
+                    bgBadge = 'bg-blue-50 border-blue-200';
+                }
+
+                return `
+                    <div class="p-4 rounded-2xl border ${n.read ? 'bg-white border-slate-200' : 'bg-amber-50/40 border-amber-300 shadow-sm'} transition flex items-start justify-between gap-3">
+                        <div class="flex items-start space-x-3">
+                            <div class="w-9 h-9 rounded-xl ${bgBadge} border flex items-center justify-center shrink-0 mt-0.5">
+                                <i class="${iconClass} text-sm"></i>
+                            </div>
+                            <div class="space-y-1">
+                                <div class="flex items-center space-x-2">
+                                    <h4 class="text-xs font-bold text-slate-900">${n.title}</h4>
+                                    ${!n.read ? '<span class="text-[9px] bg-red-500 text-white font-extrabold px-1.5 py-0.2 rounded-full uppercase">New</span>' : ''}
+                                </div>
+                                <p class="text-xs text-slate-700 leading-relaxed font-sans whitespace-pre-line">${n.message}</p>
+                                <span class="text-[10px] text-slate-400 block pt-0.5">${n.dateStr || ''}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-1.5 shrink-0">
+                            ${!n.read ? `
+                            <button onclick="markNotificationAsRead('${n.id}')" class="text-[10px] font-bold text-slate-600 hover:text-slate-900 bg-white border border-slate-200 px-2.5 py-1 rounded-lg transition shadow-xs" title="Mark as read">
+                                Read
+                            </button>` : ''}
+                            <button onclick="deleteSingleNotification('${n.id}')" class="text-slate-400 hover:text-red-500 p-1.5 transition" title="Delete notification">
+                                <i class="fa-solid fa-trash-can text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.markNotificationAsRead = async function(notifId) {
+            if (!currentUser || !currentUser.email) return;
+            const userKey = currentUser.email.toLowerCase();
+            const list = notificationsMap[userKey] || [];
+            const item = list.find(n => n.id === notifId);
+            if (item) {
+                item.read = true;
+                await syncNotificationsStorage();
+                renderCustomerNotificationsUI();
+            }
+        };
+
+        window.markAllNotificationsAsRead = async function() {
+            if (!currentUser || !currentUser.email) return;
+            const userKey = currentUser.email.toLowerCase();
+            const list = notificationsMap[userKey] || [];
+            list.forEach(n => n.read = true);
+            await syncNotificationsStorage();
+            renderCustomerNotificationsUI();
+            showToast("Notifications Read", "All notifications marked as read.");
+        };
+
+        window.clearCustomerNotifications = async function() {
+            if (!currentUser || !currentUser.email) return;
+            if (confirm("Are you sure you want to clear all your notifications?")) {
+                const userKey = currentUser.email.toLowerCase();
+                notificationsMap[userKey] = [];
+                await syncNotificationsStorage();
+                renderCustomerNotificationsUI();
+                showToast("Cleared", "All notifications cleared.");
+            }
+        };
+
+        window.deleteSingleNotification = async function(notifId) {
+            if (!currentUser || !currentUser.email) return;
+            const userKey = currentUser.email.toLowerCase();
+            notificationsMap[userKey] = (notificationsMap[userKey] || []).filter(n => n.id !== notifId);
+            await syncNotificationsStorage();
+            renderCustomerNotificationsUI();
+        };
+
+        window.adminSendCustomNotification = async function() {
+            const select = document.getElementById('admin-notif-target-customer');
+            const targetCustomer = (select?.value || '').trim();
+            const titleInput = document.getElementById('admin-notif-title');
+            const messageInput = document.getElementById('admin-notif-message');
+
+            const title = (titleInput?.value || '').trim() || 'Message from Sweetopia Admin';
+            const message = (messageInput?.value || '').trim();
+
+            if (!targetCustomer) {
+                showToast("Select Customer", "Please select a registered customer to receive this notification.", true);
+                return;
+            }
+
+            if (!message) {
+                showToast("Message Required", "Please type a message in the message box to send.", true);
+                return;
+            }
+
+            await addNotificationForCustomer(targetCustomer, {
+                title: title,
+                message: message,
+                type: 'message'
+            });
+
+            if (titleInput) titleInput.value = '';
+            if (messageInput) messageInput.value = '';
+
+            showToast("Notification Sent!", `Direct notification sent to ${targetCustomer}.`);
+        };
 
         function loadAssignedVouchers() {
             try {
@@ -1992,10 +2242,11 @@
                 assignedVouchersMap[targetEmail] = [];
             }
 
+            const discountVal = VALID_VOUCHERS[code] || 0.00;
             const existingIdx = assignedVouchersMap[targetEmail].findIndex(v => v.code === code);
             const voucherObj = {
                 code: code,
-                discount: VALID_VOUCHERS[code] || 0.00,
+                discount: discountVal,
                 expiresAt: expiryDate,
                 used: false,
                 publishedAt: new Date().toISOString()
@@ -2008,8 +2259,16 @@
             }
 
             await syncAssignedVouchersStorage();
+
+            // Automatically notify customer of received voucher code
+            await addNotificationForCustomer(targetEmail, {
+                title: `Voucher Received: ${code}`,
+                message: `Congratulations! You have received a discount voucher ${code} (-RM ${discountVal.toFixed(2)}) valid until ${expiryDate}. Apply it at checkout!`,
+                type: 'voucher'
+            });
+
             renderCustomerVouchersUI();
-            showToast("Voucher Published!", `Successfully published ${code} to ${targetEmail}.`);
+            showToast("Voucher Published!", `Successfully published ${code} to ${targetEmail} and notified customer.`);
         };
 
         function renderAdminVoucherCustomerDropdowns() {
@@ -2018,6 +2277,7 @@
             if (currentUser && currentUser.email) knownUsersSet.add(currentUser.email);
             const userList = Array.from(knownUsersSet).filter(u => !isAdminUser(u));
 
+            // Populate voucher presets dropdowns
             ['code1', 'code2', 'code3', 'code4', 'code5'].forEach(codeId => {
                 const select = document.getElementById(`customer-${codeId}`);
                 if (!select) return;
@@ -2031,6 +2291,17 @@
 
                 select.innerHTML = optionsHtml;
             });
+
+            // Populate admin send notification target customer dropdown
+            const notifSelect = document.getElementById('admin-notif-target-customer');
+            if (notifSelect) {
+                const currentVal = notifSelect.value;
+                let optionsHtml = '<option value="">-- Registered Customer --</option>';
+                userList.forEach(u => {
+                    optionsHtml += `<option value="${u}" ${u === currentVal ? 'selected' : ''}>${u}</option>`;
+                });
+                notifSelect.innerHTML = optionsHtml;
+            }
         }
 
         window.renderCustomerVouchersUI = function() {
@@ -2521,6 +2792,7 @@
             loadSavedAddresses();
             loadFavourites();
             loadAssignedVouchers();
+            loadNotifications();
             const savedEmail = localStorage.getItem('sweetopia_logged_in_email');
 
             if (savedEmail) {
@@ -2578,6 +2850,14 @@
                         assignedVouchersMap = vSnap.data().data;
                     }
                 } catch(e) { console.warn("Reading vouchers error:", e); }
+
+                try {
+                    const nSnap = await getDoc(doc(db, "lumilens_notifications", "all_notifications"));
+                    if (nSnap.exists() && nSnap.data().data) {
+                        notificationsMap = nSnap.data().data;
+                        renderCustomerNotificationsUI();
+                    }
+                } catch(e) { console.warn("Reading notifications error:", e); }
             }
 
             renderStoreProducts(products);
@@ -2588,6 +2868,7 @@
             onAdminPowerRangeChange();
             initSlideshow();
             renderCustomerVouchersUI();
+            renderCustomerNotificationsUI();
             renderAdminVoucherCustomerDropdowns();
             enforceMobileNavForRole();
 
@@ -2651,6 +2932,13 @@
                     renderCustomerVouchersUI();
                 }
             }, (err) => console.warn("Voucher listen error:", err));
+
+            onSnapshot(doc(db, "lumilens_notifications", "all_notifications"), (snap) => {
+                if (snap.exists() && snap.data().data) {
+                    notificationsMap = snap.data().data;
+                    renderCustomerNotificationsUI();
+                }
+            }, (err) => console.warn("Notifications listen error:", err));
         }
 
         function initChatListeners() {
@@ -2984,12 +3272,16 @@
 
             const isAdmin = currentUser && isAdminUser(currentUser.email);
 
-            ['catalog', 'cart', 'favourites', 'customer-dashboard', 'admin-workspace'].forEach(t => {
+            ['catalog', 'cart', 'favourites', 'notification', 'customer-dashboard', 'admin-workspace'].forEach(t => {
                 const sec = document.getElementById('tab-section-' + t);
                 const btn = document.getElementById('dtab-' + t);
                 if (sec) sec.classList.add('hidden');
                 if (btn) {
-                    btn.className = "px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] flex items-center space-x-2 shrink-0";
+                    if (t === 'notification') {
+                        btn.className = "px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] flex items-center space-x-1.5 sm:space-x-2 shrink-0";
+                    } else {
+                        btn.className = "px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] flex items-center space-x-2 shrink-0";
+                    }
                 }
             });
 
@@ -2998,7 +3290,11 @@
 
             const activeBtn = document.getElementById('dtab-' + tabName);
             if (activeBtn) {
-                activeBtn.className = "px-5 py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 text-white transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] flex items-center space-x-2 shrink-0";
+                if (tabName === 'notification') {
+                    activeBtn.className = "px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 text-white transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] flex items-center space-x-1.5 sm:space-x-2 shrink-0";
+                } else {
+                    activeBtn.className = "px-5 py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 text-white transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] flex items-center space-x-2 shrink-0";
+                }
             }
 
             const adminCatBtn = document.getElementById('dtab-admin-catalog');
@@ -3036,6 +3332,7 @@
 
             if (tabName === 'cart') { renderCartItems(); }
             if (tabName === 'favourites') { renderFavouritesGrid(); }
+            if (tabName === 'notification') { renderCustomerNotificationsUI(); }
             if (tabName === 'customer-dashboard') { renderCustomerOrders(); window.renderDeliveryAddresses(); renderCustomerVouchersUI(); }
             if (tabName === 'admin-workspace') { renderAdminOrdersList(); renderAdminProductsList(); renderAdminPowerStockCheckboxes(); renderAdminVoucherCustomerDropdowns(); }
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -3864,9 +4161,22 @@
                 } catch(e) { console.warn("Tracking save error:", e); }
             }
 
+            // If a valid tracking number was provided, notify customer with the exact required format
+            if (order && order.customer && trackingNum && trackingNum !== 'Pending') {
+                const customerDisplayName = order.customerName || order.customer.split('@')[0] || 'Customer';
+                const trackingUrl = `https://tracking.sweetopiashop.my?track=${encodeURIComponent(trackingNum)}`;
+                const messageText = `Order Confirmation: "Hi ${customerDisplayName}, your order is on its way! Track it at ${trackingUrl}."`;
+
+                await addNotificationForCustomer(order.customer, {
+                    title: `Order Shipped (${order.id})`,
+                    message: messageText,
+                    type: 'order'
+                });
+            }
+
             renderAdminOrdersList();
             renderCustomerOrders();
-            showToast("Tracking Published!", `Tracking number saved for order ${orderId}.`);
+            showToast("Tracking Published!", `Tracking number saved for order ${orderId} and customer notified.`);
         }
 
         async function deleteAdminOrder(orderId) {
