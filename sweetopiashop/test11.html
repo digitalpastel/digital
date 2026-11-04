@@ -1936,6 +1936,35 @@
             }
         ];
 
+        function calculateShippingFee(cartItems) {
+            const totalQty = (cartItems || []).reduce((acc, i) => acc + (i.qty || 0), 0);
+            if (totalQty === 0) return 0.00;
+
+            const isMoliconOnly = cartItems.length > 0 && cartItems.every(i => {
+                const brand = (i.brand || '').trim().toLowerCase();
+                if (brand === 'molicon') return true;
+                const prod = products.find(p => p.id === i.id);
+                return prod && (prod.brand || '').trim().toLowerCase() === 'molicon';
+            });
+
+            if (isMoliconOnly) {
+                // Molicon rules:
+                // Buy 1: RM5 shipping
+                // Buy 2 to 10: Free shipping (RM0)
+                // Buy > 10: RM5 shipping
+                if (totalQty === 1) {
+                    return 5.00;
+                } else if (totalQty >= 2 && totalQty <= 10) {
+                    return 0.00;
+                } else {
+                    return 5.00;
+                }
+            }
+
+            // Default standard shipping for other brands
+            return 5.00;
+        }
+
         function loadNotifications() {
             try {
                 const stored = localStorage.getItem('sweetopia_notifications');
@@ -3613,6 +3642,7 @@
                 cart.push({
                     id: currentSelectedProduct.id,
                     name: currentSelectedProduct.name,
+                    brand: currentSelectedProduct.brand || "Molicon",
                     price: currentSelectedProduct.price,
                     image: currentSelectedProduct.image,
                     category: currentSelectedProduct.category,
@@ -3704,7 +3734,7 @@
             let discount = appliedVoucher ? appliedVoucher.discount : 0.00;
             if (discount > subtotal) discount = subtotal;
 
-            const shippingFee = subtotal > 0 ? 5.00 : 0.00;
+            const shippingFee = calculateShippingFee(cart);
             const total = Math.max(0, subtotal - discount) + shippingFee;
 
             const subElem = document.getElementById('cart-subtotal');
@@ -3725,7 +3755,13 @@
             }
 
             const shipElem = document.getElementById('cart-shipping-fee');
-            if (shipElem) shipElem.innerText = `RM ${shippingFee.toFixed(2)}`;
+            if (shipElem) {
+                if (shippingFee === 0.00 && subtotal > 0) {
+                    shipElem.innerHTML = `<span class="text-emerald-600 font-bold">FREE (RM 0.00)</span>`;
+                } else {
+                    shipElem.innerText = `RM ${shippingFee.toFixed(2)}`;
+                }
+            }
 
             const totElem = document.getElementById('cart-total');
             if (totElem) totElem.innerText = `RM ${total.toFixed(2)}`;
@@ -3749,7 +3785,7 @@
             const subtotal = cart.reduce((acc, i) => acc + (parseFloat(i.price) * i.qty), 0);
             let discount = appliedVoucher ? appliedVoucher.discount : 0.00;
             if (discount > subtotal) discount = subtotal;
-            const shippingFee = subtotal > 0 ? 5.00 : 0.00;
+            const shippingFee = calculateShippingFee(cart);
             const total = Math.max(0, subtotal - discount) + shippingFee;
 
             const dateStr = new Date().toISOString();
