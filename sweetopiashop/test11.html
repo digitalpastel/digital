@@ -185,29 +185,29 @@
         /* ToyyibPay Custom Footer Widget */
         .toyyibpay-widget {
             position: relative;
-            width: 260px;
+            width: 140px;
             max-width: 100%;
             background: #ffffff;
             border: 2px solid #6b21a8;
             border-radius: 16px;
-            padding: 24px 16px 14px 16px;
+            padding: 16px 8px 8px 8px;
             box-shadow: 0 4px 12px rgba(107, 33, 168, 0.12);
             font-family: 'Plus Jakarta Sans', sans-serif;
             text-align: center;
-            margin: 14px auto 0 auto;
+            margin: 10px 0 0 0;
         }
         .toyyibpay-header {
             position: absolute;
-            top: -14px;
+            top: -12px;
             left: 50%;
             transform: translateX(-50%);
             background: #6b21a8;
             color: #ffffff;
-            padding: 4px 20px;
+            padding: 2px 14px;
             border-radius: 30px;
             font-weight: 700;
-            font-size: 14px;
-            letter-spacing: -0.5px;
+            font-size: 11px;
+            letter-spacing: -0.3px;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
             white-space: nowrap;
         }
@@ -217,7 +217,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding-top: 4px;
+            padding-top: 2px;
         }
         .fpx-container {
             display: flex;
@@ -226,18 +226,19 @@
             background: #ffffff;
             border: 1px solid #e2e8f0;
             border-radius: 8px;
-            padding: 6px 20px;
+            padding: 4px 10px;
+            width: 100%;
         }
         .fpx-icon {
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 4px;
         }
-        .fpx-text {
-            font-size: 22px;
-            font-weight: 800;
-            color: #1e3a8a;
-            letter-spacing: 0.5px;
+        .fpx-logo-img {
+            max-height: 28px;
+            width: auto;
+            object-fit: contain;
         }
 
         /* Retro Comic Pink-Purple Image Frame Window Modal */
@@ -1280,39 +1281,56 @@
                     </div>
                 </div>
 
-                <!-- PAGE 2 FOOTER WITH TOYYIBPAY WIDGET -->
-                <footer class="w-full border-t border-slate-200 bg-slate-50/80 mt-auto">
-                    <div class="px-4 py-8 flex flex-col items-center justify-center text-center">
-                        <p class="text-xs font-bold text-slate-700 tracking-wide mb-3">
-                            ToyyibPay is registered with SSM
-                        </p>
+                <!-- PAGE 2 FOOTER -->
+                <footer class="w-full bg-[#d8b4fe] border-t-4 border-[#7c3aed] py-6 px-6 retro-font shadow-[0_-4px_0_0_#4c1d95] mt-auto">
+                    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 items-center gap-4">
+                        
+                        <!-- Left: Social Media Icons (Y2K Chunky Style) -->
+                        <div class="flex items-center justify-center md:justify-start space-x-3">
+                            <!-- Facebook -->
+                            <a href="https://www.facebook.com/share/1C455cr2u5/" target="_blank" rel="noopener noreferrer" class="w-9 h-9 bg-[#f472b6] hover:bg-[#ec4899] text-white rounded-full border-2 border-black flex items-center justify-center shadow-[2px_2px_0_0_#000] active:translate-y-0.5 active:shadow-[0_0_0_0_#000] transition-all">
+                                <i class="fa-brands fa-facebook-f text-sm"></i>
+                            </a>
+                            <!-- Instagram -->
+                            <a href="https://www.instagram.com/sweetopialens" target="_blank" rel="noopener noreferrer" class="w-9 h-9 bg-[#fb7185] hover:bg-[#f43f5e] text-white rounded-full border-2 border-black flex items-center justify-center shadow-[2px_2px_0_0_#000] active:translate-y-0.5 active:shadow-[0_0_0_0_#000] transition-all">
+                                <i class="fa-brands fa-instagram text-sm"></i>
+                            </a>
+                            <!-- TikTok -->
+                            <a href="https://www.tiktok.com/@sweetopiashop6" target="_blank" rel="noopener noreferrer" class="w-9 h-9 bg-[#38bdf8] hover:bg-[#0ea5e9] text-white rounded-full border-2 border-black flex items-center justify-center shadow-[2px_2px_0_0_#000] active:translate-y-0.5 active:shadow-[0_0_0_0_#000] transition-all">
+                                <i class="fa-brands fa-tiktok text-sm"></i>
+                            </a>
+                        </div>
 
-                        <!-- ToyyibPay FPX Badge Widget -->
-                        <div class="toyyibpay-widget">
-                            <div class="toyyibpay-header">
-                                <span class="brand-text">toyyib<span class="pay-text">Pay</span></span>
+                        <!-- Center: Copyright Text Only (No Border/Background) -->
+                        <div class="text-center flex justify-center">
+                            <p class="text-[11px] text-[#581c87] font-extrabold tracking-wider">
+                                © Brand Works Empire 2026, all rights reserved
+                            </p>
+                        </div>
+
+                        <!-- Right: ToyyibPay Widget & Is oce Logo Side-by-Side -->
+                        <div class="flex items-center justify-center md:justify-end gap-3">
+                            <!-- ToyyibPay Widget -->
+                            <div class="bg-white border-2 border-black rounded-lg p-1.5 shadow-[2px_2px_0_0_#000] flex flex-col items-center">
+                                <div class="text-[10px] font-black text-slate-800 pb-1">
+                                    toyyib<span class="text-purple-600">Pay</span>
+                                </div>
+                                <div class="bg-[#f3e8ff] p-1 rounded border border-black flex items-center justify-center">
+                                    <img src="https://digitalpastel.github.io/digital/sweetopiashop/fpxlogo.webp" alt="FPX Logo" width="70" height="30" class="object-contain h-5">
+                                </div>
                             </div>
-                            <div class="toyyibpay-body">
-                                <div class="fpx-container">
-                                    <div class="fpx-icon">
-                                        <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600">
-                                            <polyline points="15 18 9 12 15 6"></polyline>
-                                        </svg>
-                                        <span class="fpx-text">FPX</span>
-                                        <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600">
-                                            <polyline points="9 18 15 12 9 6"></polyline>
-                                        </svg>
-                                    </div>
+
+                            <!-- Is oce / Verified Logo Frame -->
+                            <div class="bg-white border-2 border-black rounded-lg p-1.5 shadow-[2px_2px_0_0_#000] flex flex-col items-center">
+                                <div class="text-[10px] font-black text-purple-700 pb-1">
+                                    Verified
+                                </div>
+                                <div class="bg-[#f3e8ff] p-1 rounded border border-black flex items-center justify-center">
+                                    <img src="https://digitalpastel.github.io/digital/sweetopiashop/isocelogo.webp" alt="Is oce Logo" width="70" height="30" class="object-contain h-5">
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Dark Copyright Footer Bar -->
-                    <div class="w-full bg-[#111827] py-4 px-4 text-center">
-                        <p class="text-xs text-slate-300 font-medium tracking-wide">
-                            Copyright Brand Works Empire 2026, all rights reserved
-                        </p>
                     </div>
                 </footer>
 
