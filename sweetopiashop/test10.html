@@ -13,6 +13,8 @@
     <link rel="manifest" href="https://digitalpastel.github.io/digital/sweetopiashop/manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+    <!-- Retro Pixel Font for 10-Bar Window matching reference image -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- html2canvas for A4 PNG invoice download -->
@@ -34,6 +36,7 @@
                     },
                     fontFamily: {
                         sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        pixel: ['"Press Start 2P"', 'monospace']
                     }
                 }
             }
@@ -182,29 +185,29 @@
         /* ToyyibPay Custom Footer Widget */
         .toyyibpay-widget {
             position: relative;
-            width: 260px;
+            width: 140px;
             max-width: 100%;
             background: #ffffff;
             border: 2px solid #6b21a8;
             border-radius: 16px;
-            padding: 24px 16px 14px 16px;
+            padding: 16px 8px 8px 8px;
             box-shadow: 0 4px 12px rgba(107, 33, 168, 0.12);
             font-family: 'Plus Jakarta Sans', sans-serif;
             text-align: center;
-            margin: 14px auto 0 auto;
+            margin: 10px 0 0 0;
         }
         .toyyibpay-header {
             position: absolute;
-            top: -14px;
+            top: -12px;
             left: 50%;
             transform: translateX(-50%);
             background: #6b21a8;
             color: #ffffff;
-            padding: 4px 20px;
+            padding: 2px 14px;
             border-radius: 30px;
             font-weight: 700;
-            font-size: 14px;
-            letter-spacing: -0.5px;
+            font-size: 11px;
+            letter-spacing: -0.3px;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
             white-space: nowrap;
         }
@@ -214,7 +217,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding-top: 4px;
+            padding-top: 2px;
         }
         .fpx-container {
             display: flex;
@@ -223,18 +226,19 @@
             background: #ffffff;
             border: 1px solid #e2e8f0;
             border-radius: 8px;
-            padding: 6px 20px;
+            padding: 4px 10px;
+            width: 100%;
         }
         .fpx-icon {
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 4px;
         }
-        .fpx-text {
-            font-size: 22px;
-            font-weight: 800;
-            color: #1e3a8a;
-            letter-spacing: 0.5px;
+        .fpx-logo-img {
+            max-height: 28px;
+            width: auto;
+            object-fit: contain;
         }
 
         /* Retro Comic Pink-Purple Image Frame Window Modal */
@@ -311,6 +315,46 @@
             display: block;
             background: #ffffff;
         }
+
+        /* Retro 10-Bar Pink Window Pixel Styling matching reference image */
+        .retro-loading-window {
+            background-color: #f7a5d9;
+            border: 4px solid #b82b79;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 6px 6px 0px #701147;
+            font-family: 'Press Start 2P', monospace;
+            image-rendering: pixelated;
+        }
+
+        .retro-loading-inner {
+            background-color: #ffffff;
+            border: 4px solid #b82b79;
+        }
+
+        .retro-window-btn {
+            background-color: #fcd5ec;
+            border: 2px solid #b82b79;
+            color: #550731;
+            box-shadow: inset -1px -1px 0px #b82b79, inset 1px 1px 0px #ffffff;
+        }
+
+        /* 10-Segment Pixel Loading Bar */
+        .retro-progress-bar-slot {
+            background-color: #f2d5e6;
+            transition: background-color 0.15s steps(2);
+        }
+
+        .retro-progress-bar-slot.filled {
+            background-color: #5a0c3f;
+        }
+
+        /* Retro Y2K Modal Typography & Utilities */
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Varela+Round&display=swap');
+        .retro-varela {
+            font-family: 'Varela Round', sans-serif;
+        }
+        .retro-title {
+            font-family: 'Press Start 2P', monospace;
+        }
     </style>
 </head>
 
@@ -344,6 +388,41 @@
         <div>
             <p id="toast-title" class="text-xs font-bold">Signed In</p>
             <p id="toast-msg" class="text-xs text-slate-300">Welcome to Sweetopia Shop!</p>
+        </div>
+    </div>
+
+    <!-- RETRO 10-BAR LOADING WINDOW MODAL -->
+    <div id="retro-auth-loading-modal" class="fixed inset-0 z-[100] bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200">
+        <div class="retro-loading-window w-full max-w-lg p-3 sm:p-4 rounded-none select-none">
+            <!-- Window Title bar -->
+            <div class="flex items-center justify-between pb-3 sm:pb-3.5">
+                <span class="text-xs sm:text-sm font-bold tracking-wider text-[#5a0c3f]">LOADING...</span>
+                <div class="flex items-center gap-1.5">
+                    <button type="button" class="retro-window-btn w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center text-[10px] sm:text-xs font-bold leading-none cursor-default">_</button>
+                    <button type="button" class="retro-window-btn w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center text-[10px] sm:text-xs font-bold leading-none cursor-default">X</button>
+                </div>
+            </div>
+
+            <!-- Inner White Box -->
+            <div class="retro-loading-inner p-4 sm:p-5">
+                <p id="retro-loading-status" class="text-[10px] sm:text-xs font-bold text-[#5a0c3f] tracking-wide mb-4 uppercase">
+                    AUTHENTICATING USER...
+                </p>
+
+                <!-- 10 Distinct Bars Grid -->
+                <div class="grid grid-cols-10 gap-1.5 sm:gap-2 h-10 sm:h-12 w-full" id="retro-loading-bars-container">
+                    <div class="retro-progress-bar-slot" id="retro-bar-0"></div>
+                    <div class="retro-progress-bar-slot" id="retro-bar-1"></div>
+                    <div class="retro-progress-bar-slot" id="retro-bar-2"></div>
+                    <div class="retro-progress-bar-slot" id="retro-bar-3"></div>
+                    <div class="retro-progress-bar-slot" id="retro-bar-4"></div>
+                    <div class="retro-progress-bar-slot" id="retro-bar-5"></div>
+                    <div class="retro-progress-bar-slot" id="retro-bar-6"></div>
+                    <div class="retro-progress-bar-slot" id="retro-bar-7"></div>
+                    <div class="retro-progress-bar-slot" id="retro-bar-8"></div>
+                    <div class="retro-progress-bar-slot" id="retro-bar-9"></div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -435,41 +514,45 @@
             <!-- PAGE 2: DASHBOARD & STORE CATALOG -->
             <div id="page-dashboard" class="w-full max-w-[1280px] flex flex-col bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xl relative">
 
-                <!-- CUSTOMER NAVIGATION BAR (DESKTOP MODE) -->
-                <div id="customer-nav-bar" class="px-4 sm:px-6 md:px-10 py-4 bg-slate-50 border-b border-slate-200 flex-wrap items-center justify-between gap-3 hidden md:flex">
-                    <div class="hidden md:flex items-center space-x-2 overflow-x-auto hide-scrollbar w-full sm:w-auto pb-1 sm:pb-0">
-                        <button onclick="switchTab('catalog')" id="dtab-catalog" class="px-5 py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 text-white transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] flex items-center space-x-2 shrink-0">
+                <!-- CUSTOMER NAVIGATION BAR (DESKTOP NAVIGATION + RESPONSIVE SIGN OUT BAR) -->
+                <div id="customer-nav-bar" class="px-4 sm:px-6 md:px-10 py-3 sm:py-4 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
+                    <!-- Nav buttons: strictly hidden on mobile phone view, visible on md+ -->
+                    <div class="hidden md:flex items-center space-x-3 overflow-x-auto hide-scrollbar w-full sm:w-auto pb-3">
+                        <button onclick="switchTab('catalog')" id="dtab-catalog" class="px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] shrink-0 flex items-center space-x-2">
                             <i class="fa-solid fa-house text-sm"></i>
                             <span>View Store Catalog</span>
                         </button>
-
-                        <button onclick="switchTab('customer-dashboard')" id="dtab-customer-dashboard" class="px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] flex items-center space-x-2 shrink-0">
+                        <button onclick="switchTab('customer-dashboard')" id="dtab-customer-dashboard" class="px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] shrink-0 flex items-center space-x-2">
                             <i class="fa-regular fa-user text-sm"></i>
                             <span>Dashboard</span>
                         </button>
-
-                        <button onclick="switchTab('favourites')" id="dtab-favourites" class="px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] flex items-center space-x-2 shrink-0">
+                        <button onclick="switchTab('favourites')" id="dtab-favourites" class="px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] shrink-0 flex items-center space-x-2">
                             <i class="fa-regular fa-heart text-xs"></i>
                             <span>Favourites (<span id="header-fav-count">0</span>)</span>
                         </button>
-
-                        <button onclick="switchTab('cart')" id="dtab-cart" class="px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] flex items-center space-x-2 shrink-0">
+                        <button onclick="switchTab('cart')" id="dtab-cart" class="px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] shrink-0 flex items-center space-x-2">
                             <i class="fa-solid fa-cart-shopping"></i>
                             <span>Cart (<span id="header-cart-count">0</span>)</span>
                         </button>
                     </div>
 
-                    <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto space-x-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200">
-                        <span id="user-email-display" class="text-xs text-slate-700 font-semibold truncate max-w-[200px]">customer@gmail.com</span>
-                        <button onclick="handleSignOut()" class="px-4 py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 text-white border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all shrink-0">
+                    <!-- User Email, Notification Button, and Sign Out: always visible on both mobile and desktop -->
+                    <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto space-x-2 sm:space-x-3 pt-0 border-t-0 border-slate-200">
+                        <span id="user-email-display" class="text-xs text-slate-700 font-semibold truncate max-w-[150px] sm:max-w-[200px]">customer@gmail.com</span>
+                        <button onclick="switchTab('notification')" id="dtab-notification" class="px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] flex items-center space-x-1.5 sm:space-x-2 shrink-0">
+                            <i class="fa-solid fa-bell text-black"></i>
+                            <span>Notification (<span id="header-notification-count">0</span>)</span>
+                        </button>
+                        <button onclick="handleSignOut()" class="px-3 sm:px-4 py-2 sm:py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 text-white border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all shrink-0">
                             Sign Out
                         </button>
                     </div>
                 </div>
 
-                <!-- ADMIN NAVIGATION BAR (Desktop Only - Strictly for Admins) -->
-                <div id="admin-nav-bar" class="hidden px-4 sm:px-6 md:px-10 py-4 bg-slate-50 border-b border-slate-200 flex-wrap items-center justify-between gap-3">
-                    <div class="flex items-center space-x-3 overflow-x-auto hide-scrollbar w-full sm:w-auto pb-3">
+                <!-- ADMIN NAVIGATION BAR (DESKTOP NAVIGATION + RESPONSIVE SIGN OUT BAR) -->
+                <div id="admin-nav-bar" class="hidden px-4 sm:px-6 md:px-10 py-3 sm:py-4 bg-slate-50 border-b border-slate-200 flex-wrap items-center justify-between gap-3">
+                    <!-- Nav buttons: strictly hidden on mobile phone view, visible on md+ -->
+                    <div class="hidden md:flex items-center space-x-3 overflow-x-auto hide-scrollbar w-full sm:w-auto pb-3">
                         <button onclick="switchTab('catalog')" id="dtab-admin-catalog" class="px-5 py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 text-white transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] shrink-0 flex items-center space-x-2">
                             <i class="fa-solid fa-house text-sm"></i>
                             <span>View Store Catalog</span>
@@ -481,7 +564,8 @@
                         </button>
                     </div>
 
-                    <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto space-x-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200">
+                    <!-- Admin Email and Sign Out: always visible on both mobile and desktop -->
+                    <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto space-x-3 pt-0 border-t-0 border-slate-200">
                         <span id="admin-email-display" class="text-xs text-amber-600 font-bold truncate max-w-[200px]">Admin (yeegummy@gmail.com)</span>
                         <button onclick="handleSignOut()" class="px-4 py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 text-white border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all shrink-0">
                             Sign Out
@@ -633,7 +717,7 @@
                                     <span>Subtotal (Lens items)</span>
                                     <span id="cart-subtotal">RM 0.00</span>
                                 </div>
-                                <div id="cart-discount-row" class="hidden flex justify-between text-xs text-emerald-600 font-semibold">
+                                <div id="cart-discount-row" class="hidden flex justify-between text-emerald-600 font-semibold">
                                     <span id="cart-discount-label">Discount Applied</span>
                                     <span id="cart-discount-amount">-RM 0.00</span>
                                 </div>
@@ -669,6 +753,30 @@
                             </span>
                         </div>
                         <div id="favourites-product-grid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6"></div>
+                    </div>
+
+                    <!-- TAB: NOTIFICATION (CUSTOMER SIDE) -->
+                    <div id="tab-section-notification" class="hidden max-w-3xl mx-auto space-y-6">
+                        <div class="flex items-center justify-between pb-4 border-b border-slate-200">
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                                    <i class="fa-solid fa-bell text-black"></i>
+                                    <span>Notifications</span>
+                                </h3>
+                                <p class="text-xs text-slate-500 mt-0.5">Real-time alerts for received vouchers, admin announcements, and order tracking confirmations.</p>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button onclick="markAllNotificationsAsRead()" class="text-xs font-bold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-xl transition">
+                                    Mark Read
+                                </button>
+                                <button onclick="clearCustomerNotifications()" class="text-xs font-bold text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-xl transition">
+                                    Clear All
+                                </button>
+                            </div>
+                        </div>
+                        <div id="customer-notifications-container" class="space-y-3">
+                            <p class="text-xs text-slate-500 text-center py-10">No notifications yet.</p>
+                        </div>
                     </div>
 
                     <!-- TAB 3: CUSTOMER DASHBOARD -->
@@ -878,6 +986,44 @@
                             </button>
                         </div>
 
+                        <!-- ADMIN SEND CUSTOMER NOTIFICATION WIDGET -->
+                        <div class="flex flex-col gap-3 pb-4 border-b border-slate-200 bg-amber-50 p-4 sm:p-5 rounded-2xl border border-amber-200 shadow-sm">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center text-amber-600 shrink-0">
+                                        <i class="fa-solid fa-bell text-base"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-sm font-bold text-slate-900">Admin Send Customer Notification</h3>
+                                        <p class="text-[11px] text-slate-600">Send direct custom messages or promotional alerts to individual customer notification feeds.</p>
+                                    </div>
+                                </div>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <div class="flex items-center gap-1.5">
+                                        <label for="admin-notif-target-customer" class="text-[10px] font-semibold text-slate-500 uppercase">Assign:</label>
+                                        <select id="admin-notif-target-customer" class="admin-voucher-customer-select bg-white border border-amber-300 text-slate-700 text-xs px-2.5 py-1.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400 font-sans max-w-[200px] truncate shadow-xs">
+                                            <option value="">-- Registered Customer --</option>
+                                        </select>
+                                    </div>
+                                    <button type="button" onclick="adminSendCustomNotification()" class="bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs px-3.5 py-1.5 rounded-lg transition-colors shadow-xs flex items-center gap-1.5 cursor-pointer">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                                        <span>Send &amp; Publish</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Title & Message Box -->
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
+                                <div class="sm:col-span-1">
+                                    <label class="block text-[10px] font-semibold text-slate-500 uppercase mb-1">Notification Title:</label>
+                                    <input type="text" id="admin-notif-title" placeholder="e.g. Special Voucher / Important Notice" class="w-full bg-white border border-slate-300 text-xs text-slate-900 rounded-xl px-3 py-2 shadow-xs focus:outline-none focus:ring-2 focus:ring-amber-400">
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <label class="block text-[10px] font-semibold text-slate-500 uppercase mb-1">Message Content:</label>
+                                    <textarea id="admin-notif-message" rows="2" placeholder="Write message to customer..." class="w-full bg-white border border-slate-300 text-xs text-slate-900 rounded-xl px-3 py-2 shadow-xs focus:outline-none focus:ring-2 focus:ring-amber-400"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- VOUCHERS PRESETS -->
                         <div class="bg-amber-50/70 p-4 rounded-2xl border border-amber-200 space-y-3">
                             <div class="flex items-center justify-between">
@@ -968,7 +1114,7 @@
                                             <input type="date" id="expiry-code4" value="2026-12-31" class="bg-amber-50/50 border border-amber-200 text-slate-700 text-xs px-2 py-1 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400 font-sans">
                                         </div>
                                         <button type="button" onclick="publishVoucher('CODE4')" class="bg-amber-600 hover:bg-amber-700 text-white font-medium text-xs px-3 py-1.5 rounded-lg transition-colors shadow-xs flex items-center gap-1 cursor-pointer">
-                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18-9-2zm0 0v-8"></path></svg>
                                             Send &amp; Publish
                                         </button>
                                     </div>
@@ -1135,44 +1281,61 @@
                     </div>
                 </div>
 
-                <!-- PAGE 2 FOOTER WITH TOYYIBPAY WIDGET -->
-                <footer class="w-full border-t border-slate-200 bg-slate-50/80 mt-auto">
-                    <div class="px-4 py-8 flex flex-col items-center justify-center text-center">
-                        <p class="text-xs font-bold text-slate-700 tracking-wide mb-3">
-                            ToyyibPay is registered with SSM
-                        </p>
+                <!-- PAGE 2 FOOTER -->
+                <footer class="w-full bg-[#d8b4fe] border-t-4 border-[#7c3aed] py-6 px-6 retro-font shadow-[0_-4px_0_0_#4c1d95] mt-auto">
+                    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 items-center gap-4">
+                        
+                        <!-- Left: Social Media Icons (Y2K Chunky Style) -->
+                        <div class="flex items-center justify-center md:justify-start space-x-3">
+                            <!-- Facebook -->
+                            <a href="https://www.facebook.com/share/1C455cr2u5/" target="_blank" rel="noopener noreferrer" class="w-9 h-9 bg-[#f472b6] hover:bg-[#ec4899] text-white rounded-full border-2 border-black flex items-center justify-center shadow-[2px_2px_0_0_#000] active:translate-y-0.5 active:shadow-[0_0_0_0_#000] transition-all">
+                                <i class="fa-brands fa-facebook-f text-sm"></i>
+                            </a>
+                            <!-- Instagram -->
+                            <a href="https://www.instagram.com/sweetopialens" target="_blank" rel="noopener noreferrer" class="w-9 h-9 bg-[#fb7185] hover:bg-[#f43f5e] text-white rounded-full border-2 border-black flex items-center justify-center shadow-[2px_2px_0_0_#000] active:translate-y-0.5 active:shadow-[0_0_0_0_#000] transition-all">
+                                <i class="fa-brands fa-instagram text-sm"></i>
+                            </a>
+                            <!-- TikTok -->
+                            <a href="https://www.tiktok.com/@sweetopiashop6" target="_blank" rel="noopener noreferrer" class="w-9 h-9 bg-[#38bdf8] hover:bg-[#0ea5e9] text-white rounded-full border-2 border-black flex items-center justify-center shadow-[2px_2px_0_0_#000] active:translate-y-0.5 active:shadow-[0_0_0_0_#000] transition-all">
+                                <i class="fa-brands fa-tiktok text-sm"></i>
+                            </a>
+                        </div>
 
-                        <!-- ToyyibPay FPX Badge Widget -->
-                        <div class="toyyibpay-widget">
-                            <div class="toyyibpay-header">
-                                <span class="brand-text">toyyib<span class="pay-text">Pay</span></span>
+                        <!-- Center: Copyright Text Only (No Border/Background) -->
+                        <div class="text-center flex justify-center">
+                            <p class="text-[11px] text-[#581c87] font-extrabold tracking-wider">
+                                © Brand Works Empire 2026, all rights reserved
+                            </p>
+                        </div>
+
+                        <!-- Right: ToyyibPay Widget & Is oce Logo Side-by-Side -->
+                        <div class="flex items-center justify-center md:justify-end gap-3">
+                            <!-- ToyyibPay Widget -->
+                            <div class="bg-white border-2 border-black rounded-lg p-1.5 shadow-[2px_2px_0_0_#000] flex flex-col items-center">
+                                <div class="text-[10px] font-black text-slate-800 pb-1">
+                                    toyyib<span class="text-purple-600">Pay</span>
+                                </div>
+                                <div class="bg-[#f3e8ff] p-1 rounded border border-black flex items-center justify-center">
+                                    <img src="https://digitalpastel.github.io/digital/sweetopiashop/fpxlogo.webp" alt="FPX Logo" width="70" height="30" class="object-contain h-5">
+                                </div>
                             </div>
-                            <div class="toyyibpay-body">
-                                <div class="fpx-container">
-                                    <div class="fpx-icon">
-                                        <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600">
-                                            <polyline points="15 18 9 12 15 6"></polyline>
-                                        </svg>
-                                        <span class="fpx-text">FPX</span>
-                                        <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600">
-                                            <polyline points="9 18 15 12 9 6"></polyline>
-                                        </svg>
-                                    </div>
+
+                            <!-- Is oce / Verified Logo Frame -->
+                            <div class="bg-white border-2 border-black rounded-lg p-1.5 shadow-[2px_2px_0_0_#000] flex flex-col items-center">
+                                <div class="text-[10px] font-black text-purple-700 pb-1">
+                                    Verified
+                                </div>
+                                <div class="bg-[#f3e8ff] p-1 rounded border border-black flex items-center justify-center">
+                                    <img src="https://digitalpastel.github.io/digital/sweetopiashop/isocelogo.webp" alt="Is oce Logo" width="70" height="30" class="object-contain h-5">
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Dark Copyright Footer Bar -->
-                    <div class="w-full bg-[#111827] py-4 px-4 text-center">
-                        <p class="text-xs text-slate-300 font-medium tracking-wide">
-                            Copyright Brand Works Empire 2026, all rights reserved
-                        </p>
                     </div>
                 </footer>
 
                 <!-- CHAT WIDGET -->
-                <div id="page2-chat-widget-container" class="fixed bottom-16 md:bottom-6 right-4 sm:right-6 z-40 flex flex-col items-end">
+                <div id="page2-chat-widget-container" class="fixed bottom-20 md:bottom-4 right-4 sm:right-6 z-40 flex flex-col items-end">
                     <div class="sweetopia-kawaii-window relative w-[calc(100vw-2rem)] sm:w-96 max-w-sm bg-white rounded-3xl shadow-2xl border border-[#ecfccb] overflow-visible flex flex-col mb-4 transition-all duration-300 transform h-[460px] sm:h-[500px] hidden opacity-0 scale-95 pointer-events-none" id="sweetopiaChatWindow">
                         <style>
                             .cat-ear-left-green, .cat-ear-right-green {
@@ -1201,6 +1364,7 @@
                         <div class="cat-ear-left-green"><div class="cat-ear-left-inner-green"></div></div>
                         <div class="cat-ear-right-green"><div class="cat-ear-right-inner-green"></div></div>
 
+                        <!-- Header -->
                         <div class="bg-gradient-to-r from-[#65a30d] to-[#4d7c0f] text-white px-4 py-3.5 rounded-t-3xl flex items-center justify-between shadow-md relative z-10">
                             <div class="flex items-center space-x-2.5">
                                 <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center font-bold text-sm border border-white/30">
@@ -1209,41 +1373,135 @@
                                 <div>
                                     <h4 class="text-xs font-bold">Sweetopia Live Support</h4>
                                     <p class="text-[10px] text-lime-100 flex items-center" id="support-status-indicator">
-                                        <span id="support-dot-indicator" class="w-2 h-2 rounded-full bg-slate-400 inline-block mr-1 transition-colors"></span>
-                                        <span id="support-status-text">Offline / Away</span>
+                                        <span id="support-dot-indicator" class="w-2 h-2 rounded-full bg-emerald-400 inline-block mr-1"></span>
+                                        <span id="widgetStatusText">Online &amp; Active</span>
                                     </p>
                                 </div>
                             </div>
                             <div class="flex items-center space-x-2">
-                                <button onclick="clearCurrentChatHistory()" id="chat-delete-history-btn" class="text-[10px] bg-white/20 hover:bg-white/30 text-white px-2 py-1 rounded-lg transition" title="Delete Chat History">Clear</button>
-                                <button onclick="toggleChatPopup()" class="w-7 h-7 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition">
+                                <button onclick="clearWidgetChat()" class="text-[10px] bg-white/20 hover:bg-white/30 text-white px-2 py-1 rounded-lg transition">Clear</button>
+                                <button onclick="toggleWidgetChat()" class="w-7 h-7 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition">
                                     <i class="fa-solid fa-xmark text-xs"></i>
                                 </button>
                             </div>
                         </div>
 
-                        <div id="admin-chat-session-bar" class="bg-[#f7fee7] px-3 py-2.5 border-b border-[#ecfccb] flex items-center justify-between text-[11px]">
-                            <span class="font-bold text-[#4d7c0f]">Select User:</span>
+                        <!-- Admin Session Switcher Bar -->
+                        <div id="admin-chat-session-bar" class="bg-[#f7fee7] px-3 py-2 border-b border-[#ecfccb] flex items-center justify-between text-[11px]">
+                            <span class="font-bold text-[#4d7c0f]">User Session:</span>
                             <div class="flex items-center space-x-2">
-                                <select id="admin-active-chat-user" onchange="switchAdminChatSession()" class="bg-white border border-[#84cc16] rounded-lg px-2 py-1 text-slate-800 font-semibold focus:outline-none max-w-[170px]"><option value="">No Active Chat</option></select>
-                                <button onclick="adminDeleteSelectedChatSession()" class="bg-red-50 hover:bg-red-100 text-red-600 px-2 py-1 rounded-lg font-bold border border-red-200 transition" title="Delete entire conversation">Delete</button>
+                                <select id="admin-active-chat-user" onchange="switchAdminChatSession()" class="bg-white border border-[#84cc16] rounded-lg px-2 py-1 text-slate-800 font-semibold focus:outline-none text-xs max-w-[170px]">
+                                    <option value="">No Active Chat</option>
+                                </select>
+                                <button onclick="adminDeleteSelectedChatSession()" class="bg-red-50 hover:bg-red-100 text-red-600 px-2 py-1 rounded-lg font-bold border border-red-200 transition text-[10px]" title="Delete entire conversation">Delete</button>
                             </div>
                         </div>
 
-                        <div id="chat-messages-box" class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/50 text-xs"><div class="text-center text-slate-400 py-10"><i class="fa-solid fa-comments text-2xl text-lime-500 mb-2"></i><p class="text-xs">No active conversation selected.</p></div></div>
+                        <!-- Messages Box -->
+                        <div id="widget-chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/50 text-xs">
+                            <div class="text-center text-slate-400 py-10">
+                                <i class="fa-solid fa-heart text-2xl text-lime-500 mb-2"></i>
+                                <p class="text-xs">Welcome to Sweetopia Support!<br>Ask us about colored lenses, orders, or stock availability.</p>
+                            </div>
+                        </div>
 
-                        <div class="p-3 bg-white border-t border-slate-100 flex items-center space-x-2 rounded-b-3xl">
-                            <input type="text" id="chat-input-text" onkeypress="handleChatKeypress(event)" placeholder="Type a message..." class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#65a30d]">
-                            <button onclick="sendChatMessage()" class="w-10 h-10 rounded-xl bg-[#65a30d] hover:bg-[#4d7c0f] text-white flex items-center justify-center shadow-md transition shrink-0">
-                                <i class="fa-solid fa-paper-plane text-xs"></i>
-                            </button>
+                        <!-- Footer Input & Multimedia Toolbar -->
+                        <div class="p-3 bg-white border-t border-pink-100 flex flex-col space-y-2 rounded-b-3xl">
+                            <!-- Multimedia & Sticker Toolbar Icons -->
+                            <div class="flex items-center space-x-2 sm:space-x-3 px-1 text-slate-500">
+                                <!-- Sticker Picker Toggle Button -->
+                                <button type="button" onclick="toggleStickerPicker()" class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl hover:bg-pink-100/80 hover:text-pink-600 flex items-center justify-center transition text-sm sm:text-base" title="Stickers">
+                                    <i class="fa-solid fa-face-smile"></i>
+                                </button>
+                                <!-- Image Upload Button -->
+                                <label class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl hover:bg-pink-100/80 hover:text-pink-600 flex items-center justify-center transition cursor-pointer text-sm sm:text-base" title="Upload Image">
+                                    <i class="fa-solid fa-image"></i>
+                                    <input type="file" id="imageUploadInput" accept="image/png,image/jpeg,image/jpg,image/webp" class="hidden" onchange="handleImageUpload(event)">
+                                </label>
+                                <!-- Video Upload Button -->
+                                <label class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl hover:bg-pink-100/80 hover:text-pink-600 flex items-center justify-center transition cursor-pointer text-sm sm:text-base" title="Upload Video">
+                                    <i class="fa-solid fa-video"></i>
+                                    <input type="file" id="videoUploadInput" accept="video/*,.mp4,.webm,.mov" class="hidden" onchange="handleVideoUpload(event)">
+                                </label>
+                                <!-- Product Share Button -->
+                                <button type="button" onclick="openProductSelectorModal()" class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl hover:bg-pink-100/80 hover:text-pink-600 flex items-center justify-center transition text-sm sm:text-base" title="Order / Share Product">
+                                    <i class="fa-solid fa-bag-shopping"></i>
+                                </button>
+                                <!-- Custom Upload Sticker Button -->
+                                <label class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl hover:bg-purple-100 hover:text-purple-600 flex items-center justify-center transition cursor-pointer text-sm sm:text-base" title="Upload Custom Sticker">
+                                    <i class="fa-solid fa-plus-circle text-purple-500"></i>
+                                    <input type="file" id="customStickerInput" accept="image/*" class="hidden" onchange="handleCustomStickerUpload(event)">
+                                </label>
+                            </div>
+
+                            <!-- Textarea and Send Button -->
+                            <div class="flex items-center space-x-2 bg-pink-50/70 rounded-2xl p-2 border border-pink-200 focus-within:border-pink-400 transition">
+                                <textarea id="chatInput" rows="1" placeholder="Type a message here..." class="flex-1 bg-transparent border-none focus:outline-none text-slate-700 text-xs px-2 resize-none" onkeypress="handleKeypress(event)"></textarea>
+                                <button id="sendBtn" onclick="sendTextMessage()" class="px-3.5 py-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold rounded-xl shadow-md hover:opacity-95 transition text-xs flex items-center space-x-1.5 shrink-0">
+                                    <span>Send</span>
+                                    <i class="fa-solid fa-paper-plane text-[10px]"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
-                    <button onclick="toggleChatPopup()" class="w-14 h-14 rounded-full bg-gradient-to-r from-[#65a30d] to-[#4d7c0f] hover:from-[#4d7c0f] hover:to-[#3f6212] text-white shadow-2xl flex items-center justify-center text-xl transition-all transform hover:scale-105 border-2 border-white relative group">
+                    <!-- Floating Chat Toggle Button -->
+                    <button onclick="toggleWidgetChat()" class="w-14 h-14 rounded-full bg-gradient-to-r from-[#65a30d] to-[#4d7c0f] hover:from-[#4d7c0f] hover:to-[#3f6212] text-white shadow-2xl flex items-center justify-center text-xl transition-all transform hover:scale-105 border-2 border-white relative group">
                         <i class="fa-solid fa-comments"></i>
-                        <span id="chat-unread-badge" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-extrabold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-md hidden">0</span>
+                        <span id="widget-unread-badge" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-extrabold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-md hidden">0</span>
                     </button>
+                </div>
+            </div>
+
+            <!-- SHOPEE STYLE STICKER PICKER MODAL (20 STICKER SLOTS) -->
+            <div id="screen-sticker-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-3 sm:p-4" onclick="closeStickerPicker()">
+                <div class="w-full max-w-sm bg-white rounded-3xl border border-pink-200 overflow-hidden shadow-2xl flex flex-col max-h-[85vh] animate-in fade-in zoom-in-95 duration-200" onclick="event.stopPropagation()">
+                    <div class="px-5 py-3.5 bg-gradient-to-r from-pink-100 to-purple-100 border-b border-pink-200 flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-face-smile text-pink-500 text-base"></i>
+                            <h3 class="text-xs font-bold text-slate-800">Select Sticker (20 Packs)</h3>
+                        </div>
+                        <button type="button" onclick="closeStickerPicker()" class="w-7 h-7 rounded-full bg-white/80 hover:bg-white text-slate-600 flex items-center justify-center transition shadow-xs">
+                            <i class="fa-solid fa-xmark text-xs"></i>
+                        </button>
+                    </div>
+
+                    <!-- 20 Replaceable Sticker Slots Grid -->
+                    <div class="p-3.5 overflow-y-auto max-h-72 cute-h-scrollbar">
+                        <div id="sticker-slots-grid" class="grid grid-cols-4 sm:grid-cols-5 gap-2.5">
+                            <!-- Populated dynamically with 20 placeable sticker slots -->
+                        </div>
+                    </div>
+
+                    <div class="p-2.5 bg-slate-50 border-t border-slate-100 text-center">
+                        <span class="text-[10px] text-slate-400">Click any sticker slot to post into chat</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SHOPEE STYLE PRODUCT SHARE / ORDER MODAL -->
+            <div id="screen-product-selector-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-3 sm:p-4" onclick="closeProductSelectorModal()">
+                <div class="w-full max-w-md bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-2xl flex flex-col max-h-[85vh] animate-in fade-in zoom-in-95 duration-200" onclick="event.stopPropagation()">
+                    <div class="px-5 py-3.5 bg-slate-100 border-b border-slate-200 flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-bag-shopping text-[#65a30d] text-base"></i>
+                            <h3 class="text-xs font-bold text-slate-800">Order / Share Product with Support</h3>
+                        </div>
+                        <button type="button" onclick="closeProductSelectorModal()" class="w-7 h-7 rounded-full bg-white hover:bg-slate-200 text-slate-600 flex items-center justify-center transition shadow-xs">
+                            <i class="fa-solid fa-xmark text-xs"></i>
+                        </button>
+                    </div>
+
+                    <!-- Scrollable Product List -->
+                    <div class="p-4 overflow-y-auto space-y-3 max-h-80" id="chat-product-share-list">
+                        <!-- Populated dynamically from products list -->
+                    </div>
+
+                    <div class="p-3 bg-slate-50 border-t border-slate-200 text-right">
+                        <button type="button" onclick="closeProductSelectorModal()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl text-xs font-bold transition">
+                            Cancel
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -1443,13 +1701,39 @@
                     </div>
                     <h3 class="text-lg font-bold text-slate-900">Redirecting to ToyyibPay FPX</h3>
                     <p class="text-xs text-slate-600">Order ID: <span id="fpx-modal-order-id" class="font-mono text-[#65a30d] font-bold"></span></p>
-                    <p class="text-xs text-slate-500">You are about to be securely redirected to your ToyyibPay payment link: <br><b class="text-slate-800">https://toyyibpay.com/brandworks</b></p>
+                    <p class="text-xs text-slate-500">You are about to be securely redirected to ToyyibPay with </p>
+                    <h3 class="text-lg font-bold text-slate-900">Total Amount: <span id="fpx-modal-total-amount" class="text-[#65a30d]">RM 0.00</span></h3>
+                    <p class="text-xs text-slate-500">payment link:<br><b class="text-slate-800">https://toyyibpay.com/brandworks</b></p>
                     <div class="pt-2 flex space-x-3">
                         <button onclick="confirmToyyibPayRedirect()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl text-xs shadow-sm">
                             Proceed to ToyyibPay
                         </button>
                         <button onclick="closeToyyibPayModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-3 rounded-xl text-xs border border-slate-200">
                             Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAYMENT STATUS VERIFICATION MODAL (WAITING FOR DRAWN PAYMENT) -->
+            <div id="payment-verify-modal" class="fixed inset-0 z-[75] bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+                <div class="w-full max-w-sm bg-white rounded-3xl border border-slate-200 shadow-2xl p-6 text-center space-y-4">
+                    <div class="w-12 h-12 bg-amber-50 rounded-2xl mx-auto flex items-center justify-center text-amber-600 text-xl border border-amber-200">
+                        <i class="fa-solid fa-receipt"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-slate-900">Payment Verification</h4>
+                        <p class="text-xs text-slate-500 mt-1">Did you complete the payment transaction on ToyyibPay?</p>
+                    </div>
+                    <div class="bg-slate-50 rounded-xl p-3 text-xs border border-slate-200 text-slate-600">
+                        Total Amount: <b id="verify-modal-amount" class="text-[#65a30d]">RM 0.00</b>
+                    </div>
+                    <div class="flex space-x-2 pt-2">
+                        <button type="button" onclick="finalizeCompletedPayment()" class="flex-1 bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold py-2.5 rounded-xl text-xs shadow-sm transition">
+                            Yes, Paid Full Amount
+                        </button>
+                        <button type="button" onclick="cancelPendingPaymentVerification()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs border border-slate-300 transition">
+                            Not Paid Yet
                         </button>
                     </div>
                 </div>
@@ -1472,6 +1756,50 @@
                     <button onclick="submitForgotPassword()" class="w-full bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold py-3 rounded-xl text-xs shadow-sm">
                         Send Reset Email
                     </button>
+                </div>
+            </div>
+
+            <!-- RETRO Y2K ORDER CONFIRMATION MODAL (BLURRED STORE BACKGROUND) -->
+            <div id="retro-order-success-modal" class="fixed inset-0 z-[80] bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+                <div class="w-[440px] max-w-[calc(100vw-2rem)] bg-[#d8b4fe] border-[3px] border-[#7c3aed] rounded-xl shadow-[8px_8px_0_0_#4c1d95] retro-varela overflow-hidden select-none animate-in fade-in zoom-in-95 duration-200">
+                    <!-- Window Title Bar -->
+                    <div class="bg-[#a855f7] px-3 py-2 flex justify-between items-center border-b-[3px] border-[#7c3aed]">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-white text-[10px] tracking-wider font-bold uppercase">order_success.exe</span>
+                        </div>
+                        <div class="flex space-x-1.5">
+                            <!-- Minimize Button -->
+                            <div class="w-5 h-5 bg-[#e9d5ff] border-2 border-black flex items-center justify-center text-[10px] font-bold shadow-[1px_1px_0_0_#000] cursor-pointer hover:bg-white transition-colors leading-none">_</div>
+                            <!-- Close Button -->
+                            <button type="button" onclick="handleRetroOrderSuccessClose()" class="w-5 h-5 bg-[#f472b6] border-2 border-black flex items-center justify-center text-[12px] font-bold text-white shadow-[1px_1px_0_0_#000] cursor-pointer hover:bg-[#ec4899] transition-colors leading-none">×</button>
+                        </div>
+                    </div>
+
+                    <!-- Window Inner Body -->
+                    <div class="bg-[#f3e8ff] p-5 sm:p-6 flex flex-col items-center text-center space-y-5 sm:space-y-6 m-2 border-2 border-[#9333ea] rounded-lg">
+                        <!-- Multi-colored Retro Title Blocks -->
+                        <div class="space-y-2 py-1 sm:py-2">
+                            <div class="inline-block bg-[#fef08a] border-2 border-black px-3 py-1.5 transform -rotate-1 shadow-[3px_3px_0_0_#000]">
+                                <span class="retro-title text-xs sm:text-sm font-extrabold text-[#713f12] tracking-wider">THANK YOU</span>
+                            </div>
+                            <div class="block">
+                                <span class="retro-title text-xs sm:text-sm font-extrabold text-[#f472b6] tracking-wider drop-shadow-[2px_2px_0_#000]">FOR YOUR</span>
+                            </div>
+                            <div class="inline-block bg-[#bbf7d0] border-2 border-black px-3 py-1.5 transform rotate-1 shadow-[3px_3px_0_0_#000]">
+                                <span class="retro-title text-xs sm:text-sm font-extrabold text-[#14532d] tracking-wider">ORDER!</span>
+                            </div>
+                        </div>
+
+                        <!-- Subtitle message -->
+                        <p class="text-xs font-bold text-slate-700 tracking-wide max-w-[280px] leading-relaxed">
+                            Your package is getting prepared in our digital warehouse. We'll email you tracking updates soon!
+                        </p>
+
+                        <!-- Single Action Button to Return to Store Catalog -->
+                        <button type="button" onclick="handleRetroOrderSuccessContinue()" class="w-full py-3 bg-[#f472b6] hover:bg-[#ec4899] text-white text-xs font-extrabold rounded-full border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all uppercase tracking-widest cursor-pointer">
+                            Continue Shopping
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -1566,7 +1894,7 @@
         </main>
     </div>
 
-    <!-- MOBILE DEVICE VIEW BOTTOM NAVIGATION BAR (UNTOUCHED) -->
+    <!-- MOBILE DEVICE VIEW BOTTOM NAVIGATION BAR -->
     <div id="mobile-bottom-nav" class="md:hidden fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-lg border-t border-slate-800 px-6 py-2.5 flex justify-between items-center z-50">
         <button type="button" onclick="switchTab('catalog', true)" id="mob-nav-catalog" class="mob-nav-btn flex flex-col items-center space-y-1 text-[#84cc16]">
             <i class="fa-solid fa-house text-sm"></i>
@@ -1591,6 +1919,25 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
         import { getAuth, signInWithCustomToken, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
         import { getFirestore, collection, doc, setDoc, deleteDoc, getDoc, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
+
+        // Pre-bind critical navigation functions to window immediately to prevent ReferenceError in inline onclick handlers
+        window.switchTab = function(tabName, saveState = true) {
+            if (typeof doSwitchTab === 'function') {
+                doSwitchTab(tabName, saveState);
+            }
+        };
+
+        window.switchPage = function(pageName) {
+            if (typeof doSwitchPage === 'function') {
+                doSwitchPage(pageName);
+            }
+        };
+
+        window.handleSignOut = function() {
+            if (typeof doSignOut === 'function') {
+                doSignOut();
+            }
+        };
 
         let deferredInstallPrompt = null;
         window.addEventListener('beforeinstallprompt', (e) => {
@@ -1636,6 +1983,93 @@
             if (token) { await signInWithCustomToken(auth, token); }
         } catch(e) { console.warn("Firebase mode:", e); }
 
+        /* ADAPTIVE 10-BAR RETRO PROGRESS CONTROLLER */
+        let loadingBarsProgress = 0;
+        let loadingIntervalTimer = null;
+        let loadingResolveFn = null;
+
+        function setRetroBars(count) {
+            loadingBarsProgress = Math.min(10, Math.max(0, count));
+            for (let i = 0; i < 10; i++) {
+                const bar = document.getElementById(`retro-bar-${i}`);
+                if (bar) {
+                    if (i < loadingBarsProgress) {
+                        bar.classList.add('filled');
+                    } else {
+                        bar.classList.remove('filled');
+                    }
+                }
+            }
+        }
+
+        function startRetroLoading(statusText = "AUTHENTICATING USER...") {
+            const modal = document.getElementById('retro-auth-loading-modal');
+            const statusEl = document.getElementById('retro-loading-status');
+            if (statusEl) statusEl.innerText = statusText;
+
+            setRetroBars(0);
+
+            if (modal) {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modal.classList.add('opacity-100');
+            }
+
+            if (loadingIntervalTimer) clearInterval(loadingIntervalTimer);
+
+            let current = 0;
+            loadingIntervalTimer = setInterval(() => {
+                if (current < 8) {
+                    current++;
+                    setRetroBars(current);
+                }
+            }, 180);
+
+            return new Promise(resolve => {
+                loadingResolveFn = resolve;
+            });
+        }
+
+        function finishRetroLoading(speed = 'normal') {
+            if (loadingIntervalTimer) clearInterval(loadingIntervalTimer);
+
+            return new Promise((resolve) => {
+                const stepDelay = speed === 'fast' ? 30 : 60;
+                const fillRest = () => {
+                    if (loadingBarsProgress < 10) {
+                        setRetroBars(loadingBarsProgress + 1);
+                        setTimeout(fillRest, stepDelay);
+                    } else {
+                        setTimeout(() => {
+                            const modal = document.getElementById('retro-auth-loading-modal');
+                            if (modal) {
+                                modal.classList.remove('opacity-100');
+                                modal.classList.add('opacity-0', 'pointer-events-none');
+                            }
+                            if (loadingResolveFn) {
+                                loadingResolveFn();
+                                loadingResolveFn = null;
+                            }
+                            resolve();
+                        }, 220);
+                    }
+                };
+                fillRest();
+            });
+        }
+
+        function cancelRetroLoading() {
+            if (loadingIntervalTimer) clearInterval(loadingIntervalTimer);
+            const modal = document.getElementById('retro-auth-loading-modal');
+            if (modal) {
+                modal.classList.remove('opacity-100');
+                modal.classList.add('opacity-0', 'pointer-events-none');
+            }
+            if (loadingResolveFn) {
+                loadingResolveFn();
+                loadingResolveFn = null;
+            }
+        }
+
         let products = [
             { id: "p1", name: "HAZEL NATURAL", brand: "Molicon", price: "25.00", category: "3 Months Disposable", image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500", badge: "In Stock" },
             { id: "p2", name: "CRYSTAL CLEAR", brand: "Uyaai", price: "25.00", category: "1 Month Disposable", image: "https://images.unsplash.com/photo-1583946099066-764f2537f136?auto=format&fit=crop&q=80&w=500", badge: "In Stock" },
@@ -1674,6 +2108,7 @@
         };
 
         let assignedVouchersMap = {};
+        let notificationsMap = {};
         let favouritesList = [];
         const ADMIN_EMAILS = ["yeegummy@gmail.com", "nur@brandworkz.co", "nurzuraysha@gmail.com"];
         const TOYYIBPAY_URL = "https://toyyibpay.com/brandworks";
@@ -1692,6 +2127,218 @@
                 phone: '+6012-3456789'
             }
         ];
+
+        function calculateShippingFee(cartItems) {
+            const totalQty = (cartItems || []).reduce((acc, i) => acc + (i.qty || 0), 0);
+            if (totalQty === 0) return 0.00;
+
+            const isMoliconOnly = cartItems.length > 0 && cartItems.every(i => {
+                const brand = (i.brand || '').trim().toLowerCase();
+                if (brand === 'molicon') return true;
+                const prod = products.find(p => p.id === i.id);
+                return prod && (prod.brand || '').trim().toLowerCase() === 'molicon';
+            });
+
+            if (isMoliconOnly) {
+                // Molicon rules:
+                // Buy 1: RM5 shipping
+                // Buy 2 to 10: Free shipping (RM0)
+                // Buy > 10: RM5 shipping
+                if (totalQty === 1) {
+                    return 5.00;
+                } else if (totalQty >= 2 && totalQty <= 10) {
+                    return 0.00;
+                } else {
+                    return 5.00;
+                }
+            }
+
+            // Default standard shipping for other brands
+            return 5.00;
+        }
+
+        function loadNotifications() {
+            try {
+                const stored = localStorage.getItem('sweetopia_notifications');
+                if (stored) {
+                    notificationsMap = JSON.parse(stored);
+                }
+            } catch(e) { console.warn(e); }
+        }
+
+        async function syncNotificationsStorage() {
+            localStorage.setItem('sweetopia_notifications', JSON.stringify(notificationsMap));
+            if (db) {
+                try {
+                    await setDoc(doc(db, "lumilens_notifications", "all_notifications"), {
+                        data: notificationsMap,
+                        updatedAt: new Date().toISOString()
+                    }, { merge: true });
+                } catch(e) { console.warn("Notifications Firestore sync error:", e); }
+            }
+        }
+
+        function getCustomerNotifications() {
+            if (!currentUser || !currentUser.email) return [];
+            const userKey = currentUser.email.toLowerCase();
+            return (notificationsMap[userKey] || []).sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+        }
+
+        async function addNotificationForCustomer(targetEmail, notif) {
+            if (!targetEmail) return;
+            const userKey = targetEmail.trim().toLowerCase();
+            if (!notificationsMap[userKey]) {
+                notificationsMap[userKey] = [];
+            }
+            const fullNotif = {
+                id: 'notif_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
+                title: notif.title || 'Notification',
+                message: notif.message || '',
+                type: notif.type || 'info', // 'message' | 'voucher' | 'order' | 'info'
+                read: false,
+                timestamp: new Date().toISOString(),
+                dateStr: new Date().toLocaleString()
+            };
+            notificationsMap[userKey].unshift(fullNotif);
+            await syncNotificationsStorage();
+            renderCustomerNotificationsUI();
+        }
+
+        function updateNotificationBadge() {
+            const list = getCustomerNotifications();
+            const unreadCount = list.filter(n => !n.read).length;
+            const headerCount = document.getElementById('header-notification-count');
+            if (headerCount) headerCount.innerText = unreadCount;
+        }
+
+        function renderCustomerNotificationsUI() {
+            updateNotificationBadge();
+            const container = document.getElementById('customer-notifications-container');
+            if (!container) return;
+
+            const list = getCustomerNotifications();
+            if (list.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 bg-white rounded-2xl border border-dashed border-slate-300">
+                        <i class="fa-regular fa-bell text-3xl text-slate-300 mb-2 block"></i>
+                        <p class="text-xs font-semibold text-slate-600">No notifications yet.</p>
+                        <p class="text-[11px] text-slate-400 mt-1">You will see announcements, received coupons, and shipment tracking alerts here.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = list.map(n => {
+                let iconClass = 'fa-solid fa-bell text-black';
+                let bgBadge = 'bg-slate-100 border-slate-300';
+                if (n.type === 'voucher') {
+                    iconClass = 'fa-solid fa-ticket text-emerald-600';
+                    bgBadge = 'bg-emerald-50 border-emerald-200';
+                } else if (n.type === 'order') {
+                    iconClass = 'fa-solid fa-truck-fast text-blue-600';
+                    bgBadge = 'bg-blue-50 border-blue-200';
+                }
+
+                return `
+                    <div class="p-4 rounded-2xl border ${n.read ? 'bg-white border-slate-200' : 'bg-slate-50 border-slate-400 shadow-sm'} transition flex items-start justify-between gap-3">
+                        <div class="flex items-start space-x-3">
+                            <div class="w-9 h-9 rounded-xl ${bgBadge} border flex items-center justify-center shrink-0 mt-0.5">
+                                <i class="${iconClass} text-sm"></i>
+                            </div>
+                            <div class="space-y-1">
+                                <div class="flex items-center space-x-2">
+                                    <h4 class="text-xs font-bold text-slate-900">${n.title}</h4>
+                                    ${!n.read ? '<span class="text-[9px] bg-red-500 text-white font-extrabold px-1.5 py-0.2 rounded-full uppercase">New</span>' : ''}
+                                </div>
+                                <p class="text-xs text-slate-700 leading-relaxed font-sans whitespace-pre-line">${n.message}</p>
+                                <span class="text-[10px] text-slate-400 block pt-0.5">${n.dateStr || ''}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-1.5 shrink-0">
+                            ${!n.read ? `
+                            <button onclick="markNotificationAsRead('${n.id}')" class="text-[10px] font-bold text-slate-600 hover:text-slate-900 bg-white border border-slate-200 px-2.5 py-1 rounded-lg transition shadow-xs" title="Mark as read">
+                                Read
+                            </button>` : ''}
+                            <button onclick="deleteSingleNotification('${n.id}')" class="text-slate-400 hover:text-red-500 p-1.5 transition" title="Delete notification">
+                                <i class="fa-solid fa-trash-can text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.markNotificationAsRead = async function(notifId) {
+            if (!currentUser || !currentUser.email) return;
+            const userKey = currentUser.email.toLowerCase();
+            const list = notificationsMap[userKey] || [];
+            const item = list.find(n => n.id === notifId);
+            if (item) {
+                item.read = true;
+                await syncNotificationsStorage();
+                renderCustomerNotificationsUI();
+            }
+        };
+
+        window.markAllNotificationsAsRead = async function() {
+            if (!currentUser || !currentUser.email) return;
+            const userKey = currentUser.email.toLowerCase();
+            const list = notificationsMap[userKey] || [];
+            list.forEach(n => n.read = true);
+            await syncNotificationsStorage();
+            renderCustomerNotificationsUI();
+            showToast("Notifications Read", "All notifications marked as read.");
+        };
+
+        window.clearCustomerNotifications = async function() {
+            if (!currentUser || !currentUser.email) return;
+            if (confirm("Are you sure you want to clear all your notifications?")) {
+                const userKey = currentUser.email.toLowerCase();
+                notificationsMap[userKey] = [];
+                await syncNotificationsStorage();
+                renderCustomerNotificationsUI();
+                showToast("Cleared", "All notifications cleared.");
+            }
+        };
+
+        window.deleteSingleNotification = async function(notifId) {
+            if (!currentUser || !currentUser.email) return;
+            const userKey = currentUser.email.toLowerCase();
+            notificationsMap[userKey] = (notificationsMap[userKey] || []).filter(n => n.id !== notifId);
+            await syncNotificationsStorage();
+            renderCustomerNotificationsUI();
+        };
+
+        window.adminSendCustomNotification = async function() {
+            const select = document.getElementById('admin-notif-target-customer');
+            const targetCustomer = (select?.value || '').trim();
+            const titleInput = document.getElementById('admin-notif-title');
+            const messageInput = document.getElementById('admin-notif-message');
+
+            const title = (titleInput?.value || '').trim() || 'Message from Sweetopia Admin';
+            const message = (messageInput?.value || '').trim();
+
+            if (!targetCustomer) {
+                showToast("Select Customer", "Please select a registered customer to receive this notification.", true);
+                return;
+            }
+
+            if (!message) {
+                showToast("Message Required", "Please type a message in the message box to send.", true);
+                return;
+            }
+
+            await addNotificationForCustomer(targetCustomer, {
+                title: title,
+                message: message,
+                type: 'message'
+            });
+
+            if (titleInput) titleInput.value = '';
+            if (messageInput) messageInput.value = '';
+
+            showToast("Notification Sent!", `Direct notification sent to ${targetCustomer}.`);
+        };
 
         function loadAssignedVouchers() {
             try {
@@ -1816,10 +2463,11 @@
                 assignedVouchersMap[targetEmail] = [];
             }
 
+            const discountVal = VALID_VOUCHERS[code] || 0.00;
             const existingIdx = assignedVouchersMap[targetEmail].findIndex(v => v.code === code);
             const voucherObj = {
                 code: code,
-                discount: VALID_VOUCHERS[code] || 0.00,
+                discount: discountVal,
                 expiresAt: expiryDate,
                 used: false,
                 publishedAt: new Date().toISOString()
@@ -1832,8 +2480,16 @@
             }
 
             await syncAssignedVouchersStorage();
+
+            // Automatically notify customer of received voucher code
+            await addNotificationForCustomer(targetEmail, {
+                title: `Voucher Received: ${code}`,
+                message: `Congratulations! You have received a discount voucher ${code} (-RM ${discountVal.toFixed(2)}) valid until ${expiryDate}. Apply it at checkout!`,
+                type: 'voucher'
+            });
+
             renderCustomerVouchersUI();
-            showToast("Voucher Published!", `Successfully published ${code} to ${targetEmail}.`);
+            showToast("Voucher Published!", `Successfully published ${code} to ${targetEmail} and notified customer.`);
         };
 
         function renderAdminVoucherCustomerDropdowns() {
@@ -1842,6 +2498,7 @@
             if (currentUser && currentUser.email) knownUsersSet.add(currentUser.email);
             const userList = Array.from(knownUsersSet).filter(u => !isAdminUser(u));
 
+            // Populate voucher presets dropdowns
             ['code1', 'code2', 'code3', 'code4', 'code5'].forEach(codeId => {
                 const select = document.getElementById(`customer-${codeId}`);
                 if (!select) return;
@@ -1855,6 +2512,17 @@
 
                 select.innerHTML = optionsHtml;
             });
+
+            // Populate admin send notification target customer dropdown
+            const notifSelect = document.getElementById('admin-notif-target-customer');
+            if (notifSelect) {
+                const currentVal = notifSelect.value;
+                let optionsHtml = '<option value="">-- Registered Customer --</option>';
+                userList.forEach(u => {
+                    optionsHtml += `<option value="${u}" ${u === currentVal ? 'selected' : ''}>${u}</option>`;
+                });
+                notifSelect.innerHTML = optionsHtml;
+            }
         }
 
         window.renderCustomerVouchersUI = function() {
@@ -2206,7 +2874,9 @@
             }
         };
 
-        window.continueAsGuest = function() {
+        window.continueAsGuest = async function() {
+            startRetroLoading("INITIALIZING GUEST SESSION...");
+
             let guestId = localStorage.getItem('sweetopia_guest_id');
             if (!guestId) {
                 guestId = 'Guest_' + Math.floor(1000 + Math.random() * 9000);
@@ -2214,6 +2884,9 @@
             }
             currentUser = { email: `${guestId}@sweetopiashop.my`, isGuest: true, guestId: guestId };
             updateUIAfterLogin(currentUser);
+
+            await finishRetroLoading('fast');
+
             switchPage('dashboard');
             switchTab('catalog');
             showToast("Guest Mode", "Browsing store as guest.");
@@ -2328,18 +3001,359 @@
         window.closeInvoiceModal = closeInvoiceModal;
         window.downloadInvoiceAsPNG = downloadInvoiceAsPNG;
         window.showToast = showToast;
-        window.toggleChatPopup = toggleChatPopup;
-        window.sendChatMessage = sendChatMessage;
-        window.handleChatKeypress = handleChatKeypress;
-        window.clearCurrentChatHistory = clearCurrentChatHistory;
+        window.handleRetroOrderSuccessClose = handleRetroOrderSuccessClose;
+        window.handleRetroOrderSuccessContinue = handleRetroOrderSuccessContinue;
+        window.finalizeCompletedPayment = finalizeCompletedPayment;
+        window.cancelPendingPaymentVerification = cancelPendingPaymentVerification;
+        
+        // Widget Chat methods & bindings
+        window.toggleWidgetChat = toggleWidgetChat;
+        window.clearWidgetChat = clearWidgetChat;
+        window.sendTextMessage = sendTextMessage;
+        window.handleKeypress = handleKeypress;
+        window.toggleStickerPicker = toggleStickerPicker;
+        window.closeStickerPicker = closeStickerPicker;
+        window.selectSticker = selectSticker;
+        window.handleImageUpload = handleImageUpload;
+        window.handleVideoUpload = handleVideoUpload;
+        window.handleCustomStickerUpload = handleCustomStickerUpload;
+        window.openProductSelectorModal = openProductSelectorModal;
+        window.closeProductSelectorModal = closeProductSelectorModal;
+        window.shareProductInChat = shareProductInChat;
         window.switchAdminChatSession = switchAdminChatSession;
         window.adminDeleteSelectedChatSession = adminDeleteSelectedChatSession;
+
+        // 20 Replaceable Sticker image sources (Easy to replace with your custom stickers/image codes)
+        const defaultStickerAssets = [
+            "https://placehold.co/120x120/fce7f3/db2777?text=Heart+1",
+            "https://placehold.co/120x120/fce7f3/db2777?text=Sparkle+2",
+            "https://placehold.co/120x120/ede9fe/7c3aed?text=Cat+3",
+            "https://placehold.co/120x120/ede9fe/7c3aed?text=Love+4",
+            "https://placehold.co/120x120/dbeafe/2563eb?text=Star+5",
+            "https://placehold.co/120x120/dbeafe/2563eb?text=Cool+6",
+            "https://placehold.co/120x120/dcfce7/16a34a?text=Yay+7",
+            "https://placehold.co/120x120/dcfce7/16a34a?text=Lens+8",
+            "https://placehold.co/120x120/fef3c7/d97706?text=Cute+9",
+            "https://placehold.co/120x120/fef3c7/d97706?text=Hi+10",
+            "https://placehold.co/120x120/ffe4e6/e11d48?text=Wow+11",
+            "https://placehold.co/120x120/ffe4e6/e11d48?text=Kiss+12",
+            "https://placehold.co/120x120/fae8ff/c026d3?text=Sweet+13",
+            "https://placehold.co/120x120/fae8ff/c026d3?text=Bling+14",
+            "https://placehold.co/120x120/e0e7ff/4f46e5?text=Eyes+15",
+            "https://placehold.co/120x120/e0e7ff/4f46e5?text=OK+16",
+            "https://placehold.co/120x120/ecfccb/65a30d?text=Thanks+17",
+            "https://placehold.co/120x120/ecfccb/65a30d?text=Shop+18",
+            "https://placehold.co/120x120/f1f5f9/475569?text=Bye+19",
+            "https://placehold.co/120x120/f1f5f9/475569?text=Smile+20"
+        ];
+
+        function renderStickerSlotsGrid() {
+            const grid = document.getElementById('sticker-slots-grid');
+            if (!grid) return;
+            grid.innerHTML = defaultStickerAssets.map((src, idx) => `
+                <div onclick="selectSticker('${src}')" class="p-1 rounded-2xl border-2 border-pink-100 hover:border-pink-500 bg-pink-50/50 hover:bg-white cursor-pointer transition flex items-center justify-center transform hover:scale-105 active:scale-95 group shadow-xs" title="Sticker #${idx + 1}">
+                    <img src="${src}" alt="Sticker ${idx + 1}" class="w-14 h-14 object-contain rounded-xl group-hover:drop-shadow-sm">
+                </div>
+            `).join('');
+        }
+
+        function toggleStickerPicker() {
+            const modal = document.getElementById('screen-sticker-modal');
+            if (!modal) return;
+            renderStickerSlotsGrid();
+            if (modal.classList.contains('opacity-0')) {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modal.classList.add('opacity-100');
+            } else {
+                closeStickerPicker();
+            }
+        }
+
+        function closeStickerPicker() {
+            const modal = document.getElementById('screen-sticker-modal');
+            modal?.classList.remove('opacity-100');
+            modal?.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        async function selectSticker(stickerSrc) {
+            closeStickerPicker();
+            await sendSpecialChatMessage({
+                type: 'sticker',
+                mediaUrl: stickerSrc,
+                text: 'Sent a sticker'
+            });
+        }
+
+        function handleCustomStickerUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const base64 = e.target.result;
+                await sendSpecialChatMessage({
+                    type: 'sticker',
+                    mediaUrl: base64,
+                    text: 'Sent a custom sticker'
+                });
+            };
+            reader.readAsDataURL(file);
+            event.target.value = '';
+        }
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const base64 = e.target.result;
+                await sendSpecialChatMessage({
+                    type: 'image',
+                    mediaUrl: base64,
+                    text: 'Sent an image'
+                });
+            };
+            reader.readAsDataURL(file);
+            event.target.value = '';
+        }
+
+        function handleVideoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const base64 = e.target.result;
+                await sendSpecialChatMessage({
+                    type: 'video',
+                    mediaUrl: base64,
+                    text: 'Sent a video'
+                });
+            };
+            reader.readAsDataURL(file);
+            event.target.value = '';
+        }
+
+        function openProductSelectorModal() {
+            const list = document.getElementById('chat-product-share-list');
+            if (!list) return;
+            list.innerHTML = products.map(p => `
+                <div class="flex items-center justify-between p-3 rounded-2xl border border-slate-200 bg-white hover:border-[#65a30d] transition shadow-xs">
+                    <div class="flex items-center space-x-3">
+                        <img src="${p.image}" class="w-12 h-12 object-cover rounded-xl border border-slate-200">
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-900">${p.name}</h4>
+                            <span class="text-[10px] text-slate-500">${p.brand || 'Molicon'} • RM ${p.price}</span>
+                        </div>
+                    </div>
+                    <button type="button" onclick="shareProductInChat('${p.id}')" class="px-3 py-1.5 bg-[#65a30d] hover:bg-[#4d7c0f] text-white text-xs font-bold rounded-xl shadow-xs transition">
+                        Share &amp; Inquire
+                    </button>
+                </div>
+            `).join('');
+
+            const modal = document.getElementById('screen-product-selector-modal');
+            modal?.classList.remove('opacity-0', 'pointer-events-none');
+            modal?.classList.add('opacity-100');
+        }
+
+        function closeProductSelectorModal() {
+            const modal = document.getElementById('screen-product-selector-modal');
+            modal?.classList.remove('opacity-100');
+            modal?.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        async function shareProductInChat(productId) {
+            const prod = products.find(p => p.id === productId);
+            if (!prod) return;
+            closeProductSelectorModal();
+            await sendSpecialChatMessage({
+                type: 'product',
+                productData: prod,
+                text: `Inquiring about ${prod.name} (RM ${prod.price})`
+            });
+        }
+
+        function renderActiveChatMessages() {
+            const container = document.getElementById('widget-chat-messages');
+            if (!container) return;
+
+            let targetUser = currentUser?.email;
+            if (currentUser && isAdminUser(currentUser.email)) {
+                targetUser = activeChatSessionUser || document.getElementById('admin-active-chat-user')?.value;
+            }
+
+            if (!targetUser) {
+                container.innerHTML = `<div class="text-center text-slate-400 py-10"><i class="fa-solid fa-comments text-2xl text-lime-500 mb-2"></i><p class="text-xs">No active conversation selected.</p></div>`;
+                return;
+            }
+
+            const msgs = userSessionsMap[targetUser] || [];
+            if (msgs.length === 0) {
+                container.innerHTML = `<div class="text-center text-slate-400 py-10"><i class="fa-solid fa-heart text-2xl text-lime-500 mb-2"></i><p class="text-xs">Chatting with <b class="text-slate-700">${targetUser}</b>.<br>Leave a message or sticker to start conversation.</p></div>`;
+                return;
+            }
+
+            container.innerHTML = msgs.map(m => {
+                const isMe = m.sender === currentUser?.email;
+                const isAdmin = m.isAdmin;
+
+                let mediaHtml = '';
+                if (m.type === 'sticker') {
+                    mediaHtml = `
+                        <div class="p-1">
+                            <img src="${m.mediaUrl}" alt="Sticker" class="w-24 h-24 sm:w-28 sm:h-28 object-contain">
+                        </div>
+                    `;
+                } else if (m.type === 'image') {
+                    mediaHtml = `
+                        <div class="p-1 max-w-[220px]">
+                            <img src="${m.mediaUrl}" alt="Attached Image" class="w-full h-auto rounded-xl border border-slate-200 max-h-48 object-cover cursor-pointer" onclick="openImageZoomModal('${m.mediaUrl}')">
+                        </div>
+                    `;
+                } else if (m.type === 'video') {
+                    mediaHtml = `
+                        <div class="p-1 max-w-[240px]">
+                            <video src="${m.mediaUrl}" controls class="w-full rounded-xl border border-slate-200 max-h-48 bg-black"></video>
+                        </div>
+                    `;
+                } else if (m.type === 'product' && m.productData) {
+                    const p = m.productData;
+                    mediaHtml = `
+                        <div class="p-2 bg-white rounded-xl border border-slate-200 text-slate-900 flex items-center space-x-2.5 max-w-xs shadow-xs">
+                            <img src="${p.image}" class="w-12 h-12 object-cover rounded-lg border border-slate-200 shrink-0">
+                            <div class="truncate">
+                                <span class="text-xs font-bold block truncate">${p.name}</span>
+                                <span class="text-[10px] text-fuchsia-600 font-bold block">RM ${p.price}</span>
+                                <span class="text-[9px] text-slate-500">${p.brand || 'Molicon'} • ${p.category}</span>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    mediaHtml = `<p class="whitespace-pre-line">${m.text}</p>`;
+                }
+
+                return `
+                    <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
+                        <span class="text-[9px] text-slate-400 mb-0.5 px-1">${m.senderName || m.sender} • ${m.time || ''}</span>
+                        <div class="max-w-[85%] rounded-2xl px-3 py-2 text-xs shadow-sm ${m.type === 'sticker' ? 'bg-transparent shadow-none' : (isMe ? 'bg-[#65a30d] text-white rounded-tr-none' : (isAdmin ? 'bg-amber-100 text-amber-950 border border-amber-200 rounded-tl-none' : 'bg-white text-slate-800 border border-slate-200 rounded-tl-none'))}">
+                            ${mediaHtml}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function toggleWidgetChat() {
+            const win = document.getElementById('sweetopiaChatWindow');
+            if (!win) return;
+            if (win.classList.contains('hidden')) {
+                win.classList.remove('hidden');
+                setTimeout(() => {
+                    win.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+                    win.classList.add('opacity-100', 'scale-100');
+                }, 10);
+                renderActiveChatMessages();
+                updateSupportIndicator();
+            } else {
+                win.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+                win.classList.remove('opacity-100', 'scale-100');
+                setTimeout(() => win.classList.add('hidden'), 200);
+            }
+        }
+
+        async function sendTextMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input ? input.value.trim() : '';
+            if (!text) return;
+            await sendSpecialChatMessage({ text: text, type: 'text' });
+            if (input) input.value = '';
+        }
+
+        async function sendSpecialChatMessage(msgPayload) {
+            if (!currentUser) {
+                showToast("Sign In Required", "Please sign in or continue as guest to chat.", true);
+                return;
+            }
+
+            const isAdmin = isAdminUser(currentUser.email);
+            let targetSessionUser = currentUser.email;
+
+            if (isAdmin) {
+                const select = document.getElementById('admin-active-chat-user');
+                targetSessionUser = activeChatSessionUser || select.value;
+                if (!targetSessionUser) {
+                    showToast("No User Selected", "Select a customer or guest from the dropdown to reply.", true);
+                    return;
+                }
+            }
+
+            const newMsg = {
+                id: 'msg_' + Date.now(),
+                sender: currentUser.email,
+                senderName: isAdmin ? 'Admin Support' : (currentUser.guestId || currentUser.email.split('@')[0]),
+                text: msgPayload.text || '',
+                type: msgPayload.type || 'text',
+                mediaUrl: msgPayload.mediaUrl || null,
+                productData: msgPayload.productData || null,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                timestamp: new Date().toISOString(),
+                isAdmin: isAdmin
+            };
+
+            const existingMsgs = userSessionsMap[targetSessionUser] || [];
+            existingMsgs.push(newMsg);
+            userSessionsMap[targetSessionUser] = existingMsgs;
+
+            renderActiveChatMessages();
+
+            if (db) {
+                try {
+                    const docKey = targetSessionUser.replace(/[^a-zA-Z0-9]/g, '_');
+                    await setDoc(doc(db, "lumilens_chats", docKey), {
+                        userEmail: targetSessionUser,
+                        messages: existingMsgs,
+                        lastUpdated: new Date().toISOString()
+                    }, { merge: true });
+                } catch(e) { console.warn("Firestore chat send error:", e); }
+            }
+        }
+
+        function handleKeypress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendTextMessage();
+            }
+        }
+
+        async function clearWidgetChat() {
+            let targetUser = currentUser?.email;
+            if (currentUser && isAdminUser(currentUser.email)) {
+                targetUser = activeChatSessionUser || document.getElementById('admin-active-chat-user')?.value;
+            }
+            if (!targetUser) return;
+
+            userSessionsMap[targetUser] = [];
+            renderActiveChatMessages();
+
+            if (db) {
+                try {
+                    const docKey = targetUser.replace(/[^a-zA-Z0-9]/g, '_');
+                    await setDoc(doc(db, "lumilens_chats", docKey), {
+                        userEmail: targetUser,
+                        messages: [],
+                        lastUpdated: new Date().toISOString()
+                    });
+                } catch(e) { console.warn(e); }
+            }
+            showToast("Chat Cleared", "Messages cleared.");
+        }
 
         document.addEventListener('DOMContentLoaded', async () => {
             if (typeof lucide !== 'undefined') { lucide.createIcons(); }
             loadSavedAddresses();
             loadFavourites();
             loadAssignedVouchers();
+            loadNotifications();
             const savedEmail = localStorage.getItem('sweetopia_logged_in_email');
 
             if (savedEmail) {
@@ -2397,6 +3411,14 @@
                         assignedVouchersMap = vSnap.data().data;
                     }
                 } catch(e) { console.warn("Reading vouchers error:", e); }
+
+                try {
+                    const nSnap = await getDoc(doc(db, "lumilens_notifications", "all_notifications"));
+                    if (nSnap.exists() && nSnap.data().data) {
+                        notificationsMap = nSnap.data().data;
+                        renderCustomerNotificationsUI();
+                    }
+                } catch(e) { console.warn("Reading notifications error:", e); }
             }
 
             renderStoreProducts(products);
@@ -2407,8 +3429,42 @@
             onAdminPowerRangeChange();
             initSlideshow();
             renderCustomerVouchersUI();
+            renderCustomerNotificationsUI();
             renderAdminVoucherCustomerDropdowns();
             enforceMobileNavForRole();
+
+            // Check URL query parameters in case customer returned via ToyyibPay callback (status_id=1 means paid)
+            const urlParams = new URLSearchParams(window.location.search);
+            const statusId = urlParams.get('status_id');
+            const billcode = urlParams.get('billcode');
+
+            if (statusId === '1' || urlParams.get('payment') === 'success') {
+                sessionStorage.removeItem('sweetopia_pending_order_id');
+                sessionStorage.removeItem('sweetopia_pending_order_total');
+                setTimeout(() => {
+                    openRetroOrderSuccessModal();
+                }, 400);
+            } else if (statusId === '2' || statusId === '3') {
+                // Payment cancelled or failed at ToyyibPay
+                sessionStorage.removeItem('sweetopia_pending_order_id');
+                sessionStorage.removeItem('sweetopia_pending_order_total');
+                showToast("Payment Incomplete", "Payment was not drawn or was cancelled.", true);
+            }
+
+            // Window focus detection: Ask customer if they actually finished drawing payment
+            window.addEventListener('focus', () => {
+                const pendingId = sessionStorage.getItem('sweetopia_pending_order_id');
+                const pendingTotal = sessionStorage.getItem('sweetopia_pending_order_total');
+                if (pendingId && pendingTotal) {
+                    const verifyModal = document.getElementById('payment-verify-modal');
+                    const amtElem = document.getElementById('verify-modal-amount');
+                    if (amtElem) amtElem.innerText = `RM ${pendingTotal}`;
+                    if (verifyModal) {
+                        verifyModal.classList.remove('opacity-0', 'pointer-events-none');
+                        verifyModal.classList.add('opacity-100');
+                    }
+                }
+            });
 
             setInterval(() => {
                 if (currentUser && currentUser.email) {
@@ -2470,6 +3526,13 @@
                     renderCustomerVouchersUI();
                 }
             }, (err) => console.warn("Voucher listen error:", err));
+
+            onSnapshot(doc(db, "lumilens_notifications", "all_notifications"), (snap) => {
+                if (snap.exists() && snap.data().data) {
+                    notificationsMap = snap.data().data;
+                    renderCustomerNotificationsUI();
+                }
+            }, (err) => console.warn("Notifications listen error:", err));
         }
 
         function initChatListeners() {
@@ -2553,41 +3616,6 @@
                 renderActiveChatMessages();
             }
             updateSupportIndicator();
-        }
-
-        function renderActiveChatMessages() {
-            const container = document.getElementById('chat-messages-box');
-            if (!container) return;
-
-            let targetUser = currentUser?.email;
-            if (currentUser && isAdminUser(currentUser.email)) {
-                targetUser = activeChatSessionUser || document.getElementById('admin-active-chat-user')?.value;
-            }
-
-            if (!targetUser) {
-                container.innerHTML = `<div class="text-center text-slate-400 py-10"><i class="fa-solid fa-comments text-2xl text-lime-500 mb-2"></i><p class="text-xs">No active conversation selected.</p></div>`;
-                return;
-            }
-
-            const msgs = userSessionsMap[targetUser] || [];
-            if (msgs.length === 0) {
-                container.innerHTML = `<div class="text-center text-slate-400 py-10"><i class="fa-solid fa-heart text-2xl text-lime-500 mb-2"></i><p class="text-xs">Chatting with <b class="text-slate-700">${targetUser}</b>.<br>Leave a message to start conversation.</p></div>`;
-                return;
-            }
-
-            container.innerHTML = msgs.map(m => {
-                const isMe = m.sender === currentUser?.email;
-                const isAdmin = m.isAdmin;
-                return `
-                    <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
-                        <span class="text-[9px] text-slate-400 mb-0.5 px-1">${m.senderName || m.sender} • ${m.time || ''}</span>
-                        <div class="max-w-[80%] rounded-2xl px-3.5 py-2 text-xs shadow-sm ${isMe ? 'bg-[#65a30d] text-white rounded-tr-none' : (isAdmin ? 'bg-amber-100 text-amber-950 border border-amber-200 rounded-tl-none' : 'bg-white text-slate-800 border border-slate-200 rounded-tl-none')}">
-                            ${m.text}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-            container.scrollTop = container.scrollHeight;
         }
 
         function toggleChatPopup() {
@@ -2766,7 +3794,7 @@
             } catch (e) { console.warn("Error saving cart:", e); }
         }
 
-        function switchPage(pageName) {
+        function doSwitchPage(pageName) {
             sessionStorage.setItem('sweetopia_active_page', pageName);
             const pageAuth = document.getElementById('page-auth');
             const pageDashboard = document.getElementById('page-dashboard');
@@ -2786,28 +3814,33 @@
                 if (currentUser && isAdminUser(currentUser.email)) {
                     const savedTab = sessionStorage.getItem('sweetopia_active_tab') || 'admin-workspace';
                     const savedSubTab = sessionStorage.getItem('sweetopia_admin_subtab') || 'stock';
-                    switchTab(savedTab, false);
+                    doSwitchTab(savedTab, false);
                     if(savedTab === 'admin-workspace') { switchAdminSubTab(savedSubTab, false); }
                 } else {
                     const savedTab = sessionStorage.getItem('sweetopia_active_tab') || 'catalog';
-                    switchTab(savedTab, false);
+                    doSwitchTab(savedTab, false);
                 }
             }
             enforceMobileNavForRole();
         }
+        function switchPage(pageName) { doSwitchPage(pageName); }
 
-        function switchTab(tabName, saveState = true) {
+        function doSwitchTab(tabName, saveState = true) {
             if (tabName === 'admin-workspace' && (!currentUser || !isAdminUser(currentUser.email))) return;
             if (saveState) { sessionStorage.setItem('sweetopia_active_tab', tabName); }
 
             const isAdmin = currentUser && isAdminUser(currentUser.email);
 
-            ['catalog', 'cart', 'favourites', 'customer-dashboard', 'admin-workspace'].forEach(t => {
+            ['catalog', 'cart', 'favourites', 'notification', 'customer-dashboard', 'admin-workspace'].forEach(t => {
                 const sec = document.getElementById('tab-section-' + t);
                 const btn = document.getElementById('dtab-' + t);
                 if (sec) sec.classList.add('hidden');
                 if (btn) {
-                    btn.className = "px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] flex items-center space-x-2 shrink-0";
+                    if (t === 'notification') {
+                        btn.className = "px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] flex items-center space-x-1.5 sm:space-x-2 shrink-0";
+                    } else {
+                        btn.className = "px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] flex items-center space-x-2 shrink-0";
+                    }
                 }
             });
 
@@ -2816,7 +3849,11 @@
 
             const activeBtn = document.getElementById('dtab-' + tabName);
             if (activeBtn) {
-                activeBtn.className = "px-5 py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 text-white transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] flex items-center space-x-2 shrink-0";
+                if (tabName === 'notification') {
+                    activeBtn.className = "px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 text-white transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] flex items-center space-x-1.5 sm:space-x-2 shrink-0";
+                } else {
+                    activeBtn.className = "px-5 py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 text-white transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] flex items-center space-x-2 shrink-0";
+                }
             }
 
             const adminCatBtn = document.getElementById('dtab-admin-catalog');
@@ -2854,10 +3891,12 @@
 
             if (tabName === 'cart') { renderCartItems(); }
             if (tabName === 'favourites') { renderFavouritesGrid(); }
+            if (tabName === 'notification') { renderCustomerNotificationsUI(); }
             if (tabName === 'customer-dashboard') { renderCustomerOrders(); window.renderDeliveryAddresses(); renderCustomerVouchersUI(); }
             if (tabName === 'admin-workspace') { renderAdminOrdersList(); renderAdminProductsList(); renderAdminPowerStockCheckboxes(); renderAdminVoucherCustomerDropdowns(); }
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+        function switchTab(tabName, saveState = true) { doSwitchTab(tabName, saveState); }
 
         function setAuthModeTab(mode) {
             authMode = mode;
@@ -2884,9 +3923,17 @@
             const email = document.getElementById('auth-email').value.trim();
             const password = document.getElementById('auth-password').value;
 
+            const isSigningIn = authMode === 'signin';
+            const statusMsg = isSigningIn ? "AUTHENTICATING USER..." : "CREATING USER ACCOUNT...";
+
+            startRetroLoading(statusMsg);
+
             if (!auth) {
                 currentUser = { email: email, isGuest: false };
                 updateUIAfterLogin(currentUser);
+
+                await finishRetroLoading('fast');
+
                 switchPage('dashboard');
                 switchTab(isAdminUser(email) ? 'admin-workspace' : 'catalog');
                 showToast("Signed In (Offline)", `Welcome ${email}`);
@@ -2898,11 +3945,13 @@
                 if (authMode === 'signin') {
                     const res = await signInWithEmailAndPassword(auth, email, password);
                     currentUser = res.user;
+                    await finishRetroLoading('fast');
                     showToast("Signed In", `Welcome back, ${email}!`);
                 } else {
                     const res = await createUserWithEmailAndPassword(auth, email, password);
                     currentUser = res.user;
                     try { await sendEmailVerification(currentUser); } catch(e){}
+                    await finishRetroLoading('fast');
                     showToast("Account Created", "Registration successful! Verification email sent.");
                 }
                 localStorage.setItem('sweetopia_logged_in_email', email);
@@ -2911,11 +3960,11 @@
                 switchTab(isAdminUser(email) ? 'admin-workspace' : 'catalog');
                 updatePresence(email, true);
             } catch (err) {
+                cancelRetroLoading();
                 showToast("Authentication Error", err.message, true);
             }
         }
-
-        async function handleSignOut() {
+        async function doSignOut() {
             if (currentUser && currentUser.email) {
                 updatePresence(currentUser.email, false);
             }
@@ -2929,9 +3978,10 @@
             sessionStorage.removeItem('sweetopia_active_page');
             sessionStorage.removeItem('sweetopia_active_tab');
             updateCartBadge();
-            switchPage('auth');
+            doSwitchPage('auth');
             showToast("Signed Out", "You have successfully signed out.");
         }
+        function handleSignOut() { doSignOut(); }
 
         function updateUIAfterLogin(user) {
             const email = user.email || "user@sweetopiashop.my";
@@ -2957,26 +4007,36 @@
             const mobileAdminLink = document.getElementById('mobile-admin-workspace-link');
 
             if (isAdmin) {
-                // If admin logs in, hide customer nav bar and show admin nav bar on desktop
-                if (customerNavBar) customerNavBar.classList.add('hidden');
+                // Strictly hide customer bar for admin
+                if (customerNavBar) {
+                    customerNavBar.style.setProperty('display', 'none', 'important');
+                    customerNavBar.classList.remove('flex');
+                    customerNavBar.classList.add('hidden');
+                }
+                // Show admin bar (with email & sign out visible on mobile, navigation tabs hidden on mobile)
                 if (adminNavBar) {
+                    adminNavBar.style.removeProperty('display');
                     adminNavBar.classList.remove('hidden');
                     adminNavBar.classList.add('flex');
                 }
                 if (mobileAdminLink) mobileAdminLink.classList.remove('hidden');
             } else {
-                // If customer logs in, show customer nav bar on desktop and strictly hide admin nav bar
+                // Show customer bar (with email & sign out visible on mobile, navigation tabs hidden on mobile)
                 if (customerNavBar) {
+                    customerNavBar.style.removeProperty('display');
                     customerNavBar.classList.remove('hidden');
                     customerNavBar.classList.add('flex');
                 }
+                // Strictly hide admin bar for customer
                 if (adminNavBar) {
+                    adminNavBar.style.setProperty('display', 'none', 'important');
                     adminNavBar.classList.remove('flex');
                     adminNavBar.classList.add('hidden');
                 }
                 if (mobileAdminLink) mobileAdminLink.classList.add('hidden');
             }
             enforceMobileNavForRole();
+            renderStoreProducts(products);
             renderCustomerVouchersUI();
             updateSupportIndicator();
         }
@@ -3112,6 +4172,7 @@
                 cart.push({
                     id: currentSelectedProduct.id,
                     name: currentSelectedProduct.name,
+                    brand: currentSelectedProduct.brand || "Molicon",
                     price: currentSelectedProduct.price,
                     image: currentSelectedProduct.image,
                     category: currentSelectedProduct.category,
@@ -3203,7 +4264,7 @@
             let discount = appliedVoucher ? appliedVoucher.discount : 0.00;
             if (discount > subtotal) discount = subtotal;
 
-            const shippingFee = subtotal > 0 ? 5.00 : 0.00;
+            const shippingFee = calculateShippingFee(cart);
             const total = Math.max(0, subtotal - discount) + shippingFee;
 
             const subElem = document.getElementById('cart-subtotal');
@@ -3224,7 +4285,13 @@
             }
 
             const shipElem = document.getElementById('cart-shipping-fee');
-            if (shipElem) shipElem.innerText = `RM ${shippingFee.toFixed(2)}`;
+            if (shipElem) {
+                if (shippingFee === 0.00 && subtotal > 0) {
+                    shipElem.innerHTML = `<span class="text-emerald-600 font-bold">FREE (RM 0.00)</span>`;
+                } else {
+                    shipElem.innerText = `RM ${shippingFee.toFixed(2)}`;
+                }
+            }
 
             const totElem = document.getElementById('cart-total');
             if (totElem) totElem.innerText = `RM ${total.toFixed(2)}`;
@@ -3248,7 +4315,7 @@
             const subtotal = cart.reduce((acc, i) => acc + (parseFloat(i.price) * i.qty), 0);
             let discount = appliedVoucher ? appliedVoucher.discount : 0.00;
             if (discount > subtotal) discount = subtotal;
-            const shippingFee = subtotal > 0 ? 5.00 : 0.00;
+            const shippingFee = calculateShippingFee(cart);
             const total = Math.max(0, subtotal - discount) + shippingFee;
 
             const dateStr = new Date().toISOString();
@@ -3299,6 +4366,12 @@
             renderAdminOrdersList();
 
             document.getElementById('fpx-modal-order-id').innerText = orderId;
+            const fpxModalTotalElem = document.getElementById('fpx-modal-total-amount');
+            if (fpxModalTotalElem) {
+                fpxModalTotalElem.innerText = `RM ${total.toFixed(2)}`;
+            }
+            sessionStorage.setItem('sweetopia_active_checkout_total', total.toFixed(2));
+
             const fpxModal = document.getElementById('fpx-modal');
             fpxModal?.classList.remove('opacity-0', 'pointer-events-none');
             fpxModal?.classList.add('opacity-100');
@@ -3306,20 +4379,109 @@
 
         function confirmToyyibPayRedirect() {
             closeToyyibPayModal();
-            cart = [];
-            appliedVoucher = null;
-            saveCustomerCartToFirestore();
-            updateCartBadge();
-            renderCartItems();
+            const orderTotal = sessionStorage.getItem('sweetopia_active_checkout_total') || '0.00';
+            
+            // Set pending payment verification session
+            if (pendingOrderId) {
+                sessionStorage.setItem('sweetopia_pending_order_id', pendingOrderId);
+                sessionStorage.setItem('sweetopia_pending_order_total', orderTotal);
+            }
+
             window.open(TOYYIBPAY_URL, '_blank');
-            showToast("Payment Successful!", "Redirected to ToyyibPay FPX gateway. Order placed successfully.");
-            switchTab('customer-dashboard');
         }
 
         function closeToyyibPayModal() {
             const fpxModal = document.getElementById('fpx-modal');
             fpxModal?.classList.remove('opacity-100');
             fpxModal?.classList.add('opacity-0', 'pointer-events-none');
+            sessionStorage.removeItem('sweetopia_pending_order_id');
+            sessionStorage.removeItem('sweetopia_pending_order_total');
+            sessionStorage.removeItem('sweetopia_active_checkout_total');
+        }
+
+        async function finalizeCompletedPayment() {
+            const pendingId = sessionStorage.getItem('sweetopia_pending_order_id');
+            const verifyModal = document.getElementById('payment-verify-modal');
+
+            if (verifyModal) {
+                verifyModal.classList.remove('opacity-100');
+                verifyModal.classList.add('opacity-0', 'pointer-events-none');
+            }
+
+            sessionStorage.removeItem('sweetopia_pending_order_id');
+            sessionStorage.removeItem('sweetopia_pending_order_total');
+            sessionStorage.removeItem('sweetopia_active_checkout_total');
+
+            // Clear the cart now that payment was completed
+            cart = [];
+            appliedVoucher = null;
+            await saveCustomerCartToFirestore();
+            updateCartBadge();
+            renderCartItems();
+
+            // Update order status to FPX Paid in database
+            if (pendingId) {
+                const targetOrder = allOrders.find(o => o.id === pendingId);
+                if (targetOrder) {
+                    targetOrder.status = 'Processing';
+                    targetOrder.date = new Date().toLocaleString() + ' (FPX Paid)';
+                    if (db) {
+                        try {
+                            await setDoc(doc(db, "lumilens_orders", pendingId), {
+                                status: 'Processing',
+                                date: targetOrder.date
+                            }, { merge: true });
+                        } catch(e) { console.warn(e); }
+                    }
+                    renderCustomerOrders();
+                    renderAdminOrdersList();
+                }
+            }
+
+            // Only now show the Y2K confirmation pop up
+            openRetroOrderSuccessModal();
+            showToast("Payment Confirmed", "Your payment was processed successfully!");
+        }
+
+        function cancelPendingPaymentVerification() {
+            const verifyModal = document.getElementById('payment-verify-modal');
+            if (verifyModal) {
+                verifyModal.classList.remove('opacity-100');
+                verifyModal.classList.add('opacity-0', 'pointer-events-none');
+            }
+
+            const pendingId = sessionStorage.getItem('sweetopia_pending_order_id');
+            sessionStorage.removeItem('sweetopia_pending_order_id');
+            sessionStorage.removeItem('sweetopia_pending_order_total');
+            sessionStorage.removeItem('sweetopia_active_checkout_total');
+
+            // Do NOT show the retro order success modal because customer did not pay yet
+            showToast("Payment Incomplete", "No payment was drawn. Your cart items are preserved.");
+        }
+
+        function openRetroOrderSuccessModal() {
+            const modal = document.getElementById('retro-order-success-modal');
+            if (modal) {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modal.classList.add('opacity-100');
+            }
+        }
+
+        function handleRetroOrderSuccessClose() {
+            const modal = document.getElementById('retro-order-success-modal');
+            if (modal) {
+                modal.classList.remove('opacity-100');
+                modal.classList.add('opacity-0', 'pointer-events-none');
+            }
+        }
+
+        function handleRetroOrderSuccessContinue() {
+            handleRetroOrderSuccessClose();
+            switchTab('catalog');
+            const storeCatalogElem = document.getElementById('store-product-grid');
+            if (storeCatalogElem) {
+                storeCatalogElem.scrollIntoView({ behavior: 'smooth' });
+            }
         }
 
         function renderCustomerOrders() {
@@ -3660,9 +4822,22 @@
                 } catch(e) { console.warn("Tracking save error:", e); }
             }
 
+            // If a valid tracking number was provided, notify customer with the exact required format
+            if (order && order.customer && trackingNum && trackingNum !== 'Pending') {
+                const customerDisplayName = order.customerName || order.customer.split('@')[0] || 'Customer';
+                const trackingUrl = `https://tracking.sweetopiashop.my?track=${encodeURIComponent(trackingNum)}`;
+                const messageText = `Order Confirmation: "Hi ${customerDisplayName}, your order is on its way! Track it at ${trackingUrl}."`;
+
+                await addNotificationForCustomer(order.customer, {
+                    title: `Order Shipped (${order.id})`,
+                    message: messageText,
+                    type: 'order'
+                });
+            }
+
             renderAdminOrdersList();
             renderCustomerOrders();
-            showToast("Tracking Published!", `Tracking number saved for order ${orderId}.`);
+            showToast("Tracking Published!", `Tracking number saved for order ${orderId} and customer notified.`);
         }
 
         async function deleteAdminOrder(orderId) {
