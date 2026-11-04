@@ -347,6 +347,48 @@
             background-color: #5a0c3f;
         }
 
+        /* Pagination Styling */
+        .sf-pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 12px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .sf-pagination .page, .sf-pagination .next, .sf-pagination .prev {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            height: 28px;
+            padding: 0 6px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            color: #334155;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            user-select: none;
+        }
+        .sf-pagination .page:hover, .sf-pagination .next:hover, .sf-pagination .prev:hover {
+            border-color: #65a30d;
+            color: #65a30d;
+            background: #f7fee7;
+        }
+        .sf-pagination .page.current {
+            background: #65a30d;
+            color: #ffffff;
+            border-color: #65a30d;
+            cursor: default;
+        }
+        .sf-pagination .disabled {
+            opacity: 0.4;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+
         /* Retro Y2K Modal Typography & Utilities */
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Varela+Round&display=swap');
         .retro-varela {
@@ -986,6 +1028,68 @@
                             </button>
                         </div>
 
+                        <!-- CREATE NEW VOUCHER (PRODUCT VOUCHER) -->
+                        <div class="bg-amber-50 p-4 sm:p-5 rounded-2xl border border-amber-300 space-y-3.5 shadow-sm">
+                            <div class="flex items-center justify-between border-b border-amber-200 pb-2.5">
+                                <div class="flex items-center space-x-2.5">
+                                    <div class="w-8 h-8 rounded-xl bg-amber-200/80 text-amber-900 flex items-center justify-center font-bold">
+                                        <i class="fa-solid fa-ticket text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-xs font-bold text-amber-950">Create New Voucher: <span class="text-amber-800 font-semibold">Product Voucher</span></h4>
+                                        <p class="text-[10px] text-amber-800/80">Configure custom voucher name, prefix code SWEET[...], discount amount &amp; validity period.</p>
+                                    </div>
+                                </div>
+                                <span class="bg-amber-200/70 text-amber-900 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-amber-300">Voucher Type: Product Voucher</span>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                                <!-- 1. Voucher Name -->
+                                <div>
+                                    <label for="new-voucher-name" class="block text-[10px] font-bold text-slate-700 uppercase mb-1">1. Voucher Name:</label>
+                                    <input type="text" id="new-voucher-name" placeholder="e.g. VIP Member Discount" class="w-full bg-white border border-amber-300 text-xs text-slate-900 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400 shadow-xs">
+                                </div>
+
+                                <!-- 2. Voucher Code with SWEET prefix -->
+                                <div>
+                                    <label for="new-voucher-suffix" class="block text-[10px] font-bold text-slate-700 uppercase mb-1">2. Voucher Code:</label>
+                                    <div class="flex items-center">
+                                        <span class="bg-amber-200/90 text-amber-950 border border-r-0 border-amber-300 px-3 py-2 rounded-l-xl font-mono font-bold text-xs select-none">SWEET</span>
+                                        <input type="text" id="new-voucher-suffix" maxlength="5" oninput="onVoucherSuffixInput(this)" placeholder="LENS5" class="w-full bg-white border border-amber-300 text-xs text-slate-900 font-mono font-bold uppercase rounded-r-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400 shadow-xs">
+                                    </div>
+                                    <p class="text-[9px] text-slate-500 mt-1">Please enter A-Z, 0-9; 5 characters maximum.</p>
+                                    <p class="text-[10px] text-amber-900 font-bold font-mono mt-0.5" id="new-voucher-preview">Your complete voucher code is: SWEET</p>
+                                </div>
+
+                                <!-- Discount Amount (RM) -->
+                                <div>
+                                    <label for="new-voucher-discount" class="block text-[10px] font-bold text-slate-700 uppercase mb-1">Discount Amount (RM):</label>
+                                    <input type="number" id="new-voucher-discount" min="0.5" step="0.5" placeholder="e.g. 5.00" class="w-full bg-white border border-amber-300 text-xs text-slate-900 font-bold rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400 shadow-xs">
+                                </div>
+
+                                <!-- 3. Voucher Usage Period (Expiry Date) -->
+                                <div>
+                                    <label for="new-voucher-expiry" class="block text-[10px] font-bold text-slate-700 uppercase mb-1">3. Usage Period (Expires):</label>
+                                    <input type="date" id="new-voucher-expiry" value="2026-12-31" class="w-full bg-white border border-amber-300 text-slate-800 text-xs px-3 py-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 shadow-xs">
+                                </div>
+                            </div>
+
+                            <!-- Customer Assignment & Publish Button -->
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-2 border-t border-amber-200">
+                                <div class="flex items-center gap-2 flex-1 max-w-md">
+                                    <label for="new-voucher-customer" class="text-[10px] font-semibold text-slate-600 uppercase shrink-0">Assign To:</label>
+                                    <select id="new-voucher-customer" class="admin-voucher-customer-select w-full bg-white border border-amber-300 text-slate-800 text-xs px-3 py-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 font-sans truncate shadow-xs">
+                                        <option value="">-- Registered Customer --</option>
+                                    </select>
+                                </div>
+
+                                <button type="button" onclick="createAndPublishCustomVoucher()" class="bg-amber-600 hover:bg-amber-700 active:scale-95 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer shrink-0">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                                    <span>Create &amp; Publish Voucher</span>
+                                </button>
+                            </div>
+                        </div>
+
                         <!-- ADMIN SEND CUSTOMER NOTIFICATION WIDGET -->
                         <div class="flex flex-col gap-3 pb-4 border-b border-slate-200 bg-amber-50 p-4 sm:p-5 rounded-2xl border border-amber-200 shadow-sm">
                             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -1206,6 +1310,9 @@
                                 </div>
                                 <div id="admin-power-stock-checkboxes-container" class="space-y-2"></div>
                                 <div class="pt-2">
+                                    <div class="sf-pagination" id="admin-stock-pagination">
+                                        <!-- Rendered dynamically with 9 products per page limit -->
+                                    </div>
                                     <button onclick="saveAdminStockSettings()" class="w-full bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold py-3 rounded-xl text-xs shadow-lg shadow-[#65a30d]/20 transition-all flex items-center justify-center space-x-2">
                                         <i class="fa-solid fa-floppy-disk"></i>
                                         <span>Save &amp; Publish Live Stock Settings</span>
@@ -2097,6 +2204,8 @@
         let authMode = 'signin';
         let currentSelectedProduct = null;
         let pendingOrderId = null;
+        let adminStockCurrentPage = 1;
+        const ADMIN_STOCK_ITEMS_PER_PAGE = 9;
 
         let appliedVoucher = null;
         const VALID_VOUCHERS = {
@@ -2512,6 +2621,17 @@
 
                 select.innerHTML = optionsHtml;
             });
+
+            // Populate new custom voucher target customer dropdown
+            const newVoucherSelect = document.getElementById('new-voucher-customer');
+            if (newVoucherSelect) {
+                const currentVal = newVoucherSelect.value;
+                let optionsHtml = '<option value="">-- Registered Customer --</option>';
+                userList.forEach(u => {
+                    optionsHtml += `<option value="${u}" ${u === currentVal ? 'selected' : ''}>${u}</option>`;
+                });
+                newVoucherSelect.innerHTML = optionsHtml;
+            }
 
             // Populate admin send notification target customer dropdown
             const notifSelect = document.getElementById('admin-notif-target-customer');
@@ -2984,6 +3104,7 @@
         window.onAdminPowerRangeChange = onAdminPowerRangeChange;
         window.updatePowerStockFromCheckboxes = updatePowerStockFromCheckboxes;
         window.saveAdminStockSettings = saveAdminStockSettings;
+        window.goToAdminStockPage = goToAdminStockPage;
         window.handleImageFileUpload = handleImageFileUpload;
         window.saveAdminProduct = saveAdminProduct;
         window.editAdminProduct = editAdminProduct;
@@ -3005,6 +3126,8 @@
         window.handleRetroOrderSuccessContinue = handleRetroOrderSuccessContinue;
         window.finalizeCompletedPayment = finalizeCompletedPayment;
         window.cancelPendingPaymentVerification = cancelPendingPaymentVerification;
+        window.onVoucherSuffixInput = onVoucherSuffixInput;
+        window.createAndPublishCustomVoucher = createAndPublishCustomVoucher;
         
         // Widget Chat methods & bindings
         window.toggleWidgetChat = toggleWidgetChat;
@@ -3429,42 +3552,8 @@
             onAdminPowerRangeChange();
             initSlideshow();
             renderCustomerVouchersUI();
-            renderCustomerNotificationsUI();
             renderAdminVoucherCustomerDropdowns();
             enforceMobileNavForRole();
-
-            // Check URL query parameters in case customer returned via ToyyibPay callback (status_id=1 means paid)
-            const urlParams = new URLSearchParams(window.location.search);
-            const statusId = urlParams.get('status_id');
-            const billcode = urlParams.get('billcode');
-
-            if (statusId === '1' || urlParams.get('payment') === 'success') {
-                sessionStorage.removeItem('sweetopia_pending_order_id');
-                sessionStorage.removeItem('sweetopia_pending_order_total');
-                setTimeout(() => {
-                    openRetroOrderSuccessModal();
-                }, 400);
-            } else if (statusId === '2' || statusId === '3') {
-                // Payment cancelled or failed at ToyyibPay
-                sessionStorage.removeItem('sweetopia_pending_order_id');
-                sessionStorage.removeItem('sweetopia_pending_order_total');
-                showToast("Payment Incomplete", "Payment was not drawn or was cancelled.", true);
-            }
-
-            // Window focus detection: Ask customer if they actually finished drawing payment
-            window.addEventListener('focus', () => {
-                const pendingId = sessionStorage.getItem('sweetopia_pending_order_id');
-                const pendingTotal = sessionStorage.getItem('sweetopia_pending_order_total');
-                if (pendingId && pendingTotal) {
-                    const verifyModal = document.getElementById('payment-verify-modal');
-                    const amtElem = document.getElementById('verify-modal-amount');
-                    if (amtElem) amtElem.innerText = `RM ${pendingTotal}`;
-                    if (verifyModal) {
-                        verifyModal.classList.remove('opacity-0', 'pointer-events-none');
-                        verifyModal.classList.add('opacity-100');
-                    }
-                }
-            });
 
             setInterval(() => {
                 if (currentUser && currentUser.email) {
@@ -3473,94 +3562,89 @@
             }, 30000);
         });
 
-        async function updatePresence(email, isOnline) {
-            if (!db || !email) return;
-            try {
-                const userKey = email.replace(/[^a-zA-Z0-9]/g, '_');
-                await setDoc(doc(db, "lumilens_presence", userKey), {
-                    email: email,
-                    isOnline: isOnline,
-                    lastSeen: new Date().toISOString()
-                }, { merge: true });
-            } catch(e) { console.warn("Presence sync error:", e); }
+        function onVoucherSuffixInput(inputEl) {
+            if (!inputEl) return;
+            // Restrict input to uppercase A-Z and digits 0-9 with 5 characters maximum
+            const sanitized = inputEl.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 5);
+            inputEl.value = sanitized;
+            const previewEl = document.getElementById('new-voucher-preview');
+            if (previewEl) {
+                previewEl.innerText = `Your complete voucher code is: SWEET${sanitized}`;
+            }
         }
 
-        function initFirestoreListeners() {
-            if (!db) return;
-            onSnapshot(collection(db, "lumilens_products"), (snapshot) => {
-                if (!snapshot.empty) {
-                    const loaded = [];
-                    snapshot.forEach(docSnap => {
-                        const data = { id: docSnap.id, ...docSnap.data() };
-                        loaded.push(data);
-                        if (data.powerStock) {
-                            window.productPowerStock[data.id] = data.powerStock;
-                        } else if (!window.productPowerStock[data.id]) {
-                            window.productPowerStock[data.id] = {};
-                            powersList.forEach(pw => window.productPowerStock[data.id][pw] = true);
-                        }
-                    });
-                    products = loaded;
-                }
-                renderStoreProducts(products);
-                renderFavouritesGrid();
-                renderAdminProductsList();
-                renderAdminPowerStockCheckboxes();
-            }, (err) => { console.warn("Products sync error:", err); });
+        async function createAndPublishCustomVoucher() {
+            const nameInput = document.getElementById('new-voucher-name');
+            const suffixInput = document.getElementById('new-voucher-suffix');
+            const discountInput = document.getElementById('new-voucher-discount');
+            const expiryInput = document.getElementById('new-voucher-expiry');
+            const customerSelect = document.getElementById('new-voucher-customer');
 
-            onSnapshot(collection(db, "lumilens_orders"), (snapshot) => {
-                const loadedOrders = [];
-                snapshot.forEach(docSnap => {
-                    loadedOrders.push({ id: docSnap.id, ...docSnap.data() });
-                });
-                allOrders = loadedOrders.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
-                renderAdminOrdersList();
-                renderCustomerOrders();
-                updateAdminChatUserDropdown();
-                renderAdminVoucherCustomerDropdowns();
-            }, (err) => { console.warn("Orders sync error:", err); });
+            const voucherName = (nameInput?.value || '').trim() || 'Product Voucher';
+            const suffix = (suffixInput?.value || '').trim().toUpperCase();
+            const discountVal = parseFloat(discountInput?.value || '0');
+            const expiryDate = expiryInput?.value || '2026-12-31';
+            const targetEmail = (customerSelect?.value || '').trim().toLowerCase();
 
-            onSnapshot(doc(db, "lumilens_assigned_vouchers", "all_vouchers"), (snap) => {
-                if (snap.exists() && snap.data().data) {
-                    assignedVouchersMap = snap.data().data;
-                    renderCustomerVouchersUI();
-                }
-            }, (err) => console.warn("Voucher listen error:", err));
+            if (!suffix) {
+                showToast("Missing Voucher Code", "Please enter up to 5 alphanumeric characters for the voucher code (e.g. LENS5).", true);
+                return;
+            }
 
-            onSnapshot(doc(db, "lumilens_notifications", "all_notifications"), (snap) => {
-                if (snap.exists() && snap.data().data) {
-                    notificationsMap = snap.data().data;
-                    renderCustomerNotificationsUI();
-                }
-            }, (err) => console.warn("Notifications listen error:", err));
-        }
+            if (isNaN(discountVal) || discountVal <= 0) {
+                showToast("Invalid Discount", "Please enter a valid discount amount greater than RM 0.00.", true);
+                return;
+            }
 
-        function initChatListeners() {
-            if (!db) return;
-            onSnapshot(collection(db, "lumilens_presence"), (snapshot) => {
-                const now = Date.now();
-                snapshot.forEach(docSnap => {
-                    const data = docSnap.data();
-                    const lastSeenTime = new Date(data.lastSeen || 0).getTime();
-                    const isReallyOnline = data.isOnline && (now - lastSeenTime < 60000);
-                    presenceMap[data.email] = isReallyOnline;
-                });
-                updateAdminChatUserDropdown();
-                updateSupportIndicator();
-            }, (err) => console.warn("Presence listen error:", err));
+            if (!targetEmail) {
+                showToast("Select Customer", "Please choose a registered customer to assign this voucher.", true);
+                return;
+            }
 
-            onSnapshot(collection(db, "lumilens_chats"), (snapshot) => {
-                userSessionsMap = {};
-                snapshot.forEach(docSnap => {
-                    const data = docSnap.data();
-                    const user = data.userEmail || data.user;
-                    if (user) { userSessionsMap[user] = data.messages || []; }
-                });
-                updateAdminChatUserDropdown();
-                renderActiveChatMessages();
-                updateSupportIndicator();
-                renderAdminVoucherCustomerDropdowns();
-            }, (err) => console.warn("Chat listen error:", err));
+            const completeCode = `SWEET${suffix}`;
+
+            // Register in runtime valid vouchers mapping
+            VALID_VOUCHERS[completeCode] = discountVal;
+
+            if (!assignedVouchersMap[targetEmail]) {
+                assignedVouchersMap[targetEmail] = [];
+            }
+
+            const existingIdx = assignedVouchersMap[targetEmail].findIndex(v => v.code === completeCode);
+            const voucherObj = {
+                name: voucherName,
+                code: completeCode,
+                discount: discountVal,
+                voucherType: "Product Voucher",
+                expiresAt: expiryDate,
+                used: false,
+                publishedAt: new Date().toISOString()
+            };
+
+            if (existingIdx !== -1) {
+                assignedVouchersMap[targetEmail][existingIdx] = voucherObj;
+            } else {
+                assignedVouchersMap[targetEmail].push(voucherObj);
+            }
+
+            await syncAssignedVouchersStorage();
+
+            // Automatically notify designated customer
+            await addNotificationForCustomer(targetEmail, {
+                title: `New Product Voucher: ${completeCode}`,
+                message: `You've received "${voucherName}"! Code: ${completeCode} (-RM ${discountVal.toFixed(2)}) valid until ${expiryDate}. Use it on your next purchase!`,
+                type: 'voucher'
+            });
+
+            // Reset inputs
+            if (nameInput) nameInput.value = '';
+            if (suffixInput) suffixInput.value = '';
+            if (discountInput) discountInput.value = '';
+            const previewEl = document.getElementById('new-voucher-preview');
+            if (previewEl) previewEl.innerText = "Your complete voucher code is: SWEET";
+
+            renderCustomerVouchersUI();
+            showToast("Voucher Created!", `Voucher ${completeCode} (-RM ${discountVal.toFixed(2)}) published to ${targetEmail}.`);
         }
 
         function updateSupportIndicator() {
@@ -4564,18 +4648,68 @@
 
         function renderAdminPowerStockCheckboxes() {
             const container = document.getElementById('admin-power-stock-checkboxes-container');
+            const paginationContainer = document.getElementById('admin-stock-pagination');
             if (!container) return;
 
-            container.innerHTML = products.map(p => `
-                <label class="flex items-center justify-between p-3 bg-white rounded-xl border border-slate-200 hover:border-[#65a30d] cursor-pointer transition">
-                    <div class="flex items-center space-x-3">
-                        <img src="${p.image}" class="w-10 h-10 object-cover rounded-lg border border-slate-200">
-                        <span class="text-xs font-bold text-slate-900">${p.name} <span class="text-[10px] text-slate-500 font-normal">(${p.brand || 'Molicon'})</span></span>
-                    </div>
-                    <input type="checkbox" data-prod-id="${p.id}" class="admin-stock-checkbox w-4 h-4 text-[#65a30d] rounded border-slate-300 focus:ring-[#65a30d]">
-                </label>
-            `).join('');
+            const totalItems = products.length;
+            const totalPages = Math.max(1, Math.ceil(totalItems / ADMIN_STOCK_ITEMS_PER_PAGE));
+            if (adminStockCurrentPage > totalPages) adminStockCurrentPage = totalPages;
+            if (adminStockCurrentPage < 1) adminStockCurrentPage = 1;
+
+            const startIndex = (adminStockCurrentPage - 1) * ADMIN_STOCK_ITEMS_PER_PAGE;
+            const pageProducts = products.slice(startIndex, startIndex + ADMIN_STOCK_ITEMS_PER_PAGE);
+
+            if (pageProducts.length === 0) {
+                container.innerHTML = `<div class="p-4 text-center text-xs text-slate-400 bg-white rounded-xl border border-dashed border-slate-200">No products available. Add products in the "Manage Products" tab.</div>`;
+            } else {
+                container.innerHTML = pageProducts.map(p => `
+                    <label class="flex items-center justify-between p-3 bg-white rounded-xl border border-slate-200 hover:border-[#65a30d] cursor-pointer transition">
+                        <div class="flex items-center space-x-3">
+                            <img src="${p.image}" class="w-10 h-10 object-cover rounded-lg border border-slate-200" onerror="this.src='https://placehold.co/100x100/f1f5f9/65a30d?text=Lens'">
+                            <span class="text-xs font-bold text-slate-900">${p.name} <span class="text-[10px] text-slate-500 font-normal">(${p.brand || 'Molicon'})</span></span>
+                        </div>
+                        <input type="checkbox" data-prod-id="${p.id}" class="admin-stock-checkbox w-4 h-4 text-[#65a30d] rounded border-slate-300 focus:ring-[#65a30d]">
+                    </label>
+                `).join('');
+            }
+
+            // Render pagination links
+            if (paginationContainer) {
+                if (totalPages <= 1) {
+                    paginationContainer.innerHTML = `<span class="page current">1</span>`;
+                } else {
+                    let pagHtml = '';
+                    if (adminStockCurrentPage > 1) {
+                        pagHtml += `<span class="prev" onclick="goToAdminStockPage(${adminStockCurrentPage - 1})" title="Previous">«</span>`;
+                    } else {
+                        pagHtml += `<span class="prev disabled">«</span>`;
+                    }
+
+                    for (let pg = 1; pg <= totalPages; pg++) {
+                        if (pg === adminStockCurrentPage) {
+                            pagHtml += `<span class="page current">${pg}</span>`;
+                        } else {
+                            pagHtml += `<span class="page" onclick="goToAdminStockPage(${pg})">${pg}</span>`;
+                        }
+                    }
+
+                    if (adminStockCurrentPage < totalPages) {
+                        pagHtml += `<span class="next" onclick="goToAdminStockPage(${adminStockCurrentPage + 1})" title="Next">»</span>`;
+                    } else {
+                        pagHtml += `<span class="next disabled">»</span>`;
+                    }
+
+                    paginationContainer.innerHTML = pagHtml;
+                }
+            }
+
             onAdminPowerRangeChange();
+        }
+
+        function goToAdminStockPage(pageNum) {
+            updatePowerStockFromCheckboxes();
+            adminStockCurrentPage = pageNum;
+            renderAdminPowerStockCheckboxes();
         }
 
         function onAdminPowerRangeChange() {
