@@ -1600,6 +1600,30 @@
                 </div>
             </div>
 
+            <!-- PAYMENT STATUS VERIFICATION MODAL (WAITING FOR DRAWN PAYMENT) -->
+            <div id="payment-verify-modal" class="fixed inset-0 z-[75] bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+                <div class="w-full max-w-sm bg-white rounded-3xl border border-slate-200 shadow-2xl p-6 text-center space-y-4">
+                    <div class="w-12 h-12 bg-amber-50 rounded-2xl mx-auto flex items-center justify-center text-amber-600 text-xl border border-amber-200">
+                        <i class="fa-solid fa-receipt"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-slate-900">Payment Verification</h4>
+                        <p class="text-xs text-slate-500 mt-1">Did you complete the payment transaction on ToyyibPay?</p>
+                    </div>
+                    <div class="bg-slate-50 rounded-xl p-3 text-xs border border-slate-200 text-slate-600">
+                        Total Amount: <b id="verify-modal-amount" class="text-[#65a30d]">RM 0.00</b>
+                    </div>
+                    <div class="flex space-x-2 pt-2">
+                        <button type="button" onclick="finalizeCompletedPayment()" class="flex-1 bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold py-2.5 rounded-xl text-xs shadow-sm transition">
+                            Yes, Paid Full Amount
+                        </button>
+                        <button type="button" onclick="cancelPendingPaymentVerification()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs border border-slate-300 transition">
+                            Not Paid Yet
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <!-- FORGOT PASSWORD MODAL -->
             <div id="forgot-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-2 sm:p-6">
                 <div class="w-full max-w-md bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-2xl flex flex-col p-6 space-y-4">
@@ -2864,6 +2888,8 @@
         window.showToast = showToast;
         window.handleRetroOrderSuccessClose = handleRetroOrderSuccessClose;
         window.handleRetroOrderSuccessContinue = handleRetroOrderSuccessContinue;
+        window.finalizeCompletedPayment = finalizeCompletedPayment;
+        window.cancelPendingPaymentVerification = cancelPendingPaymentVerification;
         window.toggleChatPopup = toggleChatPopup;
         window.sendChatMessage = sendChatMessage;
         window.handleChatKeypress = handleChatKeypress;
@@ -2956,14 +2982,36 @@
             renderAdminVoucherCustomerDropdowns();
             enforceMobileNavForRole();
 
-            // Detect when customer returns from ToyyibPay payment tab/window
+            // Check URL query parameters in case customer returned via ToyyibPay callback (status_id=1 means paid)
+            const urlParams = new URLSearchParams(window.location.search);
+            const statusId = urlParams.get('status_id');
+            const billcode = urlParams.get('billcode');
+
+            if (statusId === '1' || urlParams.get('payment') === 'success') {
+                sessionStorage.removeItem('sweetopia_pending_order_id');
+                sessionStorage.removeItem('sweetopia_pending_order_total');
+                setTimeout(() => {
+                    openRetroOrderSuccessModal();
+                }, 400);
+            } else if (statusId === '2' || statusId === '3') {
+                // Payment cancelled or failed at ToyyibPay
+                sessionStorage.removeItem('sweetopia_pending_order_id');
+                sessionStorage.removeItem('sweetopia_pending_order_total');
+                showToast("Payment Incomplete", "Payment was not drawn or was cancelled.", true);
+            }
+
+            // Window focus detection: Ask customer if they actually finished drawing payment
             window.addEventListener('focus', () => {
-                const isAwaitingReturn = sessionStorage.getItem('sweetopia_awaiting_payment_return') === 'true';
-                if (isAwaitingReturn) {
-                    sessionStorage.removeItem('sweetopia_awaiting_payment_return');
-                    setTimeout(() => {
-                        openRetroOrderSuccessModal();
-                    }, 400);
+                const pendingId = sessionStorage.getItem('sweetopia_pending_order_id');
+                const pendingTotal = sessionStorage.getItem('sweetopia_pending_order_total');
+                if (pendingId && pendingTotal) {
+                    const verifyModal = document.getElementById('payment-verify-modal');
+                    const amtElem = document.getElementById('verify-modal-amount');
+                    if (amtElem) amtElem.innerText = `RM ${pendingTotal}`;
+                    if (verifyModal) {
+                        verifyModal.classList.remove('opacity-0', 'pointer-events-none');
+                        verifyModal.classList.add('opacity-100');
+                    }
                 }
             });
 
@@ -3902,6 +3950,8 @@
             renderAdminOrdersList();
 
             document.getElementById('fpx-modal-order-id').innerText = orderId;
+            sessionStorage.setItem('sweetopia_active_checkout_total', total.toFixed(2));
+
             const fpxModal = document.getElementById('fpx-modal');
             fpxModal?.classList.remove('opacity-0', 'pointer-events-none');
             fpxModal?.classList.add('opacity-100');
@@ -3909,26 +3959,84 @@
 
         function confirmToyyibPayRedirect() {
             closeToyyibPayModal();
-            cart = [];
-            appliedVoucher = null;
-            saveCustomerCartToFirestore();
-            updateCartBadge();
-            renderCartItems();
-
-            // Set session marker indicating customer went to ToyyibPay to pay
-            sessionStorage.setItem('sweetopia_awaiting_payment_return', 'true');
+            const orderTotal = sessionStorage.getItem('sweetopia_active_checkout_total') || '0.00';
+            
+            // Set pending payment verification session
+            if (pendingOrderId) {
+                sessionStorage.setItem('sweetopia_pending_order_id', pendingOrderId);
+                sessionStorage.setItem('sweetopia_pending_order_total', orderTotal);
+            }
 
             window.open(TOYYIBPAY_URL, '_blank');
-            showToast("Payment Successful!", "Redirected to ToyyibPay FPX gateway. Order placed successfully.");
-            switchTab('customer-dashboard');
         }
 
         function closeToyyibPayModal() {
             const fpxModal = document.getElementById('fpx-modal');
             fpxModal?.classList.remove('opacity-100');
             fpxModal?.classList.add('opacity-0', 'pointer-events-none');
-            // User cancelled out of dialog, clear payment return awaiting flag
-            sessionStorage.removeItem('sweetopia_awaiting_payment_return');
+            sessionStorage.removeItem('sweetopia_pending_order_id');
+            sessionStorage.removeItem('sweetopia_pending_order_total');
+            sessionStorage.removeItem('sweetopia_active_checkout_total');
+        }
+
+        async function finalizeCompletedPayment() {
+            const pendingId = sessionStorage.getItem('sweetopia_pending_order_id');
+            const verifyModal = document.getElementById('payment-verify-modal');
+
+            if (verifyModal) {
+                verifyModal.classList.remove('opacity-100');
+                verifyModal.classList.add('opacity-0', 'pointer-events-none');
+            }
+
+            sessionStorage.removeItem('sweetopia_pending_order_id');
+            sessionStorage.removeItem('sweetopia_pending_order_total');
+            sessionStorage.removeItem('sweetopia_active_checkout_total');
+
+            // Clear the cart now that payment was completed
+            cart = [];
+            appliedVoucher = null;
+            await saveCustomerCartToFirestore();
+            updateCartBadge();
+            renderCartItems();
+
+            // Update order status to FPX Paid in database
+            if (pendingId) {
+                const targetOrder = allOrders.find(o => o.id === pendingId);
+                if (targetOrder) {
+                    targetOrder.status = 'Processing';
+                    targetOrder.date = new Date().toLocaleString() + ' (FPX Paid)';
+                    if (db) {
+                        try {
+                            await setDoc(doc(db, "lumilens_orders", pendingId), {
+                                status: 'Processing',
+                                date: targetOrder.date
+                            }, { merge: true });
+                        } catch(e) { console.warn(e); }
+                    }
+                    renderCustomerOrders();
+                    renderAdminOrdersList();
+                }
+            }
+
+            // Only now show the Y2K confirmation pop up
+            openRetroOrderSuccessModal();
+            showToast("Payment Confirmed", "Your payment was processed successfully!");
+        }
+
+        function cancelPendingPaymentVerification() {
+            const verifyModal = document.getElementById('payment-verify-modal');
+            if (verifyModal) {
+                verifyModal.classList.remove('opacity-100');
+                verifyModal.classList.add('opacity-0', 'pointer-events-none');
+            }
+
+            const pendingId = sessionStorage.getItem('sweetopia_pending_order_id');
+            sessionStorage.removeItem('sweetopia_pending_order_id');
+            sessionStorage.removeItem('sweetopia_pending_order_total');
+            sessionStorage.removeItem('sweetopia_active_checkout_total');
+
+            // Do NOT show the retro order success modal because customer did not pay yet
+            showToast("Payment Incomplete", "No payment was drawn. Your cart items are preserved.");
         }
 
         function openRetroOrderSuccessModal() {
@@ -3949,7 +4057,6 @@
 
         function handleRetroOrderSuccessContinue() {
             handleRetroOrderSuccessClose();
-            // Navigate back to the Store Catalog
             switchTab('catalog');
             const storeCatalogElem = document.getElementById('store-product-grid');
             if (storeCatalogElem) {
