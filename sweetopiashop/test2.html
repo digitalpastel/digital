@@ -1009,14 +1009,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Validity Period -->
-                                    <div class="space-y-1.5">
-                                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
-                                            Validity Period (Until 🎀) <span class="text-rose-500">*</span>
-                                        </label>
-                                        <input type="datetime-local" id="c_expiryDate" required="" class="block w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-pink-500 focus:bg-white focus:outline-none transition-all">
-                                    </div>
-
                                     <!-- Limit per customer -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
@@ -1046,13 +1038,22 @@
                                             </h3>
                                             <p class="text-xs text-slate-600">Select specific recipients who are authorized to redeem this voucher preset.</p>
                                         </div>
-                                        <span id="c_selectedCustomersBadge" class="px-3 py-1 bg-white text-pink-700 text-xs font-semibold rounded-lg border border-pink-200 shadow-sm">
-                                            0 Customers Selected
-                                        </span>
+                                        <span id="c_selectedCustomersBadge" class="px-3 py-1 bg-white text-pink-700 text-xs font-semibold rounded-lg border border-pink-200 shadow-sm">1 Customer Selected</span>
                                     </div>
 
-                                    <div id="c_chosenCustomersGrid" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                                        <!-- Dynamically rendered or pre-populated via JS -->
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <div class="flex items-center gap-1.5">
+                                            <label for="customer-code1" class="text-[10px] font-semibold text-slate-500 uppercase">Assign:</label>
+                                            <select id="customer-code1" onchange="updateSection1SelectedCount()" class="admin-voucher-customer-select bg-amber-50/50 border border-amber-200 text-slate-700 text-xs px-2 py-1 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400 font-sans max-w-[180px] truncate"><option value="">-- Registered Customer --</option><option value="brandworkzco@gmail.com">brandworkzco@gmail.com</option></select>
+                                        </div>
+                                        <div class="flex items-center gap-1.5">
+                                            <label for="expiry-code1" class="text-[10px] font-semibold text-slate-500 uppercase">Expires:</label>
+                                            <input type="date" id="expiry-code1" value="2026-12-31" class="bg-amber-50/50 border border-amber-200 text-slate-700 text-xs px-2 py-1 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400 font-sans">
+                                        </div>
+                                        <button type="submit" class="bg-amber-600 hover:bg-amber-700 text-white font-medium text-xs px-3 py-1.5 rounded-lg transition-colors shadow-xs flex items-center gap-1 cursor-pointer">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                                            Save &amp; Publish
+                                        </button>
                                     </div>
                                 </div>
 
@@ -1580,45 +1581,62 @@
                     </div>
                 </div>
 
-                <!-- PAGE 2 FOOTER WITH TOYYIBPAY WIDGET -->
-                <footer class="w-full border-t border-slate-200 bg-slate-50/80 mt-auto">
-                    <div class="px-4 py-8 flex flex-col items-center justify-center text-center">
-                        <p class="text-xs font-bold text-slate-700 tracking-wide mb-3">
-                            ToyyibPay is registered with SSM
-                        </p>
+                <!-- PAGE 2 FOOTER -->
+                <footer class="w-full bg-[#d8b4fe] border-t-4 border-[#7c3aed] py-6 px-6 retro-font shadow-[0_-4px_0_0_#4c1d95] mt-auto">
+                    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 items-center gap-4">
+                        
+                        <!-- Left: Social Media Icons (Y2K Chunky Style) -->
+                        <div class="flex items-center justify-center md:justify-start space-x-3">
+                            <!-- Facebook -->
+                            <a href="https://www.facebook.com/share/1C455cr2u5/" target="_blank" rel="noopener noreferrer" class="w-9 h-9 bg-[#f472b6] hover:bg-[#ec4899] text-white rounded-full border-2 border-black flex items-center justify-center shadow-[2px_2px_0_0_#000] active:translate-y-0.5 active:shadow-[0_0_0_0_#000] transition-all">
+                                <i class="fa-brands fa-facebook-f text-sm"></i>
+                            </a>
+                            <!-- Instagram -->
+                            <a href="https://www.instagram.com/sweetopialens" target="_blank" rel="noopener noreferrer" class="w-9 h-9 bg-[#fb7185] hover:bg-[#f43f5e] text-white rounded-full border-2 border-black flex items-center justify-center shadow-[2px_2px_0_0_#000] active:translate-y-0.5 active:shadow-[0_0_0_0_#000] transition-all">
+                                <i class="fa-brands fa-instagram text-sm"></i>
+                            </a>
+                            <!-- TikTok -->
+                            <a href="https://www.tiktok.com/@sweetopiashop6" target="_blank" rel="noopener noreferrer" class="w-9 h-9 bg-[#38bdf8] hover:bg-[#0ea5e9] text-white rounded-full border-2 border-black flex items-center justify-center shadow-[2px_2px_0_0_#000] active:translate-y-0.5 active:shadow-[0_0_0_0_#000] transition-all">
+                                <i class="fa-brands fa-tiktok text-sm"></i>
+                            </a>
+                        </div>
 
-                        <!-- ToyyibPay FPX Badge Widget -->
-                        <div class="toyyibpay-widget">
-                            <div class="toyyibpay-header">
-                                <span class="brand-text">toyyib<span class="pay-text">Pay</span></span>
+                        <!-- Center: Copyright Text Only (No Border/Background) -->
+                        <div class="text-center flex justify-center">
+                            <p class="text-[11px] text-[#581c87] font-extrabold tracking-wider">
+                                © Brand Works Empire 2026, all rights reserved
+                            </p>
+                        </div>
+
+                        <!-- Right: ToyyibPay Widget & Is oce Logo Side-by-Side -->
+                        <div class="flex items-center justify-center md:justify-end gap-3">
+                            <!-- ToyyibPay Widget -->
+                            <div class="bg-white border-2 border-black rounded-lg p-1.5 shadow-[2px_2px_0_0_#000] flex flex-col items-center">
+                                <div class="text-[10px] font-black text-slate-800 pb-1">
+                                    toyyib<span class="text-purple-600">Pay</span>
+                                </div>
+                                <div class="bg-[#f3e8ff] p-1 rounded border border-black flex items-center justify-center">
+                                    <img src="https://digitalpastel.github.io/digital/sweetopiashop/fpxlogo.webp" alt="FPX Logo" width="70" height="30" class="object-contain h-5">
+                                </div>
                             </div>
-                            <div class="toyyibpay-body">
-                                <div class="fpx-container">
-                                    <div class="fpx-icon">
-                                        <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600">
-                                            <polyline points="15 18 9 12 15 6"></polyline>
-                                        </svg>
-                                        <span class="fpx-text">FPX</span>
-                                        <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600">
-                                            <polyline points="9 18 15 12 9 6"></polyline>
-                                        </svg>
-                                    </div>
+
+                            <!-- Is oce / Verified Logo Frame -->
+                            <div class="bg-white border-2 border-black rounded-lg p-1.5 shadow-[2px_2px_0_0_#000] flex flex-col items-center">
+                                <div class="text-[10px] font-black text-purple-700 pb-1">
+                                    Verified
+                                </div>
+                                <div class="bg-[#f3e8ff] p-1 rounded border border-black flex items-center justify-center">
+                                    <img src="https://digitalpastel.github.io/digital/sweetopiashop/isocelogo.webp" alt="Is oce Logo" width="70" height="30" class="object-contain h-5">
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Dark Copyright Footer Bar -->
-                    <div class="w-full bg-[#111827] py-4 px-4 text-center">
-                        <p class="text-xs text-slate-300 font-medium tracking-wide">
-                            Copyright Brand Works Empire 2026, all rights reserved
-                        </p>
                     </div>
                 </footer>
 
                 <!-- CHAT WIDGET -->
-                <div id="page2-chat-widget-container" class="fixed bottom-16 md:bottom-6 right-4 sm:right-6 z-40 flex flex-col items-end">
-                    <div class="sweetopia-kawaii-window relative w-[calc(100vw-2rem)] sm:w-96 max-w-sm bg-white rounded-3xl shadow-2xl border border-[#ecfccb] overflow-visible flex flex-col mb-4 transition-all duration-300 transform h-[460px] sm:h-[500px] hidden opacity-0 scale-95 pointer-events-none" id="sweetopiaChatWindow">
+                <div id="page2-chat-widget-container" class="fixed bottom-20 md:bottom-4 right-4 sm:right-6 z-40 flex flex-col items-end">
+                    <div class="sweetopia-kawaii-window relative w-[calc(100vw-2rem)] sm:w-96 max-w-sm bg-white rounded-3xl shadow-2xl border border-[#ecfccb] overflow-visible flex flex-col mb-4 transition-all duration-300 transform h-[460px] sm:h-[500px] opacity-100 scale-100" id="sweetopiaChatWindow">
                         <style>
                             .cat-ear-left-green, .cat-ear-right-green {
                                 position: absolute;
@@ -1646,6 +1664,7 @@
                         <div class="cat-ear-left-green"><div class="cat-ear-left-inner-green"></div></div>
                         <div class="cat-ear-right-green"><div class="cat-ear-right-inner-green"></div></div>
 
+                        <!-- Header -->
                         <div class="bg-gradient-to-r from-[#65a30d] to-[#4d7c0f] text-white px-4 py-3.5 rounded-t-3xl flex items-center justify-between shadow-md relative z-10">
                             <div class="flex items-center space-x-2.5">
                                 <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center font-bold text-sm border border-white/30">
@@ -1654,41 +1673,128 @@
                                 <div>
                                     <h4 class="text-xs font-bold">Sweetopia Live Support</h4>
                                     <p class="text-[10px] text-lime-100 flex items-center" id="support-status-indicator">
-                                        <span id="support-dot-indicator" class="w-2 h-2 rounded-full bg-slate-400 inline-block mr-1 transition-colors"></span>
-                                        <span id="support-status-text">Offline / Away</span>
+                                        <span id="support-dot-indicator" class="w-2 h-2 rounded-full bg-emerald-400 inline-block mr-1"></span>
+                                        <span id="widgetStatusText">Online &amp; Active</span>
                                     </p>
                                 </div>
                             </div>
                             <div class="flex items-center space-x-2">
-                                <button onclick="clearCurrentChatHistory()" id="chat-delete-history-btn" class="text-[10px] bg-white/20 hover:bg-white/30 text-white px-2 py-1 rounded-lg transition" title="Delete Chat History">Clear</button>
-                                <button onclick="toggleChatPopup()" class="w-7 h-7 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition">
+                                <button onclick="clearWidgetChat()" class="text-[10px] bg-white/20 hover:bg-white/30 text-white px-2 py-1 rounded-lg transition">Clear</button>
+                                <button onclick="toggleWidgetChat()" class="w-7 h-7 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition">
                                     <i class="fa-solid fa-xmark text-xs"></i>
                                 </button>
                             </div>
                         </div>
 
-                        <div id="admin-chat-session-bar" class="bg-[#f7fee7] px-3 py-2.5 border-b border-[#ecfccb] flex items-center justify-between text-[11px]">
-                            <span class="font-bold text-[#4d7c0f]">Select User:</span>
+                        <!-- Admin Session Switcher Bar -->
+                        <div id="admin-chat-session-bar" class="bg-[#f7fee7] px-3 py-2 border-b border-[#ecfccb] flex items-center justify-between text-[11px]">
+                            <span class="font-bold text-[#4d7c0f]">User Session:</span>
                             <div class="flex items-center space-x-2">
-                                <select id="admin-active-chat-user" onchange="switchAdminChatSession()" class="bg-white border border-[#84cc16] rounded-lg px-2 py-1 text-slate-800 font-semibold focus:outline-none max-w-[170px]"><option value="">No Active Chat</option></select>
-                                <button onclick="adminDeleteSelectedChatSession()" class="bg-red-50 hover:bg-red-100 text-red-600 px-2 py-1 rounded-lg font-bold border border-red-200 transition" title="Delete entire conversation">Delete</button>
+                                <select id="admin-active-chat-user" onchange="switchAdminChatSession()" class="bg-white border border-[#84cc16] rounded-lg px-2 py-1 text-slate-800 font-semibold focus:outline-none text-xs max-w-[170px]"><option value="brandworkzco@gmail.com">🔘 brandworkzco@gmail.com (Customer - Offline)</option></select>
+                                <button onclick="adminDeleteSelectedChatSession()" class="bg-red-50 hover:bg-red-100 text-red-600 px-2 py-1 rounded-lg font-bold border border-red-200 transition text-[10px]" title="Delete entire conversation">Delete</button>
                             </div>
                         </div>
 
-                        <div id="chat-messages-box" class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/50 text-xs"><div class="text-center text-slate-400 py-10"><i class="fa-solid fa-comments text-2xl text-lime-500 mb-2"></i><p class="text-xs">No active conversation selected.</p></div></div>
+                        <!-- Messages Box -->
+                        <div id="widget-chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/50 text-xs"><div class="text-center text-slate-400 py-10"><i class="fa-solid fa-heart text-2xl text-lime-500 mb-2"></i><p class="text-xs">Chatting with <b class="text-slate-700">brandworkzco@gmail.com</b>.<br>Leave a message or sticker to start conversation.</p></div></div>
 
-                        <div class="p-3 bg-white border-t border-slate-100 flex items-center space-x-2 rounded-b-3xl">
-                            <input type="text" id="chat-input-text" onkeypress="handleChatKeypress(event)" placeholder="Type a message..." class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#65a30d]">
-                            <button onclick="sendChatMessage()" class="w-10 h-10 rounded-xl bg-[#65a30d] hover:bg-[#4d7c0f] text-white flex items-center justify-center shadow-md transition shrink-0">
-                                <i class="fa-solid fa-paper-plane text-xs"></i>
-                            </button>
+                        <!-- Footer Input & Multimedia Toolbar -->
+                        <div class="p-3 bg-white border-t border-pink-100 flex flex-col space-y-2 rounded-b-3xl">
+                            <!-- Multimedia & Sticker Toolbar Icons -->
+                            <div class="flex items-center space-x-2 sm:space-x-3 px-1 text-slate-500">
+                                <!-- Sticker Picker Toggle Button -->
+                                <button type="button" onclick="toggleStickerPicker()" class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl hover:bg-pink-100/80 hover:text-pink-600 flex items-center justify-center transition text-sm sm:text-base" title="Stickers">
+                                    <i class="fa-solid fa-face-smile"></i>
+                                </button>
+                                <!-- Image Upload Button -->
+                                <label class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl hover:bg-pink-100/80 hover:text-pink-600 flex items-center justify-center transition cursor-pointer text-sm sm:text-base" title="Upload Image">
+                                    <i class="fa-solid fa-image"></i>
+                                    <input type="file" id="imageUploadInput" accept="image/png,image/jpeg,image/jpg,image/webp" class="hidden" onchange="handleImageUpload(event)">
+                                </label>
+                                <!-- Video Upload Button -->
+                                <label class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl hover:bg-pink-100/80 hover:text-pink-600 flex items-center justify-center transition cursor-pointer text-sm sm:text-base" title="Upload Video">
+                                    <i class="fa-solid fa-video"></i>
+                                    <input type="file" id="videoUploadInput" accept="video/*,.mp4,.webm,.mov" class="hidden" onchange="handleVideoUpload(event)">
+                                </label>
+                                <!-- Product Share Button -->
+                                <button type="button" onclick="openProductSelectorModal()" class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl hover:bg-pink-100/80 hover:text-pink-600 flex items-center justify-center transition text-sm sm:text-base" title="Order / Share Product">
+                                    <i class="fa-solid fa-bag-shopping"></i>
+                                </button>
+                                <!-- Custom Upload Sticker Button -->
+                                <label class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl hover:bg-purple-100 hover:text-purple-600 flex items-center justify-center transition cursor-pointer text-sm sm:text-base" title="Upload Custom Sticker">
+                                    <i class="fa-solid fa-plus-circle text-purple-500"></i>
+                                    <input type="file" id="customStickerInput" accept="image/*" class="hidden" onchange="handleCustomStickerUpload(event)">
+                                </label>
+                            </div>
+
+                            <!-- Textarea and Send Button -->
+                            <div class="flex items-center space-x-2 bg-pink-50/70 rounded-2xl p-2 border border-pink-200 focus-within:border-pink-400 transition">
+                                <textarea id="chatInput" rows="1" placeholder="Type a message here..." class="flex-1 bg-transparent border-none focus:outline-none text-slate-700 text-xs px-2 resize-none" onkeypress="handleKeypress(event)"></textarea>
+                                <button id="sendBtn" onclick="sendTextMessage()" class="px-3.5 py-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold rounded-xl shadow-md hover:opacity-95 transition text-xs flex items-center space-x-1.5 shrink-0">
+                                    <span>Send</span>
+                                    <i class="fa-solid fa-paper-plane text-[10px]"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
-                    <button onclick="toggleChatPopup()" class="w-14 h-14 rounded-full bg-gradient-to-r from-[#65a30d] to-[#4d7c0f] hover:from-[#4d7c0f] hover:to-[#3f6212] text-white shadow-2xl flex items-center justify-center text-xl transition-all transform hover:scale-105 border-2 border-white relative group">
+                    <!-- Floating Chat Toggle Button -->
+                    <button onclick="toggleWidgetChat()" class="w-14 h-14 rounded-full bg-gradient-to-r from-[#65a30d] to-[#4d7c0f] hover:from-[#4d7c0f] hover:to-[#3f6212] text-white shadow-2xl flex items-center justify-center text-xl transition-all transform hover:scale-105 border-2 border-white relative group">
                         <i class="fa-solid fa-comments"></i>
-                        <span id="chat-unread-badge" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-extrabold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-md hidden">0</span>
+                        <span id="widget-unread-badge" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-extrabold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-md hidden">0</span>
                     </button>
+                </div>
+            </div>
+
+            <!-- SHOPEE STYLE STICKER PICKER MODAL (20 STICKER SLOTS) -->
+            <div id="screen-sticker-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-3 sm:p-4" onclick="closeStickerPicker()">
+                <div class="w-full max-w-sm bg-white rounded-3xl border border-pink-200 overflow-hidden shadow-2xl flex flex-col max-h-[85vh] animate-in fade-in zoom-in-95 duration-200" onclick="event.stopPropagation()">
+                    <div class="px-5 py-3.5 bg-gradient-to-r from-pink-100 to-purple-100 border-b border-pink-200 flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-face-smile text-pink-500 text-base"></i>
+                            <h3 class="text-xs font-bold text-slate-800">Select Sticker (20 Packs)</h3>
+                        </div>
+                        <button type="button" onclick="closeStickerPicker()" class="w-7 h-7 rounded-full bg-white/80 hover:bg-white text-slate-600 flex items-center justify-center transition shadow-xs">
+                            <i class="fa-solid fa-xmark text-xs"></i>
+                        </button>
+                    </div>
+
+                    <!-- 20 Replaceable Sticker Slots Grid -->
+                    <div class="p-3.5 overflow-y-auto max-h-72 cute-h-scrollbar">
+                        <div id="sticker-slots-grid" class="grid grid-cols-4 sm:grid-cols-5 gap-2.5">
+                            <!-- Populated dynamically with 20 placeable sticker slots -->
+                        </div>
+                    </div>
+
+                    <div class="p-2.5 bg-slate-50 border-t border-slate-100 text-center">
+                        <span class="text-[10px] text-slate-400">Click any sticker slot to post into chat</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SHOPEE STYLE PRODUCT SHARE / ORDER MODAL -->
+            <div id="screen-product-selector-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-3 sm:p-4" onclick="closeProductSelectorModal()">
+                <div class="w-full max-w-md bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-2xl flex flex-col max-h-[85vh] animate-in fade-in zoom-in-95 duration-200" onclick="event.stopPropagation()">
+                    <div class="px-5 py-3.5 bg-slate-100 border-b border-slate-200 flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-bag-shopping text-[#65a30d] text-base"></i>
+                            <h3 class="text-xs font-bold text-slate-800">Order / Share Product with Support</h3>
+                        </div>
+                        <button type="button" onclick="closeProductSelectorModal()" class="w-7 h-7 rounded-full bg-white hover:bg-slate-200 text-slate-600 flex items-center justify-center transition shadow-xs">
+                            <i class="fa-solid fa-xmark text-xs"></i>
+                        </button>
+                    </div>
+
+                    <!-- Scrollable Product List -->
+                    <div class="p-4 overflow-y-auto space-y-3 max-h-80" id="chat-product-share-list">
+                        <!-- Populated dynamically from products list -->
+                    </div>
+
+                    <div class="p-3 bg-slate-50 border-t border-slate-200 text-right">
+                        <button type="button" onclick="closeProductSelectorModal()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl text-xs font-bold transition">
+                            Cancel
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -2874,6 +2980,275 @@
         window.switchAdminChatSession = switchAdminChatSession;
         window.adminDeleteSelectedChatSession = adminDeleteSelectedChatSession;
 
+        // Widget Chat bindings & methods
+        window.toggleWidgetChat = toggleWidgetChat;
+        window.clearWidgetChat = clearWidgetChat;
+        window.sendTextMessage = sendTextMessage;
+        window.handleKeypress = handleKeypress;
+        window.toggleStickerPicker = toggleStickerPicker;
+        window.closeStickerPicker = closeStickerPicker;
+        window.selectSticker = selectSticker;
+        window.handleImageUpload = handleImageUpload;
+        window.handleVideoUpload = handleVideoUpload;
+        window.handleCustomStickerUpload = handleCustomStickerUpload;
+        window.openProductSelectorModal = openProductSelectorModal;
+        window.closeProductSelectorModal = closeProductSelectorModal;
+        window.shareProductInChat = shareProductInChat;
+
+        // 20 Replaceable Sticker image sources
+        const defaultStickerAssets = [
+            "https://placehold.co/120x120/fce7f3/db2777?text=Heart+1",
+            "https://placehold.co/120x120/fce7f3/db2777?text=Sparkle+2",
+            "https://placehold.co/120x120/ede9fe/7c3aed?text=Cat+3",
+            "https://placehold.co/120x120/ede9fe/7c3aed?text=Love+4",
+            "https://placehold.co/120x120/dbeafe/2563eb?text=Star+5",
+            "https://placehold.co/120x120/dbeafe/2563eb?text=Cool+6",
+            "https://placehold.co/120x120/dcfce7/16a34a?text=Yay+7",
+            "https://placehold.co/120x120/dcfce7/16a34a?text=Lens+8",
+            "https://placehold.co/120x120/fef3c7/d97706?text=Cute+9",
+            "https://placehold.co/120x120/fef3c7/d97706?text=Hi+10",
+            "https://placehold.co/120x120/ffe4e6/e11d48?text=Wow+11",
+            "https://placehold.co/120x120/ffe4e6/e11d48?text=Kiss+12",
+            "https://placehold.co/120x120/fae8ff/c026d3?text=Sweet+13",
+            "https://placehold.co/120x120/fae8ff/c026d3?text=Bling+14",
+            "https://placehold.co/120x120/e0e7ff/4f46e5?text=Eyes+15",
+            "https://placehold.co/120x120/e0e7ff/4f46e5?text=OK+16",
+            "https://placehold.co/120x120/ecfccb/65a30d?text=Thanks+17",
+            "https://placehold.co/120x120/ecfccb/65a30d?text=Shop+18",
+            "https://placehold.co/120x120/f1f5f9/475569?text=Bye+19",
+            "https://placehold.co/120x120/f1f5f9/475569?text=Smile+20"
+        ];
+
+        function renderStickerSlotsGrid() {
+            const grid = document.getElementById('sticker-slots-grid');
+            if (!grid) return;
+            grid.innerHTML = defaultStickerAssets.map((src, idx) => `
+                <div onclick="selectSticker('${src}')" class="p-1 rounded-2xl border-2 border-pink-100 hover:border-pink-500 bg-pink-50/50 hover:bg-white cursor-pointer transition flex items-center justify-center transform hover:scale-105 active:scale-95 group shadow-xs" title="Sticker #${idx + 1}">
+                    <img src="${src}" alt="Sticker ${idx + 1}" class="w-14 h-14 object-contain rounded-xl group-hover:drop-shadow-sm">
+                </div>
+            `).join('');
+        }
+
+        function toggleStickerPicker() {
+            const modal = document.getElementById('screen-sticker-modal');
+            if (!modal) return;
+            renderStickerSlotsGrid();
+            if (modal.classList.contains('opacity-0')) {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modal.classList.add('opacity-100');
+            } else {
+                closeStickerPicker();
+            }
+        }
+
+        function closeStickerPicker() {
+            const modal = document.getElementById('screen-sticker-modal');
+            modal?.classList.remove('opacity-100');
+            modal?.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        async function selectSticker(stickerSrc) {
+            closeStickerPicker();
+            await sendSpecialChatMessage({
+                type: 'sticker',
+                mediaUrl: stickerSrc,
+                text: 'Sent a sticker'
+            });
+        }
+
+        function handleCustomStickerUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const base64 = e.target.result;
+                await sendSpecialChatMessage({
+                    type: 'sticker',
+                    mediaUrl: base64,
+                    text: 'Sent a custom sticker'
+                });
+            };
+            reader.readAsDataURL(file);
+            event.target.value = '';
+        }
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const base64 = e.target.result;
+                await sendSpecialChatMessage({
+                    type: 'image',
+                    mediaUrl: base64,
+                    text: 'Sent an image'
+                });
+            };
+            reader.readAsDataURL(file);
+            event.target.value = '';
+        }
+
+        function handleVideoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const base64 = e.target.result;
+                await sendSpecialChatMessage({
+                    type: 'video',
+                    mediaUrl: base64,
+                    text: 'Sent a video'
+                });
+            };
+            reader.readAsDataURL(file);
+            event.target.value = '';
+        }
+
+        function openProductSelectorModal() {
+            const list = document.getElementById('chat-product-share-list');
+            if (!list) return;
+            list.innerHTML = products.map(p => `
+                <div class="flex items-center justify-between p-3 rounded-2xl border border-slate-200 bg-white hover:border-[#65a30d] transition shadow-xs">
+                    <div class="flex items-center space-x-3">
+                        <img src="${p.image}" class="w-12 h-12 object-cover rounded-xl border border-slate-200">
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-900">${p.name}</h4>
+                            <span class="text-[10px] text-slate-500">${p.brand || 'Molicon'} • RM ${p.price}</span>
+                        </div>
+                    </div>
+                    <button type="button" onclick="shareProductInChat('${p.id}')" class="px-3 py-1.5 bg-[#65a30d] hover:bg-[#4d7c0f] text-white text-xs font-bold rounded-xl shadow-xs transition">
+                        Share &amp; Inquire
+                    </button>
+                </div>
+            `).join('');
+
+            const modal = document.getElementById('screen-product-selector-modal');
+            modal?.classList.remove('opacity-0', 'pointer-events-none');
+            modal?.classList.add('opacity-100');
+        }
+
+        function closeProductSelectorModal() {
+            const modal = document.getElementById('screen-product-selector-modal');
+            modal?.classList.remove('opacity-100');
+            modal?.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        async function shareProductInChat(productId) {
+            const prod = products.find(p => p.id === productId);
+            if (!prod) return;
+            closeProductSelectorModal();
+            await sendSpecialChatMessage({
+                type: 'product',
+                productData: prod,
+                text: `Inquiring about ${prod.name} (RM ${prod.price})`
+            });
+        }
+
+        function toggleWidgetChat() {
+            const win = document.getElementById('sweetopiaChatWindow');
+            if (!win) return;
+            if (win.classList.contains('hidden')) {
+                win.classList.remove('hidden');
+                setTimeout(() => {
+                    win.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+                    win.classList.add('opacity-100', 'scale-100');
+                }, 10);
+                renderActiveChatMessages();
+                updateSupportIndicator();
+            } else {
+                win.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+                win.classList.remove('opacity-100', 'scale-100');
+                setTimeout(() => win.classList.add('hidden'), 200);
+            }
+        }
+
+        async function sendTextMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input ? input.value.trim() : '';
+            if (!text) return;
+            await sendSpecialChatMessage({ text: text, type: 'text' });
+            if (input) input.value = '';
+        }
+
+        async function sendSpecialChatMessage(msgPayload) {
+            if (!currentUser) {
+                showToast("Sign In Required", "Please sign in or continue as guest to chat.", true);
+                return;
+            }
+
+            const isAdmin = isAdminUser(currentUser.email);
+            let targetSessionUser = currentUser.email;
+
+            if (isAdmin) {
+                const select = document.getElementById('admin-active-chat-user');
+                targetSessionUser = activeChatSessionUser || select?.value;
+                if (!targetSessionUser) {
+                    showToast("No User Selected", "Select a customer or guest from the dropdown to reply.", true);
+                    return;
+                }
+            }
+
+            const newMsg = {
+                id: 'msg_' + Date.now(),
+                sender: currentUser.email,
+                senderName: isAdmin ? 'Admin Support' : (currentUser.guestId || currentUser.email.split('@')[0]),
+                text: msgPayload.text || '',
+                type: msgPayload.type || 'text',
+                mediaUrl: msgPayload.mediaUrl || null,
+                productData: msgPayload.productData || null,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                timestamp: new Date().toISOString(),
+                isAdmin: isAdmin
+            };
+
+            const existingMsgs = userSessionsMap[targetSessionUser] || [];
+            existingMsgs.push(newMsg);
+            userSessionsMap[targetSessionUser] = existingMsgs;
+
+            renderActiveChatMessages();
+
+            if (db) {
+                try {
+                    const docKey = targetSessionUser.replace(/[^a-zA-Z0-9]/g, '_');
+                    await setDoc(doc(db, "lumilens_chats", docKey), {
+                        userEmail: targetSessionUser,
+                        messages: existingMsgs,
+                        lastUpdated: new Date().toISOString()
+                    }, { merge: true });
+                } catch(e) { console.warn("Firestore chat send error:", e); }
+            }
+        }
+
+        function handleKeypress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendTextMessage();
+            }
+        }
+
+        async function clearWidgetChat() {
+            let targetUser = currentUser?.email;
+            if (currentUser && isAdminUser(currentUser.email)) {
+                targetUser = activeChatSessionUser || document.getElementById('admin-active-chat-user')?.value;
+            }
+            if (!targetUser) return;
+
+            userSessionsMap[targetUser] = [];
+            renderActiveChatMessages();
+
+            if (db) {
+                try {
+                    const docKey = targetUser.replace(/[^a-zA-Z0-9]/g, '_');
+                    await setDoc(doc(db, "lumilens_chats", docKey), {
+                        userEmail: targetUser,
+                        messages: [],
+                        lastUpdated: new Date().toISOString()
+                    });
+                } catch(e) { console.warn(e); }
+            }
+            showToast("Chat Cleared", "Messages cleared.");
+        }
+
         /* SECTION 1 & 2 ADMIN VOUCHER WORKSPACE HANDLERS */
         let section2AssignedProducts = ["p1", "p2"];
 
@@ -3026,6 +3401,10 @@
             if (form) form.reset();
             const preview = document.getElementById('c_previewFullCode');
             if (preview) preview.innerText = 'SWEET[...]';
+            const select = document.getElementById('customer-code1');
+            if (select) select.value = '';
+            const expiry = document.getElementById('expiry-code1');
+            if (expiry) expiry.value = '2026-12-31';
             updateSection1SelectedCount();
         };
 
@@ -3039,9 +3418,12 @@
         };
 
         function updateSection1SelectedCount() {
-            const checked = document.querySelectorAll('input[name="chosenCustomer"]:checked');
+            const select = document.getElementById('customer-code1');
             const badge = document.getElementById('c_selectedCustomersBadge');
-            if (badge) badge.innerText = `${checked.length} Customers Selected`;
+            if (badge) {
+                const isSelected = select && select.value.trim().length > 0;
+                badge.innerText = isSelected ? `1 Customer Selected` : `0 Customers Selected`;
+            }
         }
 
         window.handleCreateCustomerVoucher = async function(event) {
@@ -3050,57 +3432,60 @@
             const rawSuffix = document.getElementById('c_voucherSuffix')?.value.trim();
             const discType = document.getElementById('c_discountType')?.value || 'fixed';
             const discValue = parseFloat(document.getElementById('c_discountValue')?.value || '0');
-            const expiry = document.getElementById('c_expiryDate')?.value;
+            const expiry = document.getElementById('expiry-code1')?.value || '2026-12-31';
             const minOrder = parseFloat(document.getElementById('c_minOrder')?.value || '0');
             const displaySetting = document.querySelector('input[name="c_displaySetting"]:checked')?.value || 'all_pages';
 
-            const selectedCustomers = Array.from(document.querySelectorAll('input[name="chosenCustomer"]:checked')).map(el => el.value);
+            const customerSelect = document.getElementById('customer-code1');
+            const chosenCustomer = (customerSelect?.value || '').trim();
 
-            if (!title || !rawSuffix || !discValue || !expiry) {
+            if (!title || !rawSuffix || !discValue) {
                 showToast("Missing Fields", "Please fill in all required voucher parameters.", true);
                 return;
             }
 
-            if (selectedCustomers.length === 0) {
-                showToast("No Customer Selected", "Please choose at least 1 registered customer to assign.", true);
+            if (!chosenCustomer) {
+                showToast("No Customer Selected", "Please choose a registered customer to assign.", true);
                 return;
             }
 
             const finalCode = getFormattedVoucherCode('SWEET', rawSuffix);
+            const userKey = chosenCustomer.toLowerCase();
 
-            selectedCustomers.forEach(customerEntry => {
-                // Extracts email inside parentheses if present e.g. "Alyssa (alyssa@kawaii.my)" -> "alyssa@kawaii.my"
-                const match = customerEntry.match(/\(([^)]+)\)/);
-                const email = (match ? match[1] : customerEntry).trim().toLowerCase();
+            if (!assignedVouchersMap[userKey]) assignedVouchersMap[userKey] = [];
 
-                if (!assignedVouchersMap[email]) assignedVouchersMap[email] = [];
+            VALID_VOUCHERS[finalCode] = discType === 'percentage' ? 5.00 : discValue;
 
-                VALID_VOUCHERS[finalCode] = discType === 'percentage' ? 5.00 : discValue;
+            const voucherObj = {
+                title: title,
+                code: finalCode,
+                discount: discValue,
+                discountType: discType,
+                minOrder: minOrder,
+                expiresAt: expiry,
+                displaySetting: displaySetting,
+                used: false,
+                publishedAt: new Date().toISOString()
+            };
 
-                const voucherObj = {
-                    title: title,
-                    code: finalCode,
-                    discount: discValue,
-                    discountType: discType,
-                    minOrder: minOrder,
-                    expiresAt: expiry.split('T')[0],
-                    displaySetting: displaySetting,
-                    used: false,
-                    publishedAt: new Date().toISOString()
-                };
-
-                const existingIdx = assignedVouchersMap[email].findIndex(v => v.code === finalCode);
-                if (existingIdx !== -1) {
-                    assignedVouchersMap[email][existingIdx] = voucherObj;
-                } else {
-                    assignedVouchersMap[email].push(voucherObj);
-                }
-            });
+            const existingIdx = assignedVouchersMap[userKey].findIndex(v => v.code === finalCode);
+            if (existingIdx !== -1) {
+                assignedVouchersMap[userKey][existingIdx] = voucherObj;
+            } else {
+                assignedVouchersMap[userKey].push(voucherObj);
+            }
 
             await syncAssignedVouchersStorage();
 
+            // Notify customer in notification feed
+            await addNotificationForCustomer(chosenCustomer, {
+                title: `Special Voucher: ${finalCode}`,
+                message: `You have received a special voucher ${finalCode} (${title}) valid until ${expiry}.`,
+                type: 'voucher'
+            });
+
             // Add new preset to Active Voucher Code Presets (Admin View) Table
-            const formattedExpiry = new Date(expiry).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + ' 🎀';
+            const formattedExpiry = new Date(expiry + 'T23:59:00').toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' 🎀';
             activePresetsList.unshift({
                 id: 'preset_' + Date.now(),
                 type: 'customer',
@@ -3110,7 +3495,7 @@
                 limitText: '★ Limit: 1 use per customer ★',
                 displayText: `Display: ${displaySetting === 'all_pages' ? 'Display on all pages' : 'Do not display'}`,
                 assignedTargetType: 'Assigned Customers:',
-                assignedItems: selectedCustomers,
+                assignedItems: [chosenCustomer],
                 expiryText: formattedExpiry,
                 active: true,
                 badgeTheme: 'pink'
@@ -3118,7 +3503,7 @@
 
             renderPresetsTable();
             renderCustomerVouchersUI();
-            showToast("Voucher Published!", `${finalCode} assigned to ${selectedCustomers.length} chosen customer(s) & added to active table.`);
+            showToast("Voucher Published!", `${finalCode} assigned to ${chosenCustomer} & added to active table.`);
             resetSection1Form();
         };
 
@@ -3191,39 +3576,7 @@
         };
 
         function renderSection1ChosenCustomers() {
-            const container = document.getElementById('c_chosenCustomersGrid');
-            if (!container) return;
-
-            const knownUsersSet = new Set(Object.keys(userSessionsMap));
-            allOrders.forEach(o => { if (o.customer) knownUsersSet.add(o.customer); });
-            if (currentUser && currentUser.email) knownUsersSet.add(currentUser.email);
-            
-            // Default demo customer presets
-            const defaultDemoUsers = [
-                { name: "Alyssa", email: "alyssa@kawaii.my" },
-                { name: "Sarah", email: "sarah@sweetlens.com" },
-                { name: "Mimi", email: "mimi_99@gmail.com" }
-            ];
-
-            const customerList = [];
-            defaultDemoUsers.forEach(d => customerList.push({ name: d.name, email: d.email }));
-
-            Array.from(knownUsersSet).filter(u => !isAdminUser(u)).forEach(u => {
-                if (!customerList.some(c => c.email.toLowerCase() === u.toLowerCase())) {
-                    customerList.push({ name: u.split('@')[0], email: u });
-                }
-            });
-
-            container.innerHTML = customerList.map((c, idx) => `
-                <label class="flex items-center space-x-3 p-3 bg-white rounded-xl border border-pink-100 shadow-sm cursor-pointer hover:border-pink-300 transition">
-                    <input type="checkbox" name="chosenCustomer" onchange="updateSection1SelectedCount()" value="${c.name} (${c.email})" ${idx < 3 ? 'checked' : ''} class="w-4 h-4 text-pink-600 rounded focus:ring-pink-500">
-                    <div>
-                        <div class="text-xs font-bold text-slate-800">${c.name}</div>
-                        <div class="text-[11px] text-slate-500">${c.email}</div>
-                    </div>
-                </label>
-            `).join('');
-
+            // Dropdown list is now automatically kept in sync via renderAdminVoucherCustomerDropdowns()
             updateSection1SelectedCount();
         }
 
