@@ -1107,7 +1107,11 @@
                             </div>
 
                             <form id="voucherFormSection2" onsubmit="handleCreateProductVoucher(event)" class="p-6 space-y-6">
+                                
+                                <!-- Main Grid Configuration -->
                                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    
+                                    <!-- Voucher Name -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                                             Voucher Title / Name <span class="text-rose-500">*</span>
@@ -1115,6 +1119,7 @@
                                         <input type="text" id="p_voucherName" required="" placeholder="e.g. Kawaii Plushie Special" class="block w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-purple-500 focus:bg-white focus:outline-none transition-all">
                                     </div>
 
+                                    <!-- Prefix Code SWEET[...] -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                                             Voucher Code / Prefix <span class="text-rose-500">*</span>
@@ -1129,6 +1134,7 @@
                                         <p class="text-[11px] text-purple-600 font-medium">Resulting Code: <span class="font-mono font-bold" id="p_previewFullCode">SWEET[...]</span></p>
                                     </div>
 
+                                    <!-- Discount Amount -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                                             Discount Amount / Value <span class="text-rose-500">*</span>
@@ -1142,13 +1148,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="space-y-1.5">
-                                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
-                                            Validity Period (Until 🎀) <span class="text-rose-500">*</span>
-                                        </label>
-                                        <input type="datetime-local" id="p_expiryDate" required="" class="block w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-purple-500 focus:bg-white focus:outline-none transition-all">
-                                    </div>
-
+                                    <!-- Usage Limit -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                                             Total Usage Limit <span class="text-rose-500">*</span>
@@ -1156,14 +1156,17 @@
                                         <input type="number" id="p_usageLimit" required="" min="1" value="100" placeholder="100" class="block w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-purple-500 focus:outline-none">
                                     </div>
 
+                                    <!-- Min Order Spend -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                                             Min. Order Spend (RM)
                                         </label>
                                         <input type="number" id="p_minOrder" min="0" step="0.01" value="0.00" placeholder="0.00" class="block w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-purple-500 focus:outline-none">
                                     </div>
+
                                 </div>
 
+                                <!-- Chosen Product Frame Assignment Area -->
                                 <div class="p-5 bg-purple-50/70 border border-purple-200 rounded-2xl space-y-4">
                                     <div class="flex items-center justify-between flex-wrap gap-3">
                                         <div>
@@ -1173,21 +1176,26 @@
                                             </h3>
                                             <p class="text-xs text-slate-600">Link this sale voucher directly to selected product catalog items.</p>
                                         </div>
-                                        <div class="flex items-center space-x-2">
-                                            <button type="button" onclick="triggerAddProductModal()" class="px-3.5 py-2 bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold rounded-xl shadow transition flex items-center space-x-1.5">
-                                                <i class="fa-solid fa-plus text-[10px]"></i>
-                                                <span>Add Product</span>
-                                            </button>
-                                            <button type="button" onclick="publishDisplayButtonAction()" class="px-3.5 py-2 bg-white hover:bg-purple-50 text-purple-700 border border-purple-300 text-xs font-semibold rounded-xl shadow-sm transition flex items-center space-x-1.5">
-                                                <i class="fa-solid fa-eye text-[10px]"></i>
-                                                <span>Publish display button</span>
-                                            </button>
-                                        </div>
                                     </div>
 
-                                    <div id="assignedProductsList" class="flex flex-wrap gap-2 pt-2"></div>
+                                    <!-- Assigned Product List tags -->
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <div class="flex items-center gap-1.5">
+                                            <label for="customer-code1" class="text-[10px] font-semibold text-slate-500 uppercase">Assign:</label>
+                                            <select id="customer-code1" onchange="updateSection1SelectedCount()" class="admin-voucher-customer-select bg-amber-50/50 border border-amber-200 text-slate-700 text-xs px-2 py-1 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400 font-sans max-w-[180px] truncate"><option value="">-- Registered Customer --</option><option value="brandworkzco@gmail.com">brandworkzco@gmail.com</option></select>
+                                        </div>
+                                        <div class="flex items-center gap-1.5">
+                                            <label for="expiry-code1" class="text-[10px] font-semibold text-slate-500 uppercase">Expires:</label>
+                                            <input type="date" id="expiry-code1" value="2026-12-31" class="bg-amber-50/50 border border-amber-200 text-slate-700 text-xs px-2 py-1 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400 font-sans">
+                                        </div>
+                                        <button type="submit" class="bg-amber-600 hover:bg-amber-700 text-white font-medium text-xs px-3 py-1.5 rounded-lg transition-colors shadow-xs flex items-center gap-1 cursor-pointer">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                                            Save &amp; Publish
+                                        </button>
+                                    </div>
                                 </div>
 
+                                <!-- Voucher Display Settings & Notice -->
                                 <div class="border-t border-purple-100 pt-5 space-y-4">
                                     <div class="flex items-center justify-between flex-wrap gap-4">
                                         <div>
@@ -1215,6 +1223,7 @@
                                     </div>
                                 </div>
 
+                                <!-- Save & Publish Product Frame Action Button -->
                                 <div class="pt-4 flex items-center justify-end space-x-3 border-t border-slate-100">
                                     <button type="button" onclick="resetSection2Form()" class="px-5 py-2.5 border border-slate-300 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-100 transition">
                                         Cancel
@@ -1224,6 +1233,7 @@
                                         <span>Save &amp; Publish Voucher Display To Product Frame</span>
                                     </button>
                                 </div>
+
                             </form>
                         </section>
 
@@ -1970,6 +1980,7 @@
         let loadingBarsProgress = 0;
         let loadingIntervalTimer = null;
         let loadingResolveFn = null;
+        let loadingSafetyTimer = null; // Safety fallback timer to prevent permanent loading lock
 
         function setRetroBars(count) {
             loadingBarsProgress = Math.min(10, Math.max(0, count));
@@ -1998,6 +2009,7 @@
             }
 
             if (loadingIntervalTimer) clearInterval(loadingIntervalTimer);
+            if (loadingSafetyTimer) clearTimeout(loadingSafetyTimer);
 
             let current = 0;
             loadingIntervalTimer = setInterval(() => {
@@ -2007,6 +2019,13 @@
                 }
             }, 180);
 
+            // Safety fallback: Automatically dismiss loading screen after 4 seconds if network/auth hangs
+            loadingSafetyTimer = setTimeout(() => {
+                if (loadingResolveFn) {
+                    finishRetroLoading('fast');
+                }
+            }, 4000);
+
             return new Promise(resolve => {
                 loadingResolveFn = resolve;
             });
@@ -2014,6 +2033,7 @@
 
         function finishRetroLoading(speed = 'normal') {
             if (loadingIntervalTimer) clearInterval(loadingIntervalTimer);
+            if (loadingSafetyTimer) clearTimeout(loadingSafetyTimer);
 
             return new Promise((resolve) => {
                 const stepDelay = speed === 'fast' ? 30 : 60;
@@ -2038,6 +2058,20 @@
                 };
                 fillRest();
             });
+        }
+
+        function cancelRetroLoading() {
+            if (loadingIntervalTimer) clearInterval(loadingIntervalTimer);
+            if (loadingSafetyTimer) clearTimeout(loadingSafetyTimer);
+            const modal = document.getElementById('retro-auth-loading-modal');
+            if (modal) {
+                modal.classList.remove('opacity-100');
+                modal.classList.add('opacity-0', 'pointer-events-none');
+            }
+            if (loadingResolveFn) {
+                loadingResolveFn();
+                loadingResolveFn = null;
+            }
         }
 
         let products = [
@@ -2371,7 +2405,8 @@
             const email = document.getElementById('auth-email').value.trim();
             const password = document.getElementById('auth-password').value;
 
-            await startRetroLoading(window.isSignUpMode ? "CREATING NEW ACCOUNT..." : "AUTHENTICATING USER...");
+            // Start loading modal with safety fallback
+            startRetroLoading(window.isSignUpMode ? "CREATING NEW ACCOUNT..." : "AUTHENTICATING USER...");
 
             try {
                 if (auth) {
