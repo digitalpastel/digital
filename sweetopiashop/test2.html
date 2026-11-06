@@ -947,6 +947,315 @@
                             </button>
                         </div>
 
+                        <!-- Section 1: Create New Voucher & Chosen Customer Only Settings -->
+                        <section class="bg-white rounded-3xl shadow-sm border border-pink-100 overflow-hidden transition-all-300">
+                            <div class="bg-gradient-to-r from-pink-600 to-rose-500 px-6 py-4 flex items-center justify-between text-white">
+                                <div class="flex items-center space-x-3">
+                                    <div class="p-2.5 bg-white/15 rounded-xl backdrop-blur-sm">
+                                        <i class="fa-solid fa-user-check text-pink-100"></i>
+                                    </div>
+                                    <div>
+                                        <h2 class="text-base font-bold flex items-center space-x-2">
+                                            <span>1. Create New Voucher: Chosen Customer Only</span>
+                                            <span class="text-yellow-300">★</span>
+                                        </h2>
+                                        <p class="text-xs text-pink-100">★ This Voucher Is For Chosen Customer Only ★ Configure prefix code, customer assignment &amp; display rules</p>
+                                    </div>
+                                </div>
+                                <button type="button" onclick="resetSection1Form()" class="text-xs text-pink-100 hover:text-white underline cursor-pointer bg-white/10 px-3 py-1.5 rounded-lg transition">
+                                    Clear Form
+                                </button>
+                            </div>
+
+                            <form id="voucherFormSection1" onsubmit="handleCreateCustomerVoucher(event)" class="p-6 space-y-6">
+                                
+                                <!-- Main Grid Configuration -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    
+                                    <!-- Voucher Name -->
+                                    <div class="space-y-1.5">
+                                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                                            Voucher Title / Name <span class="text-rose-500">*</span>
+                                        </label>
+                                        <input type="text" id="c_voucherName" required="" placeholder="e.g. VIP Kawaii Special" class="block w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-pink-500 focus:bg-white focus:outline-none transition-all">
+                                    </div>
+
+                                    <!-- Prefix Code SWEET[...] -->
+                                    <div class="space-y-1.5">
+                                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                                            Voucher Code / Prefix <span class="text-rose-500">*</span>
+                                        </label>
+                                        <div class="relative rounded-xl shadow-sm flex items-center">
+                                            <span class="absolute left-0 inset-y-0 pl-3 flex items-center text-xs font-mono font-bold text-pink-700 bg-pink-50 border border-r-0 border-pink-300 rounded-l-xl px-3">
+                                                SWEET[
+                                            </span>
+                                            <input type="text" id="c_voucherSuffix" required="" placeholder="VIP]" class="block w-full pl-24 pr-12 py-2.5 bg-slate-50 border border-slate-300 rounded-r-xl text-sm text-slate-900 uppercase font-mono placeholder:normal-case placeholder:text-slate-400 focus:ring-2 focus:ring-pink-500 focus:bg-white focus:outline-none transition-all">
+                                            <span class="absolute right-3 text-xs font-mono font-bold text-pink-700">]</span>
+                                        </div>
+                                        <p class="text-[11px] text-pink-600 font-medium">Resulting Code: <span class="font-mono font-bold" id="c_previewFullCode">SWEET[...]</span></p>
+                                    </div>
+
+                                    <!-- Discount Amount -->
+                                    <div class="space-y-1.5">
+                                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                                            Discount Amount / Value <span class="text-rose-500">*</span>
+                                        </label>
+                                        <div class="grid grid-cols-2 gap-2">
+                                            <select id="c_discountType" class="py-2.5 px-3 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-pink-500 focus:outline-none">
+                                                <option value="fixed">Fixed (RM)</option>
+                                                <option value="percentage">Percentage (%)</option>
+                                            </select>
+                                            <input type="number" id="c_discountValue" required="" min="1" step="0.01" value="1.00" placeholder="1.00" class="py-2.5 px-3 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-pink-500 focus:outline-none">
+                                        </div>
+                                    </div>
+
+                                    <!-- Validity Period -->
+                                    <div class="space-y-1.5">
+                                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                                            Validity Period (Until 🎀) <span class="text-rose-500">*</span>
+                                        </label>
+                                        <input type="datetime-local" id="c_expiryDate" required="" class="block w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-pink-500 focus:bg-white focus:outline-none transition-all">
+                                    </div>
+
+                                    <!-- Limit per customer -->
+                                    <div class="space-y-1.5">
+                                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                                            Usage Limit per Customer
+                                        </label>
+                                        <input type="number" id="c_limitPerCustomer" min="1" value="1" readonly="" class="block w-full px-3.5 py-2.5 bg-pink-50/50 border border-pink-200 rounded-xl text-sm font-semibold text-pink-700 focus:outline-none cursor-not-allowed">
+                                        <p class="text-[11px] text-slate-500">★ Limit: 1 use per customer ★</p>
+                                    </div>
+
+                                    <!-- Min Spend -->
+                                    <div class="space-y-1.5">
+                                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                                            Min. Order Spend (RM)
+                                        </label>
+                                        <input type="number" id="c_minOrder" min="0" step="0.01" value="0.00" placeholder="0.00" class="block w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-pink-500 focus:outline-none">
+                                    </div>
+
+                                </div>
+
+                                <!-- Chosen Customer Assignment Area -->
+                                <div class="p-5 bg-pink-50/70 border border-pink-200 rounded-2xl space-y-4">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <h3 class="text-sm font-bold text-slate-900 flex items-center space-x-2">
+                                                <i class="fa-solid fa-users text-pink-600"></i>
+                                                <span>Assign Registered Customers (Chosen Customer Only)</span>
+                                            </h3>
+                                            <p class="text-xs text-slate-600">Select specific recipients who are authorized to redeem this voucher preset.</p>
+                                        </div>
+                                        <span id="c_selectedCustomersBadge" class="px-3 py-1 bg-white text-pink-700 text-xs font-semibold rounded-lg border border-pink-200 shadow-sm">
+                                            0 Customers Selected
+                                        </span>
+                                    </div>
+
+                                    <div id="c_chosenCustomersGrid" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                        <!-- Dynamically rendered or pre-populated via JS -->
+                                    </div>
+                                </div>
+
+                                <!-- Voucher Display Settings & Sale Mode Badge -->
+                                <div class="border-t border-pink-100 pt-5 space-y-4">
+                                    <div class="flex items-center justify-between flex-wrap gap-4">
+                                        <div>
+                                            <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center space-x-1.5">
+                                                <span class="text-pink-600">♡</span>
+                                                <span>Voucher Display Setting</span>
+                                                <span class="text-pink-600">♡</span>
+                                            </h4>
+                                            <p class="text-xs text-slate-500">Choose how this chosen customer voucher appears across your storefront.</p>
+                                        </div>
+                                        <div class="inline-flex items-center px-3 py-1.5 rounded-xl bg-pink-100/70 border border-pink-200 text-pink-800 text-xs font-bold shadow-sm">
+                                            🛍️ Sale Mode Active: Checkout &amp; Store Only (FOR CHOSEN CUSTOMER ONLY)
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-wrap gap-6 items-center">
+                                        <label class="flex items-center space-x-2 text-sm font-medium text-slate-700 cursor-pointer">
+                                            <input type="radio" name="c_displaySetting" value="all_pages" checked="" class="text-pink-600 focus:ring-pink-500 w-4 h-4">
+                                            <span>Display on all pages</span>
+                                        </label>
+                                        <label class="flex items-center space-x-2 text-sm font-medium text-slate-700 cursor-pointer">
+                                            <input type="radio" name="c_displaySetting" value="no_display" class="text-pink-600 focus:ring-pink-500 w-4 h-4">
+                                            <span>Do not display</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Publish Action Button -->
+                                <div class="pt-4 flex items-center justify-end space-x-3 border-t border-slate-100">
+                                    <button type="button" onclick="resetSection1Form()" class="px-5 py-2.5 border border-slate-300 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-100 transition">
+                                        Cancel
+                                    </button>
+                                    <button type="submit" class="px-6 py-2.5 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white font-semibold text-sm rounded-xl shadow-md shadow-pink-200 transition flex items-center space-x-2">
+                                        <i class="fa-solid fa-cloud-arrow-up text-xs"></i>
+                                        <span>Save &amp; Publish Voucher Display to all pages</span>
+                                    </button>
+                                </div>
+
+                            </form>
+                        </section>
+
+                        <!-- Section 2: Create New Sale Voucher for Chosen Product Only -->
+                        <section class="bg-white rounded-3xl shadow-sm border border-purple-100 overflow-hidden transition-all-300">
+                            <div class="bg-gradient-to-r from-purple-600 to-indigo-600 px-6 py-4 flex items-center justify-between text-white">
+                                <div class="flex items-center space-x-3">
+                                    <div class="p-2.5 bg-white/15 rounded-xl backdrop-blur-sm">
+                                        <i class="fa-solid fa-box-open text-purple-100"></i>
+                                    </div>
+                                    <div>
+                                        <h2 class="text-base font-bold flex items-center space-x-2">
+                                            <span>2. Create New Sale Voucher: Chosen Product Only</span>
+                                            <span class="text-yellow-300">✨</span>
+                                        </h2>
+                                        <p class="text-xs text-purple-100">★ This Voucher Is For Chosen Product Only ★ Configure product frame assignments &amp; display rules</p>
+                                    </div>
+                                </div>
+                                <button type="button" onclick="resetSection2Form()" class="text-xs text-purple-100 hover:text-white underline cursor-pointer bg-white/10 px-3 py-1.5 rounded-lg transition">
+                                    Clear Form
+                                </button>
+                            </div>
+
+                            <form id="voucherFormSection2" onsubmit="handleCreateProductVoucher(event)" class="p-6 space-y-6">
+                                
+                                <!-- Main Grid Configuration -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    
+                                    <!-- Voucher Name -->
+                                    <div class="space-y-1.5">
+                                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                                            Voucher Title / Name <span class="text-rose-500">*</span>
+                                        </label>
+                                        <input type="text" id="p_voucherName" required="" placeholder="e.g. Kawaii Plushie Special" class="block w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-purple-500 focus:bg-white focus:outline-none transition-all">
+                                    </div>
+
+                                    <!-- Prefix Code SWEET[...] -->
+                                    <div class="space-y-1.5">
+                                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                                            Voucher Code / Prefix <span class="text-rose-500">*</span>
+                                        </label>
+                                        <div class="relative rounded-xl shadow-sm flex items-center">
+                                            <span class="absolute left-0 inset-y-0 pl-3 flex items-center text-xs font-mono font-bold text-purple-700 bg-purple-50 border border-r-0 border-purple-300 rounded-l-xl px-3">
+                                                SWEET[
+                                            </span>
+                                            <input type="text" id="p_voucherSuffix" required="" placeholder="PLUSH]" class="block w-full pl-24 pr-12 py-2.5 bg-slate-50 border border-slate-300 rounded-r-xl text-sm text-slate-900 uppercase font-mono placeholder:normal-case placeholder:text-slate-400 focus:ring-2 focus:ring-purple-500 focus:bg-white focus:outline-none transition-all">
+                                            <span class="absolute right-3 text-xs font-mono font-bold text-purple-700">]</span>
+                                        </div>
+                                        <p class="text-[11px] text-purple-600 font-medium">Resulting Code: <span class="font-mono font-bold" id="p_previewFullCode">SWEET[...]</span></p>
+                                    </div>
+
+                                    <!-- Discount Amount -->
+                                    <div class="space-y-1.5">
+                                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                                            Discount Amount / Value <span class="text-rose-500">*</span>
+                                        </label>
+                                        <div class="grid grid-cols-2 gap-2">
+                                            <select id="p_discountType" class="py-2.5 px-3 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-purple-500 focus:outline-none">
+                                                <option value="percentage">Percentage (%)</option>
+                                                <option value="fixed">Fixed (RM)</option>
+                                            </select>
+                                            <input type="number" id="p_discountValue" required="" min="1" step="0.01" value="10" placeholder="10" class="py-2.5 px-3 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-purple-500 focus:outline-none">
+                                        </div>
+                                    </div>
+
+                                    <!-- Validity Period -->
+                                    <div class="space-y-1.5">
+                                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                                            Validity Period (Until 🎀) <span class="text-rose-500">*</span>
+                                        </label>
+                                        <input type="datetime-local" id="p_expiryDate" required="" class="block w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-purple-500 focus:bg-white focus:outline-none transition-all">
+                                    </div>
+
+                                    <!-- Usage Limit -->
+                                    <div class="space-y-1.5">
+                                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                                            Total Usage Limit <span class="text-rose-500">*</span>
+                                        </label>
+                                        <input type="number" id="p_usageLimit" required="" min="1" value="100" placeholder="100" class="block w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-purple-500 focus:outline-none">
+                                    </div>
+
+                                    <!-- Min Order Spend -->
+                                    <div class="space-y-1.5">
+                                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                                            Min. Order Spend (RM)
+                                        </label>
+                                        <input type="number" id="p_minOrder" min="0" step="0.01" value="0.00" placeholder="0.00" class="block w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-purple-500 focus:outline-none">
+                                    </div>
+
+                                </div>
+
+                                <!-- Chosen Product Frame Assignment Area -->
+                                <div class="p-5 bg-purple-50/70 border border-purple-200 rounded-2xl space-y-4">
+                                    <div class="flex items-center justify-between flex-wrap gap-3">
+                                        <div>
+                                            <h3 class="text-sm font-bold text-slate-900 flex items-center space-x-2">
+                                                <i class="fa-solid fa-tags text-purple-600"></i>
+                                                <span>Assign Chosen Product Frames</span>
+                                            </h3>
+                                            <p class="text-xs text-slate-600">Link this sale voucher directly to selected product catalog items.</p>
+                                        </div>
+                                        <div class="flex items-center space-x-2">
+                                            <button type="button" onclick="triggerAddProductModal()" class="px-3.5 py-2 bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold rounded-xl shadow transition flex items-center space-x-1.5">
+                                                <i class="fa-solid fa-plus text-[10px]"></i>
+                                                <span>Add Product</span>
+                                            </button>
+                                            <button type="button" onclick="publishDisplayButtonAction()" class="px-3.5 py-2 bg-white hover:bg-purple-50 text-purple-700 border border-purple-300 text-xs font-semibold rounded-xl shadow-sm transition flex items-center space-x-1.5">
+                                                <i class="fa-solid fa-eye text-[10px]"></i>
+                                                <span>Publish display button</span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Assigned Product List tags -->
+                                    <div id="assignedProductsList" class="flex flex-wrap gap-2 pt-2">
+                                        <!-- Dynamically rendered or pre-populated via JS -->
+                                    </div>
+                                </div>
+
+                                <!-- Voucher Display Settings & Notice -->
+                                <div class="border-t border-purple-100 pt-5 space-y-4">
+                                    <div class="flex items-center justify-between flex-wrap gap-4">
+                                        <div>
+                                            <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center space-x-1.5">
+                                                <span class="text-purple-600">♡</span>
+                                                <span>Voucher Display Setting</span>
+                                                <span class="text-purple-600">♡</span>
+                                            </h4>
+                                            <p class="text-xs text-slate-500">Your voucher will not be displayed on any pages, but you may share the sale voucher code directly with users. ✨</p>
+                                        </div>
+                                        <div class="inline-flex items-center px-3 py-1.5 rounded-xl bg-purple-100/70 border border-purple-200 text-purple-800 text-xs font-bold shadow-sm">
+                                            🛍️ Sale Mode Active: Checkout &amp; Store Only (FOR CHOSEN PRODUCT ONLY)
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-wrap gap-6 items-center">
+                                        <label class="flex items-center space-x-2 text-sm font-medium text-slate-700 cursor-pointer">
+                                            <input type="radio" name="p_displaySetting" value="product_selections" checked="" class="text-purple-600 focus:ring-purple-500 w-4 h-4">
+                                            <span>Display at product selections</span>
+                                        </label>
+                                        <label class="flex items-center space-x-2 text-sm font-medium text-slate-700 cursor-pointer">
+                                            <input type="radio" name="p_displaySetting" value="no_display" class="text-purple-600 focus:ring-purple-500 w-4 h-4">
+                                            <span>Do not display</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Save & Publish Product Frame Action Button -->
+                                <div class="pt-4 flex items-center justify-end space-x-3 border-t border-slate-100">
+                                    <button type="button" onclick="resetSection2Form()" class="px-5 py-2.5 border border-slate-300 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-100 transition">
+                                        Cancel
+                                    </button>
+                                    <button type="submit" class="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold text-sm rounded-xl shadow-md shadow-purple-200 transition flex items-center space-x-2">
+                                        <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
+                                        <span>Save &amp; Publish Voucher Display To Product Frame</span>
+                                    </button>
+                                </div>
+
+                            </form>
+                        </section>
+
                         <!-- VOUCHERS PRESETS -->
                         <div class="bg-amber-50/70 p-4 rounded-2xl border border-amber-200 space-y-3">
                             <div class="flex items-center justify-between">
@@ -2498,11 +2807,248 @@
         window.switchAdminChatSession = switchAdminChatSession;
         window.adminDeleteSelectedChatSession = adminDeleteSelectedChatSession;
 
+        /* SECTION 1 & 2 ADMIN VOUCHER WORKSPACE HANDLERS */
+        let section2AssignedProducts = ["p1", "p2"];
+
+        function getFormattedVoucherCode(prefix, suffix) {
+            let s = (suffix || '').trim().toUpperCase();
+            if (s.endsWith(']')) s = s.slice(0, -1);
+            if (s.startsWith('[')) s = s.slice(1);
+            return `SWEET[${s}]`;
+        }
+
+        window.resetSection1Form = function() {
+            const form = document.getElementById('voucherFormSection1');
+            if (form) form.reset();
+            const preview = document.getElementById('c_previewFullCode');
+            if (preview) preview.innerText = 'SWEET[...]';
+            updateSection1SelectedCount();
+        };
+
+        window.resetSection2Form = function() {
+            const form = document.getElementById('voucherFormSection2');
+            if (form) form.reset();
+            const preview = document.getElementById('p_previewFullCode');
+            if (preview) preview.innerText = 'SWEET[...]';
+            section2AssignedProducts = ["p1", "p2"];
+            renderSection2AssignedProducts();
+        };
+
+        function updateSection1SelectedCount() {
+            const checked = document.querySelectorAll('input[name="chosenCustomer"]:checked');
+            const badge = document.getElementById('c_selectedCustomersBadge');
+            if (badge) badge.innerText = `${checked.length} Customers Selected`;
+        }
+
+        window.handleCreateCustomerVoucher = async function(event) {
+            event.preventDefault();
+            const title = document.getElementById('c_voucherName')?.value.trim();
+            const rawSuffix = document.getElementById('c_voucherSuffix')?.value.trim();
+            const discType = document.getElementById('c_discountType')?.value || 'fixed';
+            const discValue = parseFloat(document.getElementById('c_discountValue')?.value || '0');
+            const expiry = document.getElementById('c_expiryDate')?.value;
+            const minOrder = parseFloat(document.getElementById('c_minOrder')?.value || '0');
+            const displaySetting = document.querySelector('input[name="c_displaySetting"]:checked')?.value || 'all_pages';
+
+            const selectedCustomers = Array.from(document.querySelectorAll('input[name="chosenCustomer"]:checked')).map(el => el.value);
+
+            if (!title || !rawSuffix || !discValue || !expiry) {
+                showToast("Missing Fields", "Please fill in all required voucher parameters.", true);
+                return;
+            }
+
+            if (selectedCustomers.length === 0) {
+                showToast("No Customer Selected", "Please choose at least 1 registered customer to assign.", true);
+                return;
+            }
+
+            const finalCode = getFormattedVoucherCode('SWEET', rawSuffix);
+
+            selectedCustomers.forEach(customerEntry => {
+                // Extracts email inside parentheses if present e.g. "Alyssa (alyssa@kawaii.my)" -> "alyssa@kawaii.my"
+                const match = customerEntry.match(/\(([^)]+)\)/);
+                const email = (match ? match[1] : customerEntry).trim().toLowerCase();
+
+                if (!assignedVouchersMap[email]) assignedVouchersMap[email] = [];
+
+                VALID_VOUCHERS[finalCode] = discType === 'percentage' ? 5.00 : discValue;
+
+                const voucherObj = {
+                    title: title,
+                    code: finalCode,
+                    discount: discValue,
+                    discountType: discType,
+                    minOrder: minOrder,
+                    expiresAt: expiry.split('T')[0],
+                    displaySetting: displaySetting,
+                    used: false,
+                    publishedAt: new Date().toISOString()
+                };
+
+                const existingIdx = assignedVouchersMap[email].findIndex(v => v.code === finalCode);
+                if (existingIdx !== -1) {
+                    assignedVouchersMap[email][existingIdx] = voucherObj;
+                } else {
+                    assignedVouchersMap[email].push(voucherObj);
+                }
+            });
+
+            await syncAssignedVouchersStorage();
+            renderCustomerVouchersUI();
+            showToast("Voucher Published!", `${finalCode} assigned to ${selectedCustomers.length} chosen customer(s).`);
+            resetSection1Form();
+        };
+
+        window.handleCreateProductVoucher = async function(event) {
+            event.preventDefault();
+            const title = document.getElementById('p_voucherName')?.value.trim();
+            const rawSuffix = document.getElementById('p_voucherSuffix')?.value.trim();
+            const discType = document.getElementById('p_discountType')?.value || 'percentage';
+            const discValue = parseFloat(document.getElementById('p_discountValue')?.value || '0');
+            const expiry = document.getElementById('p_expiryDate')?.value;
+            const usageLimit = parseInt(document.getElementById('p_usageLimit')?.value || '100');
+            const minOrder = parseFloat(document.getElementById('p_minOrder')?.value || '0');
+            const displaySetting = document.querySelector('input[name="p_displaySetting"]:checked')?.value || 'product_selections';
+
+            if (!title || !rawSuffix || !discValue || !expiry) {
+                showToast("Missing Fields", "Please complete all required voucher parameters.", true);
+                return;
+            }
+
+            if (section2AssignedProducts.length === 0) {
+                showToast("No Product Assigned", "Please link at least one product frame using 'Add Product'.", true);
+                return;
+            }
+
+            const finalCode = getFormattedVoucherCode('SWEET', rawSuffix);
+            VALID_VOUCHERS[finalCode] = discType === 'percentage' ? (discValue / 100) * 25.00 : discValue;
+
+            if (db) {
+                try {
+                    await setDoc(doc(db, "lumilens_product_vouchers", finalCode), {
+                        title: title,
+                        code: finalCode,
+                        discountType: discType,
+                        discountValue: discValue,
+                        expiry: expiry,
+                        usageLimit: usageLimit,
+                        minOrder: minOrder,
+                        displaySetting: displaySetting,
+                        assignedProducts: section2AssignedProducts,
+                        updatedAt: new Date().toISOString()
+                    });
+                } catch(e) { console.warn("Firestore product voucher error:", e); }
+            }
+
+            showToast("Product Voucher Saved!", `${finalCode} published for ${section2AssignedProducts.length} product frame(s).`);
+            resetSection2Form();
+        };
+
+        function renderSection1ChosenCustomers() {
+            const container = document.getElementById('c_chosenCustomersGrid');
+            if (!container) return;
+
+            const knownUsersSet = new Set(Object.keys(userSessionsMap));
+            allOrders.forEach(o => { if (o.customer) knownUsersSet.add(o.customer); });
+            if (currentUser && currentUser.email) knownUsersSet.add(currentUser.email);
+            
+            // Default demo customer presets
+            const defaultDemoUsers = [
+                { name: "Alyssa", email: "alyssa@kawaii.my" },
+                { name: "Sarah", email: "sarah@sweetlens.com" },
+                { name: "Mimi", email: "mimi_99@gmail.com" }
+            ];
+
+            const customerList = [];
+            defaultDemoUsers.forEach(d => customerList.push({ name: d.name, email: d.email }));
+
+            Array.from(knownUsersSet).filter(u => !isAdminUser(u)).forEach(u => {
+                if (!customerList.some(c => c.email.toLowerCase() === u.toLowerCase())) {
+                    customerList.push({ name: u.split('@')[0], email: u });
+                }
+            });
+
+            container.innerHTML = customerList.map((c, idx) => `
+                <label class="flex items-center space-x-3 p-3 bg-white rounded-xl border border-pink-100 shadow-sm cursor-pointer hover:border-pink-300 transition">
+                    <input type="checkbox" name="chosenCustomer" onchange="updateSection1SelectedCount()" value="${c.name} (${c.email})" ${idx < 3 ? 'checked' : ''} class="w-4 h-4 text-pink-600 rounded focus:ring-pink-500">
+                    <div>
+                        <div class="text-xs font-bold text-slate-800">${c.name}</div>
+                        <div class="text-[11px] text-slate-500">${c.email}</div>
+                    </div>
+                </label>
+            `).join('');
+
+            updateSection1SelectedCount();
+        }
+
+        function renderSection2AssignedProducts() {
+            const container = document.getElementById('assignedProductsList');
+            if (!container) return;
+
+            if (section2AssignedProducts.length === 0) {
+                container.innerHTML = `<span class="text-xs text-purple-400 italic">No products assigned yet. Click "Add Product" above.</span>`;
+                return;
+            }
+
+            container.innerHTML = section2AssignedProducts.map(pid => {
+                const p = products.find(prod => prod.id === pid) || { name: `Product #${pid}`, id: pid };
+                return `
+                    <span class="inline-flex items-center space-x-2 px-3 py-1.5 bg-white border border-purple-200 text-purple-900 text-xs font-semibold rounded-xl shadow-sm">
+                        <i class="fa-solid fa-box text-purple-500"></i>
+                        <span>${p.name} (#${p.id})</span>
+                        <button type="button" onclick="removeSection2Product('${pid}')" class="text-slate-400 hover:text-rose-600 ml-1"><i class="fa-solid fa-xmark text-xs"></i></button>
+                    </span>
+                `;
+            }).join('');
+        }
+
+        window.removeSection2Product = function(pid) {
+            section2AssignedProducts = section2AssignedProducts.filter(id => id !== pid);
+            renderSection2AssignedProducts();
+        };
+
+        window.triggerAddProductModal = function() {
+            const availableToAdd = products.filter(p => !section2AssignedProducts.includes(p.id));
+            if (availableToAdd.length === 0) {
+                showToast("All Added", "All catalog products are already assigned to this sale voucher.");
+                return;
+            }
+            // Add next available product
+            section2AssignedProducts.push(availableToAdd[0].id);
+            renderSection2AssignedProducts();
+            showToast("Product Linked", `Added ${availableToAdd[0].name} to voucher frame.`);
+        };
+
+        window.publishDisplayButtonAction = function() {
+            showToast("Display Settings Live", "Sale voucher badge display published to assigned product frames.");
+        };
+
         document.addEventListener('DOMContentLoaded', async () => {
             if (typeof lucide !== 'undefined') { lucide.createIcons(); }
             loadSavedAddresses();
             loadFavourites();
             loadAssignedVouchers();
+
+            // Set up real-time preview listeners for Section 1 and 2 code fields
+            const cSuffixInput = document.getElementById('c_voucherSuffix');
+            if (cSuffixInput) {
+                cSuffixInput.addEventListener('input', () => {
+                    const preview = document.getElementById('c_previewFullCode');
+                    if (preview) preview.innerText = getFormattedVoucherCode('SWEET', cSuffixInput.value);
+                });
+            }
+
+            const pSuffixInput = document.getElementById('p_voucherSuffix');
+            if (pSuffixInput) {
+                pSuffixInput.addEventListener('input', () => {
+                    const preview = document.getElementById('p_previewFullCode');
+                    if (preview) preview.innerText = getFormattedVoucherCode('SWEET', pSuffixInput.value);
+                });
+            }
+
+            renderSection1ChosenCustomers();
+            renderSection2AssignedProducts();
+
             const savedEmail = localStorage.getItem('sweetopia_logged_in_email');
 
             if (savedEmail) {
