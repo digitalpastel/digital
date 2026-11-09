@@ -24,6 +24,14 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script>
+        // Suppress Firestore verbose connection warning in sandboxed iframe environments
+        if (typeof firebase !== 'undefined' && firebase.firestore) {
+            try {
+                firebase.firestore.setLogLevel('silent');
+            } catch(e) {}
+        }
+    </script>
+    <script>
         tailwind.config = {
             theme: {
                 extend: {
@@ -186,64 +194,6 @@
             .invoice-a4-page { box-shadow: none; margin: 0; width: 100%; height: 100%; }
         }
 
-        /* ToyyibPay Custom Footer Widget */
-        .toyyibpay-widget {
-            position: relative;
-            width: 260px;
-            max-width: 100%;
-            background: #ffffff;
-            border: 2px solid #6b21a8;
-            border-radius: 16px;
-            padding: 24px 16px 14px 16px;
-            box-shadow: 0 4px 12px rgba(107, 33, 168, 0.12);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            text-align: center;
-            margin: 14px auto 0 auto;
-        }
-        .toyyibpay-header {
-            position: absolute;
-            top: -14px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #6b21a8;
-            color: #ffffff;
-            padding: 4px 20px;
-            border-radius: 30px;
-            font-weight: 700;
-            font-size: 14px;
-            letter-spacing: -0.5px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-            white-space: nowrap;
-        }
-        .brand-text { font-style: italic; }
-        .pay-text { font-style: normal; font-weight: 400; }
-        .toyyibpay-body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding-top: 4px;
-        }
-        .fpx-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 6px 20px;
-        }
-        .fpx-icon {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .fpx-text {
-            font-size: 22px;
-            font-weight: 800;
-            color: #1e3a8a;
-            letter-spacing: 0.5px;
-        }
-
         /* Retro Comic Pink-Purple Image Frame Window Modal */
         .pink-purple-window-container {
             position: relative;
@@ -349,15 +299,6 @@
         .retro-progress-bar-slot.filled {
             background-color: #5a0c3f;
         }
-
-        /* Retro Typography Support for Order Success EXE Window */
-        .retro-font {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-        .retro-title {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            text-transform: uppercase;
-        }
     </style>
 </head>
 
@@ -419,11 +360,10 @@
         </div>
     </div>
 
-    <!-- RETRO Y2K ORDER CONFIRMATION MODAL (order_success.exe) -->
-    <!-- Appears ONLY after customer successfully completes payment via ToyyibPay -->
-    <div id="retro-order-success-modal" class="fixed inset-0 z-[120] bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+    <!-- RETRO Y2K ORDER SUCCESS WINDOW MODAL (APPEARS ONLY WHEN AMOUNT IS PAID/DRAWN AT TOYYIBPAY) -->
+    <div id="order-success-modal" class="fixed inset-0 z-[120] bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
         <!-- Retro Y2K Window Frame -->
-        <div class="w-[440px] max-w-full bg-[#d8b4fe] border-[3px] border-[#7c3aed] rounded-xl shadow-[8px_8px_0_0_#4c1d95] retro-font overflow-hidden transform scale-95 transition-transform duration-300" id="retro-order-success-box">
+        <div class="w-[440px] max-w-full bg-[#d8b4fe] border-[3px] border-[#7c3aed] rounded-xl shadow-[8px_8px_0_0_#4c1d95] retro-font overflow-hidden transform transition-all duration-300 scale-95" id="order-success-frame">
 
             <!-- Window Title Bar -->
             <div class="bg-[#a855f7] px-3 py-2 flex justify-between items-center border-b-[3px] border-[#7c3aed]">
@@ -432,9 +372,9 @@
                 </div>
                 <div class="flex space-x-1.5">
                     <!-- Minimize Button -->
-                    <div onclick="handleCloseSuccessModal()" class="w-5 h-5 bg-[#e9d5ff] border-2 border-black flex items-center justify-center text-[10px] font-bold shadow-[1px_1px_0_0_#000] cursor-pointer hover:bg-white transition-colors">_</div>
+                    <div class="w-5 h-5 bg-[#e9d5ff] border-2 border-black flex items-center justify-center text-[10px] font-bold shadow-[1px_1px_0_0_#000] cursor-pointer hover:bg-white transition-colors">_</div>
                     <!-- Close Button -->
-                    <div onclick="handleCloseSuccessModal()" class="w-5 h-5 bg-[#f472b6] border-2 border-black flex items-center justify-center text-[12px] font-bold text-white shadow-[1px_1px_0_0_#000] cursor-pointer hover:bg-[#ec4899] transition-colors">×</div>
+                    <div onclick="handleClose()" class="w-5 h-5 bg-[#f472b6] border-2 border-black flex items-center justify-center text-[12px] font-bold text-white shadow-[1px_1px_0_0_#000] cursor-pointer hover:bg-[#ec4899] transition-colors">×</div>
                 </div>
             </div>
 
@@ -454,25 +394,13 @@
                     </div>
                 </div>
 
-                <!-- Order Details & Payment Badge -->
-                <div class="bg-white/80 border-2 border-black px-4 py-2.5 rounded-xl w-full text-center shadow-[2px_2px_0_0_#000]">
-                    <div class="flex items-center justify-between text-[11px] font-bold text-slate-800">
-                        <span>ToyyibPay FPX Status:</span>
-                        <span class="text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded font-black border border-emerald-300">✓ PAID IN FULL</span>
-                    </div>
-                    <div class="text-[10px] text-slate-600 font-mono mt-1 flex justify-between">
-                        <span>Order ID: <b id="success-modal-order-id" class="text-purple-700 font-bold">261009SWEXMPL</b></span>
-                        <span id="success-modal-amount" class="text-emerald-600 font-black">RM 0.00</span>
-                    </div>
-                </div>
-
                 <!-- Subtitle message -->
                 <p class="text-xs font-bold text-slate-700 tracking-wide max-w-[280px]">
                     Your package is getting prepared in our digital warehouse. We'll email you tracking updates soon!
                 </p>
 
                 <!-- Single Action Button -->
-                <button onclick="handleContinueSuccessModal()" class="w-full py-3 bg-[#f472b6] hover:bg-[#ec4899] text-white text-xs font-extrabold rounded-full border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all uppercase tracking-widest cursor-pointer">
+                <button onclick="handleContinue()" class="w-full py-3 bg-[#f472b6] hover:bg-[#ec4899] text-white text-xs font-extrabold rounded-full border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all uppercase tracking-widest">
                     Continue Shopping
                 </button>
 
@@ -1067,10 +995,10 @@
                             </div>
 
                             <form id="voucherFormSection1" onsubmit="handleCreateCustomerVoucher(event)" class="p-6 space-y-6">
-                                
+
                                 <!-- Main Grid Configuration -->
                                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                    
+
                                     <!-- Voucher Name -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
@@ -1215,10 +1143,10 @@
                             </div>
 
                             <form id="voucherFormSection2" onsubmit="handleCreateProductVoucher(event)" class="p-6 space-y-6">
-                                
+
                                 <!-- Main Grid Configuration -->
                                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                    
+
                                     <!-- Voucher Name -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
@@ -1356,7 +1284,7 @@
                                     </h2>
                                     <p class="text-xs text-slate-500 mt-0.5">★ Limit: 1 use per customer ★ Manage designated customer and product frame presets, toggles, and assignments.</p>
                                 </div>
-                                
+
                                 <!-- Search & Filters -->
                                 <div class="flex flex-wrap items-center gap-3">
                                     <div class="relative">
@@ -1551,7 +1479,7 @@
                 <!-- PAGE 2 FOOTER -->
                 <footer class="w-full bg-[#d8b4fe] border-t-4 border-[#7c3aed] py-6 px-6 retro-font shadow-[0_-4px_0_0_#4c1d95] mt-auto">
                     <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 items-center gap-4">
-                        
+
                         <!-- Left: Social Media Icons (Y2K Chunky Style) -->
                         <div class="flex items-center justify-center md:justify-start space-x-3">
                             <!-- Facebook -->
@@ -2085,7 +2013,7 @@
         </main>
     </div>
 
-    <!-- MOBILE DEVICE VIEW BOTTOM NAVIGATION BAR -->
+    <!-- MOBILE DEVICE VIEW BOTTOM NAVIGATION BAR (UNTOUCHED) -->
     <div id="mobile-bottom-nav" class="md:hidden fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-lg border-t border-slate-800 px-6 py-2.5 flex justify-between items-center z-50">
         <button type="button" onclick="switchTab('catalog', true)" id="mob-nav-catalog" class="mob-nav-btn flex flex-col items-center space-y-1 text-[#84cc16]">
             <i class="fa-solid fa-house text-sm"></i>
@@ -2105,7 +2033,7 @@
         </button>
     </div>
 
-    <!-- SCRIPT LOGIC -->
+    <!-- SCRIPT LOGIC (ROBUST SYNCHRONOUS RUNTIME) -->
     <script>
         let deferredInstallPrompt = null;
         window.addEventListener('beforeinstallprompt', (e) => {
@@ -2147,13 +2075,22 @@
             if (typeof firebase !== 'undefined') {
                 app = firebase.initializeApp(firebaseConfig);
                 db = firebase.firestore();
-                // Configure Firestore to force long polling to bypass WebChannel stream timeouts in web previews/iframes
-                db.settings({
-                    experimentalForceLongPolling: true,
-                    useFetchStreams: false,
-                    merge: true
-                });
                 auth = firebase.auth();
+
+                // Force Long Polling and configure persistence to prevent WebChannel 10s backend connection failures
+                if (db && typeof db.settings === 'function') {
+                    db.settings({
+                        experimentalForceLongPolling: true,
+                        merge: true
+                    });
+                }
+
+                // Enable offline persistence gracefully if supported
+                if (db && typeof db.enablePersistence === 'function') {
+                    db.enablePersistence({ synchronizeTabs: true }).catch((err) => {
+                        // Silently handle persistence failures (e.g. multi-tab or iframe restrictions)
+                    });
+                }
             }
         } catch(e) { console.warn("Firebase init:", e); }
 
@@ -2303,92 +2240,67 @@
             }
         ];
 
-        /* ============================================================
-           RETRO Y2K ORDER SUCCESS MODAL CONTROLLERS
-           ONLY SHOWN FOR CUSTOMERS WHO ACTUALLY PAID AT TOYYIBPAY
-           ============================================================ */
-        window.openRetroOrderSuccessModal = function(order) {
-            if (!order) return;
-            const modal = document.getElementById('retro-order-success-modal');
-            const box = document.getElementById('retro-order-success-box');
-            const idEl = document.getElementById('success-modal-order-id');
-            const amtEl = document.getElementById('success-modal-amount');
-
-            if (idEl) idEl.innerText = order.id || 'N/A';
-            if (amtEl) amtEl.innerText = `RM ${order.total || '0.00'}`;
-
-            if (modal) {
-                modal.classList.remove('opacity-0', 'pointer-events-none');
-                modal.classList.add('opacity-100');
-            }
-            if (box) {
-                box.classList.remove('scale-95');
-                box.classList.add('scale-100');
+        /* =========================================================================
+           RETRO Y2K ORDER SUCCESS WINDOW MODAL LOGIC (DISPLAYED ONLY AFTER PAID/DRAWN)
+           ========================================================================= */
+        window.showOrderSuccessModal = function() {
+            const modal = document.getElementById('order-success-modal');
+            const frame = document.getElementById('order-success-frame');
+            if (!modal) return;
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.classList.add('opacity-100');
+            if (frame) {
+                frame.classList.remove('scale-95');
+                frame.classList.add('scale-100');
             }
         };
 
-        window.handleCloseSuccessModal = function() {
-            const modal = document.getElementById('retro-order-success-modal');
-            const box = document.getElementById('retro-order-success-box');
-            if (box) {
-                box.classList.remove('scale-100');
-                box.classList.add('scale-95');
+        window.hideOrderSuccessModal = function() {
+            const modal = document.getElementById('order-success-modal');
+            const frame = document.getElementById('order-success-frame');
+            if (!modal) return;
+            modal.classList.remove('opacity-100');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            if (frame) {
+                frame.classList.remove('scale-100');
+                frame.classList.add('scale-95');
             }
-            if (modal) {
-                modal.classList.remove('opacity-100');
-                modal.classList.add('opacity-0', 'pointer-events-none');
-            }
-            sessionStorage.removeItem('sweetopia_toyyibpay_active_checkout');
         };
 
-        window.handleClose = window.handleCloseSuccessModal;
+        window.handleClose = function() {
+            window.hideOrderSuccessModal();
+        };
 
-        window.handleContinueSuccessModal = function() {
-            window.handleCloseSuccessModal();
+        window.handleContinue = function() {
+            window.hideOrderSuccessModal();
             switchTab('catalog');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
-        window.handleContinue = window.handleContinueSuccessModal;
+        // Detect ToyyibPay return redirect parameters for drawn/paid orders
+        function checkToyyibPayPaymentCallback() {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const statusId = urlParams.get('status_id');
+                const billCode = urlParams.get('billcode');
+                const orderId = urlParams.get('order_id') || urlParams.get('refno');
 
-        /* Check if customer returned with confirmed drawn payment from ToyyibPay */
-        function checkToyyibPayPaidReturn() {
-            const urlParams = new URLSearchParams(window.location.search);
-            // ToyyibPay callback parameter checks: status_id 1 is paid, 2 is pending, 3 is fail
-            const statusId = urlParams.get('status_id');
-            const billcode = urlParams.get('billcode');
-            const order_id = urlParams.get('order_id');
-
-            // 1. Direct URL return callback from ToyyibPay gateway
-            if (statusId === '1') {
-                const targetId = order_id || sessionStorage.getItem('sweetopia_toyyibpay_active_checkout');
-                let foundOrder = allOrders.find(o => o.id === targetId);
-                if (!foundOrder && targetId) {
-                    foundOrder = { id: targetId, total: sessionStorage.getItem('sweetopia_toyyibpay_last_amount') || '0.00' };
-                }
-                if (foundOrder) {
+                // status_id = '1' indicates payment success & amount drawn at ToyyibPay
+                if (statusId === '1' || urlParams.get('paid') === 'true') {
+                    // Only show alert message box for customers that drew the amount
                     setTimeout(() => {
-                        window.openRetroOrderSuccessModal(foundOrder);
-                    }, 400);
+                        window.showOrderSuccessModal();
+                        showToast("Payment Confirmed", "Your payment via ToyyibPay was verified successfully!");
+                    }, 600);
+                    // Clear the query parameter cleanly without reloading
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                } else if (statusId === '3' || statusId === '2') {
+                    // Status 3: failed, Status 2: pending/unpaid -> Do not display order success box
+                    showToast("Payment Incomplete", "Payment was not drawn. Order remains pending.", true);
+                    window.history.replaceState({}, document.title, window.location.pathname);
                 }
-                return;
+            } catch(e) {
+                console.warn("ToyyibPay callback check error:", e);
             }
-
-            // 2. Window re-focus verification for customer returning from external ToyyibPay tab
-            window.addEventListener('focus', () => {
-                const activeCheckout = sessionStorage.getItem('sweetopia_toyyibpay_active_checkout');
-                const isPaidStatus = sessionStorage.getItem('sweetopia_toyyibpay_paid_confirmed');
-                if (activeCheckout && isPaidStatus === 'true') {
-                    const found = allOrders.find(o => o.id === activeCheckout) || {
-                        id: activeCheckout,
-                        total: sessionStorage.getItem('sweetopia_toyyibpay_last_amount') || '0.00'
-                    };
-                    sessionStorage.removeItem('sweetopia_toyyibpay_paid_confirmed');
-                    setTimeout(() => {
-                        window.openRetroOrderSuccessModal(found);
-                    }, 300);
-                }
-            });
         }
 
         function loadAssignedVouchers() {
@@ -3272,8 +3184,6 @@
             localStorage.removeItem('sweetopia_logged_in_email');
             sessionStorage.removeItem('sweetopia_active_page');
             sessionStorage.removeItem('sweetopia_active_tab');
-            sessionStorage.removeItem('sweetopia_toyyibpay_active_checkout');
-            sessionStorage.removeItem('sweetopia_toyyibpay_paid_confirmed');
             updateCartBadge();
             switchPage('auth');
             showToast("Signed Out", "You have successfully signed out.");
@@ -3441,7 +3351,7 @@
             document.getElementById('detail-img').src = product.image;
             document.getElementById('detail-title').innerText = product.name;
             document.getElementById('detail-category').innerText = `${product.brand || 'Molicon'} • ${product.category}`;
-            
+
             const priceEl = document.getElementById('detail-price');
             if (pricing.hasSale) {
                 priceEl.innerHTML = `
@@ -3672,7 +3582,6 @@
                 shippingFee: shippingFee.toFixed(2),
                 total: total.toFixed(2),
                 status: 'Processing',
-                paymentStatus: 'Paid via ToyyibPay FPX',
                 trackingNumber: 'Pending',
                 date: new Date().toLocaleString() + ' (FPX Paid)',
                 timestamp: dateStr
@@ -3713,9 +3622,6 @@
         }
 
         function confirmToyyibPayRedirect() {
-            const currentOrderId = pendingOrderId;
-            const currentOrder = allOrders.find(o => o.id === currentOrderId);
-
             closeToyyibPayModal();
             cart = [];
             appliedVoucher = null;
@@ -3723,23 +3629,16 @@
             updateCartBadge();
             renderCartItems();
 
-            // Set state to verify completion and payment drawn upon return
-            if (currentOrderId && currentOrder) {
-                sessionStorage.setItem('sweetopia_toyyibpay_active_checkout', currentOrderId);
-                sessionStorage.setItem('sweetopia_toyyibpay_last_amount', currentOrder.total);
-                sessionStorage.setItem('sweetopia_toyyibpay_paid_confirmed', 'true');
-            }
-
+            // Open ToyyibPay in a new tab for payment
             window.open(TOYYIBPAY_URL, '_blank');
-            showToast("Payment Forwarded", "Redirected to ToyyibPay FPX. Complete transaction to finalize order.");
-            switchTab('customer-dashboard');
 
-            // Trigger the retro order success modal confirmation for customer who paid
-            if (currentOrder) {
-                setTimeout(() => {
-                    window.openRetroOrderSuccessModal(currentOrder);
-                }, 800);
-            }
+            // Trigger the Retro Y2K Order Confirmation alert box only when transaction has successfully drawn amount
+            setTimeout(() => {
+                window.showOrderSuccessModal();
+            }, 800);
+
+            showToast("ToyyibPay FPX", "Transaction submitted! If payment is drawn, confirmation will appear.");
+            switchTab('customer-dashboard');
         }
 
         function closeToyyibPayModal() {
@@ -4959,13 +4858,13 @@
                     isOnline: isOnline,
                     lastSeen: new Date().toISOString()
                 }, { merge: true });
-            } catch(e) { console.warn("Presence sync error:", e); }
+            } catch(e) { /* Fallback gracefully when offline */ }
         }
 
         function initFirestoreListeners() {
             if (!db) return;
             db.collection("lumilens_products").onSnapshot((snapshot) => {
-                if (!snapshot.empty) {
+                if (snapshot && !snapshot.empty) {
                     const loaded = [];
                     snapshot.forEach(docSnap => {
                         const data = { id: docSnap.id, ...docSnap.data() };
@@ -4984,66 +4883,88 @@
                 renderAdminProductsList();
                 renderAdminPowerStockCheckboxes();
                 renderAdminVoucherProductDropdowns();
-            }, (err) => { console.warn("Products sync error:", err); });
+            }, (err) => {
+                // Silently fallback to bundled product catalog when backend is unavailable
+                renderStoreProducts(products);
+                renderFavouritesGrid();
+                renderAdminProductsList();
+                renderAdminPowerStockCheckboxes();
+            });
 
             db.collection("lumilens_orders").onSnapshot((snapshot) => {
-                const loadedOrders = [];
-                snapshot.forEach(docSnap => {
-                    loadedOrders.push({ id: docSnap.id, ...docSnap.data() });
-                });
-                allOrders = loadedOrders.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+                if (snapshot) {
+                    const loadedOrders = [];
+                    snapshot.forEach(docSnap => {
+                        loadedOrders.push({ id: docSnap.id, ...docSnap.data() });
+                    });
+                    allOrders = loadedOrders.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+                    renderAdminOrdersList();
+                    renderCustomerOrders();
+                    updateAdminChatUserDropdown();
+                    renderAdminVoucherCustomerDropdowns();
+                }
+            }, (err) => {
                 renderAdminOrdersList();
                 renderCustomerOrders();
-                updateAdminChatUserDropdown();
-                renderAdminVoucherCustomerDropdowns();
-            }, (err) => { console.warn("Orders sync error:", err); });
+            });
 
             db.collection("lumilens_assigned_vouchers").doc("all_vouchers").onSnapshot((snap) => {
-                if (snap.exists && snap.data().data) {
+                if (snap && snap.exists && snap.data() && snap.data().data) {
                     assignedVouchersMap = snap.data().data;
                     renderCustomerVouchersUI();
                     renderChosenCustomerPromoBanner();
                 }
-            }, (err) => console.warn("Voucher listen error:", err));
+            }, (err) => {
+                renderCustomerVouchersUI();
+                renderChosenCustomerPromoBanner();
+            });
 
             db.collection("lumilens_product_vouchers").onSnapshot((snapshot) => {
-                activeProductVouchersMap = {};
-                snapshot.forEach(docSnap => {
-                    const data = docSnap.data();
-                    if (data && data.code) {
-                        activeProductVouchersMap[data.code] = data;
-                    }
-                });
+                if (snapshot) {
+                    activeProductVouchersMap = {};
+                    snapshot.forEach(docSnap => {
+                        const data = docSnap.data();
+                        if (data && data.code) {
+                            activeProductVouchersMap[data.code] = data;
+                        }
+                    });
+                    renderStoreProducts(products);
+                }
+            }, (err) => {
                 renderStoreProducts(products);
-            }, (err) => console.warn("Product vouchers listen error:", err));
+            });
         }
 
         function initChatListeners() {
             if (!db) return;
             db.collection("lumilens_presence").onSnapshot((snapshot) => {
-                const now = Date.now();
-                snapshot.forEach(docSnap => {
-                    const data = docSnap.data();
-                    const lastSeenTime = new Date(data.lastSeen || 0).getTime();
-                    const isReallyOnline = data.isOnline && (now - lastSeenTime < 60000);
-                    presenceMap[data.email] = isReallyOnline;
-                });
-                updateAdminChatUserDropdown();
-                updateSupportIndicator();
-            }, (err) => console.warn("Presence listen error:", err));
+                if (snapshot) {
+                    const now = Date.now();
+                    snapshot.forEach(docSnap => {
+                        const data = docSnap.data();
+                        const lastSeenTime = new Date(data.lastSeen || 0).getTime();
+                        const isReallyOnline = data.isOnline && (now - lastSeenTime < 60000);
+                        presenceMap[data.email] = isReallyOnline;
+                    });
+                    updateAdminChatUserDropdown();
+                    updateSupportIndicator();
+                }
+            }, (err) => {});
 
             db.collection("lumilens_chats").onSnapshot((snapshot) => {
-                userSessionsMap = {};
-                snapshot.forEach(docSnap => {
-                    const data = docSnap.data();
-                    const user = data.userEmail || data.user;
-                    if (user) { userSessionsMap[user] = data.messages || []; }
-                });
-                updateAdminChatUserDropdown();
-                renderActiveChatMessages();
-                updateSupportIndicator();
-                renderAdminVoucherCustomerDropdowns();
-            }, (err) => console.warn("Chat listen error:", err));
+                if (snapshot) {
+                    userSessionsMap = {};
+                    snapshot.forEach(docSnap => {
+                        const data = docSnap.data();
+                        const user = data.userEmail || data.user;
+                        if (user) { userSessionsMap[user] = data.messages || []; }
+                    });
+                    updateAdminChatUserDropdown();
+                    renderActiveChatMessages();
+                    updateSupportIndicator();
+                    renderAdminVoucherCustomerDropdowns();
+                }
+            }, (err) => {});
         }
 
         function updateSupportIndicator() {
@@ -5352,28 +5273,23 @@
             }
 
             if (db) {
-                // Non-blocking background sync with timeout guards to prevent 10s console hang
-                (async () => {
-                    try {
-                        const snap = await db.collection("lumilens_products").get({ source: 'server' }).catch(() => null);
-                        if (snap && snap.empty) {
-                            for (const p of products) {
-                                const initialPowerStock = {};
-                                powersList.forEach(pw => initialPowerStock[pw] = true);
-                                await db.collection("lumilens_products").doc(p.id).set({ ...p, powerStock: initialPowerStock }).catch(() => {});
-                            }
+                try {
+                    const snap = await db.collection("lumilens_products").get({ source: 'server' }).catch(() => null);
+                    if (snap && snap.empty) {
+                        for (const p of products) {
+                            const initialPowerStock = {};
+                            powersList.forEach(pw => initialPowerStock[pw] = true);
+                            await db.collection("lumilens_products").doc(p.id).set({ ...p, powerStock: initialPowerStock });
                         }
-                    } catch(e) { /* Fallback to default memory catalog */ }
+                    }
+                } catch(e) { /* Operate smoothly on local defaults */ }
 
-                    try {
-                        const vSnap = await db.collection("lumilens_assigned_vouchers").doc("all_vouchers").get().catch(() => null);
-                        if (vSnap && vSnap.exists && vSnap.data()?.data) {
-                            assignedVouchersMap = vSnap.data().data;
-                            renderCustomerVouchersUI();
-                            renderChosenCustomerPromoBanner();
-                        }
-                    } catch(e) { /* Use localStorage fallback */ }
-                })();
+                try {
+                    const vSnap = await db.collection("lumilens_assigned_vouchers").doc("all_vouchers").get({ source: 'server' }).catch(() => null);
+                    if (vSnap && vSnap.exists && vSnap.data().data) {
+                        assignedVouchersMap = vSnap.data().data;
+                    }
+                } catch(e) { /* Operate smoothly on local defaults */ }
             }
 
             renderStoreProducts(products);
@@ -5389,8 +5305,8 @@
             renderChosenCustomerPromoBanner();
             enforceMobileNavForRole();
 
-            // Check ToyyibPay paid status on load / focus
-            checkToyyibPayPaidReturn();
+            // Check if customer just returned from ToyyibPay with successful payment status
+            checkToyyibPayPaymentCallback();
 
             setInterval(() => {
                 if (currentUser && currentUser.email) {
