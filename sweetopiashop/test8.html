@@ -3662,14 +3662,20 @@
                             <span class="font-mono font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">${o.trackingNumber || 'Pending'}</span>
                         </div>
                         <div class="flex items-center space-x-2">
-                            <button type="button" onclick="openInvoiceModal('${o.id}')" class="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-3 py-1.5 rounded-xl text-xs border border-slate-300 transition flex items-center space-x-1">
-                                <i class="fa-solid fa-eye text-slate-600"></i>
-                                <span>Invoice</span>
-                            </button>
-                            <button type="button" onclick="directDownloadInvoice('${o.id}')" class="bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold px-3 py-1.5 rounded-xl text-xs transition flex items-center space-x-1 shadow-sm">
-                                <i class="fa-solid fa-file-arrow-down"></i>
-                                <span>PNG</span>
-                            </button>
+                            ${(o.trackingNumber && o.trackingNumber !== 'Pending' && o.trackingNumber.trim() !== '') ? `
+                                <button type="button" onclick="openInvoiceModal('${o.id}')" class="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-3 py-1.5 rounded-xl text-xs border border-slate-300 transition flex items-center space-x-1">
+                                    <i class="fa-solid fa-eye text-slate-600"></i>
+                                    <span>Invoice</span>
+                                </button>
+                                <button type="button" onclick="directDownloadInvoice('${o.id}')" class="bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold px-3 py-1.5 rounded-xl text-xs transition flex items-center space-x-1 shadow-sm">
+                                    <i class="fa-solid fa-file-arrow-down"></i>
+                                    <span>PNG</span>
+                                </button>
+                            ` : `
+                                <span class="text-[10px] text-amber-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200 font-semibold flex items-center gap-1">
+                                    <i class="fa-solid fa-clock"></i> Invoice locked (Pending tracking)
+                                </span>
+                            `}
                         </div>
                     </div>
                 </div>
@@ -3684,23 +3690,19 @@
                 return;
             }
 
-            // Only customers who really paid / drew the amount at ToyyibPay receive invoices
+            // Only customers with an active tracking number assigned by admin can view & download their invoice
             const verifiedPaidOrders = allOrders.filter(o => {
                 const belongsToMe = o.customer && o.customer.toLowerCase() === currentUser.email.toLowerCase();
-                const isPaidCustomer = o.paid === true || 
-                                       o.paymentStatus === 'Paid via FPX' || 
-                                       o.amountDrawn === true || 
-                                       (o.status && o.status.toLowerCase().includes('paid')) ||
-                                       (o.status && o.status.toLowerCase() === 'shipped');
-                return belongsToMe && isPaidCustomer;
+                const hasValidTracking = o.trackingNumber && o.trackingNumber !== 'Pending' && o.trackingNumber.trim() !== '';
+                return belongsToMe && hasValidTracking;
             });
 
             if (verifiedPaidOrders.length === 0) {
                 container.innerHTML = `
                     <div class="text-center py-8 text-slate-400 bg-slate-50/70 rounded-2xl border border-dashed border-slate-200 p-4">
                         <i class="fa-solid fa-file-invoice-dollar text-3xl text-slate-300 mb-2 block"></i>
-                        <p class="text-xs font-semibold text-slate-600">No paid invoices available yet</p>
-                        <p class="text-[11px] text-slate-400 mt-1">Only orders with amount successfully drawn and verified via ToyyibPay FPX receive official tax invoices.</p>
+                        <p class="text-xs font-semibold text-slate-600">No confirmed invoices available yet</p>
+                        <p class="text-[11px] text-slate-400 mt-1">Invoices and download buttons are unlocked once payment is confirmed and a tracking number is assigned by the admin.</p>
                     </div>
                 `;
                 return;
@@ -3716,7 +3718,7 @@
                             </span>
                         </div>
                         <p class="text-[11px] text-slate-700 mt-1">Order Date: <b>${o.date}</b> • Amount Paid: <b class="text-[#65a30d]">RM ${o.total}</b></p>
-                        <p class="text-[10px] text-slate-500">Items: ${(o.items || []).map(i => `${i.name} (PWR ${i.pwr}) x${i.qty}`).join(', ')}</p>
+                        <p class="text-[10px] text-slate-500">Tracking: <b class="font-mono text-amber-700">${o.trackingNumber}</b> • Items: ${(o.items || []).map(i => `${i.name} (PWR ${i.pwr}) x${i.qty}`).join(', ')}</p>
                     </div>
 
                     <div class="flex items-center space-x-2 w-full sm:w-auto">
