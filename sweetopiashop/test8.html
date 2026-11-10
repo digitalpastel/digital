@@ -3651,7 +3651,9 @@
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-2.5">
                         <div class="flex items-center space-x-2">
                             <span class="text-xs font-extrabold text-[#65a30d] font-mono">Order ID: ${o.id}</span>
-                            <span class="text-[10px] bg-blue-50 text-blue-600 border border-blue-200 font-semibold px-2 py-0.5 rounded-lg">${o.status}</span>
+                            <span class="text-[10px] ${o.paid ? 'bg-emerald-50 text-emerald-700 border-emerald-300' : 'bg-amber-50 text-amber-700 border-amber-300'} border font-semibold px-2 py-0.5 rounded-lg">
+                                ${o.paid ? 'Paid via FPX' : 'Pending Payment'}
+                            </span>
                         </div>
                         <span class="text-[10px] text-slate-500 font-medium">Date &amp; Time: ${o.date}</span>
                     </div>
@@ -3675,6 +3677,12 @@
                             <span class="font-mono font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">${o.trackingNumber || 'Pending'}</span>
                         </div>
                         <div class="flex items-center space-x-2">
+                            ${!o.paid ? `
+                                <button type="button" onclick="payPendingOrderNow('${o.id}')" class="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold px-3.5 py-1.5 rounded-xl text-xs transition flex items-center space-x-1.5 shadow-sm">
+                                    <i class="fa-solid fa-credit-card"></i>
+                                    <span>Pay Now</span>
+                                </button>
+                            ` : ''}
                             ${(o.trackingNumber && o.trackingNumber !== 'Pending' && o.trackingNumber.trim() !== '') ? `
                                 <button type="button" onclick="openInvoiceModal('${o.id}')" class="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-3 py-1.5 rounded-xl text-xs border border-slate-300 transition flex items-center space-x-1">
                                     <i class="fa-solid fa-eye text-slate-600"></i>
@@ -3973,12 +3981,14 @@
             }
 
             container.innerHTML = allOrders.map(o => `
-                <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50 space-y-3" id="admin-order-card-${o.id}">
+                <div class="p-4 rounded-2xl border ${o.paid ? 'border-emerald-300 bg-emerald-50/20' : 'border-slate-200 bg-slate-50'} space-y-3" id="admin-order-card-${o.id}">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-2">
                         <div class="flex items-center space-x-2.5">
                             <input type="checkbox" data-order-id="${o.id}" class="admin-order-select-checkbox w-4 h-4 text-[#65a30d] rounded border-slate-300 focus:ring-[#65a30d] cursor-pointer">
                             <span class="text-xs font-bold text-[#65a30d] font-mono">${o.id}</span>
-                            <span class="text-[10px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded font-bold">${o.status}</span>
+                            <span class="text-[10px] ${o.paid ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-amber-100 text-amber-800 border-amber-300'} border px-2 py-0.5 rounded font-bold">
+                                ${o.paid ? 'PAID DIRECT FPX' : 'PENDING PAYMENT'}
+                            </span>
                         </div>
                         <span class="text-[10px] text-slate-500 font-medium">Customer: <b class="text-slate-800">${o.customer}</b></span>
                     </div>
@@ -3987,7 +3997,9 @@
                         <div>
                             <p class="font-bold text-slate-900">${o.customerName || 'N/A'} • ${o.customerPhone || 'N/A'}</p>
                             <p class="text-[11px] text-slate-500 mt-0.5">Total Amount: <b class="text-[#65a30d]">RM ${o.total}</b> • Date: ${o.date}</p>
-                            <p class="text-[10px] ${o.paid ? 'text-emerald-600 font-bold' : 'text-amber-600 font-semibold'}">Payment: ${o.paid ? 'Confirmed (Amount Drawn via FPX)' : 'Pending Settlement'}</p>
+                            <p class="text-[10px] ${o.paid ? 'text-emerald-700 font-bold' : 'text-amber-600 font-semibold'}">
+                                ${o.paid ? '● Payment Confirmed (Amount Drawn via FPX)' : '○ Unpaid / Pending ToyyibPay FPX'}
+                            </p>
                         </div>
                         <div class="flex items-center space-x-2">
                             ${!o.paid ? `
@@ -4020,19 +4032,29 @@
 
             toggleClearAllButton();
         }
+        function confirmToyyibPayRedirect() {
+            closeToyyibPayModal();
+            cart = [];
+            appliedVoucher = null;
+            saveCustomerCartToFirestore();
+            updateCartBadge();
+            renderCartItems();
 
-        /* ADMIN BATCH SELECTION & ACTIONS LOGIC */
-        window.toggleClearAllButton = function() {
-            const masterCheckbox = document.getElementById('confirm-clear-checkbox');
-            const isEnabled = masterCheckbox ? masterCheckbox.checked : false;
+            // Open ToyyibPay FPX gateway in new tab
+            window.open(TOYYIBPAY_URL, '_blank');
 
-            const selectAllBtn = document.getElementById('select-all-btn');
-            const clearBtn = document.getElementById('batch-clear-btn');
-            const saveChangesBtn = document.getElementById('batch-save-changes-btn');
+            // NOTE: order_success.exe is strictly reserved for confirmed FPX payment return via ToyyibPay callback (status_id = 1)
+            showToast("ToyyibPay FPX", "Redirected to ToyyibPay. Complete your FPX payment to confirm order.");
+            switchTab('customer-dashboard');
+        }
 
-            if (selectAllBtn) selectAllBtn.disabled = !isEnabled;
-            if (clearBtn) clearBtn.disabled = !isEnabled;
-            if (saveChangesBtn) saveChangesBtn.disabled = !isEnabled;
+        window.payPendingOrderNow = function(orderId) {
+            const order = allOrders.find(o => o.id === orderId);
+            if (!order) return;
+            pendingOrderId = order.id;
+            localStorage.setItem('sweetopia_last_order_id', order.id);
+            window.open(TOYYIBPAY_URL, '_blank');
+            showToast("ToyyibPay FPX", "Proceeding to ToyyibPay. Confirmation will be verified upon amount drawn.");
         };
 
         window.toggleSelectAll = function() {
@@ -5580,6 +5602,7 @@
         window.processOrderCheckout = processOrderCheckout;
         window.confirmToyyibPayRedirect = confirmToyyibPayRedirect;
         window.closeToyyibPayModal = closeToyyibPayModal;
+        window.payPendingOrderNow = payPendingOrderNow;
         window.openInvoiceModal = openInvoiceModal;
         window.closeInvoiceModal = closeInvoiceModal;
         window.downloadInvoiceAsPNG = downloadInvoiceAsPNG;
