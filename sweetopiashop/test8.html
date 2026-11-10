@@ -1561,17 +1561,17 @@
                             </div>
                         </div>
 
-                        <!-- Admin Session Switcher Bar -->
+                        <!-- Admin Session Switcher Bar (Adapts for Customer vs Admin) -->
                         <div id="admin-chat-session-bar" class="bg-[#f7fee7] px-3 py-2 border-b border-[#ecfccb] flex items-center justify-between text-[11px]">
-                            <span class="font-bold text-[#4d7c0f]">User Session:</span>
+                            <span id="chat-session-bar-label" class="font-bold text-[#4d7c0f]">User Session:</span>
                             <div class="flex items-center space-x-2">
                                 <select id="admin-active-chat-user" onchange="switchAdminChatSession()" class="bg-white border border-[#84cc16] rounded-lg px-2 py-1 text-slate-800 font-semibold focus:outline-none text-xs max-w-[170px]"><option value="brandworkzco@gmail.com">🔘 brandworkzco@gmail.com (Customer - Offline)</option></select>
-                                <button onclick="adminDeleteSelectedChatSession()" class="bg-red-50 hover:bg-red-100 text-red-600 px-2 py-1 rounded-lg font-bold border border-red-200 transition text-[10px]" title="Delete entire conversation">Delete</button>
+                                <button id="chat-session-action-btn" onclick="adminDeleteSelectedChatSession()" class="bg-red-50 hover:bg-red-100 text-red-600 px-2 py-1 rounded-lg font-bold border border-red-200 transition text-[10px]" title="Delete entire conversation">Clear</button>
                             </div>
                         </div>
 
                         <!-- Messages Box -->
-                        <div id="widget-chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/50 text-xs"><div class="text-center text-slate-400 py-10"><i class="fa-solid fa-heart text-2xl text-lime-500 mb-2"></i><p class="text-xs">Chatting with <b class="text-slate-700">brandworkzco@gmail.com</b>.<br>Leave a message or sticker to start conversation.</p></div></div>
+                        <div id="widget-chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/50 text-xs"><div class="text-center text-slate-400 py-10"><i class="fa-solid fa-heart text-2xl text-lime-500 mb-2"></i><p class="text-xs">Chatting with <b class="text-slate-700">admin</b>.<br>Leave a message or sticker to start conversation.</p></div></div>
 
                         <!-- Footer Input & Multimedia Toolbar -->
                         <div class="p-3 bg-white border-t border-pink-100 flex flex-col space-y-2 rounded-b-3xl">
@@ -3204,6 +3204,21 @@
                 }
                 if (mobileAdminLink) mobileAdminLink.classList.add('hidden');
             }
+
+            // Adapt Chat Widget for Customer vs Admin side
+            const chatUserSelect = document.getElementById('admin-active-chat-user');
+            const chatSessionLabel = document.getElementById('chat-session-bar-label');
+            const chatActionBtn = document.getElementById('chat-session-action-btn');
+            if (isAdmin) {
+                if (chatUserSelect) chatUserSelect.style.removeProperty('display');
+                if (chatSessionLabel) chatSessionLabel.innerText = "User Session:";
+                if (chatActionBtn) chatActionBtn.innerText = "Delete";
+            } else {
+                if (chatUserSelect) chatUserSelect.style.setProperty('display', 'none', 'important');
+                if (chatSessionLabel) chatSessionLabel.innerText = "";
+                if (chatActionBtn) chatActionBtn.innerText = "Clear";
+            }
+
             enforceMobileNavForRole();
             renderStoreProducts(products);
             renderCustomerVouchersUI();
@@ -5241,7 +5256,9 @@
             if (!container) return;
 
             let targetUser = currentUser?.email;
-            if (currentUser && isAdminUser(currentUser.email)) {
+            const isAdmin = currentUser && isAdminUser(currentUser.email);
+
+            if (isAdmin) {
                 targetUser = activeChatSessionUser || document.getElementById('admin-active-chat-user')?.value;
             }
 
@@ -5252,13 +5269,14 @@
 
             const msgs = userSessionsMap[targetUser] || [];
             if (msgs.length === 0) {
-                container.innerHTML = `<div class="text-center text-slate-400 py-10"><i class="fa-solid fa-heart text-2xl text-lime-500 mb-2"></i><p class="text-xs">Chatting with <b class="text-slate-700">${targetUser}</b>.<br>Leave a message or sticker to start conversation.</p></div>`;
+                const partnerName = isAdmin ? targetUser : "admin";
+                container.innerHTML = `<div class="text-center text-slate-400 py-10"><i class="fa-solid fa-heart text-2xl text-lime-500 mb-2"></i><p class="text-xs">Chatting with <b class="text-slate-700">${partnerName}</b>.<br>Leave a message or sticker to start conversation.</p></div>`;
                 return;
             }
 
             container.innerHTML = msgs.map(m => {
                 const isMe = m.sender === currentUser?.email;
-                const isAdmin = m.isAdmin;
+                const isAdminMsg = m.isAdmin;
 
                 let mediaHtml = '';
                 if (m.type === 'sticker' && m.mediaUrl) {
@@ -5283,7 +5301,7 @@
                 return `
                     <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
                         <span class="text-[9px] text-slate-400 mb-0.5 px-1">${m.senderName || m.sender} • ${m.time || ''}</span>
-                        <div class="max-w-[80%] rounded-2xl px-3.5 py-2 text-xs shadow-sm ${isMe ? 'bg-[#65a30d] text-white rounded-tr-none' : (isAdmin ? 'bg-amber-100 text-amber-950 border border-amber-200 rounded-tl-none' : 'bg-white text-slate-800 border border-slate-200 rounded-tl-none')}">
+                        <div class="max-w-[80%] rounded-2xl px-3.5 py-2 text-xs shadow-sm ${isMe ? 'bg-[#65a30d] text-white rounded-tr-none' : (isAdminMsg ? 'bg-amber-100 text-amber-950 border border-amber-200 rounded-tl-none' : 'bg-white text-slate-800 border border-slate-200 rounded-tl-none')}">
                             ${mediaHtml}
                             ${m.text ? `<p>${m.text}</p>` : ''}
                         </div>
