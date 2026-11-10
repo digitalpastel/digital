@@ -1282,6 +1282,10 @@
                                         <option value="customer">Chosen Customer</option>
                                         <option value="product">Chosen Product</option>
                                     </select>
+                                    <button type="button" onclick="batchSaveVoucherPresets()" id="batch-save-changes-btn" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 disabled:opacity-50 disabled:pointer-events-none text-white text-xs font-medium rounded-xl shadow-xs transition-all flex items-center gap-1.5 cursor-pointer">
+                                        <i class="fa-solid fa-floppy-disk text-[10px]"></i>
+                                        <span>Save Changes</span>
+                                    </button>
                                 </div>
                             </div>
 
@@ -1457,7 +1461,7 @@
                                 <div class="flex items-center gap-2.5">
                                     <input type="checkbox" id="confirm-clear-checkbox" onchange="toggleClearAllButton()" class="w-4 h-4 text-rose-600 rounded border-slate-300 focus:ring-rose-500 cursor-pointer">
                                     <label for="confirm-clear-checkbox" class="text-xs font-semibold text-slate-700 cursor-pointer select-none">
-                                        Check box to enable <strong>Batch Actions</strong>
+                                        Check box to enable <strong>Delete</strong>
                                     </label>
                                 </div>
                                 <div class="flex flex-wrap items-center gap-2">
@@ -1465,11 +1469,11 @@
                                         <i class="fa-solid fa-check-double text-[10px]"></i>
                                         <span>Select All</span>
                                     </button>
-                                    <button type="button" onclick="batchClearSelection()" id="batch-clear-btn" disabled class="px-3 py-1.5 bg-slate-600 hover:bg-slate-700 active:scale-95 disabled:opacity-50 disabled:pointer-events-none text-white text-xs font-medium rounded-xl shadow-xs transition-all flex items-center gap-1.5 cursor-pointer">
-                                        <i class="fa-solid fa-rotate-left text-[10px]"></i>
-                                        <span>Clear</span>
+                                    <button onclick="clearAll()" id="clear-all-btn" disabled class="px-4 py-2 text-white text-sm font-medium rounded-xl shadow-sm transition-all duration-150 flex items-center gap-2 bg-rose-600 hover:bg-rose-700 active:scale-95 disabled:opacity-50 disabled:pointer-events-none cursor-pointer">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                        Delete
                                     </button>
-                                    <button type="button" onclick="batchSaveChanges()" id="batch-save-changes-btn" disabled class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 disabled:opacity-50 disabled:pointer-events-none text-white text-xs font-medium rounded-xl shadow-xs transition-all flex items-center gap-1.5 cursor-pointer">
+                                    <button type="button" onclick="batchSaveChanges()" id="batch-save-orders-btn" disabled class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 disabled:opacity-50 disabled:pointer-events-none text-white text-xs font-medium rounded-xl shadow-xs transition-all flex items-center gap-1.5 cursor-pointer">
                                         <i class="fa-solid fa-floppy-disk text-[10px]"></i>
                                         <span>Save Changes</span>
                                     </button>
@@ -4890,7 +4894,8 @@
             if (activePresetsList[index]) {
                 activePresetsList[index].active = !activePresetsList[index].active;
                 renderPresetsTable();
-                showToast("Status Changed", `${activePresetsList[index].code} is now ${activePresetsList[index].active ? 'Active' : 'Inactive'}.`);
+                markVoucherPresetsUnsaved();
+                showToast("Status Changed", `${activePresetsList[index].code} is now ${activePresetsList[index].active ? 'Active' : 'Inactive'}. Click 'Save Changes' to apply.`);
             }
         };
 
@@ -4898,8 +4903,48 @@
             if (activePresetsList[index]) {
                 const deleted = activePresetsList.splice(index, 1);
                 renderPresetsTable();
-                showToast("Preset Deleted", `${deleted[0]?.code} removed from active presets.`);
+                markVoucherPresetsUnsaved();
+                showToast("Preset Removed", `${deleted[0]?.code} removed from active list. Click 'Save Changes' to apply.`);
             }
+        };
+
+        function markVoucherPresetsUnsaved() {
+            const saveBtn = document.getElementById('batch-save-changes-btn');
+            if (saveBtn) {
+                saveBtn.classList.add('ring-2', 'ring-emerald-400', 'animate-pulse');
+            }
+        }
+
+        window.batchSaveVoucherPresets = async function() {
+            const saveBtn = document.getElementById('batch-save-changes-btn');
+            if (saveBtn) {
+                saveBtn.classList.remove('ring-2', 'ring-emerald-400', 'animate-pulse');
+            }
+
+            // Sync with assigned vouchers and product vouchers
+            for (const preset of activePresetsList) {
+                if (preset.type === 'product' && preset.assignedProductIds) {
+                    if (activeProductVouchersMap[preset.code]) {
+                        activeProductVouchersMap[preset.code].active = preset.active;
+                    }
+                }
+            }
+
+            if (db) {
+                try {
+                    await db.collection("lumilens_voucher_presets").doc("all_presets").set({
+                        presets: activePresetsList,
+                        updatedAt: new Date().toISOString()
+                    }, { merge: true });
+                } catch(e) {
+                    console.warn("Error saving voucher presets:", e);
+                }
+            }
+
+            localStorage.setItem('sweetopia_active_presets', JSON.stringify(activePresetsList));
+            renderPresetsTable();
+            renderStoreProducts(products);
+            showToast("Changes Saved!", "Active voucher presets and status changes saved successfully.");
         };
 
         function getFormattedVoucherCode(prefix, suffix) {
@@ -4909,16 +4954,103 @@
             return `SWEET[${s}]`;
         }
 
-        window.resetSection1Form = function() {
-            const form = document.getElementById('voucherFormSection1');
-            if (form) form.reset();
-            const preview = document.getElementById('c_previewFullCode');
-            if (preview) preview.innerText = 'SWEET[...]';
-            const select = document.getElementById('customer-code1');
-            if (select) select.value = '';
-            const expiry = document.getElementById('expiry-code1');
-            if (expiry) expiry.value = '2026-12-31';
-            updateSection1SelectedCount();
+        /* ADMIN BATCH SELECTION & ACTIONS LOGIC */
+        window.toggleClearAllButton = function() {
+            const masterCheckbox = document.getElementById('confirm-clear-checkbox');
+            const isEnabled = masterCheckbox ? masterCheckbox.checked : false;
+
+            const selectAllBtn = document.getElementById('select-all-btn');
+            const clearAllBtn = document.getElementById('clear-all-btn');
+            const saveChangesBtn = document.getElementById('batch-save-orders-btn');
+
+            if (selectAllBtn) selectAllBtn.disabled = !isEnabled;
+            if (clearAllBtn) clearAllBtn.disabled = !isEnabled;
+            if (saveChangesBtn) saveChangesBtn.disabled = !isEnabled;
+        };
+
+        window.toggleSelectAll = function() {
+            const masterCheckbox = document.getElementById('confirm-clear-checkbox');
+            if (masterCheckbox && !masterCheckbox.checked) return;
+
+            const checkboxes = document.querySelectorAll('.admin-order-select-checkbox');
+            const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+
+            checkboxes.forEach(cb => {
+                cb.checked = !allChecked;
+            });
+
+            const count = Array.from(checkboxes).filter(cb => cb.checked).length;
+            showToast("Orders Selected", `${count} order(s) selected.`);
+        };
+
+        window.clearAll = async function() {
+            const masterCheckbox = document.getElementById('confirm-clear-checkbox');
+            if (masterCheckbox && !masterCheckbox.checked) return;
+
+            const checkboxes = document.querySelectorAll('.admin-order-select-checkbox:checked');
+            const selectedIds = Array.from(checkboxes).map(cb => cb.getAttribute('data-order-id'));
+
+            if (selectedIds.length === 0) {
+                showToast("No Orders Selected", "Please select one or more orders to delete.", true);
+                return;
+            }
+
+            if (confirm(`Are you sure you want to delete ${selectedIds.length} selected order(s)?`)) {
+                for (const id of selectedIds) {
+                    allOrders = allOrders.filter(o => o.id !== id);
+                    if (db) {
+                        try {
+                            await db.collection("lumilens_orders").doc(id).delete();
+                        } catch(e) {
+                            console.warn("Delete order error:", e);
+                        }
+                    }
+                }
+
+                renderAdminOrdersList();
+                renderCustomerOrders();
+                renderCustomerInvoicesTabList();
+                showToast("Deleted!", `${selectedIds.length} order(s) removed.`);
+            }
+        };
+
+        window.batchSaveChanges = async function() {
+            const masterCheckbox = document.getElementById('confirm-clear-checkbox');
+            if (masterCheckbox && !masterCheckbox.checked) return;
+
+            const checkboxes = document.querySelectorAll('.admin-order-select-checkbox:checked');
+            const selectedIds = Array.from(checkboxes).map(cb => cb.getAttribute('data-order-id'));
+
+            const targetIds = selectedIds.length > 0 ? selectedIds : allOrders.map(o => o.id);
+
+            let updatedCount = 0;
+            for (const id of targetIds) {
+                const trackInput = document.getElementById(`admin-track-${id}`);
+                const trackingNum = trackInput ? trackInput.value.trim() : null;
+
+                const order = allOrders.find(o => o.id === id);
+                if (order && trackingNum !== null) {
+                    order.trackingNumber = trackingNum || 'Pending';
+                    order.status = (trackingNum && trackingNum !== 'Pending') ? 'Shipped' : (order.paid ? 'Processing (Paid)' : 'Processing');
+                    updatedCount++;
+
+                    if (db) {
+                        try {
+                            await db.collection("lumilens_orders").doc(id).set({
+                                trackingNumber: order.trackingNumber,
+                                status: order.status
+                            }, { merge: true });
+                        } catch (e) {
+                            console.warn("Batch save error:", e);
+                        }
+                    }
+                }
+            }
+
+            renderAdminOrdersList();
+            renderCustomerOrders();
+            renderCustomerInvoicesTabList();
+            showToast("Changes Saved!", `Successfully saved changes for ${updatedCount} order(s).`);
         };
 
         window.resetSection2Form = function() {
@@ -5505,8 +5637,9 @@
         window.exportInvoicesToCSV = exportInvoicesToCSV;
         window.toggleClearAllButton = toggleClearAllButton;
         window.toggleSelectAll = toggleSelectAll;
-        window.batchClearSelection = batchClearSelection;
+        window.clearAll = clearAll;
         window.batchSaveChanges = batchSaveChanges;
+        window.batchSaveVoucherPresets = batchSaveVoucherPresets;
         window.showToast = showToast;
         window.toggleWidgetChat = toggleWidgetChat;
         window.clearWidgetChat = clearWidgetChat;
@@ -5549,6 +5682,15 @@
 
             renderSection1ChosenCustomers();
             renderAdminVoucherProductDropdowns();
+
+            // Load saved voucher presets if present
+            try {
+                const savedPresets = localStorage.getItem('sweetopia_active_presets');
+                if (savedPresets) {
+                    activePresetsList = JSON.parse(savedPresets);
+                }
+            } catch(e) { console.warn(e); }
+
             renderPresetsTable();
 
             const savedEmail = localStorage.getItem('sweetopia_logged_in_email');
