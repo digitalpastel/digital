@@ -2314,6 +2314,7 @@
         let activeChatSessionUser = null;
         let presenceMap = {};
         let userSessionsMap = {};
+        let registeredCustomersList = [];
 
         let customerAddresses = [
             {
@@ -3463,9 +3464,11 @@
                     const res = await auth.createUserWithEmailAndPassword(email, password);
                     currentUser = res.user;
                     try { await currentUser.sendEmailVerification(); } catch(e){}
+                    await saveRegisteredCustomerRecord(email, res.user?.uid);
                     await finishRetroLoading('fast');
                     showToast("Account Created", "Registration successful! Verification email sent.");
                 }
+                await saveRegisteredCustomerRecord(email, currentUser?.uid);
                 localStorage.setItem('sweetopia_logged_in_email', email);
                 updateUIAfterLogin(currentUser);
                 switchPage('dashboard');
@@ -5533,6 +5536,100 @@
             updateSection1SelectedCount();
         }
 
+        function loadRegisteredCustomers() {
+            try {
+                const stored = localStorage.getItem('sweetopia_registered_customers');
+                if (stored) {
+                    const parsed = JSON.parse(stored);
+                    if (Array.isArray(parsed)) {
+                        registeredCustomersList = parsed;
+                    }
+                }
+            } catch (e) { console.warn(e); }
+        }
+
+        async function saveRegisteredCustomerRecord(email, uid = null) {
+            if (!email) return;
+            const cleanEmail = email.trim().toLowerCase();
+            if (isAdminUser(cleanEmail)) return;
+            if (cleanEmail.startsWith('guest_') || cleanEmail.endsWith('@sweetopiashop.my')) return;
+
+            if (!registeredCustomersList.includes(cleanEmail)) {
+                registeredCustomersList.push(cleanEmail);
+                try {
+                    localStorage.setItem('sweetopia_registered_customers', JSON.stringify(registeredCustomersList));
+                } catch (e) {}
+            }
+
+            if (db) {
+                try {
+                    const docKey = cleanEmail.replace(/[^a-zA-Z0-9]/g, '_');
+                    await db.collection("lumilens_users").doc(docKey).set({
+                        email: cleanEmail,
+                        uid: uid || null,
+                        role: 'customer',
+                        updatedAt: new Date().toISOString()
+                    }, { merge: true });
+                } catch (e) { console.warn("Save registered user error:", e); }
+            }
+
+            renderAdminVoucherCustomerDropdowns();
+        }
+
+        function renderAdminVoucherCustomerDropdowns() {
+            const knownUsersSet = new Set();
+
+            // 1. Registered users from Firestore & localStorage
+            (registeredCustomersList || []).forEach(u => {
+                if (u && typeof u === 'string') knownUsersSet.add(u.trim().toLowerCase());
+            });
+
+            // 2. Users from presence records
+            Object.keys(presenceMap || {}).forEach(u => {
+                if (u && typeof u === 'string') knownUsersSet.add(u.trim().toLowerCase());
+            });
+
+            // 3. Users from chat sessions
+            Object.keys(userSessionsMap || {}).forEach(u => {
+                if (u && typeof u === 'string') knownUsersSet.add(u.trim().toLowerCase());
+            });
+
+            // 4. Users from past orders
+            (allOrders || []).forEach(o => {
+                if (o && o.customer) knownUsersSet.add(o.customer.trim().toLowerCase());
+            });
+
+            // 5. Previously assigned voucher emails
+            Object.keys(assignedVouchersMap || {}).forEach(u => {
+                if (u && typeof u === 'string') knownUsersSet.add(u.trim().toLowerCase());
+            });
+
+            // 6. Current active user if registered customer
+            if (currentUser && currentUser.email && !currentUser.isGuest) {
+                knownUsersSet.add(currentUser.email.trim().toLowerCase());
+            }
+
+            const userList = Array.from(knownUsersSet)
+                .filter(u => u && !isAdminUser(u) && !u.startsWith('guest_') && !u.endsWith('@sweetopiashop.my'))
+                .sort();
+
+            ['code1', 'code2', 'code3', 'code4', 'code5'].forEach(codeId => {
+                const select = document.getElementById(`customer-${codeId}`);
+                if (!select) return;
+
+                const currentVal = (select.value || '').trim().toLowerCase();
+                let optionsHtml = '<option value="">-- Registered Customer --</option>';
+
+                userList.forEach(u => {
+                    optionsHtml += `<option value="${u}" ${u === currentVal ? 'selected' : ''}>${u}</option>`;
+                });
+
+                select.innerHTML = optionsHtml;
+            });
+            updateSection1SelectedCount();
+        }
+        window.renderAdminVoucherCustomerDropdowns = renderAdminVoucherCustomerDropdowns;
+
         async function loadCustomerCartFromFirestore(uid) {
             if (!db || !uid) return;
             try {
@@ -5617,10 +5714,30 @@
                     assignedVouchersMap = snap.data().data;
                     renderCustomerVouchersUI();
                     renderChosenCustomerPromoBanner();
+                    renderAdminVoucherCustomerDropdowns();
                 }
             }, (err) => {
                 renderCustomerVouchersUI();
                 renderChosenCustomerPromoBanner();
+            });
+
+            db.collection("lumilens_users").onSnapshot((snapshot) => {
+                if (snapshot) {
+                    const merged = new Set(registeredCustomersList || []);
+                    snapshot.forEach(docSnap => {
+                        const data = docSnap.data();
+                        if (data && data.email && !isAdminUser(data.email)) {
+                            merged.add(data.email.trim().toLowerCase());
+                        }
+                    });
+                    registeredCustomersList = Array.from(merged);
+                    try {
+                        localStorage.setItem('sweetopia_registered_customers', JSON.stringify(registeredCustomersList));
+                    } catch (e) {}
+                    renderAdminVoucherCustomerDropdowns();
+                }
+            }, (err) => {
+                renderAdminVoucherCustomerDropdowns();
             });
 
             db.collection("lumilens_product_vouchers").onSnapshot((snapshot) => {
@@ -5651,20 +5768,6 @@
                         presenceMap[data.email] = isReallyOnline;
                     });
                     updateAdminChatUserDropdown();
-                    updateSupportIndicator();
-                }
-            }, (err) => {});
-
-            db.collection("lumilens_chats").onSnapshot((snapshot) => {
-                if (snapshot) {
-                    userSessionsMap = {};
-                    snapshot.forEach(docSnap => {
-                        const data = docSnap.data();
-                        const user = data.userEmail || data.user;
-                        if (user) { userSessionsMap[user] = data.messages || []; }
-                    });
-                    updateAdminChatUserDropdown();
-                    renderActiveChatMessages();
                     updateSupportIndicator();
                     renderAdminVoucherCustomerDropdowns();
                 }
@@ -5931,6 +6034,7 @@
             loadSavedAddresses();
             loadFavourites();
             loadAssignedVouchers();
+            loadRegisteredCustomers();
             loadReadNotifications();
 
             const cSuffixInput = document.getElementById('c_voucherSuffix');
@@ -5986,6 +6090,7 @@
                     if (user && !user.isAnonymous) {
                         currentUser = user;
                         localStorage.setItem('sweetopia_logged_in_email', user.email);
+                        await saveRegisteredCustomerRecord(user.email, user.uid);
                         await loadCustomerCartFromFirestore(user.uid);
                         updateUIAfterLogin(user);
                         updatePresence(user.email, true);
@@ -6018,6 +6123,21 @@
                     const vSnap = await db.collection("lumilens_assigned_vouchers").doc("all_vouchers").get({ source: 'server' }).catch(() => null);
                     if (vSnap && vSnap.exists && vSnap.data() && vSnap.data().data) {
                         assignedVouchersMap = vSnap.data().data;
+                    }
+                } catch(e) { }
+
+                try {
+                    const uSnap = await db.collection("lumilens_users").get({ source: 'server' }).catch(() => null);
+                    if (uSnap && !uSnap.empty) {
+                        const merged = new Set(registeredCustomersList || []);
+                        uSnap.forEach(docSnap => {
+                            const data = docSnap.data();
+                            if (data && data.email && !isAdminUser(data.email)) {
+                                merged.add(data.email.trim().toLowerCase());
+                            }
+                        });
+                        registeredCustomersList = Array.from(merged);
+                        localStorage.setItem('sweetopia_registered_customers', JSON.stringify(registeredCustomersList));
                     }
                 } catch(e) { }
             }
