@@ -177,21 +177,33 @@
         .expert-dot { width: 10px; height: 10px; background: rgba(255, 255, 255, 0.5); border-radius: 50%; cursor: pointer; transition: background 0.3s ease, transform 0.3s ease; }
         .expert-dot.active { background: #ffffff; transform: scale(1.2); }
 
-        /* A4 Invoice Preview Container styling for PNG export */
+        /* A4 Invoice Preview Container styling - Responsive on Mobile & Clean Print */
         .invoice-a4-page {
-            width: 210mm;
-            min-height: 297mm;
-            padding: 20mm;
+            width: 100%;
+            max-width: 800px;
+            min-height: auto;
+            padding: 16px;
             margin: 0 auto;
             background: #ffffff;
             color: #1e293b;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
             box-sizing: border-box;
+            border-radius: 16px;
         }
+
+        @media (min-width: 768px) {
+            .invoice-a4-page {
+                width: 210mm;
+                min-height: 297mm;
+                padding: 18mm;
+                border-radius: 0;
+            }
+        }
+
         @media print {
             body { background: transparent; }
             .no-print { display: none !important; }
-            .invoice-a4-page { box-shadow: none; margin: 0; width: 100%; height: 100%; }
+            .invoice-a4-page { box-shadow: none; margin: 0; width: 100%; height: 100%; padding: 15mm; }
         }
 
         /* Retro Comic Pink-Purple Image Frame Window Modal */
@@ -299,6 +311,18 @@
         .retro-progress-bar-slot.filled {
             background-color: #5a0c3f;
         }
+
+        @keyframes bellRing {
+            0%, 100% { transform: rotate(0deg); }
+            15% { transform: rotate(15deg); }
+            30% { transform: rotate(-12deg); }
+            45% { transform: rotate(10deg); }
+            60% { transform: rotate(-8deg); }
+            75% { transform: rotate(4deg); }
+        }
+        .bell-ringing {
+            animation: bellRing 1s ease-in-out;
+        }
     </style>
 </head>
 
@@ -352,7 +376,7 @@
     </div>
 
     <!-- GLOBAL NOTIFICATION TOAST -->
-    <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 text-white px-5 py-3 rounded-2xl shadow-2xl border border-slate-700 flex items-center space-x-3 transition-all duration-300 transform opacity-0 pointer-events-none -translate-y-4">
+    <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-[200] bg-slate-900/95 text-white px-5 py-3 rounded-2xl shadow-2xl border border-slate-700 flex items-center space-x-3 transition-all duration-300 transform opacity-0 pointer-events-none -translate-y-4">
         <div id="toast-icon-wrapper" class="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold shrink-0 bg-[#65a30d]"><i class="fa-solid fa-check text-xs"></i></div>
         <div>
             <p id="toast-title" class="text-xs font-bold">Signed In</p>
@@ -447,16 +471,73 @@
     <div id="desktop-viewport-root" class="flex flex-col w-full max-w-[1280px] mx-auto items-center justify-start pb-16 md:pb-0">
 
         <!-- TOP HEADER -->
-        <header class="w-full max-w-[1280px] mx-auto flex flex-col sm:flex-row items-center justify-between pb-4 mb-4 md:mb-6 border-b border-slate-200 gap-3">
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchPage('dashboard'); switchTab('catalog');">
-                <div class="w-10 h-10 rounded-2xl bg-transparent flex items-center justify-center text-white font-extrabold text-xl overflow-hidden">
-                    <img src="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png" alt="Sweetopia Logo" class="w-full h-full object-cover">
+        <header class="w-full max-w-[1280px] mx-auto flex flex-col sm:flex-row items-center justify-between pb-4 mb-4 md:mb-6 border-b border-slate-200 gap-3 relative z-30">
+            <div class="flex items-center justify-between w-full sm:w-auto">
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchPage('dashboard'); switchTab('catalog');">
+                    <div class="w-10 h-10 rounded-2xl bg-transparent flex items-center justify-center text-white font-extrabold text-xl overflow-hidden">
+                        <img src="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png" alt="Sweetopia Logo" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-extrabold tracking-tight text-[#19a8ea]">Sweetopia <span class="text-[#65a30d]">Shop</span></h1>
+                    </div>
                 </div>
-                <div>
-                    <h1 class="text-lg font-extrabold tracking-tight text-[#19a8ea]">Sweetopia <span class="text-[#65a30d]">Shop</span></h1>
+
+                <!-- Mobile Header Bell Shortcut (Visible only on mobile when customer is signed in) -->
+                <div id="mobile-header-bell-container" class="sm:hidden hidden relative">
+                    <button type="button" onclick="toggleCustomerNotifications(event)" class="w-10 h-10 rounded-full bg-white border-2 border-black shadow-[0_3px_0_0_#1e1b4b] active:translate-y-0.5 active:shadow-none flex items-center justify-center text-slate-800 hover:bg-amber-50 transition relative" aria-label="Order Notifications">
+                        <i class="fa-solid fa-bell text-sm text-amber-500" id="mobile-bell-icon"></i>
+                        <span id="mobile-notif-badge" class="hidden absolute -top-1.5 -right-1.5 min-w-[20px] h-5 px-1 bg-rose-600 text-white text-[10px] font-black rounded-full border-2 border-white flex items-center justify-center shadow-sm">0</span>
+                    </button>
                 </div>
             </div>
-            <div class="flex items-center space-x-3" id="header-nav-actions"><span class="text-xs text-slate-500">Please Sign In or Register</span></div>
+
+            <div class="flex items-center space-x-3 relative" id="header-nav-actions">
+                <!-- CUSTOMER NOTIFICATION BELL WIDGET (Shown for Customers) -->
+                <div id="customer-notification-bell-wrapper" class="hidden relative">
+                    <button type="button" id="customer-notif-bell-btn" onclick="toggleCustomerNotifications(event)" class="px-3.5 py-2 rounded-full bg-white hover:bg-amber-50 text-slate-800 border-2 border-black shadow-[0_3px_0_0_#1e1b4b] active:translate-y-0.5 active:shadow-none transition-all flex items-center space-x-2 relative cursor-pointer" title="Order & Payment Notifications">
+                        <i class="fa-solid fa-bell text-amber-500 text-sm" id="desktop-bell-icon"></i>
+                        <span class="text-xs font-bold hidden md:inline">Notifications</span>
+                        <span id="customer-notif-badge" class="hidden min-w-[20px] h-5 px-1.5 bg-rose-600 text-white text-[10px] font-black rounded-full border border-white flex items-center justify-center shadow-xs">0</span>
+                    </button>
+                </div>
+
+                <!-- NOTIFICATION DROPDOWN PANEL -->
+                <div id="customer-notifications-dropdown" class="hidden fixed sm:absolute right-3 sm:right-0 top-28 sm:top-12 w-[calc(100vw-1.5rem)] sm:w-[390px] max-w-md bg-white rounded-3xl border-2 border-black shadow-[6px_6px_0_0_#1e1b4b] z-[110] overflow-hidden flex flex-col" onclick="event.stopPropagation()">
+                    <div class="bg-gradient-to-r from-amber-400 via-pink-400 to-fuchsia-500 px-4 py-3 border-b-2 border-black flex items-center justify-between text-slate-900">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-7 h-7 rounded-xl bg-white border-2 border-black flex items-center justify-center shadow-[1px_1px_0_0_#000]">
+                                <i class="fa-solid fa-bell text-amber-500 text-xs"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-black uppercase tracking-wider text-slate-950">Order Notifications</h4>
+                                <p class="text-[10px] font-bold text-slate-900/80" id="notif-dropdown-subtitle">Real-time payment &amp; delivery updates</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-1.5">
+                            <button type="button" onclick="markAllNotificationsRead()" class="text-[10px] font-extrabold bg-white/90 hover:bg-white text-slate-900 px-2.5 py-1 rounded-lg border border-black shadow-[1px_1px_0_0_#000] transition cursor-pointer">
+                                Mark read
+                            </button>
+                            <button type="button" onclick="closeCustomerNotifications()" class="w-6 h-6 rounded-full bg-rose-500 hover:bg-rose-600 text-white border border-black flex items-center justify-center text-xs font-black shadow-[1px_1px_0_0_#000] cursor-pointer">
+                                ×
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="customer-notifications-list" class="max-h-80 overflow-y-auto divide-y divide-slate-100 bg-white">
+                        <!-- Dynamically populated notifications -->
+                    </div>
+
+                    <div class="p-2.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-[11px]">
+                        <span class="text-slate-500 font-medium pl-1">Syncs live with ToyyibPay &amp; Admin</span>
+                        <button type="button" onclick="closeCustomerNotifications(); switchTab('customer-dashboard');" class="text-fuchsia-600 hover:text-fuchsia-700 font-extrabold flex items-center gap-1 pr-1 cursor-pointer">
+                            <span>View All Orders</span>
+                            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <span id="header-guest-status-text" class="text-xs text-slate-500">Please Sign In or Register</span>
+            </div>
         </header>
 
         <main id="app-wrapper" class="w-full max-w-[1280px] flex-1 flex flex-col items-center justify-center transition-all duration-300 relative">
@@ -846,37 +927,6 @@
                                 </button>
 
                                 <div id="content-customer-order-history" class="p-4 border-t border-slate-200 space-y-3 bg-white hidden">
-                                    <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/70 space-y-3">
-                                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-2.5">
-                                            <div class="flex items-center space-x-2">
-                                                <span class="text-xs font-extrabold text-[#65a30d] font-mono">Order ID: 261009SWEXMPL</span>
-                                                <span class="text-[10px] bg-blue-50 text-blue-600 border border-blue-200 font-semibold px-2 py-0.5 rounded-lg">Shipped</span>
-                                            </div>
-                                            <span class="text-[10px] text-slate-500 font-medium">Date &amp; Time: 20 Oct 2026, 02:45 PM</span>
-                                        </div>
-
-                                        <div class="flex items-start sm:items-center justify-between gap-3">
-                                            <div class="flex items-center space-x-3">
-                                                <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&amp;fit=crop&amp;q=80&amp;w=200" alt="Hazel Natural" class="w-12 h-12 rounded-xl object-cover border border-slate-200">
-                                                <div>
-                                                    <h4 class="text-xs font-bold text-slate-900">HAZEL NATURAL (3 Months Disposable)</h4>
-                                                    <p class="text-[10px] text-slate-500 mt-0.5">Prescription: <b class="text-slate-700">PWR -2.50</b> • Qty: <b class="text-slate-700">2 pairs</b></p>
-                                                </div>
-                                            </div>
-                                            <div class="text-right shrink-0">
-                                                <span class="text-xs font-bold text-[#65a30d]">RM 50.00</span>
-                                            </div>
-                                        </div>
-
-                                        <div class="pt-2 border-t border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px]">
-                                            <div class="flex items-center space-x-1.5">
-                                                <i class="fa-solid fa-truck-fast text-[#65a30d]"></i>
-                                                <span class="text-slate-600 font-medium">Tracking Number:</span>
-                                                <span class="font-mono font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">JNT982348123MY</span>
-                                            </div>
-                                            <span class="text-[10px] text-slate-400">Courier: J&amp;T Express Nationwide</span>
-                                        </div>
-                                    </div>
                                     <div id="customer-orders-list" class="space-y-3"></div>
                                 </div>
                             </div>
@@ -890,32 +940,17 @@
                                         </div>
                                         <div>
                                             <span class="text-xs font-bold text-slate-800 block">Invoices</span>
-                                            <span class="text-[10px] text-slate-500">Official tax invoices, view modal &amp; download A4 PNG</span>
+                                            <span class="text-[10px] text-slate-500">Official tax invoices for confirmed ToyyibPay payments</span>
                                         </div>
                                     </div>
                                     <i id="chevron-invoices" class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-200"></i>
                                 </button>
 
                                 <div id="content-customer-invoices" class="p-4 border-t border-slate-200 space-y-3 bg-white hidden">
-                                    <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/70 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                                        <div>
-                                            <div class="flex items-center space-x-2">
-                                                <span class="text-xs font-extrabold text-[#65a30d] font-mono">INV-261009SWEXMPL</span>
-                                                <span class="text-[9px] bg-emerald-50 text-emerald-600 border border-emerald-200 font-bold px-2 py-0.5 rounded uppercase">Paid via FPX</span>
-                                            </div>
-                                            <p class="text-[11px] text-slate-700 mt-1">Order Date: <b>20 Oct 2026, 02:45 PM</b> • Total: <b class="text-[#65a30d]">RM 50.00</b></p>
-                                            <p class="text-[10px] text-slate-500">Items: HAZEL NATURAL (PWR -2.50) x2</p>
-                                        </div>
-
-                                        <div class="flex items-center space-x-2 w-full sm:w-auto">
-                                            <button type="button" onclick="openInvoiceModal('261009SWEXMPL')" class="flex-1 sm:flex-initial bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-3 py-2 rounded-xl text-xs border border-slate-300 transition flex items-center justify-center space-x-1.5 shadow-sm">
-                                                <i class="fa-solid fa-eye text-slate-600"></i>
-                                                <span>View Invoice</span>
-                                            </button>
-                                            <button type="button" onclick="openInvoiceModal('261009SWEXMPL'); setTimeout(downloadInvoiceAsPNG, 400);" class="flex-1 sm:flex-initial bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold px-3 py-2 rounded-xl text-xs transition flex items-center justify-center space-x-1.5 shadow-sm">
-                                                <i class="fa-solid fa-file-arrow-down"></i>
-                                                <span>Download A4 PNG</span>
-                                            </button>
+                                    <div id="customer-invoices-dynamic-list" class="space-y-3">
+                                        <div class="text-center py-6 text-slate-400 text-xs">
+                                            <i class="fa-solid fa-file-invoice text-2xl text-slate-300 mb-2 block"></i>
+                                            No confirmed invoices found. Invoices are generated only after payment is completed and drawn at ToyyibPay.
                                         </div>
                                     </div>
                                 </div>
@@ -995,10 +1030,7 @@
                             </div>
 
                             <form id="voucherFormSection1" onsubmit="handleCreateCustomerVoucher(event)" class="p-6 space-y-6">
-
-                                <!-- Main Grid Configuration -->
                                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
                                     <!-- Voucher Name -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
@@ -1052,7 +1084,6 @@
                                         </label>
                                         <input type="number" id="c_minOrder" min="0" step="0.01" value="0.00" placeholder="0.00" class="block w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-pink-500 focus:outline-none">
                                     </div>
-
                                 </div>
 
                                 <!-- Chosen Customer Assignment Area -->
@@ -1118,7 +1149,6 @@
                                         <span>Save &amp; Publish Voucher Display to all pages</span>
                                     </button>
                                 </div>
-
                             </form>
                         </section>
 
@@ -1143,10 +1173,7 @@
                             </div>
 
                             <form id="voucherFormSection2" onsubmit="handleCreateProductVoucher(event)" class="p-6 space-y-6">
-
-                                <!-- Main Grid Configuration -->
                                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
                                     <!-- Voucher Name -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
@@ -1199,7 +1226,6 @@
                                         </label>
                                         <input type="number" id="p_minOrder" min="0" step="0.01" value="0.00" placeholder="0.00" class="block w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-purple-500 focus:outline-none">
                                     </div>
-
                                 </div>
 
                                 <!-- Chosen Product Frame Assignment Area -->
@@ -1217,7 +1243,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Assigned Product List tags -->
                                     <div class="flex flex-wrap items-center gap-2">
                                         <div class="flex items-center gap-1.5">
                                             <label for="product-hachimie" class="text-[10px] font-semibold text-slate-500 uppercase">Assign:</label>
@@ -1268,13 +1293,11 @@
                                         <span>Save &amp; Publish Voucher Display To Product Frame</span>
                                     </button>
                                 </div>
-
                             </form>
                         </section>
 
                         <!-- Active Voucher Code Presets Table (Admin View) -->
                         <section class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
-                            <!-- Table Header Bar -->
                             <div class="p-6 border-b border-slate-200 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                                 <div>
                                     <h2 class="text-lg font-bold text-slate-900 flex items-center space-x-2">
@@ -1285,7 +1308,6 @@
                                     <p class="text-xs text-slate-500 mt-0.5">★ Limit: 1 use per customer ★ Manage designated customer and product frame presets, toggles, and assignments.</p>
                                 </div>
 
-                                <!-- Search & Filters -->
                                 <div class="flex flex-wrap items-center gap-3">
                                     <div class="relative">
                                         <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
@@ -1298,10 +1320,13 @@
                                         <option value="customer">Chosen Customer</option>
                                         <option value="product">Chosen Product</option>
                                     </select>
+                                    <button type="button" onclick="batchSaveVoucherPresets()" id="batch-save-changes-btn" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 disabled:opacity-50 disabled:pointer-events-none text-white text-xs font-medium rounded-xl shadow-xs transition-all flex items-center gap-1.5 cursor-pointer">
+                                        <i class="fa-solid fa-floppy-disk text-[10px]"></i>
+                                        <span>Save Changes</span>
+                                    </button>
                                 </div>
                             </div>
 
-                            <!-- Responsive Table Container -->
                             <div class="overflow-x-auto">
                                 <table class="w-full text-left border-collapse">
                                     <thead>
@@ -1315,12 +1340,10 @@
                                         </tr>
                                     </thead>
                                     <tbody id="presetsTableBody" class="divide-y divide-slate-100 text-sm text-slate-700">
-                                        <!-- Dynamically generated via renderPresetsTable() -->
                                     </tbody>
                                 </table>
                             </div>
 
-                            <!-- Empty State -->
                             <div id="emptyState" class="hidden p-12 text-center flex flex-col items-center justify-center space-y-3">
                                 <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center text-slate-400 text-2xl">
                                     <i class="fa-solid fa-folder-open"></i>
@@ -1329,7 +1352,6 @@
                                 <p class="text-xs text-slate-500 max-w-sm">Use the configuration forms above to publish customer or product voucher presets.</p>
                             </div>
 
-                            <!-- Table Footer -->
                             <div class="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
                                 <span id="tableInfoText">Showing 2 of 2 presets</span>
                                 <div class="flex items-center space-x-2">
@@ -1471,6 +1493,31 @@
                                 <h4 class="text-xs font-bold text-slate-900">Customer Invoices &amp; Shipment Tracking Management</h4>
                                 <p class="text-[11px] text-slate-500">Assign tracking numbers, save and publish to customer dashboards.</p>
                             </div>
+
+                            <!-- Admin Batch Control Toolbar -->
+                            <div class="bg-slate-50 p-3 sm:p-4 rounded-2xl border border-slate-200 flex flex-wrap items-center justify-between gap-3 shadow-xs">
+                                <div class="flex items-center gap-2.5">
+                                    <input type="checkbox" id="confirm-clear-checkbox" onchange="toggleClearAllButton()" class="w-4 h-4 text-rose-600 rounded border-slate-300 focus:ring-rose-500 cursor-pointer">
+                                    <label for="confirm-clear-checkbox" class="text-xs font-semibold text-slate-700 cursor-pointer select-none">
+                                        Check box to enable <strong>Delete</strong>
+                                    </label>
+                                </div>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <button type="button" onclick="toggleSelectAll()" id="select-all-btn" disabled class="px-3 py-1.5 bg-sky-600 hover:bg-sky-700 active:scale-95 disabled:opacity-50 disabled:pointer-events-none text-white text-xs font-medium rounded-xl shadow-xs transition-all flex items-center gap-1.5 cursor-pointer">
+                                        <i class="fa-solid fa-check-double text-[10px]"></i>
+                                        <span>Select All</span>
+                                    </button>
+                                    <button onclick="clearAll()" id="clear-all-btn" disabled class="px-4 py-2 text-white text-sm font-medium rounded-xl shadow-sm transition-all duration-150 flex items-center gap-2 bg-rose-600 hover:bg-rose-700 active:scale-95 disabled:opacity-50 disabled:pointer-events-none cursor-pointer">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                        Delete
+                                    </button>
+                                    <button type="button" onclick="batchSaveChanges()" id="batch-save-orders-btn" disabled class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 disabled:opacity-50 disabled:pointer-events-none text-white text-xs font-medium rounded-xl shadow-xs transition-all flex items-center gap-1.5 cursor-pointer">
+                                        <i class="fa-solid fa-floppy-disk text-[10px]"></i>
+                                        <span>Save Changes</span>
+                                    </button>
+                                </div>
+                            </div>
+
                             <div id="admin-all-orders-list" class="space-y-3 max-h-96 overflow-y-auto pr-2"><p class="text-xs text-slate-500 text-center py-6">No invoices recorded in database.</p></div>
                         </div>
                     </div>
@@ -1581,41 +1628,36 @@
                             </div>
                         </div>
 
-                        <!-- Admin Session Switcher Bar -->
+                        <!-- Admin Session Switcher Bar (Adapts for Customer vs Admin) -->
                         <div id="admin-chat-session-bar" class="bg-[#f7fee7] px-3 py-2 border-b border-[#ecfccb] flex items-center justify-between text-[11px]">
-                            <span class="font-bold text-[#4d7c0f]">User Session:</span>
+                            <span id="chat-session-bar-label" class="font-bold text-[#4d7c0f]">User Session:</span>
                             <div class="flex items-center space-x-2">
                                 <select id="admin-active-chat-user" onchange="switchAdminChatSession()" class="bg-white border border-[#84cc16] rounded-lg px-2 py-1 text-slate-800 font-semibold focus:outline-none text-xs max-w-[170px]"><option value="brandworkzco@gmail.com">🔘 brandworkzco@gmail.com (Customer - Offline)</option></select>
-                                <button onclick="adminDeleteSelectedChatSession()" class="bg-red-50 hover:bg-red-100 text-red-600 px-2 py-1 rounded-lg font-bold border border-red-200 transition text-[10px]" title="Delete entire conversation">Delete</button>
+                                <button id="chat-session-action-btn" onclick="adminDeleteSelectedChatSession()" class="bg-red-50 hover:bg-red-100 text-red-600 px-2 py-1 rounded-lg font-bold border border-red-200 transition text-[10px]" title="Delete entire conversation">Clear</button>
                             </div>
                         </div>
 
                         <!-- Messages Box -->
-                        <div id="widget-chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/50 text-xs"><div class="text-center text-slate-400 py-10"><i class="fa-solid fa-heart text-2xl text-lime-500 mb-2"></i><p class="text-xs">Chatting with <b class="text-slate-700">brandworkzco@gmail.com</b>.<br>Leave a message or sticker to start conversation.</p></div></div>
+                        <div id="widget-chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/50 text-xs"><div class="text-center text-slate-400 py-10"><i class="fa-solid fa-heart text-2xl text-lime-500 mb-2"></i><p class="text-xs">Chatting with <b class="text-slate-700">admin</b>.<br>Leave a message or sticker to start conversation.</p></div></div>
 
                         <!-- Footer Input & Multimedia Toolbar -->
                         <div class="p-3 bg-white border-t border-pink-100 flex flex-col space-y-2 rounded-b-3xl">
                             <!-- Multimedia & Sticker Toolbar Icons -->
                             <div class="flex items-center space-x-2 sm:space-x-3 px-1 text-slate-500">
-                                <!-- Sticker Picker Toggle Button -->
                                 <button type="button" onclick="toggleStickerPicker()" class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl hover:bg-pink-100/80 hover:text-pink-600 flex items-center justify-center transition text-sm sm:text-base" title="Stickers">
                                     <i class="fa-solid fa-face-smile"></i>
                                 </button>
-                                <!-- Image Upload Button -->
                                 <label class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl hover:bg-pink-100/80 hover:text-pink-600 flex items-center justify-center transition cursor-pointer text-sm sm:text-base" title="Upload Image">
                                     <i class="fa-solid fa-image"></i>
                                     <input type="file" id="imageUploadInput" accept="image/png,image/jpeg,image/jpg,image/webp" class="hidden" onchange="handleImageUpload(event)">
                                 </label>
-                                <!-- Video Upload Button -->
                                 <label class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl hover:bg-pink-100/80 hover:text-pink-600 flex items-center justify-center transition cursor-pointer text-sm sm:text-base" title="Upload Video">
                                     <i class="fa-solid fa-video"></i>
                                     <input type="file" id="videoUploadInput" accept="video/*,.mp4,.webm,.mov" class="hidden" onchange="handleVideoUpload(event)">
                                 </label>
-                                <!-- Product Share Button -->
                                 <button type="button" onclick="openProductSelectorModal()" class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl hover:bg-pink-100/80 hover:text-pink-600 flex items-center justify-center transition text-sm sm:text-base" title="Order / Share Product">
                                     <i class="fa-solid fa-bag-shopping"></i>
                                 </button>
-                                <!-- Custom Upload Sticker Button -->
                                 <label class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl hover:bg-purple-100 hover:text-purple-600 flex items-center justify-center transition cursor-pointer text-sm sm:text-base" title="Upload Custom Sticker">
                                     <i class="fa-solid fa-plus-circle text-purple-500"></i>
                                     <input type="file" id="customStickerInput" accept="image/*" class="hidden" onchange="handleCustomStickerUpload(event)">
@@ -1641,23 +1683,21 @@
                 </div>
             </div>
 
-            <!-- SHOPEE STYLE STICKER PICKER MODAL (20 STICKER SLOTS) -->
+            <!-- SHOPEE STYLE STICKER PICKER MODAL (15 STICKER PACKS) -->
             <div id="screen-sticker-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-3 sm:p-4" onclick="closeStickerPicker()">
                 <div class="w-full max-w-sm bg-white rounded-3xl border border-pink-200 overflow-hidden shadow-2xl flex flex-col max-h-[85vh] animate-in fade-in zoom-in-95 duration-200" onclick="event.stopPropagation()">
                     <div class="px-5 py-3.5 bg-gradient-to-r from-pink-100 to-purple-100 border-b border-pink-200 flex items-center justify-between">
                         <div class="flex items-center space-x-2">
                             <i class="fa-solid fa-face-smile text-pink-500 text-base"></i>
-                            <h3 class="text-xs font-bold text-slate-800">Select Sticker (20 Packs)</h3>
+                            <h3 class="text-xs font-bold text-slate-800">Select Sticker (15 Packs)</h3>
                         </div>
                         <button type="button" onclick="closeStickerPicker()" class="w-7 h-7 rounded-full bg-white/80 hover:bg-white text-slate-600 flex items-center justify-center transition shadow-xs">
                             <i class="fa-solid fa-xmark text-xs"></i>
                         </button>
                     </div>
 
-                    <!-- 20 Replaceable Sticker Slots Grid -->
                     <div class="p-3.5 overflow-y-auto max-h-72 cute-h-scrollbar">
                         <div id="sticker-slots-grid" class="grid grid-cols-4 sm:grid-cols-5 gap-2.5">
-                            <!-- Populated dynamically with 20 placeable sticker slots -->
                         </div>
                     </div>
 
@@ -1680,9 +1720,7 @@
                         </button>
                     </div>
 
-                    <!-- Scrollable Product List -->
                     <div class="p-4 overflow-y-auto space-y-3 max-h-80" id="chat-product-share-list">
-                        <!-- Populated dynamically from products list -->
                     </div>
 
                     <div class="p-3 bg-slate-50 border-t border-slate-200 text-right">
@@ -1696,12 +1734,9 @@
             <!-- PRODUCT IMAGE ZOOM MODAL (PINK-PURPLE RETRO WINDOW FRAME) -->
             <div id="screen-image-zoom" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-4" onclick="closeImageZoomModal()">
                 <div class="pink-purple-window-container" onclick="event.stopPropagation()">
-                    <!-- Top Tab with Retro Round Button Pin -->
                     <div class="pink-purple-window-tab">
                         <div class="pink-purple-close-btn" onclick="closeImageZoomModal()" title="Close Frame">&times;</div>
                     </div>
-
-                    <!-- Inner White Dropzone Frame with Image -->
                     <div class="pink-purple-dropzone">
                         <img id="zoom-modal-img" src="" alt="Enlarged Product View">
                     </div>
@@ -1731,7 +1766,6 @@
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-2">Select Prescription (NO PWR 0.00)(PWR -0.25 to -8.00)</label>
-                            <!-- Clickable trigger button that opens the Prescription Picker Modal -->
                             <button type="button" onclick="openPrescriptionPickerModal()" class="w-full bg-slate-50 border border-slate-300 hover:border-[#65a30d] text-xs text-slate-900 rounded-xl p-3 shadow-sm flex items-center justify-between transition group">
                                 <span id="detail-pwr-display" class="font-bold text-[#65a30d]">PWR 0.00 (No Power)</span>
                                 <span class="text-slate-400 group-hover:text-slate-700 text-xs flex items-center gap-1.5 font-medium">
@@ -1739,7 +1773,6 @@
                                     <i class="fa-solid fa-chevron-down text-[10px]"></i>
                                 </span>
                             </button>
-                            <!-- Hidden input to store chosen power value -->
                             <input type="hidden" id="detail-pwr" value="0.00">
                         </div>
                     </div>
@@ -1759,7 +1792,6 @@
                             <h3 class="text-sm font-bold text-slate-900">Select Prescription Power</h3>
                             <p class="text-[11px] text-slate-500 mt-0.5">Choose your contact lens power range (0.00 to -8.00)</p>
                         </div>
-                        <!-- 'x' Close button for Prescription Modal -->
                         <button type="button" onclick="closePrescriptionPickerModal()" class="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-700 flex items-center justify-center transition shadow-xs" aria-label="Close prescription modal">
                             <i class="fa-solid fa-xmark text-sm"></i>
                         </button>
@@ -1767,7 +1799,6 @@
 
                     <div class="p-4 overflow-y-auto">
                         <div id="prescription-options-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                            <!-- Populated dynamically via renderPrescriptionOptions() -->
                         </div>
                     </div>
 
@@ -1780,7 +1811,7 @@
             </div>
 
             <!-- ADMIN ORDER DETAILS MODAL -->
-            <div id="admin-order-detail-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-4">
+            <div id="admin-order-detail-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-4">
                 <div class="w-full max-w-lg bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
                     <div class="px-6 py-4 bg-slate-100 border-b border-slate-200 flex items-center justify-between">
                         <div class="flex items-center space-x-2">
@@ -1922,88 +1953,122 @@
                 </div>
             </div>
 
-            <!-- A4 INVOICE PNG DOWNLOAD MODAL -->
-            <div id="invoice-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-4 overflow-y-auto">
-                <div class="relative w-full max-w-3xl bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[95vh]">
-                    <div class="px-6 py-4 bg-slate-100 border-b border-slate-200 flex items-center justify-between no-print">
-                        <h3 class="text-sm font-bold text-slate-900">Official A4 Invoice &amp; PNG Download</h3>
+            <!-- A4 INVOICE PNG DOWNLOAD & VIEW MODAL (MOBILE FIXED & FULLY OPTIMIZED) -->
+            <div id="invoice-modal" class="fixed inset-0 z-[999] bg-slate-900/80 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-2 sm:p-4 overflow-y-auto">
+                <div class="relative w-full max-w-4xl bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[96vh] my-auto">
+                    <!-- Modal Header Bar (Pinned & Responsive) -->
+                    <div class="px-3.5 sm:px-6 py-3 sm:py-4 bg-slate-100 border-b border-slate-200 flex items-center justify-between shrink-0 no-print">
                         <div class="flex items-center space-x-2">
-                            <button onclick="downloadInvoiceAsPNG()" class="bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center space-x-1.5 shadow">
+                            <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-lime-100 text-[#4d7c0f] flex items-center justify-center text-xs">
+                                <i class="fa-solid fa-file-invoice-dollar"></i>
+                            </div>
+                            <h3 class="text-xs sm:text-sm font-bold text-slate-900 truncate">Official Tax Invoice</h3>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button id="btn-modal-dl-png" type="button" onclick="downloadInvoiceAsPNG()" class="bg-[#65a30d] hover:bg-[#4d7c0f] active:scale-95 text-white font-bold px-3 sm:px-4 py-2 rounded-xl text-[11px] sm:text-xs flex items-center space-x-1.5 shadow transition cursor-pointer">
                                 <i class="fa-solid fa-download"></i>
-                                <span>Download A4 PNG Invoice</span>
+                                <span class="hidden sm:inline">Download A4 PNG</span>
+                                <span class="sm:hidden">PNG</span>
                             </button>
-                            <button onclick="closeInvoiceModal()" class="w-8 h-8 rounded-xl bg-slate-200 flex items-center justify-center text-slate-700 hover:bg-slate-300">
+                            <button type="button" onclick="closeInvoiceModal()" class="w-8 h-8 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 flex items-center justify-center transition cursor-pointer" aria-label="Close invoice modal">
                                 <i class="fa-solid fa-xmark text-xs"></i>
                             </button>
                         </div>
                     </div>
-                    <div class="flex-1 overflow-y-auto p-4 sm:p-6 bg-slate-50 flex justify-center">
-                        <div id="invoice-printable-area" class="invoice-a4-page">
-                            <div class="flex justify-between border-b-2 border-slate-200 pb-6 mb-6">
-                                <div>
-                                    <h1 class="text-2xl font-black text-[#19a8ea]">Sweetopia <span class="text-[#65a30d]">Shop</span></h1>
-                                    <p class="text-xs text-slate-500 mt-1">ToyyibPay FPX Merchant Account</p>
-                                </div>
-                                <div class="text-right">
-                                    <h2 class="text-xl font-bold text-slate-900">INVOICE</h2>
-                                    <p id="inv-modal-id" class="text-xs font-mono font-bold text-[#65a30d] mt-1"></p>
-                                    <p id="inv-modal-date" class="text-xs text-slate-500"></p>
-                                    <div class="mt-2">
-                                        <span id="inv-modal-badge" class="bg-blue-50 text-blue-600 border border-blue-200 text-[10px] font-bold px-2.5 py-1 rounded-lg uppercase">Paid via FPX</span>
+
+                    <!-- Scrollable Modal Body -->
+                    <div class="flex-1 overflow-y-auto p-2 sm:p-6 bg-slate-100/70 flex justify-center w-full">
+                        <div class="w-full flex justify-center overflow-x-auto pb-4">
+                            <!-- Printable Area -->
+                            <div id="invoice-printable-area" class="invoice-a4-page bg-white">
+                                <!-- Top Invoice Brand & Header -->
+                                <div class="flex flex-col sm:flex-row sm:items-start justify-between border-b-2 border-slate-200 pb-5 mb-5 gap-3">
+                                    <div>
+                                        <h1 class="text-2xl sm:text-3xl font-black text-[#19a8ea]">Sweetopia <span class="text-[#65a30d]">Shop</span></h1>
+                                        <p class="text-xs text-slate-500 mt-0.5">Premium Contact Lens Store</p>
+                                        <p class="text-[11px] text-slate-400 mt-0.5">ToyyibPay FPX Verified Merchant</p>
+                                    </div>
+                                    <div class="text-left sm:text-right">
+                                        <h2 class="text-lg sm:text-xl font-black text-slate-900 tracking-wider">TAX INVOICE</h2>
+                                        <p id="inv-modal-id" class="text-xs sm:text-sm font-mono font-bold text-[#65a30d] mt-1">INV-261009SWEXMPL</p>
+                                        <p id="inv-modal-date" class="text-[11px] text-slate-500">Date: 20 Oct 2026, 02:45 PM</p>
+                                        <div class="mt-2">
+                                            <span id="inv-modal-badge" class="bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold px-2.5 py-0.5 rounded-md uppercase inline-block">Paid via FPX</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="flex justify-between mb-8 text-xs">
-                                <div>
-                                    <h3 class="font-bold text-slate-900 uppercase tracking-wider mb-1">Billed To:</h3>
-                                    <p id="inv-modal-name" class="font-semibold text-slate-800"></p>
-                                    <p id="inv-modal-address" class="text-slate-600 max-w-xs"></p>
-                                    <p id="inv-modal-phone" class="text-slate-600 mt-1"></p>
-                                    <p id="inv-modal-email" class="text-slate-600 font-medium mt-1"></p>
+                                <!-- Customer Details & Merchant Details -->
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 text-xs">
+                                    <div class="bg-slate-50 p-3 sm:p-4 rounded-xl border border-slate-200">
+                                        <h3 class="font-bold text-slate-900 uppercase tracking-wider mb-1 text-[11px] text-[#4d7c0f]">Billed &amp; Shipped To:</h3>
+                                        <p id="inv-modal-name" class="font-bold text-slate-900 text-sm">Yee Gummy</p>
+                                        <p id="inv-modal-address" class="text-slate-600 mt-1 leading-relaxed">No 12-A, Jalan Ampang Mewah 3, 50450 Kuala Lumpur, Malaysia</p>
+                                        <p id="inv-modal-phone" class="text-slate-600 mt-1">Phone: +6012-3456789</p>
+                                        <p id="inv-modal-email" class="text-slate-600 font-medium mt-0.5">Email: yeegummy@gmail.com</p>
+                                    </div>
+                                    <div class="bg-slate-50 p-3 sm:p-4 rounded-xl border border-slate-200 text-left sm:text-right">
+                                        <h3 class="font-bold text-slate-900 uppercase tracking-wider mb-1 text-[11px] text-[#4d7c0f]">Order &amp; Shipment Info:</h3>
+                                        <p class="font-bold text-slate-900">Sweetopia Online Store</p>
+                                        <p class="text-slate-600 mt-0.5">Payment Method: Online Banking (FPX)</p>
+                                        <p class="text-slate-600 mt-0.5">Payment Gateway: ToyyibPay</p>
+                                        <div class="mt-2">
+                                            <span class="text-slate-600 font-medium block">Tracking Status:</span>
+                                            <span id="inv-modal-tracking" class="mt-0.5 font-mono text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200 font-bold inline-block text-[11px]">JNT982348123MY</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="text-right">
-                                    <h3 class="font-bold text-slate-900 uppercase tracking-wider mb-1">Store &amp; Payment Info:</h3>
-                                    <p><b>Sweetopia Shop Online</b></p>
-                                    <p>Gateway: ToyyibPay FPX</p>
-                                    <p id="inv-modal-tracking" class="mt-1 font-mono text-amber-600 font-bold">Tracking: Pending</p>
-                                </div>
-                            </div>
 
-                            <table class="w-full mb-8 text-xs border-collapse">
-                                <thead>
-                                    <tr class="bg-slate-100 text-slate-700">
-                                        <th class="p-3 text-left border-b border-slate-200">Item Description &amp; Prescription</th>
-                                        <th class="p-3 text-right border-b border-slate-200">Qty</th>
-                                        <th class="p-3 text-right border-b border-slate-200">Price (RM)</th>
-                                        <th class="p-3 text-right border-b border-slate-200">Total (RM)</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="inv-modal-items-tbody"></tbody>
-                            </table>
+                                <!-- Line Items Table (Clean, Non-overflowing on Mobile) -->
+                                <div class="w-full overflow-x-auto mb-6">
+                                    <table class="w-full text-xs border-collapse min-w-[340px]">
+                                        <thead>
+                                            <tr class="bg-slate-100 text-slate-700">
+                                                <th class="p-2.5 text-left border-b border-slate-200 rounded-l-lg font-bold">Item Description</th>
+                                                <th class="p-2.5 text-center border-b border-slate-200 font-bold">Qty</th>
+                                                <th class="p-2.5 text-right border-b border-slate-200 font-bold">Price (RM)</th>
+                                                <th class="p-2.5 text-right border-b border-slate-200 rounded-r-lg font-bold">Total (RM)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="inv-modal-items-tbody">
+                                            <tr class="border-b border-slate-100">
+                                                <td class="py-2.5 text-slate-800">
+                                                    <b>HAZEL NATURAL</b><br>
+                                                    <span class="text-[10px] text-slate-500">Prescription: PWR -2.50</span>
+                                                </td>
+                                                <td class="py-2.5 text-center text-slate-700">2</td>
+                                                <td class="py-2.5 text-right text-slate-700">RM 25.00</td>
+                                                <td class="py-2.5 text-right font-bold text-slate-900">RM 50.00</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
 
-                            <div class="w-72 ml-auto space-y-2 text-xs border-t border-slate-200 pt-4">
-                                <div class="flex justify-between text-slate-600">
-                                    <span>Subtotal:</span>
-                                    <span id="inv-modal-subtotal">RM 0.00</span>
+                                <!-- Financial Totals Calculation Box -->
+                                <div class="w-full sm:w-72 sm:ml-auto space-y-1.5 text-xs border-t-2 border-slate-200 pt-3">
+                                    <div class="flex justify-between text-slate-600">
+                                        <span>Subtotal:</span>
+                                        <span id="inv-modal-subtotal" class="font-medium">RM 50.00</span>
+                                    </div>
+                                    <div id="inv-modal-discount-row" class="hidden flex justify-between text-emerald-600 font-semibold">
+                                        <span>Discount:</span>
+                                        <span id="inv-modal-discount">-RM 0.00</span>
+                                    </div>
+                                    <div class="flex justify-between text-slate-600">
+                                        <span>Shipping Fee:</span>
+                                        <span id="inv-modal-shipping" class="font-medium">RM 0.00</span>
+                                    </div>
+                                    <div class="flex justify-between text-sm sm:text-base font-black text-slate-900 border-t border-slate-200 pt-2">
+                                        <span>Grand Total:</span>
+                                        <span id="inv-modal-grandtotal" class="text-[#65a30d]">RM 50.00</span>
+                                    </div>
                                 </div>
-                                <div id="inv-modal-discount-row" class="hidden flex justify-between text-emerald-600 font-semibold">
-                                    <span>Discount:</span>
-                                    <span id="inv-modal-discount">-RM 0.00</span>
-                                </div>
-                                <div class="flex justify-between text-slate-600">
-                                    <span>Shipping Fee:</span>
-                                    <span id="inv-modal-shipping">RM 0.00</span>
-                                </div>
-                                <div class="flex justify-between text-base font-bold text-slate-900 border-t border-slate-200 pt-2">
-                                    <span>Grand Total:</span>
-                                    <span id="inv-modal-grandtotal" class="text-[#65a30d]">RM 0.00</span>
-                                </div>
-                            </div>
 
-                            <div class="mt-16 text-center text-[11px] text-slate-400 border-t border-slate-100 pt-6">
-                                <p>Thank you for shopping with Sweetopia Shop! Your order is processed for fast nationwide delivery.</p>
-                                <p class="mt-1">Official Digital Invoice Generated Automatically via Sweetopia Shop System.</p>
+                                <!-- Invoice Footer Note -->
+                                <div class="mt-10 sm:mt-14 text-center text-[10px] sm:text-[11px] text-slate-400 border-t border-slate-100 pt-4">
+                                    <p>Thank you for shopping with Sweetopia Shop! Your order is processed for fast nationwide delivery.</p>
+                                    <p class="mt-1">Official Digital Invoice Generated Automatically via Sweetopia Shop System.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -2013,7 +2078,7 @@
         </main>
     </div>
 
-    <!-- MOBILE DEVICE VIEW BOTTOM NAVIGATION BAR (UNTOUCHED) -->
+    <!-- MOBILE DEVICE VIEW BOTTOM NAVIGATION BAR -->
     <div id="mobile-bottom-nav" class="md:hidden fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-lg border-t border-slate-800 px-6 py-2.5 flex justify-between items-center z-50">
         <button type="button" onclick="switchTab('catalog', true)" id="mob-nav-catalog" class="mob-nav-btn flex flex-col items-center space-y-1 text-[#84cc16]">
             <i class="fa-solid fa-house text-sm"></i>
@@ -2088,7 +2153,7 @@
                 // Enable offline persistence gracefully if supported
                 if (db && typeof db.enablePersistence === 'function') {
                     db.enablePersistence({ synchronizeTabs: true }).catch((err) => {
-                        // Silently handle persistence failures (e.g. multi-tab or iframe restrictions)
+                        // Silently handle persistence failures
                     });
                 }
             }
@@ -2189,6 +2254,24 @@
             { id: "p5", name: "MONTHLY COMFORT", brand: "Molicon", price: "25.00", category: "1 Day Disposable", image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500", badge: "In Stock" }
         ];
 
+        const defaultStickerAssets = [
+            "https://digitalpastel.github.io/digital/sweetopiashop/sweetcall.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/sweetcase.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/sweetcert.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/sweetchoose.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/sweetdidknow.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/sweetfocus.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/sweetgift.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/sweetglass.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/sweethappyhand.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/sweetonlinebank.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/sweetshock.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/sweetshopping.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/sweetsolution.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/sweetthankyou.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/sweetkaunter.webp"
+        ];
+
         const powersList = [
             "0.00", "-0.25", "-0.50", "-0.75", "-1.00", "-1.25", "-1.50", "-1.75", "-2.00",
             "-2.25", "-2.50", "-2.75", "-3.00", "-3.25", "-3.50", "-3.75", "-4.00",
@@ -2208,6 +2291,8 @@
         let authMode = 'signin';
         let currentSelectedProduct = null;
         let pendingOrderId = null;
+        let currentActiveInvoiceId = null;
+        let readNotificationKeys = new Set();
 
         let appliedVoucher = null;
         const VALID_VOUCHERS = {
@@ -2241,7 +2326,239 @@
         ];
 
         /* =========================================================================
-           RETRO Y2K ORDER SUCCESS WINDOW MODAL LOGIC (DISPLAYED ONLY AFTER PAID/DRAWN)
+            CUSTOMER NOTIFICATION BELL SYSTEM (PENDING PAYMENT, PROCESSING & SHIPPED)
+           ========================================================================= */
+        function loadReadNotifications() {
+            try {
+                const stored = localStorage.getItem('sweetopia_read_notif_keys');
+                if (stored) {
+                    readNotificationKeys = new Set(JSON.parse(stored));
+                }
+            } catch (e) { console.warn(e); }
+        }
+
+        function saveReadNotifications() {
+            try {
+                localStorage.setItem('sweetopia_read_notif_keys', JSON.stringify(Array.from(readNotificationKeys)));
+            } catch (e) { console.warn(e); }
+        }
+
+        function getCustomerNotificationItems() {
+            if (!currentUser || !currentUser.email || isAdminUser(currentUser.email)) {
+                return [];
+            }
+
+            const myEmail = currentUser.email.toLowerCase();
+            const myOrders = allOrders.filter(o => o.customer && o.customer.toLowerCase() === myEmail);
+
+            return myOrders.map(o => {
+                const hasTracking = o.trackingNumber && o.trackingNumber !== 'Pending' && o.trackingNumber.trim() !== '';
+                const isPaid = !!o.paid || o.amountDrawn === true || (o.paymentStatus && o.paymentStatus.toLowerCase().includes('paid'));
+
+                let stage = 'pending';
+                let title = '';
+                let subtitle = '';
+                let stateKey = '';
+                let badgeLabel = '';
+                let iconHtml = '';
+                let actionHtml = '';
+
+                if (hasTracking) {
+                    // Stage 3: Shipped with Tracking Number
+                    stage = 'shipped';
+                    stateKey = `${o.id}_shipped_${o.trackingNumber.trim()}`;
+                    title = `Your order ${o.id} has been shiped ${o.trackingNumber.trim()}`;
+                    subtitle = `Parcel dispatched • Courier tracking: ${o.trackingNumber.trim()}`;
+                    badgeLabel = 'Shipped';
+                    iconHtml = `<div class="w-9 h-9 rounded-xl bg-emerald-100 border-2 border-black text-emerald-700 flex items-center justify-center shrink-0 shadow-[2px_2px_0_0_#1e1b4b]"><i class="fa-solid fa-truck-fast text-xs"></i></div>`;
+                    actionHtml = `<span class="text-[10px] font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-200 inline-flex items-center gap-1 mt-1"><i class="fa-solid fa-file-invoice text-[9px]"></i> View Invoice &amp; Tracking →</span>`;
+                } else if (isPaid) {
+                    // Stage 2: Paid & Being Processed
+                    stage = 'processing';
+                    stateKey = `${o.id}_processing`;
+                    title = `Your order being processed ${o.id}`;
+                    subtitle = `Payment of RM ${o.total} confirmed via ToyyibPay FPX`;
+                    badgeLabel = 'Processing';
+                    iconHtml = `<div class="w-9 h-9 rounded-xl bg-sky-100 border-2 border-black text-sky-700 flex items-center justify-center shrink-0 shadow-[2px_2px_0_0_#1e1b4b]"><i class="fa-solid fa-box-open text-xs"></i></div>`;
+                    actionHtml = `<span class="text-[10px] font-extrabold text-sky-700 bg-sky-50 px-2 py-0.5 rounded-lg border border-sky-200 inline-flex items-center gap-1 mt-1"><i class="fa-solid fa-clock text-[9px]"></i> Preparing shipment in warehouse →</span>`;
+                } else {
+                    // Stage 1: Pending / Unpaid FPX Order
+                    stage = 'pending';
+                    stateKey = `${o.id}_pending`;
+                    title = `Order ${o.id} is pending payment via ToyyibPay FPX (RM ${o.total})`;
+                    subtitle = `Created ${o.date || 'recently'} • Complete FPX payment to process order`;
+                    badgeLabel = 'Pending FPX';
+                    iconHtml = `<div class="w-9 h-9 rounded-xl bg-amber-100 border-2 border-black text-amber-700 flex items-center justify-center shrink-0 shadow-[2px_2px_0_0_#1e1b4b]"><i class="fa-solid fa-credit-card text-xs"></i></div>`;
+                    actionHtml = `<span class="text-[10px] font-black text-white bg-blue-600 hover:bg-blue-700 px-2.5 py-1 rounded-lg border border-black shadow-[1px_1px_0_0_#000] inline-flex items-center gap-1 mt-1.5">Pay Now →</span>`;
+                }
+
+                const isUnread = !readNotificationKeys.has(stateKey);
+
+                return {
+                    order: o,
+                    stage,
+                    stateKey,
+                    title,
+                    subtitle,
+                    badgeLabel,
+                    iconHtml,
+                    actionHtml,
+                    isUnread,
+                    timestamp: o.timestamp || o.date || ''
+                };
+            });
+        }
+
+        window.renderCustomerNotifications = function() {
+            const bellWrapper = document.getElementById('customer-notification-bell-wrapper');
+            const mobBellContainer = document.getElementById('mobile-header-bell-container');
+            const guestStatus = document.getElementById('header-guest-status-text');
+            const listContainer = document.getElementById('customer-notifications-list');
+            const desktopBadge = document.getElementById('customer-notif-badge');
+            const mobileBadge = document.getElementById('mobile-notif-badge');
+            const desktopBellIcon = document.getElementById('desktop-bell-icon');
+            const mobileBellIcon = document.getElementById('mobile-bell-icon');
+
+            const isCustomer = currentUser && !isAdminUser(currentUser.email);
+
+            if (!isCustomer) {
+                bellWrapper?.classList.add('hidden');
+                mobBellContainer?.classList.add('hidden');
+                if (guestStatus) {
+                    guestStatus.style.display = currentUser ? 'none' : '';
+                }
+                return;
+            }
+
+            if (guestStatus) guestStatus.style.display = 'none';
+            bellWrapper?.classList.remove('hidden');
+            mobBellContainer?.classList.remove('hidden');
+
+            const items = getCustomerNotificationItems();
+            const unreadCount = items.filter(i => i.isUnread).length;
+
+            [desktopBadge, mobileBadge].forEach(badge => {
+                if (!badge) return;
+                if (unreadCount > 0) {
+                    badge.innerText = unreadCount > 9 ? '9+' : unreadCount;
+                    badge.classList.remove('hidden');
+                    badge.classList.add('flex');
+                } else {
+                    badge.classList.add('hidden');
+                    badge.classList.remove('flex');
+                }
+            });
+
+            if (unreadCount > 0) {
+                desktopBellIcon?.classList.add('bell-ringing');
+                mobileBellIcon?.classList.add('bell-ringing');
+            } else {
+                desktopBellIcon?.classList.remove('bell-ringing');
+                mobileBellIcon?.classList.remove('bell-ringing');
+            }
+
+            if (!listContainer) return;
+
+            if (items.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="p-8 text-center text-slate-400">
+                        <div class="w-12 h-12 rounded-2xl bg-slate-100 border border-slate-200 mx-auto flex items-center justify-center text-slate-300 text-lg mb-2.5">
+                            <i class="fa-regular fa-bell-slash"></i>
+                        </div>
+                        <p class="text-xs font-bold text-slate-600">No order notifications yet</p>
+                        <p class="text-[11px] text-slate-400 mt-1">Updates on your ToyyibPay FPX payments and parcel shipments will appear here.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            listContainer.innerHTML = items.map(item => `
+                <div onclick="handleNotificationItemClick('${item.order.id}', '${item.stage}', '${item.stateKey}')" class="p-3.5 transition cursor-pointer flex items-start space-x-3 relative ${item.isUnread ? 'bg-amber-50/60 hover:bg-amber-100/60' : 'bg-white hover:bg-slate-50'}">
+                    ${item.iconHtml}
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between gap-2 mb-0.5">
+                            <span class="text-[9px] font-black uppercase px-2 py-0.5 rounded-full border ${
+                                item.stage === 'shipped' ? 'bg-emerald-100 text-emerald-800 border-emerald-300' :
+                                item.stage === 'processing' ? 'bg-sky-100 text-sky-800 border-sky-300' :
+                                'bg-amber-100 text-amber-800 border-amber-300'
+                            }">${item.badgeLabel}</span>
+                            ${item.isUnread ? `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0" title="Unread update"></span>` : ''}
+                        </div>
+                        <p class="text-xs font-extrabold text-slate-900 leading-snug break-words">${item.title}</p>
+                        <p class="text-[10px] text-slate-500 mt-0.5 truncate">${item.subtitle}</p>
+                        <div>${item.actionHtml}</div>
+                    </div>
+                </div>
+            `).join('');
+        };
+
+        window.toggleCustomerNotifications = function(event) {
+            if (event) event.stopPropagation();
+            const dropdown = document.getElementById('customer-notifications-dropdown');
+            if (!dropdown) return;
+            const isHidden = dropdown.classList.contains('hidden');
+            if (isHidden) {
+                window.renderCustomerNotifications();
+                dropdown.classList.remove('hidden');
+            } else {
+                dropdown.classList.add('hidden');
+            }
+        };
+
+        window.closeCustomerNotifications = function() {
+            const dropdown = document.getElementById('customer-notifications-dropdown');
+            dropdown?.classList.add('hidden');
+        };
+
+        window.markAllNotificationsRead = function() {
+            const items = getCustomerNotificationItems();
+            items.forEach(item => readNotificationKeys.add(item.stateKey));
+            saveReadNotifications();
+            window.renderCustomerNotifications();
+            showToast("Notifications Updated", "All order notifications marked as read.");
+        };
+
+        window.handleNotificationItemClick = function(orderId, stage, stateKey) {
+            if (stateKey) {
+                readNotificationKeys.add(stateKey);
+                saveReadNotifications();
+            }
+            window.closeCustomerNotifications();
+            window.renderCustomerNotifications();
+
+            if (stage === 'pending') {
+                window.payPendingOrderNow(orderId);
+            } else if (stage === 'shipped') {
+                switchTab('customer-dashboard');
+                openInvoiceModal(orderId);
+            } else {
+                switchTab('customer-dashboard');
+                const historyContent = document.getElementById('content-customer-order-history');
+                const chevron = document.getElementById('chevron-order-history');
+                if (historyContent && historyContent.classList.contains('hidden')) {
+                    historyContent.classList.remove('hidden');
+                    chevron?.classList.add('rotate-180');
+                }
+            }
+        };
+
+        // Close notification dropdown when clicking anywhere outside
+        document.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('customer-notifications-dropdown');
+            const bellWrapper = document.getElementById('customer-notification-bell-wrapper');
+            const mobBell = document.getElementById('mobile-header-bell-container');
+            if (dropdown && !dropdown.classList.contains('hidden')) {
+                const clickedInside = dropdown.contains(e.target) ||
+                    (bellWrapper && bellWrapper.contains(e.target)) ||
+                    (mobBell && mobBell.contains(e.target));
+                if (!clickedInside) {
+                    dropdown.classList.add('hidden');
+                }
+            }
+        });
+
+        /* =========================================================================
+            RETRO Y2K ORDER SUCCESS WINDOW MODAL LOGIC
            ========================================================================= */
         window.showOrderSuccessModal = function() {
             const modal = document.getElementById('order-success-modal');
@@ -2286,15 +2603,36 @@
 
                 // status_id = '1' indicates payment success & amount drawn at ToyyibPay
                 if (statusId === '1' || urlParams.get('paid') === 'true') {
-                    // Only show alert message box for customers that drew the amount
+                    const targetId = orderId || pendingOrderId || localStorage.getItem('sweetopia_last_order_id');
+                    if (targetId) {
+                        const targetOrder = allOrders.find(o => o.id === targetId);
+                        if (targetOrder) {
+                            targetOrder.paid = true;
+                            targetOrder.paymentStatus = 'Paid via FPX';
+                            targetOrder.status = 'Processing (Paid)';
+                            targetOrder.amountDrawn = true;
+                            targetOrder.paidAt = new Date().toISOString();
+                        }
+                        if (db) {
+                            db.collection("lumilens_orders").doc(targetId).set({
+                                paid: true,
+                                paymentStatus: 'Paid via FPX',
+                                status: 'Processing (Paid)',
+                                amountDrawn: true,
+                                paidAt: new Date().toISOString()
+                            }, { merge: true }).catch(err => console.warn("Firestore update paid error:", err));
+                        }
+                    }
+
                     setTimeout(() => {
                         window.showOrderSuccessModal();
-                        showToast("Payment Confirmed", "Your payment via ToyyibPay was verified successfully!");
+                        showToast("Payment Confirmed", "Your payment via ToyyibPay was verified and amount drawn successfully!");
+                        renderCustomerInvoicesTabList();
+                        renderCustomerOrders();
+                        window.renderCustomerNotifications();
                     }, 600);
-                    // Clear the query parameter cleanly without reloading
                     window.history.replaceState({}, document.title, window.location.pathname);
                 } else if (statusId === '3' || statusId === '2') {
-                    // Status 3: failed, Status 2: pending/unpaid -> Do not display order success box
                     showToast("Payment Incomplete", "Payment was not drawn. Order remains pending.", true);
                     window.history.replaceState({}, document.title, window.location.pathname);
                 }
@@ -2332,7 +2670,6 @@
             return list.filter(v => !v.used && (!v.expiresAt || v.expiresAt >= todayStr));
         }
 
-        // Helper: Get active product voucher discount if a product is on sale
         function getProductSaleInfo(productId) {
             const today = new Date();
             for (const code in activeProductVouchersMap) {
@@ -2516,64 +2853,6 @@
             await syncFavourites();
             renderFavouritesGrid();
         };
-
-        window.publishVoucher = async function(code) {
-            const codeLower = code.toLowerCase();
-            const customerSelect = document.getElementById(`customer-${codeLower}`);
-            const expiryInput = document.getElementById(`expiry-${codeLower}`);
-
-            const targetEmail = (customerSelect?.value || '').trim().toLowerCase();
-            const expiryDate = expiryInput?.value || '2026-12-31';
-
-            if (!targetEmail) {
-                showToast("Select Customer", `Please select a registered customer email to assign ${code}.`, true);
-                return;
-            }
-
-            if (!assignedVouchersMap[targetEmail]) {
-                assignedVouchersMap[targetEmail] = [];
-            }
-
-            const existingIdx = assignedVouchersMap[targetEmail].findIndex(v => v.code === code);
-            const voucherObj = {
-                code: code,
-                discount: VALID_VOUCHERS[code] || 0.00,
-                expiresAt: expiryDate,
-                used: false,
-                publishedAt: new Date().toISOString()
-            };
-
-            if (existingIdx !== -1) {
-                assignedVouchersMap[targetEmail][existingIdx] = voucherObj;
-            } else {
-                assignedVouchersMap[targetEmail].push(voucherObj);
-            }
-
-            await syncAssignedVouchersStorage();
-            renderCustomerVouchersUI();
-            showToast("Voucher Published!", `Successfully published ${code} to ${targetEmail}.`);
-        };
-
-        function renderAdminVoucherCustomerDropdowns() {
-            const knownUsersSet = new Set(Object.keys(userSessionsMap));
-            allOrders.forEach(o => { if (o.customer) knownUsersSet.add(o.customer); });
-            if (currentUser && currentUser.email) knownUsersSet.add(currentUser.email);
-            const userList = Array.from(knownUsersSet).filter(u => !isAdminUser(u));
-
-            ['code1', 'code2', 'code3', 'code4', 'code5'].forEach(codeId => {
-                const select = document.getElementById(`customer-${codeId}`);
-                if (!select) return;
-
-                const currentVal = select.value;
-                let optionsHtml = '<option value="">-- Registered Customer --</option>';
-
-                userList.forEach(u => {
-                    optionsHtml += `<option value="${u}" ${u === currentVal ? 'selected' : ''}>${u}</option>`;
-                });
-
-                select.innerHTML = optionsHtml;
-            });
-        }
 
         window.renderCustomerVouchersUI = function() {
             const noState = document.getElementById('no-vouchers-state');
@@ -2904,6 +3183,8 @@
                 chevron?.classList.add('rotate-180');
                 if (sectionKey === 'addresses') {
                     window.renderDeliveryAddresses();
+                } else if (sectionKey === 'invoices') {
+                    renderCustomerInvoicesTabList();
                 }
             } else {
                 content.classList.add('hidden');
@@ -3015,14 +3296,13 @@
             sessionStorage.setItem('sweetopia_active_page', pageName);
             const pageAuth = document.getElementById('page-auth');
             const pageDashboard = document.getElementById('page-dashboard');
-            const navActions = document.getElementById('header-nav-actions');
             const mobileBottomNav = document.getElementById('mobile-bottom-nav');
 
             if (pageName === 'auth') {
                 pageAuth?.classList.remove('hidden');
                 pageDashboard?.classList.add('hidden');
-                if (navActions) navActions.innerHTML = `<span class="text-xs text-slate-500">Please Sign In or Register</span>`;
                 if (mobileBottomNav) mobileBottomNav.classList.add('hidden');
+                window.renderCustomerNotifications();
             } else {
                 pageAuth?.classList.add('hidden');
                 pageDashboard?.classList.remove('hidden');
@@ -3099,7 +3379,12 @@
 
             if (tabName === 'cart') { renderCartItems(); }
             if (tabName === 'favourites') { renderFavouritesGrid(); }
-            if (tabName === 'customer-dashboard') { renderCustomerOrders(); window.renderDeliveryAddresses(); renderCustomerVouchersUI(); }
+            if (tabName === 'customer-dashboard') { 
+                renderCustomerOrders(); 
+                renderCustomerInvoicesTabList();
+                window.renderDeliveryAddresses(); 
+                renderCustomerVouchersUI(); 
+            }
             if (tabName === 'admin-workspace') { renderAdminOrdersList(); renderAdminProductsList(); renderAdminPowerStockCheckboxes(); renderAdminVoucherCustomerDropdowns(); }
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -3185,6 +3470,8 @@
             sessionStorage.removeItem('sweetopia_active_page');
             sessionStorage.removeItem('sweetopia_active_tab');
             updateCartBadge();
+            window.closeCustomerNotifications();
+            window.renderCustomerNotifications();
             switchPage('auth');
             showToast("Signed Out", "You have successfully signed out.");
         }
@@ -3237,11 +3524,28 @@
                 }
                 if (mobileAdminLink) mobileAdminLink.classList.add('hidden');
             }
+
+            // Adapt Chat Widget for Customer vs Admin side
+            const chatUserSelect = document.getElementById('admin-active-chat-user');
+            const chatSessionLabel = document.getElementById('chat-session-bar-label');
+            const chatActionBtn = document.getElementById('chat-session-action-btn');
+            if (isAdmin) {
+                if (chatUserSelect) chatUserSelect.style.removeProperty('display');
+                if (chatSessionLabel) chatSessionLabel.innerText = "User Session:";
+                if (chatActionBtn) chatActionBtn.innerText = "Clear";
+            } else {
+                if (chatUserSelect) chatUserSelect.style.setProperty('display', 'none', 'important');
+                if (chatSessionLabel) chatSessionLabel.innerText = "";
+                if (chatActionBtn) chatActionBtn.innerText = "Clear";
+            }
+
             enforceMobileNavForRole();
             renderStoreProducts(products);
             renderCustomerVouchersUI();
             renderChosenCustomerPromoBanner();
             updateSupportIndicator();
+            renderCustomerInvoicesTabList();
+            window.renderCustomerNotifications();
         }
 
         function renderStoreProducts(list) {
@@ -3568,6 +3872,8 @@
             const randomCode = Math.random().toString(36).substring(2, 8).toUpperCase();
             const orderId = `26${Math.floor(Date.now() / 1000).toString().slice(-6)}${randomCode}`;
             pendingOrderId = orderId;
+            currentActiveInvoiceId = orderId;
+            localStorage.setItem('sweetopia_last_order_id', orderId);
 
             const newOrder = {
                 id: orderId,
@@ -3581,9 +3887,12 @@
                 discountCode: appliedVoucher ? appliedVoucher.code : null,
                 shippingFee: shippingFee.toFixed(2),
                 total: total.toFixed(2),
-                status: 'Processing',
+                status: 'Pending Payment',
+                paymentStatus: 'Pending Payment',
+                paid: false,
+                amountDrawn: false,
                 trackingNumber: 'Pending',
-                date: new Date().toLocaleString() + ' (FPX Paid)',
+                date: new Date().toLocaleString(),
                 timestamp: dateStr
             };
 
@@ -3608,7 +3917,9 @@
 
             allOrders.unshift(newOrder);
             renderCustomerOrders();
+            renderCustomerInvoicesTabList();
             renderAdminOrdersList();
+            window.renderCustomerNotifications();
 
             const modalOrderIdEl = document.getElementById('fpx-modal-order-id');
             if (modalOrderIdEl) modalOrderIdEl.innerText = orderId;
@@ -3629,15 +3940,12 @@
             updateCartBadge();
             renderCartItems();
 
-            // Open ToyyibPay in a new tab for payment
+            // Open ToyyibPay FPX gateway in new tab
             window.open(TOYYIBPAY_URL, '_blank');
 
-            // Trigger the Retro Y2K Order Confirmation alert box only when transaction has successfully drawn amount
-            setTimeout(() => {
-                window.showOrderSuccessModal();
-            }, 800);
-
-            showToast("ToyyibPay FPX", "Transaction submitted! If payment is drawn, confirmation will appear.");
+            // Update notification bell immediately so pending payment appears
+            window.renderCustomerNotifications();
+            showToast("ToyyibPay FPX", "Redirected to ToyyibPay. Complete your FPX payment to confirm order.");
             switchTab('customer-dashboard');
         }
 
@@ -3666,7 +3974,9 @@
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-2.5">
                         <div class="flex items-center space-x-2">
                             <span class="text-xs font-extrabold text-[#65a30d] font-mono">Order ID: ${o.id}</span>
-                            <span class="text-[10px] bg-blue-50 text-blue-600 border border-blue-200 font-semibold px-2 py-0.5 rounded-lg">${o.status}</span>
+                            <span class="text-[10px] ${o.paid ? 'bg-emerald-50 text-emerald-700 border-emerald-300' : 'bg-amber-50 text-amber-700 border-amber-300'} border font-semibold px-2 py-0.5 rounded-lg">
+                                ${o.paid ? 'Paid via FPX' : 'Pending Payment'}
+                            </span>
                         </div>
                         <span class="text-[10px] text-slate-500 font-medium">Date &amp; Time: ${o.date}</span>
                     </div>
@@ -3690,15 +4000,80 @@
                             <span class="font-mono font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">${o.trackingNumber || 'Pending'}</span>
                         </div>
                         <div class="flex items-center space-x-2">
-                            <button type="button" onclick="openInvoiceModal('${o.id}')" class="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-3 py-1.5 rounded-xl text-xs border border-slate-300 transition flex items-center space-x-1">
-                                <i class="fa-solid fa-eye text-slate-600"></i>
-                                <span>Invoice</span>
-                            </button>
-                            <button type="button" onclick="openInvoiceModal('${o.id}'); setTimeout(downloadInvoiceAsPNG, 400);" class="bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold px-3 py-1.5 rounded-xl text-xs transition flex items-center space-x-1 shadow-sm">
-                                <i class="fa-solid fa-file-arrow-down"></i>
-                                <span>PNG</span>
-                            </button>
+                            ${!o.paid ? `
+                                <button type="button" onclick="payPendingOrderNow('${o.id}')" class="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold px-3.5 py-1.5 rounded-xl text-xs transition flex items-center space-x-1.5 shadow-sm">
+                                    <i class="fa-solid fa-credit-card"></i>
+                                    <span>Pay Now</span>
+                                </button>
+                            ` : ''}
+                            ${(o.trackingNumber && o.trackingNumber !== 'Pending' && o.trackingNumber.trim() !== '') ? `
+                                <button type="button" onclick="openInvoiceModal('${o.id}')" class="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-3 py-1.5 rounded-xl text-xs border border-slate-300 transition flex items-center space-x-1">
+                                    <i class="fa-solid fa-eye text-slate-600"></i>
+                                    <span>Invoice</span>
+                                </button>
+                                <button type="button" onclick="directDownloadInvoice('${o.id}')" class="bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold px-3 py-1.5 rounded-xl text-xs transition flex items-center space-x-1 shadow-sm">
+                                    <i class="fa-solid fa-file-arrow-down"></i>
+                                    <span>PNG</span>
+                                </button>
+                            ` : `
+                                <span class="text-[10px] text-amber-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200 font-semibold flex items-center gap-1">
+                                    <i class="fa-solid fa-clock"></i> Invoice locked (Pending tracking)
+                                </span>
+                            `}
                         </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderCustomerInvoicesTabList() {
+            const container = document.getElementById('customer-invoices-dynamic-list');
+            if (!container) return;
+            if (!currentUser) {
+                container.innerHTML = `<div class="text-center py-6 text-slate-400 text-xs">Please sign in to view your verified invoices.</div>`;
+                return;
+            }
+
+            // Only customers with an active tracking number assigned by admin can view & download their invoice
+            const verifiedPaidOrders = allOrders.filter(o => {
+                const belongsToMe = o.customer && o.customer.toLowerCase() === currentUser.email.toLowerCase();
+                const hasValidTracking = o.trackingNumber && o.trackingNumber !== 'Pending' && o.trackingNumber.trim() !== '';
+                return belongsToMe && hasValidTracking;
+            });
+
+            if (verifiedPaidOrders.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8 text-slate-400 bg-slate-50/70 rounded-2xl border border-dashed border-slate-200 p-4">
+                        <i class="fa-solid fa-file-invoice-dollar text-3xl text-slate-300 mb-2 block"></i>
+                        <p class="text-xs font-semibold text-slate-600">No confirmed invoices available yet</p>
+                        <p class="text-[11px] text-slate-400 mt-1">Invoices and download buttons are unlocked once payment is confirmed and a tracking number is assigned by the admin.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = verifiedPaidOrders.map(o => `
+                <div class="p-4 rounded-2xl border border-emerald-200 bg-emerald-50/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xs font-extrabold text-[#65a30d] font-mono">INV-${o.id}</span>
+                            <span class="text-[9px] bg-emerald-100 text-emerald-800 border border-emerald-300 font-black px-2 py-0.5 rounded uppercase flex items-center gap-1">
+                                <i class="fa-solid fa-circle-check text-[10px]"></i> Paid Customer
+                            </span>
+                        </div>
+                        <p class="text-[11px] text-slate-700 mt-1">Order Date: <b>${o.date}</b> • Amount Paid: <b class="text-[#65a30d]">RM ${o.total}</b></p>
+                        <p class="text-[10px] text-slate-500">Tracking: <b class="font-mono text-amber-700">${o.trackingNumber}</b> • Items: ${(o.items || []).map(i => `${i.name} (PWR ${i.pwr}) x${i.qty}`).join(', ')}</p>
+                    </div>
+
+                    <div class="flex items-center space-x-2 w-full sm:w-auto">
+                        <button type="button" onclick="openInvoiceModal('${o.id}')" class="flex-1 sm:flex-initial bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-bold px-3 py-2.5 rounded-xl text-xs border border-slate-300 transition flex items-center justify-center space-x-1.5 shadow-sm">
+                            <i class="fa-solid fa-eye text-slate-600"></i>
+                            <span>View Invoice</span>
+                        </button>
+                        <button type="button" onclick="directDownloadInvoice('${o.id}')" class="flex-1 sm:flex-initial bg-[#65a30d] hover:bg-[#4d7c0f] active:bg-[#3f6212] text-white font-bold px-3 py-2.5 rounded-xl text-xs transition flex items-center justify-center space-x-1.5 shadow-sm">
+                            <i class="fa-solid fa-file-arrow-down"></i>
+                            <span>Download A4 PNG</span>
+                        </button>
                     </div>
                 </div>
             `).join('');
@@ -3929,11 +4304,14 @@
             }
 
             container.innerHTML = allOrders.map(o => `
-                <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50 space-y-3">
+                <div class="p-4 rounded-2xl border ${o.paid ? 'border-emerald-300 bg-emerald-50/20' : 'border-slate-200 bg-slate-50'} space-y-3" id="admin-order-card-${o.id}">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-2">
-                        <div class="flex items-center space-x-2">
+                        <div class="flex items-center space-x-2.5">
+                            <input type="checkbox" data-order-id="${o.id}" class="admin-order-select-checkbox w-4 h-4 text-[#65a30d] rounded border-slate-300 focus:ring-[#65a30d] cursor-pointer">
                             <span class="text-xs font-bold text-[#65a30d] font-mono">${o.id}</span>
-                            <span class="text-[10px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded font-bold">${o.status}</span>
+                            <span class="text-[10px] ${o.paid ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-amber-100 text-amber-800 border-amber-300'} border px-2 py-0.5 rounded font-bold">
+                                ${o.paid ? 'PAID DIRECT FPX' : 'PENDING PAYMENT'}
+                            </span>
                         </div>
                         <span class="text-[10px] text-slate-500 font-medium">Customer: <b class="text-slate-800">${o.customer}</b></span>
                     </div>
@@ -3942,10 +4320,20 @@
                         <div>
                             <p class="font-bold text-slate-900">${o.customerName || 'N/A'} • ${o.customerPhone || 'N/A'}</p>
                             <p class="text-[11px] text-slate-500 mt-0.5">Total Amount: <b class="text-[#65a30d]">RM ${o.total}</b> • Date: ${o.date}</p>
+                            <p class="text-[10px] ${o.paid ? 'text-emerald-700 font-bold' : 'text-amber-600 font-semibold'}">
+                                ${o.paid ? '● Payment Confirmed (Amount Drawn via FPX)' : '○ Unpaid / Pending ToyyibPay FPX'}
+                            </p>
                         </div>
-                        <button onclick="openAdminOrderDetail('${o.id}')" class="bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold px-3 py-2 rounded-xl text-xs transition">
-                            View Details &amp; Tracking
-                        </button>
+                        <div class="flex items-center space-x-2">
+                            ${!o.paid ? `
+                                <button onclick="adminMarkOrderAsPaid('${o.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded-xl text-xs transition shadow-sm">
+                                    <i class="fa-solid fa-check mr-1"></i> Verify Paid
+                                </button>
+                            ` : ''}
+                            <button onclick="openAdminOrderDetail('${o.id}')" class="bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold px-3 py-2 rounded-xl text-xs transition">
+                                View Details &amp; Tracking
+                            </button>
+                        </div>
                     </div>
 
                     <div class="pt-2 border-t border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
@@ -3964,7 +4352,86 @@
                     </div>
                 </div>
             `).join('');
+
+            toggleClearAllButton();
         }
+
+        window.payPendingOrderNow = function(orderId) {
+            const order = allOrders.find(o => o.id === orderId);
+            if (!order) return;
+            pendingOrderId = order.id;
+            localStorage.setItem('sweetopia_last_order_id', order.id);
+            window.open(TOYYIBPAY_URL, '_blank');
+            showToast("ToyyibPay FPX", "Proceeding to ToyyibPay. Confirmation will be verified upon amount drawn.");
+        };
+
+        window.toggleSelectAll = function() {
+            const masterCheckbox = document.getElementById('confirm-clear-checkbox');
+            if (masterCheckbox && !masterCheckbox.checked) return;
+
+            const checkboxes = document.querySelectorAll('.admin-order-select-checkbox');
+            const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+
+            checkboxes.forEach(cb => {
+                cb.checked = !allChecked;
+            });
+
+            const count = Array.from(checkboxes).filter(cb => cb.checked).length;
+            showToast("Orders Selected", `${count} order(s) selected.`);
+        };
+
+        window.batchClearSelection = function() {
+            const masterCheckbox = document.getElementById('confirm-clear-checkbox');
+            if (masterCheckbox && !masterCheckbox.checked) return;
+
+            const checkboxes = document.querySelectorAll('.admin-order-select-checkbox');
+            checkboxes.forEach(cb => {
+                cb.checked = false;
+            });
+
+            showToast("Selection Cleared", "All order checkboxes cleared. You can still save changes.");
+        };
+
+        window.batchSaveChanges = async function() {
+            const masterCheckbox = document.getElementById('confirm-clear-checkbox');
+            if (masterCheckbox && !masterCheckbox.checked) return;
+
+            const checkboxes = document.querySelectorAll('.admin-order-select-checkbox:checked');
+            const selectedIds = Array.from(checkboxes).map(cb => cb.getAttribute('data-order-id'));
+
+            // Collect all inputs to save
+            const targetIds = selectedIds.length > 0 ? selectedIds : allOrders.map(o => o.id);
+
+            let updatedCount = 0;
+            for (const id of targetIds) {
+                const trackInput = document.getElementById(`admin-track-${id}`);
+                const trackingNum = trackInput ? trackInput.value.trim() : null;
+
+                const order = allOrders.find(o => o.id === id);
+                if (order && trackingNum !== null) {
+                    order.trackingNumber = trackingNum || 'Pending';
+                    order.status = (trackingNum && trackingNum !== 'Pending') ? 'Shipped' : (order.paid ? 'Processing (Paid)' : 'Processing');
+                    updatedCount++;
+
+                    if (db) {
+                        try {
+                            await db.collection("lumilens_orders").doc(id).set({
+                                trackingNumber: order.trackingNumber,
+                                status: order.status
+                            }, { merge: true });
+                        } catch (e) {
+                            console.warn("Batch save error:", e);
+                        }
+                    }
+                }
+            }
+
+            renderAdminOrdersList();
+            renderCustomerOrders();
+            renderCustomerInvoicesTabList();
+            window.renderCustomerNotifications();
+            showToast("Changes Saved!", `Successfully saved changes for ${updatedCount} order(s).`);
+        };
 
         async function adminSaveAndPublishTracking(orderId) {
             const input = document.getElementById(`admin-track-${orderId}`);
@@ -3972,14 +4439,14 @@
 
             const order = allOrders.find(o => o.id === orderId);
             if (order) {
-                order.trackingNumber = trackingNum;
+                order.trackingNumber = trackingNum || 'Pending';
                 order.status = trackingNum && trackingNum !== 'Pending' ? 'Shipped' : 'Processing';
             }
 
             if (db) {
                 try {
                     await db.collection("lumilens_orders").doc(orderId).set({
-                        trackingNumber: trackingNum,
+                        trackingNumber: trackingNum || 'Pending',
                         status: trackingNum && trackingNum !== 'Pending' ? 'Shipped' : 'Processing'
                     }, { merge: true });
                 } catch(e) { console.warn("Tracking save error:", e); }
@@ -3987,8 +4454,36 @@
 
             renderAdminOrdersList();
             renderCustomerOrders();
+            renderCustomerInvoicesTabList();
+            window.renderCustomerNotifications();
             showToast("Tracking Published!", `Tracking number saved for order ${orderId}.`);
         }
+
+        async function adminMarkOrderAsPaid(orderId) {
+            const order = allOrders.find(o => o.id === orderId);
+            if (order) {
+                order.paid = true;
+                order.paymentStatus = 'Paid via FPX';
+                order.amountDrawn = true;
+                order.status = 'Paid / Processing';
+            }
+            if (db) {
+                try {
+                    await db.collection("lumilens_orders").doc(orderId).set({
+                        paid: true,
+                        paymentStatus: 'Paid via FPX',
+                        amountDrawn: true,
+                        status: 'Paid / Processing'
+                    }, { merge: true });
+                } catch(e) { console.warn(e); }
+            }
+            renderAdminOrdersList();
+            renderCustomerOrders();
+            renderCustomerInvoicesTabList();
+            window.renderCustomerNotifications();
+            showToast("Order Verified!", `Order ${orderId} marked as Paid Customer. Customer notified.`);
+        }
+        window.adminMarkOrderAsPaid = adminMarkOrderAsPaid;
 
         async function deleteAdminOrder(orderId) {
             if (confirm(`Are you sure you want to delete order ${orderId}?`)) {
@@ -3998,6 +4493,8 @@
                 }
                 renderAdminOrdersList();
                 renderCustomerOrders();
+                renderCustomerInvoicesTabList();
+                window.renderCustomerNotifications();
                 showToast("Order Deleted", `Invoice ${orderId} removed from records.`);
             }
         }
@@ -4037,32 +4534,51 @@
             showToast("CSV Exported", "Invoices CSV file downloaded successfully.");
         }
 
-        function openInvoiceModal(orderId) {
-            const order = allOrders.find(o => o.id === orderId);
+        function populateInvoiceDOM(order) {
             if (!order) return;
+            currentActiveInvoiceId = order.id;
 
-            document.getElementById('inv-modal-id').innerText = `INV-${order.id}`;
-            document.getElementById('inv-modal-date').innerText = `Date: ${order.date || 'N/A'}`;
-            document.getElementById('inv-modal-name').innerText = order.customerName || 'N/A';
-            document.getElementById('inv-modal-address').innerText = order.customerAddress || 'N/A';
-            document.getElementById('inv-modal-phone').innerText = `Phone: ${order.customerPhone || 'N/A'}`;
-            document.getElementById('inv-modal-email').innerText = `Email: ${order.customer || 'N/A'}`;
-            document.getElementById('inv-modal-tracking').innerText = `Tracking Number: ${order.trackingNumber || 'Pending'}`;
+            const invIdEl = document.getElementById('inv-modal-id');
+            if (invIdEl) invIdEl.innerText = `INV-${order.id}`;
+
+            const invDateEl = document.getElementById('inv-modal-date');
+            if (invDateEl) invDateEl.innerText = `Date: ${order.date || 'N/A'}`;
+
+            const invNameEl = document.getElementById('inv-modal-name');
+            if (invNameEl) invNameEl.innerText = order.customerName || 'N/A';
+
+            const invAddrEl = document.getElementById('inv-modal-address');
+            if (invAddrEl) invAddrEl.innerText = order.customerAddress || 'N/A';
+
+            const invPhoneEl = document.getElementById('inv-modal-phone');
+            if (invPhoneEl) invPhoneEl.innerText = `Phone: ${order.customerPhone || 'N/A'}`;
+
+            const invEmailEl = document.getElementById('inv-modal-email');
+            if (invEmailEl) invEmailEl.innerText = `Email: ${order.customer || 'N/A'}`;
+
+            const invTrackEl = document.getElementById('inv-modal-tracking');
+            if (invTrackEl) invTrackEl.innerText = order.trackingNumber || 'Pending';
+
+            const invBadgeEl = document.getElementById('inv-modal-badge');
+            if (invBadgeEl) invBadgeEl.innerText = order.status ? `${order.status} (FPX)` : 'Paid via FPX';
 
             const tbody = document.getElementById('inv-modal-items-tbody');
-            tbody.innerHTML = (order.items || []).map(i => `
-                <tr class="border-b border-slate-100">
-                    <td class="py-3 text-slate-800">
-                        <b>${i.name}</b><br>
-                        <span class="text-[10px] text-slate-500">Prescription: PWR ${i.pwr}</span>
-                    </td>
-                    <td class="py-3 text-right text-slate-700">${i.qty}</td>
-                    <td class="py-3 text-right text-slate-700">RM ${i.price}</td>
-                    <td class="py-3 text-right font-bold text-slate-900">RM ${(parseFloat(i.price) * i.qty).toFixed(2)}</td>
-                </tr>
-            `).join('');
+            if (tbody) {
+                tbody.innerHTML = (order.items || []).map(i => `
+                    <tr class="border-b border-slate-100">
+                        <td class="py-2.5 text-slate-800">
+                            <b>${i.name}</b><br>
+                            <span class="text-[10px] text-slate-500">Prescription: PWR ${i.pwr}</span>
+                        </td>
+                        <td class="py-2.5 text-center text-slate-700">${i.qty}</td>
+                        <td class="py-2.5 text-right text-slate-700">RM ${i.price}</td>
+                        <td class="py-2.5 text-right font-bold text-slate-900">RM ${(parseFloat(i.price) * i.qty).toFixed(2)}</td>
+                    </tr>
+                `).join('');
+            }
 
-            document.getElementById('inv-modal-subtotal').innerText = `RM ${order.subtotal || '0.00'}`;
+            const subEl = document.getElementById('inv-modal-subtotal');
+            if (subEl) subEl.innerText = `RM ${order.subtotal || '0.00'}`;
 
             const discRow = document.getElementById('inv-modal-discount-row');
             const discAmt = document.getElementById('inv-modal-discount');
@@ -4075,37 +4591,116 @@
                 }
             }
 
-            document.getElementById('inv-modal-shipping').innerText = `RM ${order.shippingFee || '5.00'}`;
-            document.getElementById('inv-modal-grandtotal').innerText = `RM ${order.total || '0.00'}`;
+            const shipEl = document.getElementById('inv-modal-shipping');
+            if (shipEl) shipEl.innerText = `RM ${order.shippingFee || '0.00'}`;
+
+            const grandEl = document.getElementById('inv-modal-grandtotal');
+            if (grandEl) grandEl.innerText = `RM ${order.total || '0.00'}`;
+        }
+
+        function openInvoiceModal(orderId) {
+            const order = allOrders.find(o => o.id === orderId) || (allOrders.length > 0 ? allOrders[0] : null);
+            if (!order) {
+                showToast("Invoice Not Found", "Unable to find invoice details.", true);
+                return;
+            }
+
+            populateInvoiceDOM(order);
 
             const modal = document.getElementById('invoice-modal');
-            modal.classList.remove('opacity-0', 'pointer-events-none');
-            modal.classList.add('opacity-100');
+            if (modal) {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modal.classList.add('opacity-100');
+                modal.scrollTop = 0;
+            }
         }
 
         function closeInvoiceModal() {
             const modal = document.getElementById('invoice-modal');
-            modal.classList.remove('opacity-100');
-            modal.classList.add('opacity-0', 'pointer-events-none');
+            if (modal) {
+                modal.classList.remove('opacity-100');
+                modal.classList.add('opacity-0', 'pointer-events-none');
+            }
         }
+
+        window.directDownloadInvoice = function(orderId) {
+            const order = allOrders.find(o => o.id === orderId) || (allOrders.length > 0 ? allOrders[0] : null);
+            if (!order) return;
+            populateInvoiceDOM(order);
+
+            const modal = document.getElementById('invoice-modal');
+            if (modal) {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modal.classList.add('opacity-100');
+            }
+
+            setTimeout(() => {
+                downloadInvoiceAsPNG();
+            }, 300);
+        };
 
         async function downloadInvoiceAsPNG() {
             const printableArea = document.getElementById('invoice-printable-area');
-            if (!printableArea) return;
+            if (!printableArea) {
+                showToast("Error", "Invoice area not found.", true);
+                return;
+            }
 
-            showToast("Generating A4 PNG", "Rendering official invoice image...");
+            showToast("Generating A4 PNG", "Rendering high quality invoice image...");
+
             try {
-                const canvas = await html2canvas(printableArea, { scale: 2, useCORS: true });
-                const imageURL = canvas.toDataURL('image/png');
+                const canvas = await html2canvas(printableArea, {
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: '#ffffff',
+                    scrollX: 0,
+                    scrollY: 0,
+                    logging: false
+                });
+
+                const filename = `SweetopiaShop_Invoice_${currentActiveInvoiceId || Date.now()}.png`;
+
+                if (canvas.toBlob) {
+                    canvas.toBlob((blob) => {
+                        if (!blob) {
+                            fallbackDataUrlDownload(canvas, filename);
+                            return;
+                        }
+                        const url = URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.download = filename;
+                        document.body.appendChild(link);
+                        link.click();
+                        setTimeout(() => {
+                            document.body.removeChild(link);
+                            URL.revokeObjectURL(url);
+                        }, 500);
+                        showToast("Download Complete", "Invoice PNG downloaded successfully!");
+                    }, 'image/png');
+                } else {
+                    fallbackDataUrlDownload(canvas, filename);
+                }
+            } catch (err) {
+                console.error("html2canvas error:", err);
+                showToast("Download Error", "Could not render PNG. Please retry.", true);
+            }
+        }
+
+        function fallbackDataUrlDownload(canvas, filename) {
+            try {
+                const dataUrl = canvas.toDataURL('image/png');
                 const link = document.createElement('a');
-                link.href = imageURL;
-                link.download = `SweetopiaShop_Invoice_${Date.now()}.png`;
+                link.href = dataUrl;
+                link.download = filename;
                 document.body.appendChild(link);
                 link.click();
-                document.body.removeChild(link);
-                showToast("Download Complete", "Official A4 invoice PNG downloaded successfully!");
-            } catch (err) {
-                showToast("Download Error", "Could not generate PNG image.", true);
+                setTimeout(() => document.body.removeChild(link), 500);
+                showToast("Download Complete", "Invoice PNG downloaded successfully!");
+            } catch(e) {
+                console.error("Fallback download error:", e);
+                showToast("Download Error", "Unable to download image directly.", true);
             }
         }
 
@@ -4218,30 +4813,6 @@
 
             startTimer();
         }
-
-        // Widget Chat handlers
-        const defaultStickerAssets = [
-            "https://placehold.co/120x120/fce7f3/db2777?text=Heart+1",
-            "https://placehold.co/120x120/fce7f3/db2777?text=Sparkle+2",
-            "https://placehold.co/120x120/ede9fe/7c3aed?text=Cat+3",
-            "https://placehold.co/120x120/ede9fe/7c3aed?text=Love+4",
-            "https://placehold.co/120x120/dbeafe/2563eb?text=Star+5",
-            "https://placehold.co/120x120/dbeafe/2563eb?text=Cool+6",
-            "https://placehold.co/120x120/dcfce7/16a34a?text=Yay+7",
-            "https://placehold.co/120x120/dcfce7/16a34a?text=Lens+8",
-            "https://placehold.co/120x120/fef3c7/d97706?text=Cute+9",
-            "https://placehold.co/120x120/fef3c7/d97706?text=Hi+10",
-            "https://placehold.co/120x120/ffe4e6/e11d48?text=Wow+11",
-            "https://placehold.co/120x120/ffe4e6/e11d48?text=Kiss+12",
-            "https://placehold.co/120x120/fae8ff/c026d3?text=Sweet+13",
-            "https://placehold.co/120x120/fae8ff/c026d3?text=Bling+14",
-            "https://placehold.co/120x120/e0e7ff/4f46e5?text=Eyes+15",
-            "https://placehold.co/120x120/e0e7ff/4f46e5?text=OK+16",
-            "https://placehold.co/120x120/ecfccb/65a30d?text=Thanks+17",
-            "https://placehold.co/120x120/ecfccb/65a30d?text=Shop+18",
-            "https://placehold.co/120x120/f1f5f9/475569?text=Bye+19",
-            "https://placehold.co/120x120/f1f5f9/475569?text=Smile+20"
-        ];
 
         function renderStickerSlotsGrid() {
             const grid = document.getElementById('sticker-slots-grid');
@@ -4474,7 +5045,6 @@
             showToast("Chat Cleared", "Messages cleared.");
         }
 
-        /* SECTION 1 & 2 ADMIN VOUCHER WORKSPACE HANDLERS */
         let section2AssignedProducts = ["p1", "p2"];
 
         let activePresetsList = [
@@ -4525,7 +5095,7 @@
                 const matchesFilter = filterVal === 'all' || item.type === filterVal;
                 const matchesSearch = !searchVal || 
                     item.code.toLowerCase().includes(searchVal) || 
-                    item.title.toLowerCase().includes(searchVal) ||
+                    item.title.toLowerCase().includes(searchVal) || 
                     (item.assignedItems || []).some(t => t.toLowerCase().includes(searchVal));
                 return matchesFilter && matchesSearch;
             });
@@ -4604,7 +5174,8 @@
             if (activePresetsList[index]) {
                 activePresetsList[index].active = !activePresetsList[index].active;
                 renderPresetsTable();
-                showToast("Status Changed", `${activePresetsList[index].code} is now ${activePresetsList[index].active ? 'Active' : 'Inactive'}.`);
+                markVoucherPresetsUnsaved();
+                showToast("Status Changed", `${activePresetsList[index].code} is now ${activePresetsList[index].active ? 'Active' : 'Inactive'}. Click 'Save Changes' to apply.`);
             }
         };
 
@@ -4612,8 +5183,48 @@
             if (activePresetsList[index]) {
                 const deleted = activePresetsList.splice(index, 1);
                 renderPresetsTable();
-                showToast("Preset Deleted", `${deleted[0]?.code} removed from active presets.`);
+                markVoucherPresetsUnsaved();
+                showToast("Preset Removed", `${deleted[0]?.code} removed from active list. Click 'Save Changes' to apply.`);
             }
+        };
+
+        function markVoucherPresetsUnsaved() {
+            const saveBtn = document.getElementById('batch-save-changes-btn');
+            if (saveBtn) {
+                saveBtn.classList.add('ring-2', 'ring-emerald-400', 'animate-pulse');
+            }
+        }
+
+        window.batchSaveVoucherPresets = async function() {
+            const saveBtn = document.getElementById('batch-save-changes-btn');
+            if (saveBtn) {
+                saveBtn.classList.remove('ring-2', 'ring-emerald-400', 'animate-pulse');
+            }
+
+            // Sync with assigned vouchers and product vouchers
+            for (const preset of activePresetsList) {
+                if (preset.type === 'product' && preset.assignedProductIds) {
+                    if (activeProductVouchersMap[preset.code]) {
+                        activeProductVouchersMap[preset.code].active = preset.active;
+                    }
+                }
+            }
+
+            if (db) {
+                try {
+                    await db.collection("lumilens_voucher_presets").doc("all_presets").set({
+                        presets: activePresetsList,
+                        updatedAt: new Date().toISOString()
+                    }, { merge: true });
+                } catch(e) {
+                    console.warn("Error saving voucher presets:", e);
+                }
+            }
+
+            localStorage.setItem('sweetopia_active_presets', JSON.stringify(activePresetsList));
+            renderPresetsTable();
+            renderStoreProducts(products);
+            showToast("Changes Saved!", "Active voucher presets and status changes saved successfully.");
         };
 
         function getFormattedVoucherCode(prefix, suffix) {
@@ -4622,6 +5233,52 @@
             if (s.startsWith('[')) s = s.slice(1);
             return `SWEET[${s}]`;
         }
+
+        /* ADMIN BATCH SELECTION & ACTIONS LOGIC */
+        window.toggleClearAllButton = function() {
+            const masterCheckbox = document.getElementById('confirm-clear-checkbox');
+            const isEnabled = masterCheckbox ? masterCheckbox.checked : false;
+
+            const selectAllBtn = document.getElementById('select-all-btn');
+            const clearAllBtn = document.getElementById('clear-all-btn');
+            const saveChangesBtn = document.getElementById('batch-save-orders-btn');
+
+            if (selectAllBtn) selectAllBtn.disabled = !isEnabled;
+            if (clearAllBtn) clearAllBtn.disabled = !isEnabled;
+            if (saveChangesBtn) saveChangesBtn.disabled = !isEnabled;
+        };
+
+        window.clearAll = async function() {
+            const masterCheckbox = document.getElementById('confirm-clear-checkbox');
+            if (masterCheckbox && !masterCheckbox.checked) return;
+
+            const checkboxes = document.querySelectorAll('.admin-order-select-checkbox:checked');
+            const selectedIds = Array.from(checkboxes).map(cb => cb.getAttribute('data-order-id'));
+
+            if (selectedIds.length === 0) {
+                showToast("No Orders Selected", "Please select one or more orders to delete.", true);
+                return;
+            }
+
+            if (confirm(`Are you sure you want to delete ${selectedIds.length} selected order(s)?`)) {
+                for (const id of selectedIds) {
+                    allOrders = allOrders.filter(o => o.id !== id);
+                    if (db) {
+                        try {
+                            await db.collection("lumilens_orders").doc(id).delete();
+                        } catch(e) {
+                            console.warn("Delete order error:", e);
+                        }
+                    }
+                }
+
+                renderAdminOrdersList();
+                renderCustomerOrders();
+                renderCustomerInvoicesTabList();
+                window.renderCustomerNotifications();
+                showToast("Deleted!", `${selectedIds.length} order(s) removed.`);
+            }
+        };
 
         window.resetSection1Form = function() {
             const form = document.getElementById('voucherFormSection1');
@@ -4677,6 +5334,29 @@
                 badge.innerText = isSelected ? `1 Customer Selected` : `0 Customers Selected`;
             }
         }
+
+        function renderAdminVoucherCustomerDropdowns() {
+            const knownUsersSet = new Set(Object.keys(userSessionsMap || {}));
+            (allOrders || []).forEach(o => { if (o && o.customer) knownUsersSet.add(o.customer); });
+            if (currentUser && currentUser.email) knownUsersSet.add(currentUser.email);
+            const userList = Array.from(knownUsersSet).filter(u => u && !isAdminUser(u));
+
+            ['code1', 'code2', 'code3', 'code4', 'code5'].forEach(codeId => {
+                const select = document.getElementById(`customer-${codeId}`);
+                if (!select) return;
+
+                const currentVal = select.value;
+                let optionsHtml = '<option value="">-- Registered Customer --</option>';
+
+                userList.forEach(u => {
+                    optionsHtml += `<option value="${u}" ${u === currentVal ? 'selected' : ''}>${u}</option>`;
+                });
+
+                select.innerHTML = optionsHtml;
+            });
+            updateSection1SelectedCount();
+        }
+        window.renderAdminVoucherCustomerDropdowns = renderAdminVoucherCustomerDropdowns;
 
         window.handleCreateCustomerVoucher = async function(event) {
             event.preventDefault();
@@ -4858,7 +5538,7 @@
                     isOnline: isOnline,
                     lastSeen: new Date().toISOString()
                 }, { merge: true });
-            } catch(e) { /* Fallback gracefully when offline */ }
+            } catch(e) { }
         }
 
         function initFirestoreListeners() {
@@ -4884,7 +5564,6 @@
                 renderAdminPowerStockCheckboxes();
                 renderAdminVoucherProductDropdowns();
             }, (err) => {
-                // Silently fallback to bundled product catalog when backend is unavailable
                 renderStoreProducts(products);
                 renderFavouritesGrid();
                 renderAdminProductsList();
@@ -4900,12 +5579,16 @@
                     allOrders = loadedOrders.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
                     renderAdminOrdersList();
                     renderCustomerOrders();
+                    renderCustomerInvoicesTabList();
+                    window.renderCustomerNotifications();
                     updateAdminChatUserDropdown();
                     renderAdminVoucherCustomerDropdowns();
                 }
             }, (err) => {
                 renderAdminOrdersList();
                 renderCustomerOrders();
+                renderCustomerInvoicesTabList();
+                window.renderCustomerNotifications();
             });
 
             db.collection("lumilens_assigned_vouchers").doc("all_vouchers").onSnapshot((snap) => {
@@ -5055,7 +5738,9 @@
             if (!container) return;
 
             let targetUser = currentUser?.email;
-            if (currentUser && isAdminUser(currentUser.email)) {
+            const isAdmin = currentUser && isAdminUser(currentUser.email);
+
+            if (isAdmin) {
                 targetUser = activeChatSessionUser || document.getElementById('admin-active-chat-user')?.value;
             }
 
@@ -5066,16 +5751,18 @@
 
             const msgs = userSessionsMap[targetUser] || [];
             if (msgs.length === 0) {
-                container.innerHTML = `<div class="text-center text-slate-400 py-10"><i class="fa-solid fa-heart text-2xl text-lime-500 mb-2"></i><p class="text-xs">Chatting with <b class="text-slate-700">${targetUser}</b>.<br>Leave a message or sticker to start conversation.</p></div>`;
+                const partnerName = isAdmin ? targetUser : "admin";
+                container.innerHTML = `<div class="text-center text-slate-400 py-10"><i class="fa-solid fa-heart text-2xl text-lime-500 mb-2"></i><p class="text-xs">Chatting with <b class="text-slate-700">${partnerName}</b>.<br>Leave a message or sticker to start conversation.</p></div>`;
                 return;
             }
 
             container.innerHTML = msgs.map(m => {
                 const isMe = m.sender === currentUser?.email;
-                const isAdmin = m.isAdmin;
+                const isAdminMsg = m.isAdmin;
+                const isSticker = m.type === 'sticker';
 
                 let mediaHtml = '';
-                if (m.type === 'sticker' && m.mediaUrl) {
+                if (isSticker && m.mediaUrl) {
                     mediaHtml = `<img src="${m.mediaUrl}" alt="Sticker" class="w-20 h-20 object-contain my-1">`;
                 } else if (m.type === 'image' && m.mediaUrl) {
                     mediaHtml = `<img src="${m.mediaUrl}" alt="Photo" class="max-w-[200px] max-h-[200px] object-cover rounded-xl my-1 border border-black/10">`;
@@ -5094,10 +5781,14 @@
                     `;
                 }
 
+                const bubbleClass = isSticker
+                    ? `max-w-[80%] rounded-2xl px-3.5 py-2 text-xs bg-[transparent] ${isMe ? 'rounded-tr-none text-slate-600 text-right' : 'rounded-tl-none text-slate-600 text-left'}`
+                    : `max-w-[80%] rounded-2xl px-3.5 py-2 text-xs shadow-sm ${isMe ? 'bg-[#65a30d] text-white rounded-tr-none' : (isAdminMsg ? 'bg-amber-100 text-amber-950 border border-amber-200 rounded-tl-none' : 'bg-white text-slate-800 border border-slate-200 rounded-tl-none')}`;
+
                 return `
                     <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
                         <span class="text-[9px] text-slate-400 mb-0.5 px-1">${m.senderName || m.sender} • ${m.time || ''}</span>
-                        <div class="max-w-[80%] rounded-2xl px-3.5 py-2 text-xs shadow-sm ${isMe ? 'bg-[#65a30d] text-white rounded-tr-none' : (isAdmin ? 'bg-amber-100 text-amber-950 border border-amber-200 rounded-tl-none' : 'bg-white text-slate-800 border border-slate-200 rounded-tl-none')}">
+                        <div class="${bubbleClass}">
                             ${mediaHtml}
                             ${m.text ? `<p>${m.text}</p>` : ''}
                         </div>
@@ -5166,9 +5857,11 @@
         window.processOrderCheckout = processOrderCheckout;
         window.confirmToyyibPayRedirect = confirmToyyibPayRedirect;
         window.closeToyyibPayModal = closeToyyibPayModal;
+        window.payPendingOrderNow = payPendingOrderNow;
         window.openInvoiceModal = openInvoiceModal;
         window.closeInvoiceModal = closeInvoiceModal;
         window.downloadInvoiceAsPNG = downloadInvoiceAsPNG;
+        window.directDownloadInvoice = directDownloadInvoice;
         window.openForgotPassword = openForgotPassword;
         window.closeForgotPassword = closeForgotPassword;
         window.submitForgotPassword = submitForgotPassword;
@@ -5183,12 +5876,17 @@
         window.saveAdminProduct = saveAdminProduct;
         window.editAdminProduct = editAdminProduct;
         window.deleteAdminProduct = deleteAdminProduct;
-        window.resetAdminProductForm = resetAdminProductForm;
-        window.deleteAdminOrder = deleteAdminOrder;
-        window.openAdminOrderDetail = openAdminOrderDetail;
-        window.closeAdminOrderDetailModal = closeAdminOrderDetailModal;
-        window.adminSaveAndPublishTracking = adminSaveAndPublishTracking;
+        window.renderAdminProductsList = renderAdminProductsList;
+        window.renderAdminPowerStockCheckboxes = renderAdminPowerStockCheckboxes;
+        window.renderAdminVoucherProductDropdowns = renderAdminVoucherProductDropdowns;
+        window.renderAdminVoucherCustomerDropdowns = renderAdminVoucherCustomerDropdowns;
+        window.renderPresetsTable = renderPresetsTable;
         window.exportInvoicesToCSV = exportInvoicesToCSV;
+        window.toggleClearAllButton = toggleClearAllButton;
+        window.toggleSelectAll = toggleSelectAll;
+        window.clearAll = clearAll;
+        window.batchSaveChanges = batchSaveChanges;
+        window.batchSaveVoucherPresets = batchSaveVoucherPresets;
         window.showToast = showToast;
         window.toggleWidgetChat = toggleWidgetChat;
         window.clearWidgetChat = clearWidgetChat;
@@ -5212,6 +5910,7 @@
             loadSavedAddresses();
             loadFavourites();
             loadAssignedVouchers();
+            loadReadNotifications();
 
             const cSuffixInput = document.getElementById('c_voucherSuffix');
             if (cSuffixInput) {
@@ -5231,6 +5930,15 @@
 
             renderSection1ChosenCustomers();
             renderAdminVoucherProductDropdowns();
+
+            // Load saved voucher presets if present
+            try {
+                const savedPresets = localStorage.getItem('sweetopia_active_presets');
+                if (savedPresets) {
+                    activePresetsList = JSON.parse(savedPresets);
+                }
+            } catch(e) { console.warn(e); }
+
             renderPresetsTable();
 
             const savedEmail = localStorage.getItem('sweetopia_logged_in_email');
@@ -5265,6 +5973,7 @@
                             currentUser = null;
                             cart = [];
                             updateCartBadge();
+                            window.renderCustomerNotifications();
                             switchPage('auth');
                         }
                     }
@@ -5282,14 +5991,14 @@
                             await db.collection("lumilens_products").doc(p.id).set({ ...p, powerStock: initialPowerStock });
                         }
                     }
-                } catch(e) { /* Operate smoothly on local defaults */ }
+                } catch(e) { }
 
                 try {
                     const vSnap = await db.collection("lumilens_assigned_vouchers").doc("all_vouchers").get({ source: 'server' }).catch(() => null);
-                    if (vSnap && vSnap.exists && vSnap.data().data) {
+                    if (vSnap && vSnap.exists && vSnap.data() && vSnap.data().data) {
                         assignedVouchersMap = vSnap.data().data;
                     }
-                } catch(e) { /* Operate smoothly on local defaults */ }
+                } catch(e) { }
             }
 
             renderStoreProducts(products);
@@ -5303,9 +6012,9 @@
             renderCustomerVouchersUI();
             renderAdminVoucherCustomerDropdowns();
             renderChosenCustomerPromoBanner();
+            window.renderCustomerNotifications();
             enforceMobileNavForRole();
 
-            // Check if customer just returned from ToyyibPay with successful payment status
             checkToyyibPayPaymentCallback();
 
             setInterval(() => {
