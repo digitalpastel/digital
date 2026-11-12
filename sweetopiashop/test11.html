@@ -482,19 +482,26 @@
                     </div>
                 </div>
 
-                <!-- Mobile Header Bell Shortcut (Visible only on mobile when customer is signed in) -->
-                <div id="mobile-header-bell-container" class="sm:hidden hidden relative">
-                    <button type="button" onclick="toggleCustomerNotifications(event)" class="w-10 h-10 rounded-full bg-white border-2 border-black shadow-[0_3px_0_0_#1e1b4b] active:translate-y-0.5 active:shadow-none flex items-center justify-center text-slate-800 hover:bg-amber-50 transition relative" aria-label="Order Notifications">
-                        <i class="fa-solid fa-bell text-sm text-amber-500" id="mobile-bell-icon"></i>
-                        <span id="mobile-notif-badge" class="hidden absolute -top-1.5 -right-1.5 min-w-[20px] h-5 px-1 bg-rose-600 text-white text-[10px] font-black rounded-full border-2 border-white flex items-center justify-center shadow-sm">0</span>
-                    </button>
+                <!-- Mobile Header Bell Shortcut & Sign Out Button (Visible only on mobile view) -->
+                <div class="sm:hidden flex items-center space-x-2">
+                    <div id="mobile-header-bell-container" class="hidden relative">
+                        <button type="button" onclick="toggleCustomerNotifications(event)" class="w-10 h-10 rounded-full bg-white border-2 border-black shadow-[0_3px_0_0_#1e1b4b] active:translate-y-0.5 active:shadow-none flex items-center justify-center text-slate-800 hover:bg-amber-50 transition relative" aria-label="Order Notifications">
+                            <i class="fa-solid fa-bell text-sm text-amber-500" id="mobile-bell-icon"></i>
+                            <span id="mobile-notif-badge" class="hidden absolute -top-1.5 -right-1.5 min-w-[20px] h-5 px-1 bg-rose-600 text-white text-[10px] font-black rounded-full border-2 border-white items-center justify-center shadow-sm">0</span>
+                        </button>
+                    </div>
+                    <div id="mobile-header-signout-container" class="hidden relative">
+                        <button type="button" onclick="handleSignOut()" class="px-4 py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 text-white border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all shrink-0">
+                            Sign Out
+                        </button>
+                    </div>
                 </div>
             </div>
 
             <div class="flex items-center space-x-3 relative" id="header-nav-actions">
-                <!-- CUSTOMER NOTIFICATION BELL WIDGET (Shown for Customers) -->
+                <!-- CUSTOMER NOTIFICATION BELL WIDGET (Shown for Customers on Desktop/Tablet, Page 2 only) -->
                 <div id="customer-notification-bell-wrapper" class="hidden relative">
-                    <button type="button" id="customer-notif-bell-btn" onclick="toggleCustomerNotifications(event)" class="px-3.5 py-2 rounded-full bg-white hover:bg-amber-50 text-slate-800 border-2 border-black shadow-[0_3px_0_0_#1e1b4b] active:translate-y-0.5 active:shadow-none transition-all flex items-center space-x-2 relative cursor-pointer" title="Order & Payment Notifications">
+                    <button type="button" id="customer-notif-bell-btn" onclick="toggleCustomerNotifications(event)" class="hidden sm:flex px-3.5 py-2 rounded-full bg-white hover:bg-amber-50 text-slate-800 border-2 border-black shadow-[0_3px_0_0_#1e1b4b] active:translate-y-0.5 active:shadow-none transition-all items-center space-x-2 relative cursor-pointer" title="Order & Payment Notifications">
                         <i class="fa-solid fa-bell text-amber-500 text-sm" id="desktop-bell-icon"></i>
                         <span class="text-xs font-bold hidden md:inline">Notifications</span>
                         <span id="customer-notif-badge" class="hidden min-w-[20px] h-5 px-1.5 bg-rose-600 text-white text-[10px] font-black rounded-full border border-white flex items-center justify-center shadow-xs">0</span>
@@ -636,7 +643,7 @@
                         </button>
                     </div>
 
-                    <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto space-x-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200">
+                    <div class="hidden sm:flex items-center justify-between sm:justify-end w-full sm:w-auto space-x-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200">
                         <span id="user-email-display" class="text-xs text-slate-700 font-semibold truncate max-w-[200px]">customer@gmail.com</span>
                         <button onclick="handleSignOut()" class="px-4 py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 text-white border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all shrink-0">
                             Sign Out
@@ -658,7 +665,7 @@
                         </button>
                     </div>
 
-                    <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto space-x-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200">
+                    <div class="hidden sm:flex items-center justify-between sm:justify-end w-full sm:w-auto space-x-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200">
                         <span id="admin-email-display" class="text-xs text-amber-600 font-bold truncate max-w-[200px]">Admin (yeegummy@gmail.com)</span>
                         <button onclick="handleSignOut()" class="px-4 py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 text-white border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all shrink-0">
                             Sign Out
@@ -2409,10 +2416,10 @@
                 };
             });
         }
-
-        window.renderCustomerNotifications = function() {
+        function renderCustomerNotifications() {
             const bellWrapper = document.getElementById('customer-notification-bell-wrapper');
             const mobBellContainer = document.getElementById('mobile-header-bell-container');
+            const mobSignOutContainer = document.getElementById('mobile-header-signout-container');
             const guestStatus = document.getElementById('header-guest-status-text');
             const listContainer = document.getElementById('customer-notifications-list');
             const desktopBadge = document.getElementById('customer-notif-badge');
@@ -2420,19 +2427,36 @@
             const desktopBellIcon = document.getElementById('desktop-bell-icon');
             const mobileBellIcon = document.getElementById('mobile-bell-icon');
 
-            const isCustomer = currentUser && !isAdminUser(currentUser.email);
+            const isPage1Auth = !document.getElementById('page-auth')?.classList.contains('hidden');
+            const isLoggedIn = !!currentUser && !isPage1Auth;
+            const isCustomer = isLoggedIn && !isAdminUser(currentUser.email);
 
-            if (!isCustomer) {
-                bellWrapper?.classList.add('hidden');
+            if (mobSignOutContainer) {
+                if (isLoggedIn) {
+                    mobSignOutContainer.classList.remove('hidden');
+                } else {
+                    mobSignOutContainer.classList.add('hidden');
+                }
+            }
+
+            if (!isCustomer || isPage1Auth) {
+                if (bellWrapper) {
+                    bellWrapper.classList.add('hidden');
+                    bellWrapper.classList.remove('sm:block');
+                }
                 mobBellContainer?.classList.add('hidden');
+                window.closeCustomerNotifications();
                 if (guestStatus) {
-                    guestStatus.style.display = currentUser ? 'none' : '';
+                    guestStatus.style.display = isLoggedIn ? 'none' : '';
                 }
                 return;
             }
 
             if (guestStatus) guestStatus.style.display = 'none';
-            bellWrapper?.classList.remove('hidden');
+            if (bellWrapper) {
+                bellWrapper.classList.remove('hidden');
+                bellWrapper.classList.add('sm:block');
+            }
             mobBellContainer?.classList.remove('hidden');
 
             const items = getCustomerNotificationItems();
@@ -3308,6 +3332,7 @@
                 pageAuth?.classList.add('hidden');
                 pageDashboard?.classList.remove('hidden');
                 if (mobileBottomNav) mobileBottomNav.classList.remove('hidden');
+                window.renderCustomerNotifications();
 
                 if (currentUser && isAdminUser(currentUser.email)) {
                     const savedTab = sessionStorage.getItem('sweetopia_active_tab') || 'admin-workspace';
