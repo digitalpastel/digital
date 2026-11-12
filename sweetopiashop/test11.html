@@ -2496,30 +2496,19 @@
         window.toggleCustomerNotifications = function(event) {
             if (event) event.stopPropagation();
             const dropdown = document.getElementById('customer-notifications-dropdown');
-            const slideshow = document.getElementById('hero-slideshow-section');
             if (!dropdown) return;
             const isHidden = dropdown.classList.contains('hidden');
             if (isHidden) {
                 window.renderCustomerNotifications();
                 dropdown.classList.remove('hidden');
-                if (slideshow) slideshow.classList.add('hidden');
             } else {
                 dropdown.classList.add('hidden');
-                const activeTab = sessionStorage.getItem('sweetopia_active_tab') || 'catalog';
-                if (slideshow && activeTab === 'catalog') {
-                    slideshow.classList.remove('hidden');
-                }
             }
         };
 
         window.closeCustomerNotifications = function() {
             const dropdown = document.getElementById('customer-notifications-dropdown');
             dropdown?.classList.add('hidden');
-            const slideshow = document.getElementById('hero-slideshow-section');
-            const activeTab = sessionStorage.getItem('sweetopia_active_tab') || 'catalog';
-            if (slideshow && activeTab === 'catalog') {
-                slideshow.classList.remove('hidden');
-            }
         };
 
         window.markAllNotificationsRead = function() {
