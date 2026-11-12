@@ -2637,6 +2637,7 @@
                             targetOrder.status = 'Processing (Paid)';
                             targetOrder.amountDrawn = true;
                             targetOrder.paidAt = new Date().toISOString();
+                            consumeOrderVoucherIfPaid(targetOrder);
                         }
                         if (db) {
                             db.collection("lumilens_orders").doc(targetId).set({
@@ -2658,11 +2659,28 @@
                     }, 600);
                     window.history.replaceState({}, document.title, window.location.pathname);
                 } else if (statusId === '3' || statusId === '2') {
-                    showToast("Payment Incomplete", "Payment was not drawn. Order remains pending.", true);
+                    showToast("Payment Incomplete", "Payment was not drawn. Your voucher remains available.", true);
                     window.history.replaceState({}, document.title, window.location.pathname);
                 }
             } catch(e) {
                 console.warn("ToyyibPay callback check error:", e);
+            }
+        }
+
+        async function consumeOrderVoucherIfPaid(order) {
+            if (!order || !order.discountCode || !order.customer) return;
+            const userKey = order.customer.toLowerCase();
+            if (assignedVouchersMap[userKey]) {
+                const idx = assignedVouchersMap[userKey].findIndex(
+                    v => v.code && v.code.toUpperCase() === order.discountCode.toUpperCase() && !v.used
+                );
+                if (idx !== -1) {
+                    assignedVouchersMap[userKey][idx].used = true;
+                    assignedVouchersMap[userKey][idx].usedAt = new Date().toISOString();
+                    await syncAssignedVouchersStorage();
+                    renderCustomerVouchersUI();
+                    renderChosenCustomerPromoBanner();
+                }
             }
         }
 
@@ -2672,7 +2690,7 @@
                 if (stored) {
                     assignedVouchersMap = JSON.parse(stored);
                 }
-            } catch(e) { console.warn(e); }
+            } catch (e) { console.warn(e); }
         }
 
         async function syncAssignedVouchersStorage() {
@@ -2683,7 +2701,7 @@
                         data: assignedVouchersMap,
                         updatedAt: new Date().toISOString()
                     }, { merge: true });
-                } catch(e) { console.warn("Voucher Firestore sync error:", e); }
+                } catch (e) { console.warn("Voucher Firestore sync error:", e); }
             }
         }
 
@@ -2699,7 +2717,7 @@
             const today = new Date();
             for (const code in activeProductVouchersMap) {
                 const pv = activeProductVouchersMap[code];
-                if (pv && pv.assignedProducts && pv.assignedProducts.includes(productId)) {
+                if (pv && pv.assignedProducts && pv.assignedProducts.includes(productId) && pv.active !== false) {
                     if (!pv.expiry || new Date(pv.expiry) >= today) {
                         return {
                             code: pv.code,
@@ -2763,8 +2781,8 @@
                 const titleEl = document.getElementById('promo-banner-title');
                 const subEl = document.getElementById('promo-banner-subtitle');
 
-                const discText = voucher.discountType === 'percentage' 
-                    ? `${voucher.discount}% OFF` 
+                const discText = voucher.discountType === 'percentage'
+                    ? `${voucher.discount}% OFF`
                     : `RM ${Number(voucher.discount).toFixed(2)} OFF`;
 
                 if (titleEl) titleEl.innerText = `${voucher.title || 'Special Gift Voucher'} (${discText})`;
@@ -3168,7 +3186,6 @@
             return ADMIN_EMAILS.map(e => e.toLowerCase()).includes(email.trim().toLowerCase());
         }
 
-        /* STRICT MOBILE BOTTOM NAV ENFORCEMENT */
         function enforceMobileNavForRole() {
             const mobNav = document.getElementById('mobile-bottom-nav');
             const mobNavCart = document.getElementById('mob-nav-cart');
@@ -3934,19 +3951,6 @@
                 timestamp: dateStr
             };
 
-            if (appliedVoucher && currentUser && currentUser.email) {
-                const userKey = currentUser.email.toLowerCase();
-                if (assignedVouchersMap[userKey]) {
-                    const idx = assignedVouchersMap[userKey].findIndex(v => v.code === appliedVoucher.code && !v.used);
-                    if (idx !== -1) {
-                        assignedVouchersMap[userKey][idx].used = true;
-                        assignedVouchersMap[userKey][idx].usedAt = new Date().toISOString();
-                        await syncAssignedVouchersStorage();
-                        renderCustomerVouchersUI();
-                    }
-                }
-            }
-
             if (db) {
                 try {
                     await db.collection("lumilens_orders").doc(orderId).set(newOrder);
@@ -4504,6 +4508,7 @@
                 order.paymentStatus = 'Paid via FPX';
                 order.amountDrawn = true;
                 order.status = 'Paid / Processing';
+                await consumeOrderVoucherIfPaid(order);
             }
             if (db) {
                 try {
