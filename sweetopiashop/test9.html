@@ -858,37 +858,6 @@
                                 </button>
 
                                 <div id="content-customer-order-history" class="p-4 border-t border-slate-200 space-y-3 bg-white hidden">
-                                    <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/70 space-y-3">
-                                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-2.5">
-                                            <div class="flex items-center space-x-2">
-                                                <span class="text-xs font-extrabold text-[#65a30d] font-mono">Order ID: 261009SWEXMPL</span>
-                                                <span class="text-[10px] bg-blue-50 text-blue-600 border border-blue-200 font-semibold px-2 py-0.5 rounded-lg">Shipped</span>
-                                            </div>
-                                            <span class="text-[10px] text-slate-500 font-medium">Date &amp; Time: 20 Oct 2026, 02:45 PM</span>
-                                        </div>
-
-                                        <div class="flex items-start sm:items-center justify-between gap-3">
-                                            <div class="flex items-center space-x-3">
-                                                <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&amp;fit=crop&amp;q=80&amp;w=200" alt="Hazel Natural" class="w-12 h-12 rounded-xl object-cover border border-slate-200">
-                                                <div>
-                                                    <h4 class="text-xs font-bold text-slate-900">HAZEL NATURAL (3 Months Disposable)</h4>
-                                                    <p class="text-[10px] text-slate-500 mt-0.5">Prescription: <b class="text-slate-700">PWR -2.50</b> • Qty: <b class="text-slate-700">2 pairs</b></p>
-                                                </div>
-                                            </div>
-                                            <div class="text-right shrink-0">
-                                                <span class="text-xs font-bold text-[#65a30d]">RM 50.00</span>
-                                            </div>
-                                        </div>
-
-                                        <div class="pt-2 border-t border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px]">
-                                            <div class="flex items-center space-x-1.5">
-                                                <i class="fa-solid fa-truck-fast text-[#65a30d]"></i>
-                                                <span class="text-slate-600 font-medium">Tracking Number:</span>
-                                                <span class="font-mono font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">JNT982348123MY</span>
-                                            </div>
-                                            <span class="text-[10px] text-slate-400">Courier: J&amp;T Express Nationwide</span>
-                                        </div>
-                                    </div>
                                     <div id="customer-orders-list" class="space-y-3"></div>
                                 </div>
                             </div>
@@ -902,35 +871,19 @@
                                         </div>
                                         <div>
                                             <span class="text-xs font-bold text-slate-800 block">Invoices</span>
-                                            <span class="text-[10px] text-slate-500">Official tax invoices, view modal &amp; download A4 PNG</span>
+                                            <span class="text-[10px] text-slate-500">Official tax invoices for confirmed ToyyibPay payments</span>
                                         </div>
                                     </div>
                                     <i id="chevron-invoices" class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-200"></i>
                                 </button>
 
                                 <div id="content-customer-invoices" class="p-4 border-t border-slate-200 space-y-3 bg-white hidden">
-                                    <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/70 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                                        <div>
-                                            <div class="flex items-center space-x-2">
-                                                <span class="text-xs font-extrabold text-[#65a30d] font-mono">INV-261009SWEXMPL</span>
-                                                <span class="text-[9px] bg-emerald-50 text-emerald-600 border border-emerald-200 font-bold px-2 py-0.5 rounded uppercase">Paid via FPX</span>
-                                            </div>
-                                            <p class="text-[11px] text-slate-700 mt-1">Order Date: <b>20 Oct 2026, 02:45 PM</b> • Total: <b class="text-[#65a30d]">RM 50.00</b></p>
-                                            <p class="text-[10px] text-slate-500">Items: HAZEL NATURAL (PWR -2.50) x2</p>
-                                        </div>
-
-                                        <div class="flex items-center space-x-2 w-full sm:w-auto">
-                                            <button type="button" onclick="openInvoiceModal('261009SWEXMPL')" class="flex-1 sm:flex-initial bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-bold px-3 py-2.5 rounded-xl text-xs border border-slate-300 transition flex items-center justify-center space-x-1.5 shadow-sm">
-                                                <i class="fa-solid fa-eye text-slate-600"></i>
-                                                <span>View Invoice</span>
-                                            </button>
-                                            <button type="button" onclick="directDownloadInvoice('261009SWEXMPL')" class="flex-1 sm:flex-initial bg-[#65a30d] hover:bg-[#4d7c0f] active:bg-[#3f6212] text-white font-bold px-3 py-2.5 rounded-xl text-xs transition flex items-center justify-center space-x-1.5 shadow-sm">
-                                                <i class="fa-solid fa-file-arrow-down"></i>
-                                                <span>Download A4 PNG</span>
-                                            </button>
+                                    <div id="customer-invoices-dynamic-list" class="space-y-3">
+                                        <div class="text-center py-6 text-slate-400 text-xs">
+                                            <i class="fa-solid fa-file-invoice text-2xl text-slate-300 mb-2 block"></i>
+                                            No confirmed invoices found. Invoices are generated only after payment is completed and drawn at ToyyibPay.
                                         </div>
                                     </div>
-                                    <div id="customer-invoices-dynamic-list" class="space-y-3"></div>
                                 </div>
                             </div>
 
@@ -1298,6 +1251,10 @@
                                         <option value="customer">Chosen Customer</option>
                                         <option value="product">Chosen Product</option>
                                     </select>
+                                    <button type="button" onclick="batchSaveVoucherPresets()" id="batch-save-changes-btn" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 disabled:opacity-50 disabled:pointer-events-none text-white text-xs font-medium rounded-xl shadow-xs transition-all flex items-center gap-1.5 cursor-pointer">
+                                        <i class="fa-solid fa-floppy-disk text-[10px]"></i>
+                                        <span>Save Changes</span>
+                                    </button>
                                 </div>
                             </div>
 
@@ -1467,6 +1424,31 @@
                                 <h4 class="text-xs font-bold text-slate-900">Customer Invoices &amp; Shipment Tracking Management</h4>
                                 <p class="text-[11px] text-slate-500">Assign tracking numbers, save and publish to customer dashboards.</p>
                             </div>
+
+                            <!-- Admin Batch Control Toolbar -->
+                            <div class="bg-slate-50 p-3 sm:p-4 rounded-2xl border border-slate-200 flex flex-wrap items-center justify-between gap-3 shadow-xs">
+                                <div class="flex items-center gap-2.5">
+                                    <input type="checkbox" id="confirm-clear-checkbox" onchange="toggleClearAllButton()" class="w-4 h-4 text-rose-600 rounded border-slate-300 focus:ring-rose-500 cursor-pointer">
+                                    <label for="confirm-clear-checkbox" class="text-xs font-semibold text-slate-700 cursor-pointer select-none">
+                                        Check box to enable <strong>Delete</strong>
+                                    </label>
+                                </div>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <button type="button" onclick="toggleSelectAll()" id="select-all-btn" disabled class="px-3 py-1.5 bg-sky-600 hover:bg-sky-700 active:scale-95 disabled:opacity-50 disabled:pointer-events-none text-white text-xs font-medium rounded-xl shadow-xs transition-all flex items-center gap-1.5 cursor-pointer">
+                                        <i class="fa-solid fa-check-double text-[10px]"></i>
+                                        <span>Select All</span>
+                                    </button>
+                                    <button onclick="clearAll()" id="clear-all-btn" disabled class="px-4 py-2 text-white text-sm font-medium rounded-xl shadow-sm transition-all duration-150 flex items-center gap-2 bg-rose-600 hover:bg-rose-700 active:scale-95 disabled:opacity-50 disabled:pointer-events-none cursor-pointer">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                        Delete
+                                    </button>
+                                    <button type="button" onclick="batchSaveChanges()" id="batch-save-orders-btn" disabled class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 disabled:opacity-50 disabled:pointer-events-none text-white text-xs font-medium rounded-xl shadow-xs transition-all flex items-center gap-1.5 cursor-pointer">
+                                        <i class="fa-solid fa-floppy-disk text-[10px]"></i>
+                                        <span>Save Changes</span>
+                                    </button>
+                                </div>
+                            </div>
+
                             <div id="admin-all-orders-list" class="space-y-3 max-h-96 overflow-y-auto pr-2"><p class="text-xs text-slate-500 text-center py-6">No invoices recorded in database.</p></div>
                         </div>
                     </div>
@@ -1577,17 +1559,17 @@
                             </div>
                         </div>
 
-                        <!-- Admin Session Switcher Bar -->
+                        <!-- Admin Session Switcher Bar (Adapts for Customer vs Admin) -->
                         <div id="admin-chat-session-bar" class="bg-[#f7fee7] px-3 py-2 border-b border-[#ecfccb] flex items-center justify-between text-[11px]">
-                            <span class="font-bold text-[#4d7c0f]">User Session:</span>
+                            <span id="chat-session-bar-label" class="font-bold text-[#4d7c0f]">User Session:</span>
                             <div class="flex items-center space-x-2">
                                 <select id="admin-active-chat-user" onchange="switchAdminChatSession()" class="bg-white border border-[#84cc16] rounded-lg px-2 py-1 text-slate-800 font-semibold focus:outline-none text-xs max-w-[170px]"><option value="brandworkzco@gmail.com">🔘 brandworkzco@gmail.com (Customer - Offline)</option></select>
-                                <button onclick="adminDeleteSelectedChatSession()" class="bg-red-50 hover:bg-red-100 text-red-600 px-2 py-1 rounded-lg font-bold border border-red-200 transition text-[10px]" title="Delete entire conversation">Delete</button>
+                                <button id="chat-session-action-btn" onclick="adminDeleteSelectedChatSession()" class="bg-red-50 hover:bg-red-100 text-red-600 px-2 py-1 rounded-lg font-bold border border-red-200 transition text-[10px]" title="Delete entire conversation">Clear</button>
                             </div>
                         </div>
 
                         <!-- Messages Box -->
-                        <div id="widget-chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/50 text-xs"><div class="text-center text-slate-400 py-10"><i class="fa-solid fa-heart text-2xl text-lime-500 mb-2"></i><p class="text-xs">Chatting with <b class="text-slate-700">brandworkzco@gmail.com</b>.<br>Leave a message or sticker to start conversation.</p></div></div>
+                        <div id="widget-chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/50 text-xs"><div class="text-center text-slate-400 py-10"><i class="fa-solid fa-heart text-2xl text-lime-500 mb-2"></i><p class="text-xs">Chatting with <b class="text-slate-700">admin</b>.<br>Leave a message or sticker to start conversation.</p></div></div>
 
                         <!-- Footer Input & Multimedia Toolbar -->
                         <div class="p-3 bg-white border-t border-pink-100 flex flex-col space-y-2 rounded-b-3xl">
@@ -1632,13 +1614,13 @@
                 </div>
             </div>
 
-            <!-- SHOPEE STYLE STICKER PICKER MODAL (20 STICKER SLOTS) -->
+            <!-- SHOPEE STYLE STICKER PICKER MODAL (15 STICKER PACKS) -->
             <div id="screen-sticker-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-3 sm:p-4" onclick="closeStickerPicker()">
                 <div class="w-full max-w-sm bg-white rounded-3xl border border-pink-200 overflow-hidden shadow-2xl flex flex-col max-h-[85vh] animate-in fade-in zoom-in-95 duration-200" onclick="event.stopPropagation()">
                     <div class="px-5 py-3.5 bg-gradient-to-r from-pink-100 to-purple-100 border-b border-pink-200 flex items-center justify-between">
                         <div class="flex items-center space-x-2">
                             <i class="fa-solid fa-face-smile text-pink-500 text-base"></i>
-                            <h3 class="text-xs font-bold text-slate-800">Select Sticker (20 Packs)</h3>
+                            <h3 class="text-xs font-bold text-slate-800">Select Sticker (15 Packs)</h3>
                         </div>
                         <button type="button" onclick="closeStickerPicker()" class="w-7 h-7 rounded-full bg-white/80 hover:bg-white text-slate-600 flex items-center justify-center transition shadow-xs">
                             <i class="fa-solid fa-xmark text-xs"></i>
@@ -1647,6 +1629,51 @@
 
                     <div class="p-3.5 overflow-y-auto max-h-72 cute-h-scrollbar">
                         <div id="sticker-slots-grid" class="grid grid-cols-4 sm:grid-cols-5 gap-2.5">
+                            <div onclick="selectSticker('https://digitalpastel.github.io/digital/sweetopiashop/sweetcall.webp')" class="p-1 rounded-2xl border-2 border-pink-100 hover:border-pink-500 bg-pink-50/50 hover:bg-white cursor-pointer transition flex items-center justify-center transform hover:scale-105 active:scale-95 group shadow-xs" title="Sticker #1">
+                                <img src="https://digitalpastel.github.io/digital/sweetopiashop/sweetcall.webp" alt="Sticker 1" class="w-14 h-14 object-contain rounded-xl group-hover:drop-shadow-sm">
+                            </div>
+                            <div onclick="selectSticker('https://digitalpastel.github.io/digital/sweetopiashop/sweetcase.webp')" class="p-1 rounded-2xl border-2 border-pink-100 hover:border-pink-500 bg-pink-50/50 hover:bg-white cursor-pointer transition flex items-center justify-center transform hover:scale-105 active:scale-95 group shadow-xs" title="Sticker #2">
+                                <img src="https://digitalpastel.github.io/digital/sweetopiashop/sweetcase.webp" alt="Sticker 2" class="w-14 h-14 object-contain rounded-xl group-hover:drop-shadow-sm">
+                            </div>
+                            <div onclick="selectSticker('https://digitalpastel.github.io/digital/sweetopiashop/sweetcert.webp')" class="p-1 rounded-2xl border-2 border-pink-100 hover:border-pink-500 bg-pink-50/50 hover:bg-white cursor-pointer transition flex items-center justify-center transform hover:scale-105 active:scale-95 group shadow-xs" title="Sticker #3">
+                                <img src="https://digitalpastel.github.io/digital/sweetopiashop/sweetcert.webp" alt="Sticker 3" class="w-14 h-14 object-contain rounded-xl group-hover:drop-shadow-sm">
+                            </div>
+                            <div onclick="selectSticker('https://digitalpastel.github.io/digital/sweetopiashop/sweetchoose.webp')" class="p-1 rounded-2xl border-2 border-pink-100 hover:border-pink-500 bg-pink-50/50 hover:bg-white cursor-pointer transition flex items-center justify-center transform hover:scale-105 active:scale-95 group shadow-xs" title="Sticker #4">
+                                <img src="https://digitalpastel.github.io/digital/sweetopiashop/sweetchoose.webp" alt="Sticker 4" class="w-14 h-14 object-contain rounded-xl group-hover:drop-shadow-sm">
+                            </div>
+                            <div onclick="selectSticker('https://digitalpastel.github.io/digital/sweetopiashop/sweetdidknow.webp')" class="p-1 rounded-2xl border-2 border-pink-100 hover:border-pink-500 bg-pink-50/50 hover:bg-white cursor-pointer transition flex items-center justify-center transform hover:scale-105 active:scale-95 group shadow-xs" title="Sticker #5">
+                                <img src="https://digitalpastel.github.io/digital/sweetopiashop/sweetdidknow.webp" alt="Sticker 5" class="w-14 h-14 object-contain rounded-xl group-hover:drop-shadow-sm">
+                            </div>
+                            <div onclick="selectSticker('https://digitalpastel.github.io/digital/sweetopiashop/sweetfocus.webp')" class="p-1 rounded-2xl border-2 border-pink-100 hover:border-pink-500 bg-pink-50/50 hover:bg-white cursor-pointer transition flex items-center justify-center transform hover:scale-105 active:scale-95 group shadow-xs" title="Sticker #6">
+                                <img src="https://digitalpastel.github.io/digital/sweetopiashop/sweetfocus.webp" alt="Sticker 6" class="w-14 h-14 object-contain rounded-xl group-hover:drop-shadow-sm">
+                            </div>
+                            <div onclick="selectSticker('https://digitalpastel.github.io/digital/sweetopiashop/sweetgift.webp')" class="p-1 rounded-2xl border-2 border-pink-100 hover:border-pink-500 bg-pink-50/50 hover:bg-white cursor-pointer transition flex items-center justify-center transform hover:scale-105 active:scale-95 group shadow-xs" title="Sticker #7">
+                                <img src="https://digitalpastel.github.io/digital/sweetopiashop/sweetgift.webp" alt="Sticker 7" class="w-14 h-14 object-contain rounded-xl group-hover:drop-shadow-sm">
+                            </div>
+                            <div onclick="selectSticker('https://digitalpastel.github.io/digital/sweetopiashop/sweetglass.webp')" class="p-1 rounded-2xl border-2 border-pink-100 hover:border-pink-500 bg-pink-50/50 hover:bg-white cursor-pointer transition flex items-center justify-center transform hover:scale-105 active:scale-95 group shadow-xs" title="Sticker #8">
+                                <img src="https://digitalpastel.github.io/digital/sweetopiashop/sweetglass.webp" alt="Sticker 8" class="w-14 h-14 object-contain rounded-xl group-hover:drop-shadow-sm">
+                            </div>
+                            <div onclick="selectSticker('https://digitalpastel.github.io/digital/sweetopiashop/sweethappyhand.webp')" class="p-1 rounded-2xl border-2 border-pink-100 hover:border-pink-500 bg-pink-50/50 hover:bg-white cursor-pointer transition flex items-center justify-center transform hover:scale-105 active:scale-95 group shadow-xs" title="Sticker #9">
+                                <img src="https://digitalpastel.github.io/digital/sweetopiashop/sweethappyhand.webp" alt="Sticker 9" class="w-14 h-14 object-contain rounded-xl group-hover:drop-shadow-sm">
+                            </div>
+                            <div onclick="selectSticker('https://digitalpastel.github.io/digital/sweetopiashop/sweetonlinebank.webp')" class="p-1 rounded-2xl border-2 border-pink-100 hover:border-pink-500 bg-pink-50/50 hover:bg-white cursor-pointer transition flex items-center justify-center transform hover:scale-105 active:scale-95 group shadow-xs" title="Sticker #10">
+                                <img src="https://digitalpastel.github.io/digital/sweetopiashop/sweetonlinebank.webp" alt="Sticker 10" class="w-14 h-14 object-contain rounded-xl group-hover:drop-shadow-sm">
+                            </div>
+                            <div onclick="selectSticker('https://digitalpastel.github.io/digital/sweetopiashop/sweetshock.webp')" class="p-1 rounded-2xl border-2 border-pink-100 hover:border-pink-500 bg-pink-50/50 hover:bg-white cursor-pointer transition flex items-center justify-center transform hover:scale-105 active:scale-95 group shadow-xs" title="Sticker #11">
+                                <img src="https://digitalpastel.github.io/digital/sweetopiashop/sweetshock.webp" alt="Sticker 11" class="w-14 h-14 object-contain rounded-xl group-hover:drop-shadow-sm">
+                            </div>
+                            <div onclick="selectSticker('https://digitalpastel.github.io/digital/sweetopiashop/sweetshopping.webp')" class="p-1 rounded-2xl border-2 border-pink-100 hover:border-pink-500 bg-pink-50/50 hover:bg-white cursor-pointer transition flex items-center justify-center transform hover:scale-105 active:scale-95 group shadow-xs" title="Sticker #12">
+                                <img src="https://digitalpastel.github.io/digital/sweetopiashop/sweetshopping.webp" alt="Sticker 12" class="w-14 h-14 object-contain rounded-xl group-hover:drop-shadow-sm">
+                            </div>
+                            <div onclick="selectSticker('https://digitalpastel.github.io/digital/sweetopiashop/sweetsolution.webp')" class="p-1 rounded-2xl border-2 border-pink-100 hover:border-pink-500 bg-pink-50/50 hover:bg-white cursor-pointer transition flex items-center justify-center transform hover:scale-105 active:scale-95 group shadow-xs" title="Sticker #13">
+                                <img src="https://digitalpastel.github.io/digital/sweetopiashop/sweetsolution.webp" alt="Sticker 13" class="w-14 h-14 object-contain rounded-xl group-hover:drop-shadow-sm">
+                            </div>
+                            <div onclick="selectSticker('https://digitalpastel.github.io/digital/sweetopiashop/sweetthankyou.webp')" class="p-1 rounded-2xl border-2 border-pink-100 hover:border-pink-500 bg-pink-50/50 hover:bg-white cursor-pointer transition flex items-center justify-center transform hover:scale-105 active:scale-95 group shadow-xs" title="Sticker #14">
+                                <img src="https://digitalpastel.github.io/digital/sweetopiashop/sweetthankyou.webp" alt="Sticker 14" class="w-14 h-14 object-contain rounded-xl group-hover:drop-shadow-sm">
+                            </div>
+                            <div onclick="selectSticker('https://digitalpastel.github.io/digital/sweetopiashop/sweetkaunter.webp')" class="p-1 rounded-2xl border-2 border-pink-100 hover:border-pink-500 bg-pink-50/50 hover:bg-white cursor-pointer transition flex items-center justify-center transform hover:scale-105 active:scale-95 group shadow-xs" title="Sticker #15">
+                                <img src="https://digitalpastel.github.io/digital/sweetopiashop/sweetkaunter.webp" alt="Sticker 15" class="w-14 h-14 object-contain rounded-xl group-hover:drop-shadow-sm">
+                            </div>
                         </div>
                     </div>
 
@@ -2203,6 +2230,24 @@
             { id: "p5", name: "MONTHLY COMFORT", brand: "Molicon", price: "25.00", category: "1 Day Disposable", image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500", badge: "In Stock" }
         ];
 
+        const defaultStickerAssets = [
+            "https://digitalpastel.github.io/digital/sweetopiashop/sweetcall.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/sweetcase.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/sweetcert.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/sweetchoose.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/sweetdidknow.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/sweetfocus.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/sweetgift.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/sweetglass.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/sweethappyhand.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/sweetonlinebank.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/sweetshock.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/sweetshopping.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/sweetsolution.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/sweetthankyou.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/sweetkaunter.webp"
+        ];
+
         const powersList = [
             "0.00", "-0.25", "-0.50", "-0.75", "-1.00", "-1.25", "-1.50", "-1.75", "-2.00",
             "-2.25", "-2.50", "-2.75", "-3.00", "-3.25", "-3.50", "-3.75", "-4.00",
@@ -2217,31 +2262,12 @@
         });
 
         let cart = [];
-        let allOrders = [
-            {
-                id: '261009SWEXMPL',
-                customer: 'yeegummy@gmail.com',
-                customerName: 'Yee Gummy',
-                customerPhone: '+6012-3456789',
-                customerAddress: 'No 12-A, Jalan Ampang Mewah 3, 50450 Kuala Lumpur, Malaysia',
-                items: [
-                    { id: 'p1', name: 'HAZEL NATURAL', brand: 'Molicon', category: '3 Months Disposable', price: '25.00', pwr: '-2.50', qty: 2 }
-                ],
-                subtotal: '50.00',
-                discount: '0.00',
-                shippingFee: '0.00',
-                total: '50.00',
-                status: 'Shipped',
-                trackingNumber: 'JNT982348123MY',
-                date: '20 Oct 2026, 02:45 PM',
-                timestamp: '2026-10-20T14:45:00.000Z'
-            }
-        ];
+        let allOrders = [];
         let currentUser = null;
         let authMode = 'signin';
         let currentSelectedProduct = null;
         let pendingOrderId = null;
-        let currentActiveInvoiceId = '261009SWEXMPL';
+        let currentActiveInvoiceId = null;
 
         let appliedVoucher = null;
         const VALID_VOUCHERS = {
@@ -2318,10 +2344,34 @@
                 const billCode = urlParams.get('billcode');
                 const orderId = urlParams.get('order_id') || urlParams.get('refno');
 
+                // status_id = '1' indicates payment success & amount drawn at ToyyibPay
                 if (statusId === '1' || urlParams.get('paid') === 'true') {
+                    const targetId = orderId || pendingOrderId || localStorage.getItem('sweetopia_last_order_id');
+                    if (targetId) {
+                        const targetOrder = allOrders.find(o => o.id === targetId);
+                        if (targetOrder) {
+                            targetOrder.paid = true;
+                            targetOrder.paymentStatus = 'Paid via FPX';
+                            targetOrder.status = 'Processing (Paid)';
+                            targetOrder.amountDrawn = true;
+                            targetOrder.paidAt = new Date().toISOString();
+                        }
+                        if (db) {
+                            db.collection("lumilens_orders").doc(targetId).set({
+                                paid: true,
+                                paymentStatus: 'Paid via FPX',
+                                status: 'Processing (Paid)',
+                                amountDrawn: true,
+                                paidAt: new Date().toISOString()
+                            }, { merge: true }).catch(err => console.warn("Firestore update paid error:", err));
+                        }
+                    }
+
                     setTimeout(() => {
                         window.showOrderSuccessModal();
-                        showToast("Payment Confirmed", "Your payment via ToyyibPay was verified successfully!");
+                        showToast("Payment Confirmed", "Your payment via ToyyibPay was verified and amount drawn successfully!");
+                        renderCustomerInvoicesTabList();
+                        renderCustomerOrders();
                     }, 600);
                     window.history.replaceState({}, document.title, window.location.pathname);
                 } else if (statusId === '3' || statusId === '2') {
@@ -3215,6 +3265,21 @@
                 }
                 if (mobileAdminLink) mobileAdminLink.classList.add('hidden');
             }
+
+            // Adapt Chat Widget for Customer vs Admin side
+            const chatUserSelect = document.getElementById('admin-active-chat-user');
+            const chatSessionLabel = document.getElementById('chat-session-bar-label');
+            const chatActionBtn = document.getElementById('chat-session-action-btn');
+            if (isAdmin) {
+                if (chatUserSelect) chatUserSelect.style.removeProperty('display');
+                if (chatSessionLabel) chatSessionLabel.innerText = "User Session:";
+                if (chatActionBtn) chatActionBtn.innerText = "Clear";
+            } else {
+                if (chatUserSelect) chatUserSelect.style.setProperty('display', 'none', 'important');
+                if (chatSessionLabel) chatSessionLabel.innerText = "";
+                if (chatActionBtn) chatActionBtn.innerText = "Clear";
+            }
+
             enforceMobileNavForRole();
             renderStoreProducts(products);
             renderCustomerVouchersUI();
@@ -3548,6 +3613,7 @@
             const orderId = `26${Math.floor(Date.now() / 1000).toString().slice(-6)}${randomCode}`;
             pendingOrderId = orderId;
             currentActiveInvoiceId = orderId;
+            localStorage.setItem('sweetopia_last_order_id', orderId);
 
             const newOrder = {
                 id: orderId,
@@ -3561,9 +3627,12 @@
                 discountCode: appliedVoucher ? appliedVoucher.code : null,
                 shippingFee: shippingFee.toFixed(2),
                 total: total.toFixed(2),
-                status: 'Processing',
+                status: 'Pending Payment',
+                paymentStatus: 'Pending Payment',
+                paid: false,
+                amountDrawn: false,
                 trackingNumber: 'Pending',
-                date: new Date().toLocaleString() + ' (FPX Paid)',
+                date: new Date().toLocaleString(),
                 timestamp: dateStr
             };
 
@@ -3645,7 +3714,9 @@
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-2.5">
                         <div class="flex items-center space-x-2">
                             <span class="text-xs font-extrabold text-[#65a30d] font-mono">Order ID: ${o.id}</span>
-                            <span class="text-[10px] bg-blue-50 text-blue-600 border border-blue-200 font-semibold px-2 py-0.5 rounded-lg">${o.status}</span>
+                            <span class="text-[10px] ${o.paid ? 'bg-emerald-50 text-emerald-700 border-emerald-300' : 'bg-amber-50 text-amber-700 border-amber-300'} border font-semibold px-2 py-0.5 rounded-lg">
+                                ${o.paid ? 'Paid via FPX' : 'Pending Payment'}
+                            </span>
                         </div>
                         <span class="text-[10px] text-slate-500 font-medium">Date &amp; Time: ${o.date}</span>
                     </div>
@@ -3669,14 +3740,26 @@
                             <span class="font-mono font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">${o.trackingNumber || 'Pending'}</span>
                         </div>
                         <div class="flex items-center space-x-2">
-                            <button type="button" onclick="openInvoiceModal('${o.id}')" class="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-3 py-1.5 rounded-xl text-xs border border-slate-300 transition flex items-center space-x-1">
-                                <i class="fa-solid fa-eye text-slate-600"></i>
-                                <span>Invoice</span>
-                            </button>
-                            <button type="button" onclick="directDownloadInvoice('${o.id}')" class="bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold px-3 py-1.5 rounded-xl text-xs transition flex items-center space-x-1 shadow-sm">
-                                <i class="fa-solid fa-file-arrow-down"></i>
-                                <span>PNG</span>
-                            </button>
+                            ${!o.paid ? `
+                                <button type="button" onclick="payPendingOrderNow('${o.id}')" class="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold px-3.5 py-1.5 rounded-xl text-xs transition flex items-center space-x-1.5 shadow-sm">
+                                    <i class="fa-solid fa-credit-card"></i>
+                                    <span>Pay Now</span>
+                                </button>
+                            ` : ''}
+                            ${(o.trackingNumber && o.trackingNumber !== 'Pending' && o.trackingNumber.trim() !== '') ? `
+                                <button type="button" onclick="openInvoiceModal('${o.id}')" class="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-3 py-1.5 rounded-xl text-xs border border-slate-300 transition flex items-center space-x-1">
+                                    <i class="fa-solid fa-eye text-slate-600"></i>
+                                    <span>Invoice</span>
+                                </button>
+                                <button type="button" onclick="directDownloadInvoice('${o.id}')" class="bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold px-3 py-1.5 rounded-xl text-xs transition flex items-center space-x-1 shadow-sm">
+                                    <i class="fa-solid fa-file-arrow-down"></i>
+                                    <span>PNG</span>
+                                </button>
+                            ` : `
+                                <span class="text-[10px] text-amber-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200 font-semibold flex items-center gap-1">
+                                    <i class="fa-solid fa-clock"></i> Invoice locked (Pending tracking)
+                                </span>
+                            `}
                         </div>
                     </div>
                 </div>
@@ -3687,25 +3770,39 @@
             const container = document.getElementById('customer-invoices-dynamic-list');
             if (!container) return;
             if (!currentUser) {
-                container.innerHTML = '';
+                container.innerHTML = `<div class="text-center py-6 text-slate-400 text-xs">Please sign in to view your verified invoices.</div>`;
                 return;
             }
 
-            const myOrders = allOrders.filter(o => o.id !== '261009SWEXMPL' && o.customer && o.customer.toLowerCase() === currentUser.email.toLowerCase());
-            if (myOrders.length === 0) {
-                container.innerHTML = '';
+            // Only customers with an active tracking number assigned by admin can view & download their invoice
+            const verifiedPaidOrders = allOrders.filter(o => {
+                const belongsToMe = o.customer && o.customer.toLowerCase() === currentUser.email.toLowerCase();
+                const hasValidTracking = o.trackingNumber && o.trackingNumber !== 'Pending' && o.trackingNumber.trim() !== '';
+                return belongsToMe && hasValidTracking;
+            });
+
+            if (verifiedPaidOrders.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8 text-slate-400 bg-slate-50/70 rounded-2xl border border-dashed border-slate-200 p-4">
+                        <i class="fa-solid fa-file-invoice-dollar text-3xl text-slate-300 mb-2 block"></i>
+                        <p class="text-xs font-semibold text-slate-600">No confirmed invoices available yet</p>
+                        <p class="text-[11px] text-slate-400 mt-1">Invoices and download buttons are unlocked once payment is confirmed and a tracking number is assigned by the admin.</p>
+                    </div>
+                `;
                 return;
             }
 
-            container.innerHTML = myOrders.map(o => `
-                <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/70 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            container.innerHTML = verifiedPaidOrders.map(o => `
+                <div class="p-4 rounded-2xl border border-emerald-200 bg-emerald-50/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
                     <div>
                         <div class="flex items-center space-x-2">
                             <span class="text-xs font-extrabold text-[#65a30d] font-mono">INV-${o.id}</span>
-                            <span class="text-[9px] bg-emerald-50 text-emerald-600 border border-emerald-200 font-bold px-2 py-0.5 rounded uppercase">${o.status}</span>
+                            <span class="text-[9px] bg-emerald-100 text-emerald-800 border border-emerald-300 font-black px-2 py-0.5 rounded uppercase flex items-center gap-1">
+                                <i class="fa-solid fa-circle-check text-[10px]"></i> Paid Customer
+                            </span>
                         </div>
-                        <p class="text-[11px] text-slate-700 mt-1">Order Date: <b>${o.date}</b> • Total: <b class="text-[#65a30d]">RM ${o.total}</b></p>
-                        <p class="text-[10px] text-slate-500">Items: ${(o.items || []).map(i => `${i.name} (PWR ${i.pwr}) x${i.qty}`).join(', ')}</p>
+                        <p class="text-[11px] text-slate-700 mt-1">Order Date: <b>${o.date}</b> • Amount Paid: <b class="text-[#65a30d]">RM ${o.total}</b></p>
+                        <p class="text-[10px] text-slate-500">Tracking: <b class="font-mono text-amber-700">${o.trackingNumber}</b> • Items: ${(o.items || []).map(i => `${i.name} (PWR ${i.pwr}) x${i.qty}`).join(', ')}</p>
                     </div>
 
                     <div class="flex items-center space-x-2 w-full sm:w-auto">
@@ -3947,11 +4044,14 @@
             }
 
             container.innerHTML = allOrders.map(o => `
-                <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50 space-y-3">
+                <div class="p-4 rounded-2xl border ${o.paid ? 'border-emerald-300 bg-emerald-50/20' : 'border-slate-200 bg-slate-50'} space-y-3" id="admin-order-card-${o.id}">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-2">
-                        <div class="flex items-center space-x-2">
+                        <div class="flex items-center space-x-2.5">
+                            <input type="checkbox" data-order-id="${o.id}" class="admin-order-select-checkbox w-4 h-4 text-[#65a30d] rounded border-slate-300 focus:ring-[#65a30d] cursor-pointer">
                             <span class="text-xs font-bold text-[#65a30d] font-mono">${o.id}</span>
-                            <span class="text-[10px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded font-bold">${o.status}</span>
+                            <span class="text-[10px] ${o.paid ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-amber-100 text-amber-800 border-amber-300'} border px-2 py-0.5 rounded font-bold">
+                                ${o.paid ? 'PAID DIRECT FPX' : 'PENDING PAYMENT'}
+                            </span>
                         </div>
                         <span class="text-[10px] text-slate-500 font-medium">Customer: <b class="text-slate-800">${o.customer}</b></span>
                     </div>
@@ -3960,10 +4060,20 @@
                         <div>
                             <p class="font-bold text-slate-900">${o.customerName || 'N/A'} • ${o.customerPhone || 'N/A'}</p>
                             <p class="text-[11px] text-slate-500 mt-0.5">Total Amount: <b class="text-[#65a30d]">RM ${o.total}</b> • Date: ${o.date}</p>
+                            <p class="text-[10px] ${o.paid ? 'text-emerald-700 font-bold' : 'text-amber-600 font-semibold'}">
+                                ${o.paid ? '● Payment Confirmed (Amount Drawn via FPX)' : '○ Unpaid / Pending ToyyibPay FPX'}
+                            </p>
                         </div>
-                        <button onclick="openAdminOrderDetail('${o.id}')" class="bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold px-3 py-2 rounded-xl text-xs transition">
-                            View Details &amp; Tracking
-                        </button>
+                        <div class="flex items-center space-x-2">
+                            ${!o.paid ? `
+                                <button onclick="adminMarkOrderAsPaid('${o.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded-xl text-xs transition shadow-sm">
+                                    <i class="fa-solid fa-check mr-1"></i> Verify Paid
+                                </button>
+                            ` : ''}
+                            <button onclick="openAdminOrderDetail('${o.id}')" class="bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold px-3 py-2 rounded-xl text-xs transition">
+                                View Details &amp; Tracking
+                            </button>
+                        </div>
                     </div>
 
                     <div class="pt-2 border-t border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
@@ -3982,7 +4092,101 @@
                     </div>
                 </div>
             `).join('');
+
+            toggleClearAllButton();
         }
+
+        function confirmToyyibPayRedirect() {
+            closeToyyibPayModal();
+            cart = [];
+            appliedVoucher = null;
+            saveCustomerCartToFirestore();
+            updateCartBadge();
+            renderCartItems();
+
+            // Open ToyyibPay FPX gateway in new tab
+            window.open(TOYYIBPAY_URL, '_blank');
+
+            // NOTE: order_success.exe is strictly reserved for confirmed FPX payment return via ToyyibPay callback (status_id = 1)
+            showToast("ToyyibPay FPX", "Redirected to ToyyibPay. Complete your FPX payment to confirm order.");
+            switchTab('customer-dashboard');
+        }
+
+        window.payPendingOrderNow = function(orderId) {
+            const order = allOrders.find(o => o.id === orderId);
+            if (!order) return;
+            pendingOrderId = order.id;
+            localStorage.setItem('sweetopia_last_order_id', order.id);
+            window.open(TOYYIBPAY_URL, '_blank');
+            showToast("ToyyibPay FPX", "Proceeding to ToyyibPay. Confirmation will be verified upon amount drawn.");
+        };
+
+        window.toggleSelectAll = function() {
+            const masterCheckbox = document.getElementById('confirm-clear-checkbox');
+            if (masterCheckbox && !masterCheckbox.checked) return;
+
+            const checkboxes = document.querySelectorAll('.admin-order-select-checkbox');
+            const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+
+            checkboxes.forEach(cb => {
+                cb.checked = !allChecked;
+            });
+
+            const count = Array.from(checkboxes).filter(cb => cb.checked).length;
+            showToast("Orders Selected", `${count} order(s) selected.`);
+        };
+
+        window.batchClearSelection = function() {
+            const masterCheckbox = document.getElementById('confirm-clear-checkbox');
+            if (masterCheckbox && !masterCheckbox.checked) return;
+
+            const checkboxes = document.querySelectorAll('.admin-order-select-checkbox');
+            checkboxes.forEach(cb => {
+                cb.checked = false;
+            });
+
+            showToast("Selection Cleared", "All order checkboxes cleared. You can still save changes.");
+        };
+
+        window.batchSaveChanges = async function() {
+            const masterCheckbox = document.getElementById('confirm-clear-checkbox');
+            if (masterCheckbox && !masterCheckbox.checked) return;
+
+            const checkboxes = document.querySelectorAll('.admin-order-select-checkbox:checked');
+            const selectedIds = Array.from(checkboxes).map(cb => cb.getAttribute('data-order-id'));
+
+            // Collect all inputs to save
+            const targetIds = selectedIds.length > 0 ? selectedIds : allOrders.map(o => o.id);
+
+            let updatedCount = 0;
+            for (const id of targetIds) {
+                const trackInput = document.getElementById(`admin-track-${id}`);
+                const trackingNum = trackInput ? trackInput.value.trim() : null;
+
+                const order = allOrders.find(o => o.id === id);
+                if (order && trackingNum !== null) {
+                    order.trackingNumber = trackingNum || 'Pending';
+                    order.status = (trackingNum && trackingNum !== 'Pending') ? 'Shipped' : (order.paid ? 'Processing (Paid)' : 'Processing');
+                    updatedCount++;
+
+                    if (db) {
+                        try {
+                            await db.collection("lumilens_orders").doc(id).set({
+                                trackingNumber: order.trackingNumber,
+                                status: order.status
+                            }, { merge: true });
+                        } catch (e) {
+                            console.warn("Batch save error:", e);
+                        }
+                    }
+                }
+            }
+
+            renderAdminOrdersList();
+            renderCustomerOrders();
+            renderCustomerInvoicesTabList();
+            showToast("Changes Saved!", `Successfully saved changes for ${updatedCount} order(s).`);
+        };
 
         async function adminSaveAndPublishTracking(orderId) {
             const input = document.getElementById(`admin-track-${orderId}`);
@@ -4008,6 +4212,31 @@
             renderCustomerInvoicesTabList();
             showToast("Tracking Published!", `Tracking number saved for order ${orderId}.`);
         }
+
+        async function adminMarkOrderAsPaid(orderId) {
+            const order = allOrders.find(o => o.id === orderId);
+            if (order) {
+                order.paid = true;
+                order.paymentStatus = 'Paid via FPX';
+                order.amountDrawn = true;
+                order.status = 'Paid / Processing';
+            }
+            if (db) {
+                try {
+                    await db.collection("lumilens_orders").doc(orderId).set({
+                        paid: true,
+                        paymentStatus: 'Paid via FPX',
+                        amountDrawn: true,
+                        status: 'Paid / Processing'
+                    }, { merge: true });
+                } catch(e) { console.warn(e); }
+            }
+            renderAdminOrdersList();
+            renderCustomerOrders();
+            renderCustomerInvoicesTabList();
+            showToast("Order Verified!", `Order ${orderId} marked as Paid Customer. Invoice now available in customer dashboard.`);
+        }
+        window.adminMarkOrderAsPaid = adminMarkOrderAsPaid;
 
         async function deleteAdminOrder(orderId) {
             if (confirm(`Are you sure you want to delete order ${orderId}?`)) {
@@ -4337,29 +4566,6 @@
             startTimer();
         }
 
-        const defaultStickerAssets = [
-            "https://placehold.co/120x120/fce7f3/db2777?text=Heart+1",
-            "https://placehold.co/120x120/fce7f3/db2777?text=Sparkle+2",
-            "https://placehold.co/120x120/ede9fe/7c3aed?text=Cat+3",
-            "https://placehold.co/120x120/ede9fe/7c3aed?text=Love+4",
-            "https://placehold.co/120x120/dbeafe/2563eb?text=Star+5",
-            "https://placehold.co/120x120/dbeafe/2563eb?text=Cool+6",
-            "https://placehold.co/120x120/dcfce7/16a34a?text=Yay+7",
-            "https://placehold.co/120x120/dcfce7/16a34a?text=Lens+8",
-            "https://placehold.co/120x120/fef3c7/d97706?text=Cute+9",
-            "https://placehold.co/120x120/fef3c7/d97706?text=Hi+10",
-            "https://placehold.co/120x120/ffe4e6/e11d48?text=Wow+11",
-            "https://placehold.co/120x120/ffe4e6/e11d48?text=Kiss+12",
-            "https://placehold.co/120x120/fae8ff/c026d3?text=Sweet+13",
-            "https://placehold.co/120x120/fae8ff/c026d3?text=Bling+14",
-            "https://placehold.co/120x120/e0e7ff/4f46e5?text=Eyes+15",
-            "https://placehold.co/120x120/e0e7ff/4f46e5?text=OK+16",
-            "https://placehold.co/120x120/ecfccb/65a30d?text=Thanks+17",
-            "https://placehold.co/120x120/ecfccb/65a30d?text=Shop+18",
-            "https://placehold.co/120x120/f1f5f9/475569?text=Bye+19",
-            "https://placehold.co/120x120/f1f5f9/475569?text=Smile+20"
-        ];
-
         function renderStickerSlotsGrid() {
             const grid = document.getElementById('sticker-slots-grid');
             if (!grid) return;
@@ -4641,7 +4847,7 @@
                 const matchesFilter = filterVal === 'all' || item.type === filterVal;
                 const matchesSearch = !searchVal || 
                     item.code.toLowerCase().includes(searchVal) || 
-                    item.title.toLowerCase().includes(searchVal) ||
+                    item.title.toLowerCase().includes(searchVal) || 
                     (item.assignedItems || []).some(t => t.toLowerCase().includes(searchVal));
                 return matchesFilter && matchesSearch;
             });
@@ -4720,7 +4926,8 @@
             if (activePresetsList[index]) {
                 activePresetsList[index].active = !activePresetsList[index].active;
                 renderPresetsTable();
-                showToast("Status Changed", `${activePresetsList[index].code} is now ${activePresetsList[index].active ? 'Active' : 'Inactive'}.`);
+                markVoucherPresetsUnsaved();
+                showToast("Status Changed", `${activePresetsList[index].code} is now ${activePresetsList[index].active ? 'Active' : 'Inactive'}. Click 'Save Changes' to apply.`);
             }
         };
 
@@ -4728,8 +4935,48 @@
             if (activePresetsList[index]) {
                 const deleted = activePresetsList.splice(index, 1);
                 renderPresetsTable();
-                showToast("Preset Deleted", `${deleted[0]?.code} removed from active presets.`);
+                markVoucherPresetsUnsaved();
+                showToast("Preset Removed", `${deleted[0]?.code} removed from active list. Click 'Save Changes' to apply.`);
             }
+        };
+
+        function markVoucherPresetsUnsaved() {
+            const saveBtn = document.getElementById('batch-save-changes-btn');
+            if (saveBtn) {
+                saveBtn.classList.add('ring-2', 'ring-emerald-400', 'animate-pulse');
+            }
+        }
+
+        window.batchSaveVoucherPresets = async function() {
+            const saveBtn = document.getElementById('batch-save-changes-btn');
+            if (saveBtn) {
+                saveBtn.classList.remove('ring-2', 'ring-emerald-400', 'animate-pulse');
+            }
+
+            // Sync with assigned vouchers and product vouchers
+            for (const preset of activePresetsList) {
+                if (preset.type === 'product' && preset.assignedProductIds) {
+                    if (activeProductVouchersMap[preset.code]) {
+                        activeProductVouchersMap[preset.code].active = preset.active;
+                    }
+                }
+            }
+
+            if (db) {
+                try {
+                    await db.collection("lumilens_voucher_presets").doc("all_presets").set({
+                        presets: activePresetsList,
+                        updatedAt: new Date().toISOString()
+                    }, { merge: true });
+                } catch(e) {
+                    console.warn("Error saving voucher presets:", e);
+                }
+            }
+
+            localStorage.setItem('sweetopia_active_presets', JSON.stringify(activePresetsList));
+            renderPresetsTable();
+            renderStoreProducts(products);
+            showToast("Changes Saved!", "Active voucher presets and status changes saved successfully.");
         };
 
         function getFormattedVoucherCode(prefix, suffix) {
@@ -4738,6 +4985,66 @@
             if (s.startsWith('[')) s = s.slice(1);
             return `SWEET[${s}]`;
         }
+
+        /* ADMIN BATCH SELECTION & ACTIONS LOGIC */
+        window.toggleClearAllButton = function() {
+            const masterCheckbox = document.getElementById('confirm-clear-checkbox');
+            const isEnabled = masterCheckbox ? masterCheckbox.checked : false;
+
+            const selectAllBtn = document.getElementById('select-all-btn');
+            const clearAllBtn = document.getElementById('clear-all-btn');
+            const saveChangesBtn = document.getElementById('batch-save-orders-btn');
+
+            if (selectAllBtn) selectAllBtn.disabled = !isEnabled;
+            if (clearAllBtn) clearAllBtn.disabled = !isEnabled;
+            if (saveChangesBtn) saveChangesBtn.disabled = !isEnabled;
+        };
+
+        window.toggleSelectAll = function() {
+            const masterCheckbox = document.getElementById('confirm-clear-checkbox');
+            if (masterCheckbox && !masterCheckbox.checked) return;
+
+            const checkboxes = document.querySelectorAll('.admin-order-select-checkbox');
+            const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+
+            checkboxes.forEach(cb => {
+                cb.checked = !allChecked;
+            });
+
+            const count = Array.from(checkboxes).filter(cb => cb.checked).length;
+            showToast("Orders Selected", `${count} order(s) selected.`);
+        };
+
+        window.clearAll = async function() {
+            const masterCheckbox = document.getElementById('confirm-clear-checkbox');
+            if (masterCheckbox && !masterCheckbox.checked) return;
+
+            const checkboxes = document.querySelectorAll('.admin-order-select-checkbox:checked');
+            const selectedIds = Array.from(checkboxes).map(cb => cb.getAttribute('data-order-id'));
+
+            if (selectedIds.length === 0) {
+                showToast("No Orders Selected", "Please select one or more orders to delete.", true);
+                return;
+            }
+
+            if (confirm(`Are you sure you want to delete ${selectedIds.length} selected order(s)?`)) {
+                for (const id of selectedIds) {
+                    allOrders = allOrders.filter(o => o.id !== id);
+                    if (db) {
+                        try {
+                            await db.collection("lumilens_orders").doc(id).delete();
+                        } catch(e) {
+                            console.warn("Delete order error:", e);
+                        }
+                    }
+                }
+
+                renderAdminOrdersList();
+                renderCustomerOrders();
+                renderCustomerInvoicesTabList();
+                showToast("Deleted!", `${selectedIds.length} order(s) removed.`);
+            }
+        };
 
         window.resetSection1Form = function() {
             const form = document.getElementById('voucherFormSection1');
@@ -5195,7 +5502,9 @@
             if (!container) return;
 
             let targetUser = currentUser?.email;
-            if (currentUser && isAdminUser(currentUser.email)) {
+            const isAdmin = currentUser && isAdminUser(currentUser.email);
+
+            if (isAdmin) {
                 targetUser = activeChatSessionUser || document.getElementById('admin-active-chat-user')?.value;
             }
 
@@ -5206,13 +5515,14 @@
 
             const msgs = userSessionsMap[targetUser] || [];
             if (msgs.length === 0) {
-                container.innerHTML = `<div class="text-center text-slate-400 py-10"><i class="fa-solid fa-heart text-2xl text-lime-500 mb-2"></i><p class="text-xs">Chatting with <b class="text-slate-700">${targetUser}</b>.<br>Leave a message or sticker to start conversation.</p></div>`;
+                const partnerName = isAdmin ? targetUser : "admin";
+                container.innerHTML = `<div class="text-center text-slate-400 py-10"><i class="fa-solid fa-heart text-2xl text-lime-500 mb-2"></i><p class="text-xs">Chatting with <b class="text-slate-700">${partnerName}</b>.<br>Leave a message or sticker to start conversation.</p></div>`;
                 return;
             }
 
             container.innerHTML = msgs.map(m => {
                 const isMe = m.sender === currentUser?.email;
-                const isAdmin = m.isAdmin;
+                const isAdminMsg = m.isAdmin;
 
                 let mediaHtml = '';
                 if (m.type === 'sticker' && m.mediaUrl) {
@@ -5237,7 +5547,7 @@
                 return `
                     <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
                         <span class="text-[9px] text-slate-400 mb-0.5 px-1">${m.senderName || m.sender} • ${m.time || ''}</span>
-                        <div class="max-w-[80%] rounded-2xl px-3.5 py-2 text-xs shadow-sm ${isMe ? 'bg-[#65a30d] text-white rounded-tr-none' : (isAdmin ? 'bg-amber-100 text-amber-950 border border-amber-200 rounded-tl-none' : 'bg-white text-slate-800 border border-slate-200 rounded-tl-none')}">
+                        <div class="max-w-[80%] rounded-2xl px-3.5 py-2 text-xs shadow-sm ${isMe ? 'bg-[#65a30d] text-white rounded-tr-none' : (isAdminMsg ? 'bg-amber-100 text-amber-950 border border-amber-200 rounded-tl-none' : 'bg-white text-slate-800 border border-slate-200 rounded-tl-none')}">
                             ${mediaHtml}
                             ${m.text ? `<p>${m.text}</p>` : ''}
                         </div>
@@ -5306,6 +5616,7 @@
         window.processOrderCheckout = processOrderCheckout;
         window.confirmToyyibPayRedirect = confirmToyyibPayRedirect;
         window.closeToyyibPayModal = closeToyyibPayModal;
+        window.payPendingOrderNow = payPendingOrderNow;
         window.openInvoiceModal = openInvoiceModal;
         window.closeInvoiceModal = closeInvoiceModal;
         window.downloadInvoiceAsPNG = downloadInvoiceAsPNG;
@@ -5330,6 +5641,11 @@
         window.renderAdminVoucherCustomerDropdowns = renderAdminVoucherCustomerDropdowns;
         window.renderPresetsTable = renderPresetsTable;
         window.exportInvoicesToCSV = exportInvoicesToCSV;
+        window.toggleClearAllButton = toggleClearAllButton;
+        window.toggleSelectAll = toggleSelectAll;
+        window.clearAll = clearAll;
+        window.batchSaveChanges = batchSaveChanges;
+        window.batchSaveVoucherPresets = batchSaveVoucherPresets;
         window.showToast = showToast;
         window.toggleWidgetChat = toggleWidgetChat;
         window.clearWidgetChat = clearWidgetChat;
@@ -5372,6 +5688,15 @@
 
             renderSection1ChosenCustomers();
             renderAdminVoucherProductDropdowns();
+
+            // Load saved voucher presets if present
+            try {
+                const savedPresets = localStorage.getItem('sweetopia_active_presets');
+                if (savedPresets) {
+                    activePresetsList = JSON.parse(savedPresets);
+                }
+            } catch(e) { console.warn(e); }
+
             renderPresetsTable();
 
             const savedEmail = localStorage.getItem('sweetopia_logged_in_email');
