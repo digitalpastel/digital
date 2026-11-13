@@ -6322,11 +6322,13 @@
                         localStorage.setItem('sweetopia_registered_customers', JSON.stringify(registeredCustomersList));
                     } catch (e) {}
                     renderAdminVoucherCustomerDropdowns();
+                    updateAdminChatUserDropdown();
                     updateChatHeaderAvatars();
                     renderActiveChatMessages();
                 }
             }, () => {
                 renderAdminVoucherCustomerDropdowns();
+                updateAdminChatUserDropdown();
             });
 
             db.collection("lumilens_product_vouchers").onSnapshot((snapshot) => {
@@ -6409,27 +6411,45 @@
         function updateAdminChatUserDropdown() {
             const select = document.getElementById('admin-active-chat-user');
             if (!select) return;
-            const knownUsersSet = new Set(Object.keys(userSessionsMap));
-            allOrders.forEach(o => { if (o.customer) knownUsersSet.add(o.customer); });
-            if (currentUser && currentUser.email) knownUsersSet.add(currentUser.email);
-            const userList = Array.from(knownUsersSet).filter(u => !isAdminUser(u));
+
+            const knownUsersMap = new Map();
+            const addKnownUser = (rawEmail) => {
+                if (!rawEmail || typeof rawEmail !== 'string') return;
+                const clean = rawEmail.trim().toLowerCase();
+                if (!clean || isAdminUser(clean)) return;
+                if (!knownUsersMap.has(clean)) {
+                    knownUsersMap.set(clean, rawEmail.trim());
+                }
+            };
+
+            (registeredCustomersList || []).forEach(addKnownUser);
+            Object.keys(userSessionsMap || {}).forEach(addKnownUser);
+            Object.keys(presenceMap || {}).forEach(addKnownUser);
+            Object.keys(assignedVouchersMap || {}).forEach(addKnownUser);
+            (allOrders || []).forEach(o => { if (o && o.customer) addKnownUser(o.customer); });
+            if (currentUser && currentUser.email) addKnownUser(currentUser.email);
+
+            const userList = Array.from(knownUsersMap.values()).sort((a, b) => a.localeCompare(b));
 
             if (userList.length === 0) {
-                select.innerHTML = '<option value="">No Active Chat</option>';
+                select.innerHTML = '<option value="">No Registered Accounts</option>';
                 return;
             }
-            const currentVal = select.value || activeChatSessionUser;
+            const currentVal = (select.value || activeChatSessionUser || '').trim().toLowerCase();
             select.innerHTML = userList.map(u => {
-                const isOnline = !!presenceMap[u];
+                const cleanKey = u.toLowerCase();
+                const isOnline = !!(presenceMap[u] || presenceMap[cleanKey]);
                 const statusSymbol = isOnline ? '🟢' : '🔘';
                 const statusText = isOnline ? 'Online' : 'Offline';
-                const isGuest = u.toLowerCase().startsWith('guest_') || u.toLowerCase().includes('guest');
+                const isGuest = cleanKey.startsWith('guest_') || cleanKey.endsWith('@sweetopiashop.my');
                 const label = `${statusSymbol} ${u} (${isGuest ? 'Guest' : 'Customer'} - ${statusText})`;
-                return `<option value="${u}" ${u === currentVal ? 'selected' : ''}>${label}</option>`;
+                const isSelected = cleanKey === currentVal;
+                return `<option value="${u}" ${isSelected ? 'selected' : ''}>${label}</option>`;
             }).join('');
 
             if (!activeChatSessionUser && userList.length > 0) {
                 activeChatSessionUser = select.value || userList[0];
+                updateChatHeaderAvatars();
                 renderActiveChatMessages();
             }
             updateSupportIndicator();
@@ -6758,6 +6778,10 @@
                             }
                         }
                     }
+                    renderAdminVoucherCustomerDropdowns();
+                    renderChosenCustomerPromoBanner();
+                    window.renderCustomerNotifications();
+                    updateAdminChatUserDropdown();
                     enforceMobileNavForRole();
                 });
             }
