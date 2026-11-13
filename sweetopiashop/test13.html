@@ -817,8 +817,14 @@
                                     <span>Subtotal (Lens items)</span>
                                     <span id="cart-subtotal">RM 0.00</span>
                                 </div>
-                                <div id="cart-discount-row" class="hidden flex justify-between text-emerald-600 font-semibold">
-                                    <span id="cart-discount-label">Discount Applied</span>
+                                <div id="cart-discount-row" class="hidden flex items-center justify-between text-emerald-600 font-semibold text-xs bg-emerald-50/80 border border-emerald-200 px-3 py-2 rounded-xl">
+                                    <div class="flex items-center space-x-2">
+                                        <span id="cart-discount-label">Discount Applied</span>
+                                        <button type="button" onclick="removeAppliedVoucher()" id="remove-voucher-btn" class="inline-flex items-center space-x-1 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 px-2 py-0.5 rounded-lg text-[10px] font-bold transition shadow-2xs cursor-pointer" title="Remove applied voucher">
+                                            <i class="fa-solid fa-xmark text-[10px]"></i>
+                                            <span>Remove Voucher</span>
+                                        </button>
+                                    </div>
                                     <span id="cart-discount-amount">-RM 0.00</span>
                                 </div>
                                 <div class="flex justify-between text-xs text-slate-600">
@@ -3053,6 +3059,50 @@
             updateCheckoutDisplay();
         };
 
+        window.removeAppliedVoucher = async function() {
+            if (!appliedVoucher) return;
+            const removedCode = appliedVoucher.code;
+
+            // Clear active cart voucher state
+            appliedVoucher = null;
+
+            // Reset voucher input fields & dropdown selections
+            const input = document.getElementById('voucher-code-input');
+            if (input) input.value = '';
+
+            const cartSelect = document.getElementById('cart-assigned-voucher-select');
+            if (cartSelect) cartSelect.value = '';
+
+            const dashSelect = document.getElementById('customer-voucher-select');
+            if (dashSelect) dashSelect.value = '';
+
+            const errorMsg = document.getElementById('voucher-error-msg');
+            if (errorMsg) errorMsg.innerText = '';
+
+            // Ensure voucher is released and remains available (unused) for reuse
+            if (currentUser && !isGuestUser() && currentUser.email) {
+                const userKey = currentUser.email.toLowerCase();
+                if (assignedVouchersMap[userKey]) {
+                    const vIdx = assignedVouchersMap[userKey].findIndex(
+                        v => v.code && v.code.toUpperCase() === removedCode.toUpperCase()
+                    );
+                    if (vIdx !== -1 && assignedVouchersMap[userKey][vIdx].used) {
+                        assignedVouchersMap[userKey][vIdx].used = false;
+                        delete assignedVouchersMap[userKey][vIdx].usedAt;
+                        await syncAssignedVouchersStorage();
+                    }
+                }
+            }
+
+            // Refresh voucher UI, banner, and recalculate cart totals immediately
+            renderCustomerVouchersUI();
+            renderChosenCustomerPromoBanner();
+            updateCheckoutDisplay();
+
+            showToast("Voucher Removed", `Voucher ${removedCode} was removed and released back to your available vouchers.`);
+        };
+        window.removeAppliedVoucher = removeAppliedVoucher;
+
         function renderFavouritesGrid() {
             const grid = document.getElementById('favourites-product-grid');
             if (!grid) return;
@@ -3993,6 +4043,12 @@
         async function clearCart() {
             cart = [];
             appliedVoucher = null;
+            const input = document.getElementById('voucher-code-input');
+            if (input) input.value = '';
+            const cartSelect = document.getElementById('cart-assigned-voucher-select');
+            if (cartSelect) cartSelect.value = '';
+            renderCustomerVouchersUI();
+            renderChosenCustomerPromoBanner();
             await saveCustomerCartToFirestore();
             updateCartBadge();
             renderCartItems();
