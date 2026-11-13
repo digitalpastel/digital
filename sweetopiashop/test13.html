@@ -638,20 +638,20 @@
 
                         <button onclick="switchTab('favourites')" id="dtab-favourites" class="px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] flex items-center space-x-2 shrink-0">
                             <i class="fa-regular fa-heart text-xs"></i>
-                            <span>Favourites (<span id="header-fav-count">0</span>)</span>
-                        </button>
+                    <div class="hidden sm:flex items-center space-x-4 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200">
+                        <!-- Avatar & Email Group (Centered and stacked vertically) -->
+                        <div class="flex flex-col items-center justify-center space-y-1">
+                            <!-- Avatar Container (Centered, no pencil icon) -->
+                            <div id="header-user-avatar-container" class="w-12 h-12 rounded-full bg-[#65a30d]/20 border-2 border-[#65a30d] flex items-center justify-center text-[#84cc16] text-lg font-bold shadow-sm overflow-hidden">
+                                <i id="header-user-avatar-icon" class="fa-solid fa-user text-sm"></i>
+                            </div>
 
-                        <button onclick="switchTab('cart')" id="dtab-cart" class="px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] flex items-center space-x-2 shrink-0">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                            <span>Cart (<span id="header-cart-count">0</span>)</span>
-                        </button>
-                    </div>
+                            <!-- User Email at the Bottom of Avatar (Centered & Smaller Font) -->
+                            <span id="user-email-display" class="text-[10px] text-slate-600 font-medium truncate max-w-[140px] text-center">useremail@gmail.com</span>
+                        </div>
 
-                    <div class="hidden sm:flex items-center justify-between sm:justify-end w-full sm:w-auto space-x-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200">
-                        <span id="user-email-display" class="text-xs text-slate-700 font-semibold truncate max-w-[200px]">customer@gmail.com</span>
-                        <button type="button" id="desktop-customer-auth-btn" onclick="handleSignOut()" class="px-4 py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 hover:bg-fuchsia-600 text-white border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all shrink-0 cursor-pointer">
-                            Sign Out
-                        </button>
+                        <!-- Sign Out Button -->
+                        <button type="button" id="desktop-customer-auth-btn" onclick="handleSignOut()" class="px-4 py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 hover:bg-fuchsia-600 text-white border-2 border-black shadow-[0_3px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all shrink-0 cursor-pointer">Sign Out</button>
                     </div>
                 </div>
 
@@ -5118,53 +5118,6 @@
             modal?.classList.add('opacity-0', 'pointer-events-none');
         }
 
-        function applySavedMobileAvatar() {
-            const container = document.getElementById('mobile-user-avatar-container');
-            if (!container) return;
-            const saved = localStorage.getItem('sweetopia_user_avatar');
-            if (saved && saved.startsWith('data:image')) {
-                container.innerHTML = `<img src="${saved}" alt="Profile Avatar" class="w-full h-full object-cover">`;
-            } else if (saved && saved.startsWith('icon:')) {
-                const iconClass = saved.replace('icon:', '');
-                container.innerHTML = `<i id="mobile-user-avatar-icon" class="fa-solid ${iconClass} text-base"></i>`;
-            } else {
-                container.innerHTML = `<i id="mobile-user-avatar-icon" class="fa-solid fa-user text-base"></i>`;
-            }
-        }
-
-        window.openAvatarModal = function() {
-            const modal = document.getElementById('avatar-selector-modal');
-            modal?.classList.remove('opacity-0', 'pointer-events-none');
-            modal?.classList.add('opacity-100');
-        };
-
-        window.closeAvatarModal = function() {
-            const modal = document.getElementById('avatar-selector-modal');
-            modal?.classList.remove('opacity-100');
-            modal?.classList.add('opacity-0', 'pointer-events-none');
-        };
-
-        window.selectUserAvatar = function(val) {
-            localStorage.setItem('sweetopia_user_avatar', val);
-            applySavedMobileAvatar();
-            window.closeAvatarModal();
-            showToast("Avatar Updated", "Your profile icon has been updated.");
-        };
-
-        window.handleCustomAvatarUpload = function(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                localStorage.setItem('sweetopia_user_avatar', e.target.result);
-                applySavedMobileAvatar();
-                window.closeAvatarModal();
-                showToast("Avatar Uploaded", "Custom profile photo saved.");
-            };
-            reader.readAsDataURL(file);
-            event.target.value = '';
-        };
-
         async function submitForgotPassword() {
             const emailInput = document.getElementById('forgot-email');
             const email = emailInput ? emailInput.value.trim() : '';
@@ -5297,6 +5250,62 @@
                 type: 'sticker',
                 mediaUrl: stickerSrc,
                 text: 'Sent a sticker'
+            });
+        }
+
+        window.openAvatarModal = function() {
+            const modal = document.getElementById('avatar-selector-modal');
+            modal?.classList.remove('opacity-0', 'pointer-events-none');
+            modal?.classList.add('opacity-100');
+        };
+
+        window.closeAvatarModal = function() {
+            const modal = document.getElementById('avatar-selector-modal');
+            modal?.classList.remove('opacity-100');
+            modal?.classList.add('opacity-0', 'pointer-events-none');
+        };
+
+        window.selectUserAvatar = function(avatarValue) {
+            localStorage.setItem('sweetopia_user_avatar', avatarValue);
+            applySavedMobileAvatar();
+            window.closeAvatarModal();
+            showToast("Avatar Updated", "Your profile avatar has been updated.");
+        };
+
+        window.handleCustomAvatarUpload = function(event) {
+            const file = event.target.files?.[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                localStorage.setItem('sweetopia_user_avatar', e.target.result);
+                applySavedMobileAvatar();
+                window.closeAvatarModal();
+                showToast("Photo Uploaded", "Your custom profile photo has been updated.");
+            };
+            reader.readAsDataURL(file);
+            event.target.value = '';
+        };
+
+        function applySavedMobileAvatar() {
+            const containers = [
+                document.getElementById('mobile-user-avatar-container'),
+                document.getElementById('header-user-avatar-container')
+            ];
+            const saved = localStorage.getItem('sweetopia_user_avatar');
+
+            containers.forEach((container, idx) => {
+                if (!container) return;
+                const iconId = idx === 0 ? 'mobile-user-avatar-icon' : 'header-user-avatar-icon';
+                const iconSize = idx === 0 ? 'text-base' : 'text-sm';
+
+                if (saved && saved.startsWith('data:image')) {
+                    container.innerHTML = `<img src="${saved}" alt="Profile Avatar" class="w-full h-full object-cover">`;
+                } else if (saved && saved.startsWith('icon:')) {
+                    const iconClass = saved.replace('icon:', '');
+                    container.innerHTML = `<i id="${iconId}" class="fa-solid ${iconClass} ${iconSize}"></i>`;
+                } else {
+                    container.innerHTML = `<i id="${iconId}" class="fa-solid fa-user ${iconSize}"></i>`;
+                }
             });
         }
 
