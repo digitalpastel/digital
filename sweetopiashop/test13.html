@@ -877,23 +877,37 @@
 
                         <!-- MOBILE PROFILE CARD -->
                         <div class="block md:hidden">
-                            <div class="flex items-center space-x-4 bg-slate-800/80 p-4 rounded-3xl border border-slate-700 mb-4">
-                                <div class="w-14 h-14 rounded-full bg-[#65a30d]/20 border-2 border-[#65a30d] flex items-center justify-center text-[#84cc16] text-xl font-bold">
-                                    <span id="mobile-user-avatar">Y</span>
+                            <!-- User Profile Card: Modern Minimalist Style with Icon & Edit Pencil -->
+                            <div class="flex items-center space-x-4 bg-slate-900/90 p-4 rounded-3xl border border-slate-800 shadow-lg mb-4 backdrop-blur-md relative">
+                                <!-- User Icon Container with Small Pencil Edit Button -->
+                                <div class="relative flex-shrink-0">
+                                    <div id="mobile-user-avatar-container" class="w-14 h-14 rounded-full bg-[#65a30d]/20 border-2 border-[#65a30d] flex items-center justify-center text-[#84cc16] text-xl font-bold shadow-sm overflow-hidden">
+                                        <i id="mobile-user-avatar-icon" class="fa-solid fa-user text-base"></i>
+                                    </div>
+                                    <!-- Small Pencil Trigger Button -->
+                                    <button type="button" onclick="openAvatarModal()" class="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-[#65a30d] hover:bg-[#84cc16] text-slate-950 flex items-center justify-center shadow-md border-2 border-slate-900 transition-transform hover:scale-110 cursor-pointer" title="Change Avatar">
+                                        <i class="fa-solid fa-pencil text-[10px]"></i>
+                                    </button>
                                 </div>
+
                                 <div>
-                                    <h3 id="mobile-user-name" class="text-sm font-bold text-white">yeegummy</h3>
-                                    <p id="mobile-user-email" class="text-xs text-slate-400">yeegummy@gmail.com</p>
+                                    <h3 id="mobile-user-name" class="text-sm font-bold text-white tracking-wide">brandworkzco</h3>
+                                    <p id="mobile-user-email" class="text-xs text-slate-400 font-normal">brandworkzco@gmail.com</p>
                                 </div>
                             </div>
 
-                            <div id="mobile-admin-workspace-link" class="mb-4">
-                                <div onclick="switchTab('admin-workspace')" class="bg-amber-500/10 hover:bg-amber-500/20 p-4 rounded-2xl border border-amber-500/40 flex items-center justify-between cursor-pointer transition shadow-sm">
-                                    <div class="flex items-center space-x-3 text-amber-600">
-                                        <i class="fa-solid fa-shield-halved text-base"></i>
-                                        <span class="text-xs font-bold text-slate-900">Admin Workspace Control Center</span>
+                            <!-- Admin Workspace Link: Modern Amber Accent -->
+                            <div id="mobile-admin-workspace-link" class="mb-4 hidden">
+                                <div onclick="switchTab('admin-workspace')" class="bg-amber-500/10 hover:bg-amber-500/20 p-4 rounded-2xl border border-amber-500/30 flex items-center justify-between cursor-pointer transition-all shadow-sm group">
+                                    <div class="flex items-center space-x-3 text-amber-500">
+                                        <div class="w-8 h-8 rounded-xl bg-amber-500/10 flex items-center justify-center">
+                                            <i class="fa-solid fa-shield-halved text-xs"></i>
+                                        </div>
+                                        <span class="text-xs font-bold text-white tracking-wide">Admin Workspace Control Center</span>
                                     </div>
-                                    <i class="fa-solid fa-chevron-right text-xs text-amber-600"></i>
+                                    <div class="w-7 h-7 rounded-lg bg-slate-800/80 flex items-center justify-center text-amber-500 group-hover:translate-x-0.5 transition-transform">
+                                        <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1967,6 +1981,39 @@
                     <button onclick="submitForgotPassword()" class="w-full bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold py-3 rounded-xl text-xs shadow-sm">
                         Send Reset Email
                     </button>
+                </div>
+            </div>
+
+            <!-- MOBILE AVATAR SELECTOR MODAL -->
+            <div id="avatar-selector-modal" class="fixed inset-0 z-[135] bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300" onclick="closeAvatarModal()">
+                <div class="w-full max-w-sm bg-white rounded-3xl border-2 border-black shadow-[6px_6px_0_0_#1e1b4b] overflow-hidden flex flex-col p-5 space-y-4" onclick="event.stopPropagation()">
+                    <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+                        <h3 class="text-sm font-black text-slate-900">Choose Profile Avatar</h3>
+                        <button type="button" onclick="closeAvatarModal()" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600">
+                            <i class="fa-solid fa-xmark text-xs"></i>
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-4 gap-2.5 text-center">
+                        <button type="button" onclick="selectUserAvatar('icon:fa-user')" class="p-3 rounded-2xl bg-slate-50 hover:bg-lime-50 border border-slate-200 hover:border-[#65a30d] flex items-center justify-center text-[#65a30d] text-lg transition">
+                            <i class="fa-solid fa-user"></i>
+                        </button>
+                        <button type="button" onclick="selectUserAvatar('icon:fa-cat')" class="p-3 rounded-2xl bg-slate-50 hover:bg-pink-50 border border-slate-200 hover:border-pink-400 flex items-center justify-center text-pink-500 text-lg transition">
+                            <i class="fa-solid fa-cat"></i>
+                        </button>
+                        <button type="button" onclick="selectUserAvatar('icon:fa-crown')" class="p-3 rounded-2xl bg-slate-50 hover:bg-amber-50 border border-slate-200 hover:border-amber-400 flex items-center justify-center text-amber-500 text-lg transition">
+                            <i class="fa-solid fa-crown"></i>
+                        </button>
+                        <button type="button" onclick="selectUserAvatar('icon:fa-star')" class="p-3 rounded-2xl bg-slate-50 hover:bg-purple-50 border border-slate-200 hover:border-purple-400 flex items-center justify-center text-purple-500 text-lg transition">
+                            <i class="fa-solid fa-star"></i>
+                        </button>
+                    </div>
+                    <div class="pt-1">
+                        <label class="w-full py-2.5 px-4 bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold text-xs rounded-xl flex items-center justify-center space-x-2 cursor-pointer transition shadow-sm">
+                            <i class="fa-solid fa-upload text-xs"></i>
+                            <span>Upload Custom Photo</span>
+                            <input type="file" accept="image/*" class="hidden" onchange="handleCustomAvatarUpload(event)">
+                        </label>
+                    </div>
                 </div>
             </div>
 
@@ -3782,8 +3829,7 @@
             const mobileUserName = document.getElementById('mobile-user-name');
             if (mobileUserName) mobileUserName.innerText = email.split('@')[0];
 
-            const mobileUserAvatar = document.getElementById('mobile-user-avatar');
-            if (mobileUserAvatar) mobileUserAvatar.innerText = email.charAt(0).toUpperCase();
+            applySavedMobileAvatar();
 
             const customerNavBar = document.getElementById('customer-nav-bar');
             const adminNavBar = document.getElementById('admin-nav-bar');
@@ -5071,6 +5117,53 @@
             modal?.classList.remove('opacity-100');
             modal?.classList.add('opacity-0', 'pointer-events-none');
         }
+
+        function applySavedMobileAvatar() {
+            const container = document.getElementById('mobile-user-avatar-container');
+            if (!container) return;
+            const saved = localStorage.getItem('sweetopia_user_avatar');
+            if (saved && saved.startsWith('data:image')) {
+                container.innerHTML = `<img src="${saved}" alt="Profile Avatar" class="w-full h-full object-cover">`;
+            } else if (saved && saved.startsWith('icon:')) {
+                const iconClass = saved.replace('icon:', '');
+                container.innerHTML = `<i id="mobile-user-avatar-icon" class="fa-solid ${iconClass} text-base"></i>`;
+            } else {
+                container.innerHTML = `<i id="mobile-user-avatar-icon" class="fa-solid fa-user text-base"></i>`;
+            }
+        }
+
+        window.openAvatarModal = function() {
+            const modal = document.getElementById('avatar-selector-modal');
+            modal?.classList.remove('opacity-0', 'pointer-events-none');
+            modal?.classList.add('opacity-100');
+        };
+
+        window.closeAvatarModal = function() {
+            const modal = document.getElementById('avatar-selector-modal');
+            modal?.classList.remove('opacity-100');
+            modal?.classList.add('opacity-0', 'pointer-events-none');
+        };
+
+        window.selectUserAvatar = function(val) {
+            localStorage.setItem('sweetopia_user_avatar', val);
+            applySavedMobileAvatar();
+            window.closeAvatarModal();
+            showToast("Avatar Updated", "Your profile icon has been updated.");
+        };
+
+        window.handleCustomAvatarUpload = function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                localStorage.setItem('sweetopia_user_avatar', e.target.result);
+                applySavedMobileAvatar();
+                window.closeAvatarModal();
+                showToast("Avatar Uploaded", "Custom profile photo saved.");
+            };
+            reader.readAsDataURL(file);
+            event.target.value = '';
+        };
 
         async function submitForgotPassword() {
             const emailInput = document.getElementById('forgot-email');
