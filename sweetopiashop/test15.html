@@ -1690,11 +1690,14 @@
                         <!-- Header -->
                         <div class="bg-gradient-to-r from-[#65a30d] to-[#4d7c0f] text-white px-4 py-3.5 rounded-t-3xl flex items-center justify-between shadow-md relative z-10">
                             <div class="flex items-center space-x-2.5">
-                                <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center font-bold text-sm border border-white/30">
+                                <div id="chat-header-avatar-box" class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center font-bold text-sm border border-white/30 overflow-hidden shrink-0">
                                     <i class="fa-solid fa-headset text-white"></i>
                                 </div>
                                 <div>
-                                    <h4 class="text-xs font-bold">Sweetopia Live Support</h4>
+                                    <div class="flex items-center space-x-1.5">
+                                        <h4 class="text-xs font-bold">Sweetopia Live Support</h4>
+                                        <span id="chat-header-user-avatar-badge" class="hidden w-5 h-5 rounded-full border border-white/80 overflow-hidden bg-white/20 items-center justify-center shrink-0"></span>
+                                    </div>
                                     <p class="text-[10px] text-lime-100 flex items-center" id="support-status-indicator">
                                         <span id="support-dot-indicator" class="w-2 h-2 rounded-full bg-emerald-400 inline-block mr-1"></span>
                                         <span id="widgetStatusText">Online &amp; Active</span>
@@ -2541,7 +2544,65 @@
         let activeChatSessionUser = null;
         let presenceMap = {};
         let userSessionsMap = {};
+        let userAvatarsMap = {};
         let registeredCustomersList = [];
+
+        const DEFAULT_USER_AVATAR = "https://digitalpastel.github.io/digital/sweetopiashop/Bratz1.webp";
+
+        function getUserAvatarForEmail(email) {
+            if (!email) return DEFAULT_USER_AVATAR;
+            const clean = email.trim().toLowerCase();
+            if (currentUser && currentUser.email && currentUser.email.trim().toLowerCase() === clean) {
+                const localSaved = localStorage.getItem('sweetopia_user_avatar');
+                if (localSaved) return localSaved;
+            }
+            return userAvatarsMap[clean] || DEFAULT_USER_AVATAR;
+        }
+
+        function renderAvatarSmallInnerHtml(avatarVal, fallbackIcon = 'fa-user') {
+            if (avatarVal && (avatarVal.startsWith('data:image') || avatarVal.startsWith('http://') || avatarVal.startsWith('https://'))) {
+                return `<img src="${avatarVal}" alt="User Avatar" class="w-full h-full object-cover">`;
+            } else if (avatarVal && avatarVal.startsWith('icon:')) {
+                const iconClass = avatarVal.replace('icon:', '');
+                return `<i class="fa-solid ${iconClass} text-[11px]"></i>`;
+            }
+            return `<img src="${DEFAULT_USER_AVATAR}" alt="User Avatar" class="w-full h-full object-cover">`;
+        }
+
+        function updateChatHeaderAvatars() {
+            const headerMainBox = document.getElementById('chat-header-avatar-box');
+            const headerUserBadge = document.getElementById('chat-header-user-avatar-badge');
+            if (!headerMainBox) return;
+
+            const isAdmin = currentUser && isAdminUser(currentUser.email);
+
+            if (isAdmin) {
+                // Admin always uses the headphone icon in the main header avatar box
+                headerMainBox.innerHTML = `<i class="fa-solid fa-headset text-white"></i>`;
+                // Show the selected customer/user's avatar next to "Sweetopia Live Support"
+                const targetUser = activeChatSessionUser || document.getElementById('admin-active-chat-user')?.value;
+                if (headerUserBadge) {
+                    if (targetUser) {
+                        const userAvatar = getUserAvatarForEmail(targetUser);
+                        headerUserBadge.innerHTML = renderAvatarSmallInnerHtml(userAvatar);
+                        headerUserBadge.title = `Chatting with ${targetUser}`;
+                        headerUserBadge.classList.remove('hidden');
+                        headerUserBadge.classList.add('inline-flex');
+                    } else {
+                        headerUserBadge.classList.add('hidden');
+                        headerUserBadge.classList.remove('inline-flex');
+                    }
+                }
+            } else {
+                // Customer/User sees their chosen avatar in the chat widget header
+                const myAvatar = currentUser ? getUserAvatarForEmail(currentUser.email) : DEFAULT_USER_AVATAR;
+                headerMainBox.innerHTML = renderAvatarSmallInnerHtml(myAvatar);
+                if (headerUserBadge) {
+                    headerUserBadge.classList.add('hidden');
+                    headerUserBadge.classList.remove('inline-flex');
+                }
+            }
+        }
 
         let customerAddresses = [
             {
@@ -4008,6 +4069,7 @@
                 if (chatActionBtn) chatActionBtn.innerText = "Clear";
             }
 
+            updateChatHeaderAvatars();
             enforceMobileNavForRole();
             renderStoreProducts(products);
             renderCustomerVouchersUI();
@@ -5367,7 +5429,21 @@
 
         window.selectUserAvatar = function(avatarValue) {
             localStorage.setItem('sweetopia_user_avatar', avatarValue);
+            if (currentUser && currentUser.email && !isAdminUser(currentUser.email)) {
+                const cleanEmail = currentUser.email.trim().toLowerCase();
+                userAvatarsMap[cleanEmail] = avatarValue;
+                if (db && !isGuestUser()) {
+                    const docKey = cleanEmail.replace(/[^a-zA-Z0-9]/g, '_');
+                    db.collection("lumilens_users").doc(docKey).set({
+                        email: cleanEmail,
+                        avatar: avatarValue,
+                        updatedAt: new Date().toISOString()
+                    }, { merge: true }).catch(() => {});
+                }
+            }
             applySavedMobileAvatar();
+            updateChatHeaderAvatars();
+            renderActiveChatMessages();
             window.closeAvatarModal();
             showToast("Avatar Updated", "Your profile avatar has been updated.");
         };
@@ -5377,8 +5453,23 @@
             if (!file) return;
             const reader = new FileReader();
             reader.onload = function(e) {
-                localStorage.setItem('sweetopia_user_avatar', e.target.result);
+                const avatarData = e.target.result;
+                localStorage.setItem('sweetopia_user_avatar', avatarData);
+                if (currentUser && currentUser.email && !isAdminUser(currentUser.email)) {
+                    const cleanEmail = currentUser.email.trim().toLowerCase();
+                    userAvatarsMap[cleanEmail] = avatarData;
+                    if (db && !isGuestUser()) {
+                        const docKey = cleanEmail.replace(/[^a-zA-Z0-9]/g, '_');
+                        db.collection("lumilens_users").doc(docKey).set({
+                            email: cleanEmail,
+                            avatar: avatarData,
+                            updatedAt: new Date().toISOString()
+                        }, { merge: true }).catch(() => {});
+                    }
+                }
                 applySavedMobileAvatar();
+                updateChatHeaderAvatars();
+                renderActiveChatMessages();
                 window.closeAvatarModal();
                 showToast("Photo Uploaded", "Your custom profile photo has been updated.");
             };
@@ -5403,9 +5494,10 @@
                     const iconClass = saved.replace('icon:', '');
                     el.innerHTML = `<i id="${iconId}" class="fa-solid ${iconClass} ${iconSize}"></i>`;
                 } else {
-                    el.innerHTML = `<img src="https://digitalpastel.github.io/digital/sweetopiashop/Bratz1.webp" alt="Profile Avatar" class="w-full h-full object-cover">`;
+                    el.innerHTML = `<img src="${DEFAULT_USER_AVATAR}" alt="Profile Avatar" class="w-full h-full object-cover">`;
                 }
             });
+            updateChatHeaderAvatars();
         }
 
         function handleCustomStickerUpload(event) {
@@ -5502,6 +5594,7 @@
             const isClosed = win.classList.contains('hidden') || win.classList.contains('opacity-0');
             if (isClosed) {
                 renderStickerSlotsGrid();
+                updateChatHeaderAvatars();
                 win.classList.remove('hidden');
                 requestAnimationFrame(() => {
                     win.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
@@ -5542,10 +5635,13 @@
                 }
             }
 
+            const senderAvatar = isAdmin ? null : getUserAvatarForEmail(currentUser.email);
+
             const newMsg = {
                 id: 'msg_' + Date.now(),
                 sender: currentUser.email,
                 senderName: isAdmin ? 'Admin Support' : (currentUser.guestId || currentUser.email.split('@')[0]),
+                senderAvatar: senderAvatar,
                 text: msgPayload.text || '',
                 type: msgPayload.type || 'text',
                 mediaUrl: msgPayload.mediaUrl || null,
@@ -5566,6 +5662,7 @@
                     const docKey = targetSessionUser.replace(/[^a-zA-Z0-9]/g, '_');
                     await db.collection("lumilens_chats").doc(docKey).set({
                         userEmail: targetSessionUser,
+                        userAvatar: isAdmin ? getUserAvatarForEmail(targetSessionUser) : senderAvatar,
                         messages: existingMsgs,
                         lastUpdated: new Date().toISOString()
                     }, { merge: true });
@@ -6227,7 +6324,11 @@
                     snapshot.forEach(docSnap => {
                         const data = docSnap.data();
                         if (data && data.email && !isAdminUser(data.email)) {
-                            merged.add(data.email.trim().toLowerCase());
+                            const cleanEm = data.email.trim().toLowerCase();
+                            merged.add(cleanEm);
+                            if (data.avatar) {
+                                userAvatarsMap[cleanEm] = data.avatar;
+                            }
                         }
                     });
                     registeredCustomersList = Array.from(merged);
@@ -6235,6 +6336,8 @@
                         localStorage.setItem('sweetopia_registered_customers', JSON.stringify(registeredCustomersList));
                     } catch (e) {}
                     renderAdminVoucherCustomerDropdowns();
+                    updateChatHeaderAvatars();
+                    renderActiveChatMessages();
                 }
             }, () => {
                 renderAdminVoucherCustomerDropdowns();
@@ -6270,6 +6373,23 @@
                     updateAdminChatUserDropdown();
                     updateSupportIndicator();
                     renderAdminVoucherCustomerDropdowns();
+                }
+            }, () => {});
+
+            db.collection("lumilens_chats").onSnapshot((snapshot) => {
+                if (snapshot) {
+                    snapshot.forEach(docSnap => {
+                        const data = docSnap.data();
+                        if (data && data.userEmail) {
+                            userSessionsMap[data.userEmail] = data.messages || [];
+                            if (data.userAvatar) {
+                                userAvatarsMap[data.userEmail.trim().toLowerCase()] = data.userAvatar;
+                            }
+                        }
+                    });
+                    updateAdminChatUserDropdown();
+                    updateChatHeaderAvatars();
+                    renderActiveChatMessages();
                 }
             }, () => {});
         }
@@ -6333,6 +6453,7 @@
             const select = document.getElementById('admin-active-chat-user');
             if (select) {
                 activeChatSessionUser = select.value;
+                updateChatHeaderAvatars();
                 renderActiveChatMessages();
             }
         }
@@ -6407,12 +6528,19 @@
                     ? `max-w-[80%] rounded-2xl px-3.5 py-2 text-xs bg-[transparent] ${isMe ? 'rounded-tr-none text-slate-600 text-right' : 'rounded-tl-none text-slate-600 text-left'}`
                     : `max-w-[80%] rounded-2xl px-3.5 py-2 text-xs shadow-sm ${isMe ? 'bg-[#65a30d] text-white rounded-tr-none' : (isAdminMsg ? 'bg-amber-100 text-amber-950 border border-amber-200 rounded-tl-none' : 'bg-white text-slate-800 border border-slate-200 rounded-tl-none')}`;
 
+                const avatarBadgeHtml = isAdminMsg
+                    ? `<div class="w-6 h-6 rounded-full bg-amber-500 text-white flex items-center justify-center border border-amber-600 shrink-0 shadow-xs" title="Admin Support"><i class="fa-solid fa-headset text-[10px]"></i></div>`
+                    : `<div class="w-6 h-6 rounded-full bg-lime-100 border border-[#65a30d] overflow-hidden flex items-center justify-center shrink-0 shadow-xs">${renderAvatarSmallInnerHtml(m.senderAvatar || getUserAvatarForEmail(m.sender))}</div>`;
+
                 return `
                     <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
                         <span class="text-[9px] text-slate-400 mb-0.5 px-1">${m.senderName || m.sender} • ${m.time || ''}</span>
-                        <div class="${bubbleClass}">
-                            ${mediaHtml}
-                            ${m.text ? `<p>${m.text}</p>` : ''}
+                        <div class="flex items-end gap-1.5 max-w-full ${isMe ? 'flex-row-reverse' : 'flex-row'}">
+                            ${avatarBadgeHtml}
+                            <div class="${bubbleClass}">
+                                ${mediaHtml}
+                                ${m.text ? `<p>${m.text}</p>` : ''}
+                            </div>
                         </div>
                     </div>
                 `;
