@@ -524,6 +524,10 @@
                             <button type="button" onclick="markAllNotificationsRead()" class="text-[10px] font-extrabold bg-white/90 hover:bg-white text-slate-900 px-2.5 py-1 rounded-lg border border-black shadow-[1px_1px_0_0_#000] transition cursor-pointer">
                                 Mark read
                             </button>
+                            <button type="button" onclick="clearAllCustomerNotifications()" class="bg-pink-500/10 text-pink-400 hover:bg-pink-500/20 text-xs px-3 py-1 rounded-full transition-all font-bold bg-white/95 border border-black shadow-[1px_1px_0_0_#000] inline-flex items-center gap-1 cursor-pointer" title="Clear all notifications">
+                                <i class="fa-solid fa-broom text-[10px]"></i>
+                                <span>Clear All</span>
+                            </button>
                             <button type="button" onclick="closeCustomerNotifications()" class="w-6 h-6 rounded-full bg-rose-500 hover:bg-rose-600 text-white border border-black flex items-center justify-center text-xs font-black shadow-[1px_1px_0_0_#000] cursor-pointer">
                                 ×
                             </button>
@@ -2345,6 +2349,7 @@
         let pendingOrderId = null;
         let currentActiveInvoiceId = null;
         let readNotificationKeys = new Set();
+        let clearedNotificationKeys = new Set();
 
         let appliedVoucher = null;
         const VALID_VOUCHERS = {
@@ -2388,7 +2393,81 @@
                 if (stored) {
                     readNotificationKeys = new Set(JSON.parse(stored));
                 }
+                const storedCleared = localStorage.getItem('sweetopia_cleared_notif_keys');
+                if (storedCleared) {
+                    clearedNotificationKeys = new Set(JSON.parse(storedCleared));
+                }
             } catch (e) { console.warn(e); }
+        }
+
+        function saveReadNotifications() {
+            try {
+                localStorage.setItem('sweetopia_read_notif_keys', JSON.stringify(Array.from(readNotificationKeys)));
+                localStorage.setItem('sweetopia_cleared_notif_keys', JSON.stringify(Array.from(clearedNotificationKeys)));
+            } catch (e) { console.warn(e); }
+        }
+
+        function getCustomerNotificationItems() {
+            if (!currentUser || isGuestUser() || !currentUser.email || isAdminUser(currentUser.email)) {
+                return [];
+            }
+
+            const myEmail = currentUser.email.toLowerCase();
+            const myOrders = allOrders.filter(o => o.customer && o.customer.toLowerCase() === myEmail);
+
+            return myOrders.map(o => {
+                const hasTracking = o.trackingNumber && o.trackingNumber !== 'Pending' && o.trackingNumber.trim() !== '';
+                const isPaid = !!o.paid || o.amountDrawn === true || (o.paymentStatus && o.paymentStatus.toLowerCase().includes('paid'));
+
+                let stage = 'pending';
+                let title = '';
+                let subtitle = '';
+                let stateKey = '';
+                let badgeLabel = '';
+                let iconHtml = '';
+                let actionHtml = '';
+
+                if (hasTracking) {
+                    stage = 'shipped';
+                    stateKey = `${o.id}_shipped_${o.trackingNumber.trim()}`;
+                    title = `Your order ${o.id} has been shiped ${o.trackingNumber.trim()}`;
+                    subtitle = `Parcel dispatched • Courier tracking: ${o.trackingNumber.trim()}`;
+                    badgeLabel = 'Shipped';
+                    iconHtml = `<div class="w-9 h-9 rounded-xl bg-emerald-100 border-2 border-black text-emerald-700 flex items-center justify-center shrink-0 shadow-[2px_2px_0_0_#1e1b4b]"><i class="fa-solid fa-truck-fast text-xs"></i></div>`;
+                    actionHtml = `<span class="text-[10px] font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-200 inline-flex items-center gap-1 mt-1"><i class="fa-solid fa-file-invoice text-[9px]"></i> View Invoice &amp; Tracking →</span>`;
+                } else if (isPaid) {
+                    stage = 'processing';
+                    stateKey = `${o.id}_processing`;
+                    title = `Your order being processed ${o.id}`;
+                    subtitle = `Payment of RM ${o.total} confirmed via ToyyibPay FPX`;
+                    badgeLabel = 'Processing';
+                    iconHtml = `<div class="w-9 h-9 rounded-xl bg-sky-100 border-2 border-black text-sky-700 flex items-center justify-center shrink-0 shadow-[2px_2px_0_0_#1e1b4b]"><i class="fa-solid fa-box-open text-xs"></i></div>`;
+                    actionHtml = `<span class="text-[10px] font-extrabold text-sky-700 bg-sky-50 px-2 py-0.5 rounded-lg border border-sky-200 inline-flex items-center gap-1 mt-1"><i class="fa-solid fa-clock text-[9px]"></i> Preparing shipment in warehouse →</span>`;
+                } else {
+                    stage = 'pending';
+                    stateKey = `${o.id}_pending`;
+                    title = `Order ${o.id} is pending payment via ToyyibPay FPX (RM ${o.total})`;
+                    subtitle = `Created ${o.date || 'recently'} • Complete FPX payment to process order`;
+                    badgeLabel = 'Pending FPX';
+                    iconHtml = `<div class="w-9 h-9 rounded-xl bg-amber-100 border-2 border-black text-amber-700 flex items-center justify-center shrink-0 shadow-[2px_2px_0_0_#1e1b4b]"><i class="fa-solid fa-credit-card text-xs"></i></div>`;
+                    actionHtml = `<span class="text-[10px] font-black text-white bg-blue-600 hover:bg-blue-700 px-2.5 py-1 rounded-lg border border-black shadow-[1px_1px_0_0_#000] inline-flex items-center gap-1 mt-1.5">Pay Now →</span>`;
+                }
+
+                const isUnread = !readNotificationKeys.has(stateKey);
+
+                return {
+                    order: o,
+                    stage,
+                    stateKey,
+                    title,
+                    subtitle,
+                    badgeLabel,
+                    iconHtml,
+                    actionHtml,
+                    isUnread,
+                    timestamp: o.timestamp || o.date || ''
+                };
+            }).filter(item => !clearedNotificationKeys.has(item.stateKey));
         }
 
         function saveReadNotifications() {
@@ -2617,43 +2696,45 @@
             showToast("Notifications Updated", "All order notifications marked as read.");
         };
 
-        window.handleNotificationItemClick = function(orderId, stage, stateKey) {
-            if (stateKey) {
-                readNotificationKeys.add(stateKey);
-                saveReadNotifications();
-            }
-            window.closeCustomerNotifications();
-            window.renderCustomerNotifications();
+        window.clearAllCustomerNotifications = function() {
+            const items = getCustomerNotificationItems();
+            items.forEach(item => {
+                readNotificationKeys.add(item.stateKey);
+                clearedNotificationKeys.add(item.stateKey);
+            });
+            saveReadNotifications();
 
-            if (stage === 'pending') {
-                window.payPendingOrderNow(orderId);
-            } else if (stage === 'shipped') {
-                switchTab('customer-dashboard');
-                openInvoiceModal(orderId);
-            } else {
-                switchTab('customer-dashboard');
-                const historyContent = document.getElementById('content-customer-order-history');
-                const chevron = document.getElementById('chevron-order-history');
-                if (historyContent && historyContent.classList.contains('hidden')) {
-                    historyContent.classList.remove('hidden');
-                    chevron?.classList.add('rotate-180');
-                }
+            const listContainer = document.getElementById('customer-notifications-list');
+            const desktopBadge = document.getElementById('customer-notif-badge');
+            const mobileBadge = document.getElementById('mobile-notif-badge');
+            const desktopBellIcon = document.getElementById('desktop-bell-icon');
+            const mobileBellIcon = document.getElementById('mobile-bell-icon');
+
+            [desktopBadge, mobileBadge].forEach(badge => {
+                if (!badge) return;
+                badge.innerText = '0';
+                badge.classList.add('hidden');
+                badge.classList.remove('flex');
+            });
+
+            desktopBellIcon?.classList.remove('bell-ringing');
+            mobileBellIcon?.classList.remove('bell-ringing');
+
+            if (listContainer) {
+                listContainer.innerHTML = `
+                    <div class="p-8 text-center text-slate-400">
+                        <div class="w-12 h-12 rounded-2xl bg-slate-100 border border-slate-200 mx-auto flex items-center justify-center text-slate-300 text-lg mb-2.5">
+                            <i class="fa-regular fa-bell-slash"></i>
+                        </div>
+                        <p class="text-xs font-bold text-slate-600">No order notifications yet</p>
+                        <p class="text-[11px] text-slate-400 mt-1">Updates on your ToyyibPay FPX payments and parcel shipments will appear here.</p>
+                    </div>
+                `;
             }
+
+            showToast("Notifications Cleared", "All order notifications have been cleared.");
         };
-
-        document.addEventListener('click', (e) => {
-            const dropdown = document.getElementById('customer-notifications-dropdown');
-            const bellWrapper = document.getElementById('customer-notification-bell-wrapper');
-            const mobBell = document.getElementById('mobile-header-bell-container');
-            if (dropdown && !dropdown.classList.contains('hidden')) {
-                const clickedInside = dropdown.contains(e.target) ||
-                    (bellWrapper && bellWrapper.contains(e.target)) ||
-                    (mobBell && mobBell.contains(e.target));
-                if (!clickedInside) {
-                    window.closeCustomerNotifications();
-                }
-            }
-        });
+        window.clearAllCustomerNotifications = clearAllCustomerNotifications;
 
         /* =========================================================================
             RETRO Y2K ORDER SUCCESS WINDOW MODAL LOGIC
