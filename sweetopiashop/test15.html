@@ -62,11 +62,13 @@
             -webkit-overflow-scrolling: touch;
         }
 
-        /* Enforce smooth momentum scrolling across all scrollable panels & containers */
-        *, *::before, *::after {
-            scroll-behavior: smooth;
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+            overflow-x: hidden;
         }
 
+        /* Smooth momentum scrolling on all scrollable containers without global '*' GPU layer tearing */
         .overflow-y-auto,
         .overflow-x-auto,
         .overflow-auto,
@@ -77,11 +79,21 @@
             overscroll-behavior: contain;
         }
 
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #f8fafc;
-            overflow-x: hidden;
+        /* Clean hardware-accelerated modal overlay (eliminates Android WebView backdrop-blur tearing & white bands) */
+        .modal-backdrop-clean {
+            background-color: rgba(15, 23, 42, 0.72) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            will-change: opacity;
+            transform: translateZ(0);
         }
+
+        .sticker-slot-card {
+            min-height: 64px;
+            aspect-ratio: 1 / 1;
+            contain: content;
+        }
+
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
@@ -385,7 +397,7 @@
     <!-- EXCLUSIVE CUSTOMER VOUCHER PROMO BANNER (Appears for Chosen Customer Only) -->
     <div id="chosen-customer-promo-banner" class="w-full max-w-[1280px] mb-3 bg-gradient-to-r from-pink-600 via-rose-500 to-purple-600 text-white px-4 py-3 rounded-2xl hidden items-center justify-between border-2 border-pink-300 shadow-lg transition-all">
         <div class="flex items-center space-x-3 overflow-hidden">
-            <div class="w-9 h-9 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-yellow-300 text-lg shrink-0 border border-white/30">
+            <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center text-yellow-300 text-lg shrink-0 border border-white/30">
                 <i class="fa-solid fa-gift"></i>
             </div>
             <div class="truncate">
@@ -408,7 +420,7 @@
     </div>
 
     <!-- GLOBAL NOTIFICATION TOAST -->
-    <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-[200] bg-slate-900/95 text-white px-5 py-3 rounded-2xl shadow-2xl border border-slate-700 flex items-center space-x-3 transition-all duration-300 transform opacity-0 pointer-events-none -translate-y-4">
+    <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-[200] bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl border border-slate-700 flex items-center space-x-3 transition-all duration-300 transform opacity-0 pointer-events-none -translate-y-4">
         <div id="toast-icon-wrapper" class="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold shrink-0 bg-[#65a30d]"><i class="fa-solid fa-check text-xs"></i></div>
         <div>
             <p id="toast-title" class="text-xs font-bold">Signed In</p>
@@ -417,9 +429,9 @@
     </div>
 
     <!-- RETRO Y2K ORDER SUCCESS WINDOW MODAL (APPEARS ONLY WHEN AMOUNT IS PAID/DRAWN AT TOYYIBPAY) -->
-    <div id="order-success-modal" class="fixed inset-0 z-[120] bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+    <div id="order-success-modal" class="fixed inset-0 z-[150] modal-backdrop-clean flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200">
         <!-- Retro Y2K Window Frame -->
-        <div class="w-[440px] max-w-full bg-[#d8b4fe] border-[3px] border-[#7c3aed] rounded-xl shadow-[8px_8px_0_0_#4c1d95] overflow-hidden transform transition-all duration-300 scale-95" id="order-success-frame">
+        <div class="w-[440px] max-w-full bg-[#d8b4fe] border-[3px] border-[#7c3aed] rounded-xl shadow-[8px_8px_0_0_#4c1d95] overflow-hidden transform transition-transform duration-200 scale-95" id="order-success-frame">
 
             <!-- Window Title Bar -->
             <div class="bg-[#a855f7] px-3 py-2 flex justify-between items-center border-b-[3px] border-[#7c3aed]">
@@ -465,7 +477,7 @@
     </div>
 
     <!-- RETRO 10-BAR LOADING WINDOW MODAL -->
-    <div id="retro-auth-loading-modal" class="fixed inset-0 z-[100] bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200">
+    <div id="retro-auth-loading-modal" class="fixed inset-0 z-[150] modal-backdrop-clean flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200">
         <div class="retro-loading-window w-full max-w-lg p-3 sm:p-4 rounded-none select-none">
             <!-- Window Title bar -->
             <div class="flex items-center justify-between pb-3 sm:pb-3.5">
@@ -646,7 +658,7 @@
                 <div class="relative z-20 hidden md:flex w-full md:w-1/2 p-4 sm:p-6 items-center justify-center bg-slate-50 border-l border-slate-100">
                     <div class="relative w-full h-[480px] sm:h-[540px] rounded-[32px] overflow-hidden shadow-xl border border-slate-200">
                         <img src="https://digitalpastel.github.io/digital/sweetopiashop/portalimagecust.jpg" alt="team workspace collaboration" class="w-full h-full object-cover">
-                        <button type="button" onclick="continueAsGuest()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-slate-800 hover:bg-white shadow-lg transition" aria-label="Close">
+                        <button type="button" onclick="continueAsGuest()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-white flex items-center justify-center text-slate-800 hover:bg-slate-100 shadow-lg transition" aria-label="Close">
                             <i class="fa-solid fa-xmark text-xs"></i>
                         </button>
                     </div>
@@ -918,7 +930,7 @@
 
                         <!-- PROFILE CARD (DESKTOP & MOBILE) -->
                         <div class="block">
-                            <div class="flex items-center space-x-4 bg-slate-900/90 p-4 rounded-3xl border border-slate-800 shadow-lg mb-4 backdrop-blur-md relative">
+                            <div class="flex items-center space-x-4 bg-slate-900 p-4 rounded-3xl border border-slate-800 shadow-lg mb-4 relative">
                                 <div class="relative flex-shrink-0">
                                     <div id="mobile-user-avatar-container" class="w-14 h-14 rounded-full bg-[#65a30d]/20 border-2 border-[#65a30d] flex items-center justify-center text-[#84cc16] text-xl font-bold shadow-sm overflow-hidden">
                                         <i id="mobile-user-avatar-icon" class="fa-solid fa-star text-base"></i>
@@ -1082,7 +1094,7 @@
                         <section class="bg-white rounded-3xl shadow-sm border border-pink-100 overflow-hidden transition-all-300">
                             <div class="bg-gradient-to-r from-pink-600 to-rose-500 px-6 py-4 flex items-center justify-between text-white">
                                 <div class="flex items-center space-x-3">
-                                    <div class="p-2.5 bg-white/15 rounded-xl backdrop-blur-sm">
+                                    <div class="p-2.5 bg-white/15 rounded-xl">
                                         <i class="fa-solid fa-user-check text-pink-100"></i>
                                     </div>
                                     <div>
@@ -1225,7 +1237,7 @@
                         <section class="bg-white rounded-3xl shadow-sm border border-purple-100 overflow-hidden transition-all-300">
                             <div class="bg-gradient-to-r from-purple-600 to-indigo-600 px-6 py-4 flex items-center justify-between text-white">
                                 <div class="flex items-center space-x-3">
-                                    <div class="p-2.5 bg-white/15 rounded-xl backdrop-blur-sm">
+                                    <div class="p-2.5 bg-white/15 rounded-xl">
                                         <i class="fa-solid fa-box-open text-purple-100"></i>
                                     </div>
                                     <div>
@@ -1647,7 +1659,7 @@
 
                 <!-- CHAT WIDGET -->
                 <div id="page2-chat-widget-container" class="fixed bottom-20 md:bottom-4 right-4 sm:right-6 z-40 flex flex-col items-end">
-                    <div class="sweetopia-kawaii-window relative w-[calc(100vw-2rem)] sm:w-96 max-w-sm bg-white rounded-3xl shadow-2xl border border-[#ecfccb] overflow-visible flex flex-col mb-4 transition-all duration-300 transform h-[460px] sm:h-[500px] opacity-0 scale-95 pointer-events-none hidden" id="sweetopiaChatWindow">
+                    <div class="sweetopia-kawaii-window relative w-[calc(100vw-2rem)] sm:w-96 max-w-sm bg-white rounded-3xl shadow-2xl border border-[#ecfccb] overflow-visible flex flex-col mb-4 transition-all duration-200 transform h-[460px] sm:h-[500px] opacity-0 scale-95 pointer-events-none hidden" id="sweetopiaChatWindow">
                         <style>
                             .cat-ear-left-green, .cat-ear-right-green {
                                 position: absolute;
@@ -1752,33 +1764,33 @@
                 </div>
             </div>
 
-            <!-- SHOPEE STYLE STICKER PICKER MODAL (15 STICKER PACKS) -->
-            <div id="screen-sticker-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-3 sm:p-4" onclick="closeStickerPicker()">
-                <div class="w-full max-w-sm bg-white rounded-3xl border border-pink-200 overflow-hidden shadow-2xl flex flex-col max-h-[85vh]" onclick="event.stopPropagation()">
-                    <div class="px-5 py-3.5 bg-gradient-to-r from-pink-100 to-purple-100 border-b border-pink-200 flex items-center justify-between">
+            <!-- SHOPEE STYLE STICKER PICKER MODAL (15 STICKER PACKS - INSTANT LOAD) -->
+            <div id="screen-sticker-modal" class="fixed inset-0 z-[150] modal-backdrop-clean flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-200 p-3 sm:p-4" onclick="closeStickerPicker()">
+                <div class="w-full max-w-sm bg-white rounded-3xl border-2 border-pink-300 overflow-hidden shadow-2xl flex flex-col max-h-[85vh] relative z-10" onclick="event.stopPropagation()">
+                    <div class="px-5 py-3.5 bg-gradient-to-r from-pink-100 to-purple-100 border-b border-pink-200 flex items-center justify-between shrink-0">
                         <div class="flex items-center space-x-2">
                             <i class="fa-solid fa-face-smile text-pink-500 text-base"></i>
                             <h3 class="text-xs font-bold text-slate-800">Select Sticker (15 Packs)</h3>
                         </div>
-                        <button type="button" onclick="closeStickerPicker()" class="w-7 h-7 rounded-full bg-white/80 hover:bg-white text-slate-600 flex items-center justify-center transition shadow-xs">
+                        <button type="button" onclick="closeStickerPicker()" class="w-7 h-7 rounded-full bg-white hover:bg-pink-50 text-slate-700 flex items-center justify-center transition shadow-xs border border-pink-200">
                             <i class="fa-solid fa-xmark text-xs"></i>
                         </button>
                     </div>
 
-                    <div class="p-3.5 overflow-y-auto max-h-72 cute-h-scrollbar">
+                    <div class="p-3.5 overflow-y-auto max-h-80 bg-white">
                         <div id="sticker-slots-grid" class="grid grid-cols-4 sm:grid-cols-5 gap-2.5">
                         </div>
                     </div>
 
-                    <div class="p-2.5 bg-slate-50 border-t border-slate-100 text-center">
-                        <span class="text-[10px] text-slate-400">Click any sticker slot to post into chat</span>
+                    <div class="p-2.5 bg-slate-50 border-t border-slate-100 text-center shrink-0">
+                        <span class="text-[10px] text-slate-500 font-medium">Click any sticker slot to post into chat</span>
                     </div>
                 </div>
             </div>
 
             <!-- SHOPEE STYLE PRODUCT SHARE / ORDER MODAL -->
-            <div id="screen-product-selector-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-3 sm:p-4" onclick="closeProductSelectorModal()">
-                <div class="w-full max-w-md bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-2xl flex flex-col max-h-[85vh]" onclick="event.stopPropagation()">
+            <div id="screen-product-selector-modal" class="fixed inset-0 z-[150] modal-backdrop-clean flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-200 p-3 sm:p-4" onclick="closeProductSelectorModal()">
+                <div class="w-full max-w-md bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-2xl flex flex-col max-h-[85vh] relative z-10" onclick="event.stopPropagation()">
                     <div class="px-5 py-3.5 bg-slate-100 border-b border-slate-200 flex items-center justify-between">
                         <div class="flex items-center space-x-2">
                             <i class="fa-solid fa-bag-shopping text-[#65a30d] text-base"></i>
@@ -1801,7 +1813,7 @@
             </div>
 
             <!-- PRODUCT IMAGE ZOOM MODAL (PINK-PURPLE RETRO WINDOW FRAME) -->
-            <div id="screen-image-zoom" class="fixed inset-0 z-[70] bg-slate-900/80 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-4" onclick="closeImageZoomModal()">
+            <div id="screen-image-zoom" class="fixed inset-0 z-[160] modal-backdrop-clean flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-200 p-4" onclick="closeImageZoomModal()">
                 <div class="pink-purple-window-container" onclick="event.stopPropagation()">
                     <div class="pink-purple-window-tab">
                         <div class="pink-purple-close-btn" onclick="closeImageZoomModal()" title="Close Frame">&times;</div>
@@ -1813,7 +1825,7 @@
             </div>
 
             <!-- PRODUCT DETAIL MODAL -->
-            <div id="screen-detail" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-2 sm:p-6">
+            <div id="screen-detail" class="fixed inset-0 z-[140] modal-backdrop-clean flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-200 p-2 sm:p-6">
                 <div class="w-full max-w-xl bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
                     <div class="px-6 py-4 flex items-center justify-between border-b border-slate-200">
                         <h3 class="text-sm font-bold text-slate-900">Product Detail &amp; Prescription</h3>
@@ -1854,7 +1866,7 @@
             </div>
 
             <!-- MODAL DROPDOWN: SELECT PRESCRIPTION POWER (WITH 'X' CLOSE BUTTON) -->
-            <div id="screen-prescription-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-4">
+            <div id="screen-prescription-modal" class="fixed inset-0 z-[150] modal-backdrop-clean flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-200 p-4">
                 <div class="w-full max-w-lg bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-2xl flex flex-col max-h-[85vh]">
                     <div class="px-5 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
                         <div>
@@ -1880,7 +1892,7 @@
             </div>
 
             <!-- ADMIN ORDER DETAILS MODAL -->
-            <div id="admin-order-detail-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-4">
+            <div id="admin-order-detail-modal" class="fixed inset-0 z-[150] modal-backdrop-clean flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-200 p-4">
                 <div class="w-full max-w-lg bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
                     <div class="px-6 py-4 bg-slate-100 border-b border-slate-200 flex items-center justify-between">
                         <div class="flex items-center space-x-2">
@@ -1945,7 +1957,7 @@
             </div>
 
             <!-- CUSTOMER DELIVERY ADDRESS MODAL -->
-            <div id="address-edit-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-3 sm:p-6">
+            <div id="address-edit-modal" class="fixed inset-0 z-[150] modal-backdrop-clean flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-200 p-3 sm:p-6">
                 <div class="w-full max-w-md bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-2xl flex flex-col p-6 space-y-4">
                     <div class="flex items-center justify-between border-b border-slate-200 pb-3">
                         <h3 id="address-modal-title" class="text-sm font-bold text-slate-900">Edit Delivery Address</h3>
@@ -1982,7 +1994,7 @@
             </div>
 
             <!-- TOYYIBPAY FPX MODAL -->
-            <div id="fpx-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-2 sm:p-6">
+            <div id="fpx-modal" class="fixed inset-0 z-[150] modal-backdrop-clean flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-200 p-2 sm:p-6">
                 <div class="w-full max-w-md bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-2xl flex flex-col p-6 space-y-4 text-center">
                     <div class="w-14 h-14 bg-blue-50 rounded-2xl mx-auto flex items-center justify-center text-blue-600 text-2xl font-bold border border-blue-100">
                         <i class="fa-solid fa-arrow-up-right-from-square"></i>
@@ -2003,7 +2015,7 @@
             </div>
 
             <!-- FORGOT PASSWORD MODAL -->
-            <div id="forgot-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-2 sm:p-6">
+            <div id="forgot-modal" class="fixed inset-0 z-[150] modal-backdrop-clean flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-200 p-2 sm:p-6">
                 <div class="w-full max-w-md bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-2xl flex flex-col p-6 space-y-4">
                     <div class="flex items-center justify-between border-b border-slate-200 pb-3">
                         <h3 id="forgot-modal-title" class="text-sm font-bold text-slate-900">Reset Password</h3>
@@ -2023,7 +2035,7 @@
             </div>
 
             <!-- MOBILE AVATAR SELECTOR MODAL -->
-            <div id="avatar-selector-modal" class="fixed inset-0 z-[135] bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300" onclick="closeAvatarModal()">
+            <div id="avatar-selector-modal" class="fixed inset-0 z-[150] modal-backdrop-clean flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200" onclick="closeAvatarModal()">
                 <div class="w-full max-w-sm bg-white rounded-3xl border-2 border-black shadow-[6px_6px_0_0_#1e1b4b] overflow-hidden flex flex-col p-5 space-y-4" onclick="event.stopPropagation()">
                     <div class="flex items-center justify-between border-b border-slate-200 pb-3">
                         <h3 class="text-sm font-black text-slate-900">Choose Profile Avatar</h3>
@@ -2056,7 +2068,7 @@
             </div>
 
             <!-- VOUCHER CHECKOUT EXIT WARNING MODAL -->
-            <div id="voucher-leave-warning-modal" class="fixed inset-0 z-[130] bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+            <div id="voucher-leave-warning-modal" class="fixed inset-0 z-[150] modal-backdrop-clean flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200">
                 <div class="w-full max-w-md bg-white rounded-3xl border-2 border-black shadow-[6px_6px_0_0_#1e1b4b] overflow-hidden flex flex-col p-6 space-y-4">
                     <div class="flex items-center space-x-3 border-b border-slate-200 pb-3">
                         <div class="w-10 h-10 rounded-2xl bg-amber-100 border-2 border-black text-amber-600 flex items-center justify-center text-lg shrink-0 shadow-[2px_2px_0_0_#1e1b4b]">
@@ -2082,7 +2094,7 @@
             </div>
 
             <!-- A4 INVOICE PNG DOWNLOAD & VIEW MODAL -->
-            <div id="invoice-modal" class="fixed inset-0 z-[999] bg-slate-900/80 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-2 sm:p-4 overflow-y-auto">
+            <div id="invoice-modal" class="fixed inset-0 z-[999] modal-backdrop-clean flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-200 p-2 sm:p-4 overflow-y-auto">
                 <div class="relative w-full max-w-4xl bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[96vh] my-auto">
                     <!-- Modal Header Bar -->
                     <div class="px-3.5 sm:px-6 py-3 sm:py-4 bg-slate-100 border-b border-slate-200 flex items-center justify-between shrink-0 no-print">
@@ -2207,7 +2219,7 @@
     </div>
 
     <!-- MOBILE DEVICE VIEW BOTTOM NAVIGATION BAR -->
-    <div id="mobile-bottom-nav" class="md:hidden fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-lg border-t border-slate-800 px-6 py-2.5 flex justify-between items-center z-50">
+    <div id="mobile-bottom-nav" class="md:hidden fixed bottom-0 left-0 right-0 bg-slate-900 border-t border-slate-800 px-6 py-2.5 flex justify-between items-center z-50">
         <button type="button" onclick="switchTab('catalog', true)" id="mob-nav-catalog" class="mob-nav-btn flex flex-col items-center space-y-1 text-[#84cc16]">
             <i class="fa-solid fa-house text-sm"></i>
             <span class="text-[10px] font-bold">Store Catalog</span>
@@ -2226,7 +2238,7 @@
         </button>
     </div>
 
-    <!-- SCRIPT LOGIC (CLEANED & GLITCH-FREE) -->
+    <!-- SCRIPT LOGIC (CLEANED, GLITCH-FREE & INSTANT STICKERS) -->
     <script>
         let deferredInstallPrompt = null;
         window.addEventListener('beforeinstallprompt', (e) => {
@@ -5216,14 +5228,25 @@
             startTimer();
         }
 
-        function renderStickerSlotsGrid() {
+        let stickersRendered = false;
+        function renderStickerSlotsGrid(force = false) {
             const grid = document.getElementById('sticker-slots-grid');
             if (!grid) return;
+            if (stickersRendered && !force && grid.children.length > 0) return;
+
             grid.innerHTML = defaultStickerAssets.map((src, idx) => `
-                <div onclick="selectSticker('${src}')" class="p-1 rounded-2xl border-2 border-pink-100 hover:border-pink-500 bg-pink-50/50 hover:bg-white cursor-pointer transition flex items-center justify-center transform hover:scale-105 active:scale-95 group shadow-xs" title="Sticker #${idx + 1}">
-                    <img src="${src}" alt="Sticker ${idx + 1}" class="w-14 h-14 object-contain rounded-xl group-hover:drop-shadow-sm">
-                </div>
+                <button type="button" onclick="selectSticker('${src}')" class="sticker-slot-card p-1.5 rounded-2xl border-2 border-pink-100 hover:border-pink-500 bg-pink-50/60 hover:bg-white cursor-pointer transition-transform duration-150 flex items-center justify-center hover:scale-105 active:scale-95 shadow-xs relative overflow-hidden" title="Sticker #${idx + 1}">
+                    <img src="${src}" alt="Sticker ${idx + 1}" loading="eager" decoding="async" onerror="this.onerror=null; this.src='https://placehold.co/80x80/fce7f3/db2777?text=S${idx + 1}';" class="w-12 h-12 sm:w-14 sm:h-14 object-contain rounded-xl pointer-events-none">
+                </button>
             `).join('');
+            stickersRendered = true;
+        }
+
+        function preloadStickerImages() {
+            defaultStickerAssets.forEach((src) => {
+                const img = new Image();
+                img.src = src;
+            });
         }
 
         function toggleStickerPicker() {
@@ -5401,17 +5424,18 @@
             if (!win) return;
             const isClosed = win.classList.contains('hidden') || win.classList.contains('opacity-0');
             if (isClosed) {
+                renderStickerSlotsGrid();
                 win.classList.remove('hidden');
-                setTimeout(() => {
+                requestAnimationFrame(() => {
                     win.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
                     win.classList.add('opacity-100', 'scale-100');
-                }, 10);
+                });
                 renderActiveChatMessages();
                 updateSupportIndicator();
             } else {
                 win.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
                 win.classList.remove('opacity-100', 'scale-100');
-                setTimeout(() => win.classList.add('hidden'), 200);
+                setTimeout(() => win.classList.add('hidden'), 180);
             }
         }
 
@@ -6439,6 +6463,10 @@
 
         // Startup lifecycle
         document.addEventListener('DOMContentLoaded', async () => {
+            // Preload & pre-render all 15 stickers immediately for zero-lag display on mobile
+            preloadStickerImages();
+            renderStickerSlotsGrid(true);
+
             // Enable smooth wheel horizontal scrolling on category strip
             const catStrip = document.getElementById('category-scroll-strip');
             if (catStrip) {
