@@ -2443,6 +2443,7 @@
             const isGuest = isGuestUser();
             const isLoggedIn = !!currentUser && !isPage1Auth;
             const isRegisteredCustomer = isLoggedIn && !isGuest && !isAdminUser(currentUser.email);
+            const canSeeBell = isLoggedIn && (isGuest || !isAdminUser(currentUser.email));
 
             if (mobSignOutContainer) {
                 if (isLoggedIn) {
@@ -2461,8 +2462,8 @@
                 }
             }
 
-            // Completely hide Notification Bell for Guests, Admins, and Auth Screen
-            if (!isRegisteredCustomer || isPage1Auth) {
+            // Show Notification Bell to Guests and Registered Customers (hide for Admins and Auth Screen)
+            if (!canSeeBell || isPage1Auth) {
                 if (bellWrapper) {
                     bellWrapper.classList.add('hidden');
                     bellWrapper.classList.remove('sm:block');
@@ -2481,6 +2482,19 @@
                 bellWrapper.classList.add('hidden', 'sm:block');
             }
             mobBellContainer?.classList.remove('hidden');
+
+            // If Guest, keep badges hidden and prevent notification data loading
+            if (isGuest) {
+                [desktopBadge, mobileBadge].forEach(badge => {
+                    if (!badge) return;
+                    badge.classList.add('hidden');
+                    badge.classList.remove('flex');
+                });
+                desktopBellIcon?.classList.remove('bell-ringing');
+                mobileBellIcon?.classList.remove('bell-ringing');
+                window.closeCustomerNotifications();
+                return;
+            }
 
             const items = getCustomerNotificationItems();
             const unreadCount = items.filter(i => i.isUnread).length;
@@ -2542,7 +2556,10 @@
 
         window.toggleCustomerNotifications = function(event) {
             if (event) event.stopPropagation();
-            if (isGuestUser()) return;
+            if (isGuestUser()) {
+                window.redirectGuestToSignUp("Notifications cannot be used in guest mode. Please sign up for a customer account first!");
+                return;
+            }
             const dropdown = document.getElementById('customer-notifications-dropdown');
             if (!dropdown) return;
             const isHidden = dropdown.classList.contains('hidden');
