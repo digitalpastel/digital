@@ -2044,17 +2044,17 @@
                         </button>
                     </div>
                     <div class="grid grid-cols-4 gap-2.5 text-center">
-                        <button type="button" onclick="selectUserAvatar('icon:fa-user')" class="p-3 rounded-2xl bg-slate-50 hover:bg-lime-50 border border-slate-200 hover:border-[#65a30d] flex items-center justify-center text-[#65a30d] text-lg transition">
-                            <i class="fa-solid fa-user"></i>
+                        <button type="button" onclick="selectUserAvatar('https://digitalpastel.github.io/digital/sweetopiashop/Bratz1.webp')" class="p-1.5 rounded-2xl bg-slate-50 hover:bg-pink-50 border-2 border-slate-200 hover:border-pink-500 flex items-center justify-center transition overflow-hidden aspect-square shadow-xs active:scale-95" title="Bratz Avatar 1">
+                            <img src="https://digitalpastel.github.io/digital/sweetopiashop/Bratz1.webp" alt="Bratz 1" class="w-full h-full object-cover rounded-xl">
                         </button>
-                        <button type="button" onclick="selectUserAvatar('icon:fa-cat')" class="p-3 rounded-2xl bg-slate-50 hover:bg-pink-50 border border-slate-200 hover:border-pink-400 flex items-center justify-center text-pink-500 text-lg transition">
-                            <i class="fa-solid fa-cat"></i>
+                        <button type="button" onclick="selectUserAvatar('https://digitalpastel.github.io/digital/sweetopiashop/Bratz2.webp')" class="p-1.5 rounded-2xl bg-slate-50 hover:bg-pink-50 border-2 border-slate-200 hover:border-pink-500 flex items-center justify-center transition overflow-hidden aspect-square shadow-xs active:scale-95" title="Bratz Avatar 2">
+                            <img src="https://digitalpastel.github.io/digital/sweetopiashop/Bratz2.webp" alt="Bratz 2" class="w-full h-full object-cover rounded-xl">
                         </button>
-                        <button type="button" onclick="selectUserAvatar('icon:fa-crown')" class="p-3 rounded-2xl bg-slate-50 hover:bg-amber-50 border border-slate-200 hover:border-amber-400 flex items-center justify-center text-amber-500 text-lg transition">
-                            <i class="fa-solid fa-crown"></i>
+                        <button type="button" onclick="selectUserAvatar('https://digitalpastel.github.io/digital/sweetopiashop/Bratz3.webp')" class="p-1.5 rounded-2xl bg-slate-50 hover:bg-pink-50 border-2 border-slate-200 hover:border-pink-500 flex items-center justify-center transition overflow-hidden aspect-square shadow-xs active:scale-95" title="Bratz Avatar 3">
+                            <img src="https://digitalpastel.github.io/digital/sweetopiashop/Bratz3.webp" alt="Bratz 3" class="w-full h-full object-cover rounded-xl">
                         </button>
-                        <button type="button" onclick="selectUserAvatar('icon:fa-star')" class="p-3 rounded-2xl bg-slate-50 hover:bg-purple-50 border border-slate-200 hover:border-purple-400 flex items-center justify-center text-purple-500 text-lg transition">
-                            <i class="fa-solid fa-star"></i>
+                        <button type="button" onclick="selectUserAvatar('https://digitalpastel.github.io/digital/sweetopiashop/Bratz4.webp')" class="p-1.5 rounded-2xl bg-slate-50 hover:bg-pink-50 border-2 border-slate-200 hover:border-pink-500 flex items-center justify-center transition overflow-hidden aspect-square shadow-xs active:scale-95" title="Bratz Avatar 4">
+                            <img src="https://digitalpastel.github.io/digital/sweetopiashop/Bratz4.webp" alt="Bratz 4" class="w-full h-full object-cover rounded-xl">
                         </button>
                     </div>
                     <div class="pt-1">
@@ -5247,6 +5247,15 @@
                 const img = new Image();
                 img.src = src;
             });
+            [
+                "https://digitalpastel.github.io/digital/sweetopiashop/Bratz1.webp",
+                "https://digitalpastel.github.io/digital/sweetopiashop/Bratz2.webp",
+                "https://digitalpastel.github.io/digital/sweetopiashop/Bratz3.webp",
+                "https://digitalpastel.github.io/digital/sweetopiashop/Bratz4.webp"
+            ].forEach((src) => {
+                const img = new Image();
+                img.src = src;
+            });
         }
 
         function toggleStickerPicker() {
@@ -5320,13 +5329,13 @@
             containers.forEach(({ el, iconId, iconSize }) => {
                 if (!el) return;
 
-                if (saved && saved.startsWith('data:image')) {
+                if (saved && (saved.startsWith('data:image') || saved.startsWith('http://') || saved.startsWith('https://'))) {
                     el.innerHTML = `<img src="${saved}" alt="Profile Avatar" class="w-full h-full object-cover">`;
                 } else if (saved && saved.startsWith('icon:')) {
                     const iconClass = saved.replace('icon:', '');
                     el.innerHTML = `<i id="${iconId}" class="fa-solid ${iconClass} ${iconSize}"></i>`;
                 } else {
-                    el.innerHTML = `<i id="${iconId}" class="fa-solid fa-user ${iconSize}"></i>`;
+                    el.innerHTML = `<img src="https://digitalpastel.github.io/digital/sweetopiashop/Bratz1.webp" alt="Profile Avatar" class="w-full h-full object-cover">`;
                 }
             });
         }
@@ -6463,7 +6472,7 @@
 
         // Startup lifecycle
         document.addEventListener('DOMContentLoaded', async () => {
-            // Preload & pre-render all 15 stickers immediately for zero-lag display on mobile
+            // Preload & pre-render all 15 stickers and Bratz avatars immediately for zero-lag display
             preloadStickerImages();
             renderStickerSlotsGrid(true);
 
