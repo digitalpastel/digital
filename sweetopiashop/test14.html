@@ -484,6 +484,7 @@
 
                 <!-- Mobile Header Bell Shortcut & Sign Out / Sign Up Button (Visible only on mobile view) -->
                 <div class="sm:hidden flex items-center space-x-2">
+                    <div id="mobile-header-user-avatar-container" class="hidden w-10 h-10 rounded-full bg-[#65a30d]/20 border-2 border-[#65a30d] flex items-center justify-center text-[#84cc16] text-lg font-bold shadow-sm overflow-hidden"><i id="mobile-header-user-avatar-icon" class="fa-solid fa-user text-sm"></i></div>
                     <div id="mobile-header-bell-container" class="hidden relative">
                         <button type="button" onclick="toggleCustomerNotifications(event)" class="w-10 h-10 rounded-full bg-white border-2 border-black shadow-[0_3px_0_0_#1e1b4b] active:translate-y-0.5 active:shadow-none flex items-center justify-center text-slate-800 hover:bg-amber-50 transition relative" aria-label="Order Notifications">
                             <i class="fa-solid fa-bell text-sm text-amber-500" id="mobile-bell-icon"></i>
@@ -2598,6 +2599,7 @@
         window.renderCustomerNotifications = function() {
             const bellWrapper = document.getElementById('customer-notification-bell-wrapper');
             const mobBellContainer = document.getElementById('mobile-header-bell-container');
+            const mobAvatarContainer = document.getElementById('mobile-header-user-avatar-container');
             const mobSignOutContainer = document.getElementById('mobile-header-signout-container');
             const mobAuthBtn = document.getElementById('mobile-header-auth-btn');
             const guestStatus = document.getElementById('header-guest-status-text');
@@ -2612,6 +2614,14 @@
             const isLoggedIn = !!currentUser && !isPage1Auth;
             const isRegisteredCustomer = isLoggedIn && !isGuest && !isAdminUser(currentUser.email);
             const canSeeBell = isLoggedIn && (isGuest || !isAdminUser(currentUser.email));
+
+            if (mobAvatarContainer) {
+                if (isLoggedIn && !isGuest && !isAdminUser(currentUser.email)) {
+                    mobAvatarContainer.classList.remove('hidden');
+                } else {
+                    mobAvatarContainer.classList.add('hidden');
+                }
+            }
 
             if (mobSignOutContainer) {
                 if (isLoggedIn) {
@@ -5297,23 +5307,22 @@
 
         function applySavedMobileAvatar() {
             const containers = [
-                document.getElementById('mobile-user-avatar-container'),
-                document.getElementById('header-user-avatar-container')
+                { el: document.getElementById('mobile-user-avatar-container'), iconId: 'mobile-user-avatar-icon', iconSize: 'text-base' },
+                { el: document.getElementById('header-user-avatar-container'), iconId: 'header-user-avatar-icon', iconSize: 'text-sm' },
+                { el: document.getElementById('mobile-header-user-avatar-container'), iconId: 'mobile-header-user-avatar-icon', iconSize: 'text-sm' }
             ];
             const saved = localStorage.getItem('sweetopia_user_avatar');
 
-            containers.forEach((container, idx) => {
-                if (!container) return;
-                const iconId = idx === 0 ? 'mobile-user-avatar-icon' : 'header-user-avatar-icon';
-                const iconSize = idx === 0 ? 'text-base' : 'text-sm';
+            containers.forEach(({ el, iconId, iconSize }) => {
+                if (!el) return;
 
                 if (saved && saved.startsWith('data:image')) {
-                    container.innerHTML = `<img src="${saved}" alt="Profile Avatar" class="w-full h-full object-cover">`;
+                    el.innerHTML = `<img src="${saved}" alt="Profile Avatar" class="w-full h-full object-cover">`;
                 } else if (saved && saved.startsWith('icon:')) {
                     const iconClass = saved.replace('icon:', '');
-                    container.innerHTML = `<i id="${iconId}" class="fa-solid ${iconClass} ${iconSize}"></i>`;
+                    el.innerHTML = `<i id="${iconId}" class="fa-solid ${iconClass} ${iconSize}"></i>`;
                 } else {
-                    container.innerHTML = `<i id="${iconId}" class="fa-solid fa-user ${iconSize}"></i>`;
+                    el.innerHTML = `<i id="${iconId}" class="fa-solid fa-user ${iconSize}"></i>`;
                 }
             });
         }
