@@ -2835,7 +2835,8 @@
             const banner = document.getElementById('chosen-customer-promo-banner');
             if (!banner) return;
 
-            if (!currentUser || isGuestUser() || isAdminUser(currentUser.email)) {
+            const isPage1Auth = !document.getElementById('page-auth')?.classList.contains('hidden');
+            if (isPage1Auth || !currentUser || isGuestUser() || isAdminUser(currentUser.email)) {
                 banner.classList.add('hidden');
                 banner.classList.remove('flex');
                 currentCustomerBannerVoucher = null;
@@ -3467,11 +3468,13 @@
                 pageAuth?.classList.remove('hidden');
                 pageDashboard?.classList.add('hidden');
                 if (mobileBottomNav) mobileBottomNav.classList.add('hidden');
+                renderChosenCustomerPromoBanner();
                 window.renderCustomerNotifications();
             } else {
                 pageAuth?.classList.add('hidden');
                 pageDashboard?.classList.remove('hidden');
                 if (mobileBottomNav) mobileBottomNav.classList.remove('hidden');
+                renderChosenCustomerPromoBanner();
                 window.renderCustomerNotifications();
 
                 if (currentUser && isAdminUser(currentUser.email)) {
