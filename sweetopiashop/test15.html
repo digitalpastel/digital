@@ -2034,30 +2034,81 @@
                 </div>
             </div>
 
-            <!-- MOBILE AVATAR SELECTOR MODAL -->
+            <!-- MOBILE & DESKTOP AVATAR SELECTOR MODAL (BRATZ + 15 PRINCESS AVATARS) -->
             <div id="avatar-selector-modal" class="fixed inset-0 z-[150] modal-backdrop-clean flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200" onclick="closeAvatarModal()">
-                <div class="w-full max-w-sm bg-white rounded-3xl border-2 border-black shadow-[6px_6px_0_0_#1e1b4b] overflow-hidden flex flex-col p-5 space-y-4" onclick="event.stopPropagation()">
-                    <div class="flex items-center justify-between border-b border-slate-200 pb-3">
-                        <h3 class="text-sm font-black text-slate-900">Choose Profile Avatar</h3>
+                <div class="w-full max-w-sm bg-white rounded-3xl border-2 border-black shadow-[6px_6px_0_0_#1e1b4b] overflow-hidden flex flex-col p-5 space-y-4 max-h-[88vh]" onclick="event.stopPropagation()">
+                    <div class="flex items-center justify-between border-b border-slate-200 pb-3 shrink-0">
+                        <div>
+                            <h3 class="text-sm font-black text-slate-900">Choose Profile Avatar</h3>
+                            <p class="text-[10px] text-slate-500 font-medium">19 Bratz &amp; Princess character avatars available</p>
+                        </div>
                         <button type="button" onclick="closeAvatarModal()" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600">
                             <i class="fa-solid fa-xmark text-xs"></i>
                         </button>
                     </div>
-                    <div class="grid grid-cols-4 gap-2.5 text-center">
+                    <div class="grid grid-cols-4 gap-2.5 text-center overflow-y-auto max-h-64 pr-1 py-0.5">
+                        <!-- 4 Bratz Avatars -->
                         <button type="button" onclick="selectUserAvatar('https://digitalpastel.github.io/digital/sweetopiashop/Bratz1.webp')" class="p-1.5 rounded-2xl bg-slate-50 hover:bg-pink-50 border-2 border-slate-200 hover:border-pink-500 flex items-center justify-center transition overflow-hidden aspect-square shadow-xs active:scale-95" title="Bratz Avatar 1">
-                            <img src="https://digitalpastel.github.io/digital/sweetopiashop/Bratz1.webp" alt="Bratz 1" class="w-full h-full object-cover rounded-xl">
+                            <img src="https://digitalpastel.github.io/digital/sweetopiashop/Bratz1.webp" alt="Bratz 1" loading="eager" class="w-full h-full object-cover rounded-xl">
                         </button>
                         <button type="button" onclick="selectUserAvatar('https://digitalpastel.github.io/digital/sweetopiashop/Bratz2.webp')" class="p-1.5 rounded-2xl bg-slate-50 hover:bg-pink-50 border-2 border-slate-200 hover:border-pink-500 flex items-center justify-center transition overflow-hidden aspect-square shadow-xs active:scale-95" title="Bratz Avatar 2">
-                            <img src="https://digitalpastel.github.io/digital/sweetopiashop/Bratz2.webp" alt="Bratz 2" class="w-full h-full object-cover rounded-xl">
+                            <img src="https://digitalpastel.github.io/digital/sweetopiashop/Bratz2.webp" alt="Bratz 2" loading="eager" class="w-full h-full object-cover rounded-xl">
                         </button>
                         <button type="button" onclick="selectUserAvatar('https://digitalpastel.github.io/digital/sweetopiashop/Bratz3.webp')" class="p-1.5 rounded-2xl bg-slate-50 hover:bg-pink-50 border-2 border-slate-200 hover:border-pink-500 flex items-center justify-center transition overflow-hidden aspect-square shadow-xs active:scale-95" title="Bratz Avatar 3">
-                            <img src="https://digitalpastel.github.io/digital/sweetopiashop/Bratz3.webp" alt="Bratz 3" class="w-full h-full object-cover rounded-xl">
+                            <img src="https://digitalpastel.github.io/digital/sweetopiashop/Bratz3.webp" alt="Bratz 3" loading="eager" class="w-full h-full object-cover rounded-xl">
                         </button>
                         <button type="button" onclick="selectUserAvatar('https://digitalpastel.github.io/digital/sweetopiashop/Bratz4.webp')" class="p-1.5 rounded-2xl bg-slate-50 hover:bg-pink-50 border-2 border-slate-200 hover:border-pink-500 flex items-center justify-center transition overflow-hidden aspect-square shadow-xs active:scale-95" title="Bratz Avatar 4">
-                            <img src="https://digitalpastel.github.io/digital/sweetopiashop/Bratz4.webp" alt="Bratz 4" class="w-full h-full object-cover rounded-xl">
+                            <img src="https://digitalpastel.github.io/digital/sweetopiashop/Bratz4.webp" alt="Bratz 4" loading="eager" class="w-full h-full object-cover rounded-xl">
+                        </button>
+
+                        <!-- 15 Princess Avatars -->
+                        <button type="button" onclick="selectUserAvatar('https://digitalpastel.github.io/digital/sweetopiashop/Princess1.webp')" class="p-1.5 rounded-2xl bg-slate-50 hover:bg-purple-50 border-2 border-slate-200 hover:border-purple-500 flex items-center justify-center transition overflow-hidden aspect-square shadow-xs active:scale-95" title="Princess Avatar 1">
+                            <img src="https://digitalpastel.github.io/digital/sweetopiashop/Princess1.webp" alt="Princess 1" loading="eager" class="w-full h-full object-cover rounded-xl">
+                        </button>
+                        <button type="button" onclick="selectUserAvatar('https://digitalpastel.github.io/digital/sweetopiashop/Princess2.webp')" class="p-1.5 rounded-2xl bg-slate-50 hover:bg-purple-50 border-2 border-slate-200 hover:border-purple-500 flex items-center justify-center transition overflow-hidden aspect-square shadow-xs active:scale-95" title="Princess Avatar 2">
+                            <img src="https://digitalpastel.github.io/digital/sweetopiashop/Princess2.webp" alt="Princess 2" loading="eager" class="w-full h-full object-cover rounded-xl">
+                        </button>
+                        <button type="button" onclick="selectUserAvatar('https://digitalpastel.github.io/digital/sweetopiashop/Princess3.webp')" class="p-1.5 rounded-2xl bg-slate-50 hover:bg-purple-50 border-2 border-slate-200 hover:border-purple-500 flex items-center justify-center transition overflow-hidden aspect-square shadow-xs active:scale-95" title="Princess Avatar 3">
+                            <img src="https://digitalpastel.github.io/digital/sweetopiashop/Princess3.webp" alt="Princess 3" loading="eager" class="w-full h-full object-cover rounded-xl">
+                        </button>
+                        <button type="button" onclick="selectUserAvatar('https://digitalpastel.github.io/digital/sweetopiashop/Princess4.webp')" class="p-1.5 rounded-2xl bg-slate-50 hover:bg-purple-50 border-2 border-slate-200 hover:border-purple-500 flex items-center justify-center transition overflow-hidden aspect-square shadow-xs active:scale-95" title="Princess Avatar 4">
+                            <img src="https://digitalpastel.github.io/digital/sweetopiashop/Princess4.webp" alt="Princess 4" loading="eager" class="w-full h-full object-cover rounded-xl">
+                        </button>
+                        <button type="button" onclick="selectUserAvatar('https://digitalpastel.github.io/digital/sweetopiashop/Princess5.webp')" class="p-1.5 rounded-2xl bg-slate-50 hover:bg-purple-50 border-2 border-slate-200 hover:border-purple-500 flex items-center justify-center transition overflow-hidden aspect-square shadow-xs active:scale-95" title="Princess Avatar 5">
+                            <img src="https://digitalpastel.github.io/digital/sweetopiashop/Princess5.webp" alt="Princess 5" loading="eager" class="w-full h-full object-cover rounded-xl">
+                        </button>
+                        <button type="button" onclick="selectUserAvatar('https://digitalpastel.github.io/digital/sweetopiashop/Princess6.webp')" class="p-1.5 rounded-2xl bg-slate-50 hover:bg-purple-50 border-2 border-slate-200 hover:border-purple-500 flex items-center justify-center transition overflow-hidden aspect-square shadow-xs active:scale-95" title="Princess Avatar 6">
+                            <img src="https://digitalpastel.github.io/digital/sweetopiashop/Princess6.webp" alt="Princess 6" loading="eager" class="w-full h-full object-cover rounded-xl">
+                        </button>
+                        <button type="button" onclick="selectUserAvatar('https://digitalpastel.github.io/digital/sweetopiashop/Princess7.webp')" class="p-1.5 rounded-2xl bg-slate-50 hover:bg-purple-50 border-2 border-slate-200 hover:border-purple-500 flex items-center justify-center transition overflow-hidden aspect-square shadow-xs active:scale-95" title="Princess Avatar 7">
+                            <img src="https://digitalpastel.github.io/digital/sweetopiashop/Princess7.webp" alt="Princess 7" loading="eager" class="w-full h-full object-cover rounded-xl">
+                        </button>
+                        <button type="button" onclick="selectUserAvatar('https://digitalpastel.github.io/digital/sweetopiashop/Princess8.webp')" class="p-1.5 rounded-2xl bg-slate-50 hover:bg-purple-50 border-2 border-slate-200 hover:border-purple-500 flex items-center justify-center transition overflow-hidden aspect-square shadow-xs active:scale-95" title="Princess Avatar 8">
+                            <img src="https://digitalpastel.github.io/digital/sweetopiashop/Princess8.webp" alt="Princess 8" loading="eager" class="w-full h-full object-cover rounded-xl">
+                        </button>
+                        <button type="button" onclick="selectUserAvatar('https://digitalpastel.github.io/digital/sweetopiashop/Princess9.webp')" class="p-1.5 rounded-2xl bg-slate-50 hover:bg-purple-50 border-2 border-slate-200 hover:border-purple-500 flex items-center justify-center transition overflow-hidden aspect-square shadow-xs active:scale-95" title="Princess Avatar 9">
+                            <img src="https://digitalpastel.github.io/digital/sweetopiashop/Princess9.webp" alt="Princess 9" loading="eager" class="w-full h-full object-cover rounded-xl">
+                        </button>
+                        <button type="button" onclick="selectUserAvatar('https://digitalpastel.github.io/digital/sweetopiashop/Princess10.webp')" class="p-1.5 rounded-2xl bg-slate-50 hover:bg-purple-50 border-2 border-slate-200 hover:border-purple-500 flex items-center justify-center transition overflow-hidden aspect-square shadow-xs active:scale-95" title="Princess Avatar 10">
+                            <img src="https://digitalpastel.github.io/digital/sweetopiashop/Princess10.webp" alt="Princess 10" loading="eager" class="w-full h-full object-cover rounded-xl">
+                        </button>
+                        <button type="button" onclick="selectUserAvatar('https://digitalpastel.github.io/digital/sweetopiashop/Princess11.webp')" class="p-1.5 rounded-2xl bg-slate-50 hover:bg-purple-50 border-2 border-slate-200 hover:border-purple-500 flex items-center justify-center transition overflow-hidden aspect-square shadow-xs active:scale-95" title="Princess Avatar 11">
+                            <img src="https://digitalpastel.github.io/digital/sweetopiashop/Princess11.webp" alt="Princess 11" loading="eager" class="w-full h-full object-cover rounded-xl">
+                        </button>
+                        <button type="button" onclick="selectUserAvatar('https://digitalpastel.github.io/digital/sweetopiashop/Princess12.webp')" class="p-1.5 rounded-2xl bg-slate-50 hover:bg-purple-50 border-2 border-slate-200 hover:border-purple-500 flex items-center justify-center transition overflow-hidden aspect-square shadow-xs active:scale-95" title="Princess Avatar 12">
+                            <img src="https://digitalpastel.github.io/digital/sweetopiashop/Princess12.webp" alt="Princess 12" loading="eager" class="w-full h-full object-cover rounded-xl">
+                        </button>
+                        <button type="button" onclick="selectUserAvatar('https://digitalpastel.github.io/digital/sweetopiashop/Princess13.webp')" class="p-1.5 rounded-2xl bg-slate-50 hover:bg-purple-50 border-2 border-slate-200 hover:border-purple-500 flex items-center justify-center transition overflow-hidden aspect-square shadow-xs active:scale-95" title="Princess Avatar 13">
+                            <img src="https://digitalpastel.github.io/digital/sweetopiashop/Princess13.webp" alt="Princess 13" loading="eager" class="w-full h-full object-cover rounded-xl">
+                        </button>
+                        <button type="button" onclick="selectUserAvatar('https://digitalpastel.github.io/digital/sweetopiashop/Princess14.webp')" class="p-1.5 rounded-2xl bg-slate-50 hover:bg-purple-50 border-2 border-slate-200 hover:border-purple-500 flex items-center justify-center transition overflow-hidden aspect-square shadow-xs active:scale-95" title="Princess Avatar 14">
+                            <img src="https://digitalpastel.github.io/digital/sweetopiashop/Princess14.webp" alt="Princess 14" loading="eager" class="w-full h-full object-cover rounded-xl">
+                        </button>
+                        <button type="button" onclick="selectUserAvatar('https://digitalpastel.github.io/digital/sweetopiashop/Princess15.webp')" class="p-1.5 rounded-2xl bg-slate-50 hover:bg-purple-50 border-2 border-slate-200 hover:border-purple-500 flex items-center justify-center transition overflow-hidden aspect-square shadow-xs active:scale-95" title="Princess Avatar 15">
+                            <img src="https://digitalpastel.github.io/digital/sweetopiashop/Princess15.webp" alt="Princess 15" loading="eager" class="w-full h-full object-cover rounded-xl">
                         </button>
                     </div>
-                    <div class="pt-1">
+                    <div class="pt-1 shrink-0">
                         <label class="w-full py-2.5 px-4 bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold text-xs rounded-xl flex items-center justify-center space-x-2 cursor-pointer transition shadow-sm">
                             <i class="fa-solid fa-upload text-xs"></i>
                             <span>Upload Custom Photo</span>
@@ -2423,6 +2474,28 @@
             "https://digitalpastel.github.io/digital/sweetopiashop/sweetsolution.webp",
             "https://digitalpastel.github.io/digital/sweetopiashop/sweetthankyou.webp",
             "https://digitalpastel.github.io/digital/sweetopiashop/sweetkaunter.webp"
+        ];
+
+        const avatarAssets = [
+            "https://digitalpastel.github.io/digital/sweetopiashop/Bratz1.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/Bratz2.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/Bratz3.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/Bratz4.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/Princess1.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/Princess2.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/Princess3.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/Princess4.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/Princess5.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/Princess6.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/Princess7.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/Princess8.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/Princess9.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/Princess10.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/Princess11.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/Princess12.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/Princess13.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/Princess14.webp",
+            "https://digitalpastel.github.io/digital/sweetopiashop/Princess15.webp"
         ];
 
         const powersList = [
@@ -5247,12 +5320,7 @@
                 const img = new Image();
                 img.src = src;
             });
-            [
-                "https://digitalpastel.github.io/digital/sweetopiashop/Bratz1.webp",
-                "https://digitalpastel.github.io/digital/sweetopiashop/Bratz2.webp",
-                "https://digitalpastel.github.io/digital/sweetopiashop/Bratz3.webp",
-                "https://digitalpastel.github.io/digital/sweetopiashop/Bratz4.webp"
-            ].forEach((src) => {
+            avatarAssets.forEach((src) => {
                 const img = new Image();
                 img.src = src;
             });
@@ -6472,7 +6540,7 @@
 
         // Startup lifecycle
         document.addEventListener('DOMContentLoaded', async () => {
-            // Preload & pre-render all 15 stickers and Bratz avatars immediately for zero-lag display
+            // Preload & pre-render all 15 stickers and all 19 Bratz & Princess avatars immediately for zero-lag display
             preloadStickerImages();
             renderStickerSlotsGrid(true);
 
