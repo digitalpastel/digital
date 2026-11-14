@@ -2524,8 +2524,8 @@
             if (pwr !== null) {
                 if (stockMap[pwr] === false) return null;
                 const loc = locMap[pwr] || { warehouse: true, vendor: false };
-                if (loc.warehouse && loc.vendor) return "Warehouse/HQ & Vendor BP10";
-                if (loc.warehouse) return "Warehouse/HQ";
+                if (loc.warehouse && loc.vendor) return "HQ & Vendor BP10";
+                if (loc.warehouse) return "HQ";
                 if (loc.vendor) return "Vendor BP10";
                 return "In Stock";
             }
@@ -2545,8 +2545,8 @@
             });
 
             if (!anyAvailable) return "Out of Stock";
-            if (hasWarehouse && hasVendor) return "Warehouse/HQ & Vendor BP10";
-            if (hasWarehouse) return "Warehouse/HQ";
+            if (hasWarehouse && hasVendor) return "HQ & Vendor BP10";
+            if (hasWarehouse) return "HQ";
             if (hasVendor) return "Vendor BP10";
             return "In Stock";
         }
@@ -4711,7 +4711,7 @@
                                 <div class="flex flex-col space-y-1.5">
                                     <label class="inline-flex items-center space-x-1.5 cursor-pointer select-none">
                                         <input type="checkbox" data-prod-id="${p.id}" data-loc="warehouse" onchange="onAdminLocationCheckboxChange('${p.id}')" class="admin-loc-warehouse-checkbox w-4 h-4 text-[#65a30d] rounded border-slate-400 focus:ring-[#65a30d] cursor-pointer">
-                                        <span class="text-xs font-semibold text-slate-800">Warehouse/HQ</span>
+                                        <span class="text-xs font-semibold text-slate-800">HQ</span>
                                     </label>
                                     <label class="inline-flex items-center space-x-1.5 cursor-pointer select-none">
                                         <input type="checkbox" data-prod-id="${p.id}" data-loc="vendor" onchange="onAdminLocationCheckboxChange('${p.id}')" class="admin-loc-vendor-checkbox w-4 h-4 text-[#65a30d] rounded border-slate-400 focus:ring-[#65a30d] cursor-pointer">
@@ -4809,7 +4809,7 @@
             }
             renderStoreProducts(products);
             renderFavouritesGrid();
-            showToast("Stock & Locations Updated!", "Prescription power and Warehouse/Vendor BP10 locations published to Store Catalog.");
+            showToast("Stock & Locations Updated!", "Prescription power and HQ / Vendor BP10 locations published to Store Catalog.");
         }
 
         function handleImageFileUpload(event) {
