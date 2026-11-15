@@ -5,14 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light">
     <meta name="supported-color-schemes" content="light">
+    <!-- Cache Busting & No-Cache Directives (v=1.0.2) -->
+    <meta name="app-version" content="1.0.2">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Sweetopia Shop - Premium Contact Lens Store &amp; FPX Checkout</title>
-    <!-- App Icons -->
-    <link rel="icon" type="image/png" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png">
-    <link rel="apple-touch-icon" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png">
-    <link rel="manifest" href="https://digitalpastel.github.io/digital/sweetopiashop/manifest.json">
+    <!-- App Icons & Stylesheet with Cache Busting Version (?v=1.0.2) -->
+    <link rel="stylesheet" href="style.css?v=1.0.2">
+    <link rel="icon" type="image/png" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.2">
+    <link rel="apple-touch-icon" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.2">
+    <link rel="icon" type="image/png" sizes="512x512" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png?v=1.0.2">
+    <link rel="manifest" href="https://digitalpastel.github.io/digital/sweetopiashop/manifest.json?v=1.0.2">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&amp;family=Fredoka:wght@600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
     <!-- Retro Pixel Font for 10-Bar Window matching reference image -->
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -24,6 +30,30 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script>
+        // Cache Busting Controller: Increment APP_VERSION to 1.0.3, 1.0.4, etc. whenever updating GitHub
+        const APP_VERSION = '1.0.2';
+        (function enforceCacheBustingVersion() {
+            try {
+                const storedVersion = localStorage.getItem('sweetopia_app_version');
+                if (storedVersion && storedVersion !== APP_VERSION) {
+                    localStorage.setItem('sweetopia_app_version', APP_VERSION);
+                    if ('caches' in window) {
+                        caches.keys().then(names => names.forEach(name => caches.delete(name))).catch(() => {});
+                    }
+                    if ('serviceWorker' in navigator) {
+                        navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.update())).catch(() => {});
+                    }
+                    const url = new URL(window.location.href);
+                    if (url.searchParams.get('v') !== APP_VERSION) {
+                        url.searchParams.set('v', APP_VERSION);
+                        window.location.replace(url.toString());
+                    }
+                } else {
+                    localStorage.setItem('sweetopia_app_version', APP_VERSION);
+                }
+            } catch (e) {}
+        })();
+
         // Suppress Firestore verbose connection warning in sandboxed iframe environments
         if (typeof firebase !== 'undefined' && firebase.firestore) {
             try {
@@ -367,6 +397,397 @@
         .tab-panel-animate {
             animation: smoothFadeSlide 0.28s cubic-bezier(0.22, 1, 0.36, 1);
         }
+
+        /* =========================================================================
+           FEEDBACK POST SECTION (ABOVE FOOTER) WITH HORIZONTAL RIGHT SCROLL
+           ========================================================================= */
+        .feedback-section {
+            position: relative;
+            width: 100%;
+            min-height: 680px;
+            background: radial-gradient(circle at 50% 45%, #163eff 0%, #0522e8 55%, #0015c9 100%);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1.25rem;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            border-top: 4px solid #0012a8;
+        }
+
+        .bg-watermark {
+            position: absolute;
+            inset: -10%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            pointer-events: none;
+            user-select: none;
+            transform: rotate(-10deg);
+            opacity: 0.14;
+            z-index: 1;
+        }
+        .bg-watermark span {
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(6rem, 18vw, 15rem);
+            font-weight: 700;
+            color: #6a8cff;
+            line-height: 0.85;
+            letter-spacing: -0.03em;
+            white-space: nowrap;
+        }
+
+        .glow {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            filter: blur(75px);
+            z-index: 1;
+        }
+        .glow-top-right {
+            width: 320px;
+            height: 320px;
+            top: -60px;
+            right: -40px;
+            background: rgba(255, 118, 92, 0.55);
+        }
+        .glow-center {
+            width: 340px;
+            height: 340px;
+            top: 26%;
+            left: 22%;
+            background: rgba(255, 224, 240, 0.35);
+        }
+        .glow-bottom-left {
+            width: 280px;
+            height: 280px;
+            bottom: -80px;
+            left: -60px;
+            background: rgba(255, 112, 88, 0.7);
+            filter: blur(45px);
+        }
+
+        .curve-top-left {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 170px;
+            height: auto;
+            z-index: 2;
+            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.25));
+            pointer-events: none;
+        }
+        .curve-bottom-right {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: min(65vw, 520px);
+            height: auto;
+            z-index: 2;
+            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.25));
+            pointer-events: none;
+        }
+
+        .feedback-container {
+            position: relative;
+            z-index: 5;
+            width: 100%;
+            max-width: 1120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .feedback-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .title-main {
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(2.2rem, 5vw, 3.6rem);
+            font-weight: 700;
+            color: #ffffff;
+            margin: 0;
+            letter-spacing: -0.01em;
+            text-shadow: 0 4px 20px rgba(0, 12, 120, 0.3);
+        }
+        .title-script {
+            display: block;
+            font-family: 'Caveat', cursive;
+            font-size: clamp(2.3rem, 5.5vw, 3.8rem);
+            font-weight: 700;
+            color: #ffffff;
+            margin-top: -0.65rem;
+            transform: rotate(-4deg);
+            text-shadow: 0 4px 15px rgba(0, 12, 120, 0.25);
+        }
+
+        /* Horizontal Right-Scrollable Carousel Track */
+        .feedback-carousel-wrapper {
+            position: relative;
+            width: 100%;
+            display: flex;
+            align-items: center;
+        }
+        .feedback-carousel-track {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 2.5rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            padding: 3.5rem 2.5rem 4.25rem;
+            width: 100%;
+            -webkit-overflow-scrolling: touch;
+        }
+        .feedback-carousel-track::-webkit-scrollbar {
+            height: 10px;
+        }
+        .feedback-carousel-track::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 9999px;
+            margin: 0 2rem;
+        }
+        .feedback-carousel-track::-webkit-scrollbar-thumb {
+            background: #ffd600;
+            border-radius: 9999px;
+            border: 2px solid #0522e8;
+        }
+
+        .card-stage {
+            position: relative;
+            flex: 0 0 min(100%, 640px);
+            scroll-snap-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+
+        .concentric-ring {
+            position: absolute;
+            width: clamp(300px, 50vw, 440px);
+            height: clamp(300px, 50vw, 440px);
+            border-radius: 50%;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.85) 0%, rgba(160, 195, 255, 0.45) 45%, rgba(10, 45, 230, 0.9) 100%);
+            padding: 16px;
+            box-shadow: 0 25px 50px rgba(0, 10, 110, 0.55), inset 0 4px 12px rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .ring-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 30%, #4d79ff 0%, #1039f5 60%, #051eb8 100%);
+            border: 9px solid rgba(220, 232, 255, 0.75);
+            box-shadow: inset 0 10px 25px rgba(0, 10, 90, 0.5);
+        }
+
+        .speech-bubble {
+            position: relative;
+            z-index: 3;
+            width: 100%;
+            max-width: 610px;
+            background: #f5f2e6;
+            border-radius: 28px;
+            padding: 2.25rem 2.5rem;
+            box-shadow: 0 28px 55px rgba(2, 12, 105, 0.45), inset 0 2px 4px rgba(255, 255, 255, 0.9);
+        }
+        .bubble-tail {
+            position: absolute;
+            bottom: -34px;
+            left: 0;
+            width: 90px;
+            height: 52px;
+            background: #f5f2e6;
+            clip-path: polygon(0 0, 100% 0, 16% 100%, 0 100%);
+            border-bottom-left-radius: 18px;
+            box-shadow: -8px 18px 25px rgba(2, 12, 105, 0.25);
+        }
+        .card-body {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .avatar-wrapper {
+            flex-shrink: 0;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: #ffd23f;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid #ffffff;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15), inset 0 -6px 14px rgba(215, 145, 0, 0.25);
+        }
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+        }
+
+        .testimonial-content {
+            flex: 1;
+            min-width: 0;
+        }
+        .stars {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 0.45rem;
+            font-size: 1.4rem;
+            color: #ffca18;
+            text-shadow: 0 2px 3px rgba(160, 105, 0, 0.35);
+        }
+        .client-name {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.55rem;
+            font-weight: 700;
+            color: #1f1f1f;
+            margin: 0 0 0.5rem;
+            word-break: break-word;
+        }
+        .client-quote {
+            font-size: 1.02rem;
+            line-height: 1.55;
+            color: #2c2c2c;
+            margin: 0;
+            font-weight: 500;
+            word-break: break-word;
+        }
+
+        .heart-badge {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #ff4b3e 0%, #d90b00 100%);
+            padding: 6px;
+            box-shadow: 0 14px 25px rgba(180, 10, 0, 0.4), inset 0 3px 6px rgba(255, 180, 175, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 6;
+            pointer-events: none;
+        }
+        .heart-ring {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2.5px solid rgba(255, 225, 225, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at 30% 30%, #ff584d, #d80c00);
+        }
+        .heart-icon {
+            width: 56%;
+            height: 56%;
+            fill: #f7f4eb;
+            filter: drop-shadow(0 3px 4px rgba(110, 0, 0, 0.35));
+        }
+
+        .badge-top-right {
+            width: 92px;
+            height: 92px;
+            top: -38px;
+            right: 32px;
+            transform: rotate(8deg);
+        }
+        .badge-top-left {
+            width: 72px;
+            height: 72px;
+            top: -30px;
+            left: 44px;
+            transform: rotate(-16deg);
+            filter: blur(1.8px);
+            opacity: 0.92;
+        }
+        .badge-bottom {
+            width: 90px;
+            height: 90px;
+            bottom: -50px;
+            left: 155px;
+            transform: rotate(-18deg);
+            filter: blur(2.8px);
+            opacity: 0.94;
+        }
+
+        .feedback-footer {
+            width: 100%;
+            max-width: 680px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 1rem;
+            color: #ffffff;
+            gap: 1rem;
+        }
+        .footer-note {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+        }
+        .footer-line {
+            flex: 1;
+            max-width: 220px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        @media (max-width: 640px) {
+            .feedback-carousel-track {
+                padding: 3rem 0.75rem 3.75rem;
+                gap: 1.5rem;
+            }
+            .speech-bubble {
+                padding: 1.75rem 1.25rem;
+            }
+            .card-body {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+            .stars {
+                justify-content: center;
+            }
+            .avatar-wrapper {
+                width: 112px;
+                height: 112px;
+            }
+            .badge-top-right {
+                width: 72px;
+                height: 72px;
+                top: -28px;
+                right: 14px;
+            }
+            .badge-top-left {
+                width: 54px;
+                height: 54px;
+                top: -22px;
+                left: 16px;
+            }
+            .badge-bottom {
+                width: 68px;
+                height: 68px;
+                bottom: -36px;
+                left: auto;
+                right: 26px;
+            }
+            .footer-line {
+                max-width: 90px;
+            }
+        }
     </style>
 </head>
 
@@ -467,12 +888,88 @@
                     Your package is getting prepared in our digital warehouse. We'll email you tracking updates soon!
                 </p>
 
-                <!-- Single Action Button -->
-                <button onclick="handleContinue()" class="w-full py-3 bg-[#f472b6] hover:bg-[#ec4899] text-white text-xs font-extrabold rounded-full border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all uppercase tracking-widest">
-                    Continue Shopping
-                </button>
+                <!-- Action Buttons -->
+                <div class="w-full space-y-2.5">
+                    <button onclick="openFeedbackPromptModal()" class="w-full py-3 bg-[#f472b6] hover:bg-[#ec4899] text-white text-xs font-extrabold rounded-full border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all uppercase tracking-widest flex items-center justify-center gap-2 cursor-pointer">
+                        <i class="fa-solid fa-star text-yellow-200"></i>
+                        <span>Rate &amp; Share Feedback</span>
+                    </button>
+                    <button onclick="handleContinue()" class="w-full py-2.5 bg-white hover:bg-purple-100 text-purple-900 text-[11px] font-extrabold rounded-full border-2 border-black shadow-[0_3px_0_0_#1e1b4b] active:translate-y-0.5 active:shadow-none transition-all uppercase tracking-wider cursor-pointer">
+                        Continue Shopping
+                    </button>
+                </div>
 
             </div>
+        </div>
+    </div>
+
+    <!-- POST-PURCHASE CUSTOMER FEEDBACK & STAR RATING MODAL -->
+    <div id="feedback-prompt-modal" class="fixed inset-0 z-[155] modal-backdrop-clean flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200">
+        <div class="w-[460px] max-w-full bg-[#d8b4fe] border-[3px] border-[#7c3aed] rounded-xl shadow-[8px_8px_0_0_#4c1d95] overflow-hidden transform transition-transform duration-200 scale-95" id="feedback-prompt-frame">
+            <!-- Window Title Bar -->
+            <div class="bg-[#a855f7] px-3 py-2 flex justify-between items-center border-b-[3px] border-[#7c3aed]">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-heart text-pink-200 text-xs"></i>
+                    <span class="text-white text-[10px] tracking-wider font-bold uppercase">customer_feedback.exe</span>
+                </div>
+                <button type="button" onclick="closeFeedbackPromptModal()" class="w-5 h-5 bg-[#f472b6] border-2 border-black flex items-center justify-center text-[12px] font-bold text-white shadow-[1px_1px_0_0_#000] cursor-pointer hover:bg-[#ec4899] transition-colors">×</button>
+            </div>
+
+            <!-- Modal Inner Body -->
+            <form onsubmit="submitCustomerFeedback(event)" class="bg-[#f3e8ff] p-5 sm:p-6 m-2 border-2 border-[#9333ea] rounded-lg space-y-4">
+                <div class="text-center space-y-1">
+                    <span class="inline-block bg-[#fef08a] border-2 border-black px-3 py-1 rounded-full text-[10px] font-black text-[#713f12] uppercase shadow-[2px_2px_0_0_#000]">
+                        ★ Share Your Experience ★
+                    </span>
+                    <h3 class="text-base sm:text-lg font-black text-slate-900 pt-1">How was your Sweetopia Shop experience?</h3>
+                    <p class="text-[11px] text-slate-600 font-medium">Tap the stars below and leave a review to appear on our live Feedback Wall!</p>
+                </div>
+
+                <!-- Customer Preview Chip -->
+                <div class="flex items-center justify-center gap-3 bg-white/90 p-2.5 rounded-2xl border-2 border-black shadow-[2px_2px_0_0_#1e1b4b]">
+                    <div id="feedback-modal-avatar-preview" class="w-10 h-10 rounded-full border-2 border-[#65a30d] overflow-hidden shrink-0 bg-amber-100">
+                        <img src="https://digitalpastel.github.io/digital/sweetopiashop/Bratz1.webp" alt="Your Avatar" class="w-full h-full object-cover">
+                    </div>
+                    <div class="text-left min-w-0">
+                        <p id="feedback-modal-name-preview" class="text-xs font-extrabold text-slate-900 truncate">Customer</p>
+                        <p class="text-[10px] text-slate-500 font-medium">Verified Sweetopia Shopper</p>
+                    </div>
+                </div>
+
+                <!-- Interactive 5-Star Selector -->
+                <div class="flex flex-col items-center space-y-1">
+                    <div class="flex items-center justify-center gap-2" id="feedback-star-buttons">
+                        <button type="button" onclick="setFeedbackRating(1)" data-star="1" class="feedback-star-btn text-3xl text-amber-400 hover:scale-110 transition-transform cursor-pointer drop-shadow" aria-label="1 Star">★</button>
+                        <button type="button" onclick="setFeedbackRating(2)" data-star="2" class="feedback-star-btn text-3xl text-amber-400 hover:scale-110 transition-transform cursor-pointer drop-shadow" aria-label="2 Stars">★</button>
+                        <button type="button" onclick="setFeedbackRating(3)" data-star="3" class="feedback-star-btn text-3xl text-amber-400 hover:scale-110 transition-transform cursor-pointer drop-shadow" aria-label="3 Stars">★</button>
+                        <button type="button" onclick="setFeedbackRating(4)" data-star="4" class="feedback-star-btn text-3xl text-amber-400 hover:scale-110 transition-transform cursor-pointer drop-shadow" aria-label="4 Stars">★</button>
+                        <button type="button" onclick="setFeedbackRating(5)" data-star="5" class="feedback-star-btn text-3xl text-amber-400 hover:scale-110 transition-transform cursor-pointer drop-shadow" aria-label="5 Stars">★</button>
+                    </div>
+                    <span id="feedback-rating-label" class="text-[11px] font-extrabold text-purple-800">5 / 5 Stars — Wonderful!</span>
+                </div>
+
+                <!-- Display Name Input -->
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-800 mb-1">Display Name</label>
+                    <input type="text" id="feedback-author-name" required maxlength="40" placeholder="Enter your name" class="w-full bg-white border-2 border-black rounded-xl px-3.5 py-2 text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-pink-400">
+                </div>
+
+                <!-- Written Experience -->
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-800 mb-1">Your Feedback Message</label>
+                    <textarea id="feedback-message-input" rows="3" required maxlength="260" placeholder="Share what you loved about Sweetopia Shop..." class="w-full bg-white border-2 border-black rounded-xl p-3 text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-pink-400 resize-none"></textarea>
+                    <p class="text-[10px] text-slate-500 mt-1"><i class="fa-solid fa-lock text-[9px] mr-1"></i>Note: Submitted reviews are permanent on our store wall (only Admin can moderate/remove).</p>
+                </div>
+
+                <div class="flex items-center gap-2.5 pt-1">
+                    <button type="button" onclick="closeFeedbackPromptModal()" class="px-4 py-2.5 bg-white hover:bg-slate-100 text-slate-700 text-xs font-extrabold rounded-full border-2 border-black shadow-[0_3px_0_0_#1e1b4b] transition-all cursor-pointer">
+                        Skip
+                    </button>
+                    <button type="submit" class="flex-1 py-2.5 bg-[#65a30d] hover:bg-[#4d7c0f] text-white text-xs font-extrabold rounded-full border-2 border-black shadow-[0_3px_0_0_#1e1b4b] active:translate-y-0.5 active:shadow-none transition-all uppercase tracking-wider cursor-pointer">
+                        Post My Feedback
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -616,7 +1113,26 @@
                             </div>
                             <div>
                                 <p class="text-xs font-semibold text-slate-900">Firebase Authentication Active</p>
-                                <p class="text-[10px] text-slate-600 mt-0.5 leading-relaxed">Sign in with your email and password to securely access your customer or admin workspace.</p>
+                                <p class="text-[10px] text-slate-600 mt-0.5 leading-relaxed">Sign in with your verified email and password. New customer accounts must click the email verification link before signing in.</p>
+                            </div>
+                        </div>
+
+                        <!-- EMAIL VERIFICATION NOTICE BANNER (Appears after registration or if unverified sign-in is attempted) -->
+                        <div id="auth-verification-banner" class="hidden bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 mb-5 flex items-start gap-3 shadow-xs">
+                            <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0 mt-0.5 border border-amber-300">
+                                <i class="fa-solid fa-envelope-circle-check text-sm"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p id="auth-verification-banner-title" class="text-xs font-extrabold text-amber-950">Email Verification Required</p>
+                                <p id="auth-verification-banner-msg" class="text-[11px] text-amber-800 mt-0.5 leading-relaxed">
+                                    We sent a verification link to your email. Please click the link in your inbox (or spam folder) to verify your account, then sign in here.
+                                </p>
+                                <div class="mt-2.5 flex flex-wrap items-center gap-2">
+                                    <button type="button" id="resend-verification-btn" onclick="resendVerificationEmailFromPage1()" class="inline-flex items-center gap-1.5 bg-amber-600 hover:bg-amber-700 active:scale-95 text-white text-[11px] font-bold px-3 py-1.5 rounded-xl shadow-xs transition cursor-pointer">
+                                        <i class="fa-solid fa-paper-plane text-[10px]"></i>
+                                        <span>Resend Verification Email</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
@@ -646,7 +1162,10 @@
                             <button type="submit" id="auth-submit-btn" class="w-full bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold py-3.5 rounded-xl text-xs sm:text-sm shadow-md transition-all mt-2">
                                 Sign In To Dashboard
                             </button>
-                            <div class="text-center pt-1">
+                            <div class="text-center pt-1 flex flex-col items-center gap-1.5">
+                                <button type="button" onclick="resendVerificationEmailFromPage1()" class="text-[11px] text-amber-700 font-bold hover:text-amber-800 hover:underline transition-colors cursor-pointer">
+                                    <i class="fa-solid fa-envelope-open-text mr-1"></i> Didn't receive verification email? Resend link
+                                </button>
                                 <button type="button" onclick="continueAsGuest()" class="text-[11px] text-slate-600 font-semibold hover:text-slate-900 transition-colors">
                                     <i class="fa-solid fa-arrow-left mr-1"></i> Continue as guest
                                 </button>
@@ -1183,7 +1702,7 @@
                                     <div class="flex flex-wrap items-center gap-2">
                                         <div class="flex items-center gap-1.5">
                                             <label for="customer-code1" class="text-[10px] font-semibold text-slate-500 uppercase">Assign:</label>
-                                            <select id="customer-code1" onchange="updateSection1SelectedCount()" class="admin-voucher-customer-select bg-amber-50/50 border border-amber-200 text-slate-700 text-xs px-2 py-1 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400 font-sans max-w-[180px] truncate"><option value="">-- Registered Customer --</option><option value="brandworkzco@gmail.com">brandworkzco@gmail.com</option></select>
+                                            <select id="customer-code1" onchange="updateSection1SelectedCount()" class="admin-voucher-customer-select bg-amber-50/50 border border-amber-200 text-slate-700 text-xs px-2 py-1 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400 font-sans max-w-[180px] truncate"><option value="">-- Registered Customer --</option></select>
                                         </div>
                                         <div class="flex items-center gap-1.5">
                                             <label for="expiry-code1" class="text-[10px] font-semibold text-slate-500 uppercase">Expires:</label>
@@ -1588,6 +2107,58 @@
                     </div>
                 </div>
 
+                <!-- CUSTOMER FEEDBACK POST SECTION (ABOVE FOOTER - HORIZONTAL RIGHT SCROLL) -->
+                <section id="feedback-wall-section" class="feedback-section">
+                    <!-- Background Watermark Text -->
+                    <div class="bg-watermark" aria-hidden="true">
+                        <span>Feedback</span>
+                        <span>Feedback</span>
+                        <span>Feedback</span>
+                    </div>
+
+                    <!-- Ambient Glows & Decorative Yellow Curves -->
+                    <div class="glow glow-top-right"></div>
+                    <div class="glow glow-center"></div>
+                    <div class="glow glow-bottom-left"></div>
+
+                    <svg class="curve-top-left" viewBox="0 0 200 300" fill="none">
+                        <path d="M160 -20 C 175 80, 70 180, -20 270" stroke="#FFD600" stroke-width="11" stroke-linecap="round"/>
+                    </svg>
+                    <svg class="curve-bottom-right" viewBox="0 0 600 250" fill="none">
+                        <path d="M620 10 C 420 110, 260 220, 80 260" stroke="#FFD600" stroke-width="11" stroke-linecap="round"/>
+                    </svg>
+
+                    <!-- Main Content Container -->
+                    <div class="feedback-container">
+                        <!-- Header -->
+                        <header class="feedback-header">
+                            <h2 class="title-main">Feedback Post</h2>
+                            <span class="title-script">Customer Reviews</span>
+                        </header>
+
+                        <!-- Horizontal Right-Scrollable Centerpiece Graphic & Speech Bubble Cards -->
+                        <div class="feedback-carousel-wrapper">
+                            <div id="feedback-carousel-track" class="feedback-carousel-track">
+                                <!-- Dynamically populated feedback cards (with user avatar, name, stars, and Admin-only Delete button) -->
+                            </div>
+                        </div>
+
+                        <!-- Bottom Footer Meta & Scroll Controls -->
+                        <footer class="feedback-footer">
+                            <span id="feedback-counter-note" class="footer-note">Swipe or scroll right for more reviews →</span>
+                            <div class="flex items-center gap-2">
+                                <button type="button" onclick="scrollFeedbackCarousel(-1)" class="w-9 h-9 rounded-full bg-white/20 hover:bg-white/30 text-white border border-white/40 flex items-center justify-center transition cursor-pointer" aria-label="Scroll feedback left">
+                                    <i class="fa-solid fa-chevron-left text-xs"></i>
+                                </button>
+                                <button type="button" onclick="scrollFeedbackCarousel(1)" class="w-9 h-9 rounded-full bg-[#FFD600] hover:bg-yellow-300 text-slate-950 font-black flex items-center justify-center shadow-md transition cursor-pointer" aria-label="Scroll feedback right">
+                                    <i class="fa-solid fa-chevron-right text-xs"></i>
+                                </button>
+                            </div>
+                            <span class="footer-line hidden sm:block"></span>
+                        </footer>
+                    </div>
+                </section>
+
                 <!-- PAGE 2 FOOTER -->
                 <footer class="w-full bg-[#d8b4fe] border-t-4 border-[#7c3aed] py-6 px-6 shadow-[0_-4px_0_0_#4c1d95] mt-auto">
                     <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 items-center gap-4">
@@ -1611,7 +2182,7 @@
                         <!-- Center: Copyright Text Only -->
                         <div class="text-center flex justify-center">
                             <p class="text-[11px] text-[#581c87] font-extrabold tracking-wider">
-                                © Brand Works Empire 2026, all rights reserved
+                                © Brand Works Empire 2026, all rights reserved <span class="opacity-75 font-mono text-[10px]">(v1.0.2)</span>
                             </p>
                         </div>
 
@@ -2297,7 +2868,9 @@
 
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js').catch(() => {});
+                navigator.serviceWorker.register(`./sw.js?v=${APP_VERSION}`).then(reg => {
+                    reg.update().catch(() => {});
+                }).catch(() => {});
             });
         }
 
@@ -2565,7 +3138,142 @@
         let userSessionsMap = {};
         let userAvatarsMap = {};
         let registeredCustomersList = [...SEEDED_REGISTERED_CUSTOMERS];
+        let verifiedEmailsMap = {};
+        let adminSupportOnlineFlag = false;
+        let lastPendingVerificationEmail = '';
+        let lastPendingVerificationPassword = '';
         const DEFAULT_USER_AVATAR = "https://digitalpastel.github.io/digital/sweetopiashop/Bratz1.webp";
+
+        function showAuthVerificationBanner(title, message, targetEmail = '') {
+            const banner = document.getElementById('auth-verification-banner');
+            const titleEl = document.getElementById('auth-verification-banner-title');
+            const msgEl = document.getElementById('auth-verification-banner-msg');
+            if (!banner) return;
+            if (targetEmail) {
+                lastPendingVerificationEmail = targetEmail.trim().toLowerCase();
+            }
+            if (titleEl && title) titleEl.innerText = title;
+            if (msgEl && message) msgEl.innerText = message;
+            banner.classList.remove('hidden');
+        }
+
+        function hideAuthVerificationBanner() {
+            const banner = document.getElementById('auth-verification-banner');
+            banner?.classList.add('hidden');
+        }
+
+        window.resendVerificationEmailFromPage1 = async function() {
+            const emailInput = document.getElementById('auth-email');
+            const pwdInput = document.getElementById('auth-password');
+            const email = ((emailInput?.value || '') || lastPendingVerificationEmail || '').trim().toLowerCase();
+            const password = (pwdInput?.value || '') || lastPendingVerificationPassword || '';
+
+            if (!email) {
+                showToast("Email Required", "Please type your registered email address in the Email box first.", true);
+                emailInput?.focus();
+                return;
+            }
+
+            if (isAdminUser(email)) {
+                showToast("Admin Account", "Admin accounts do not require email verification.");
+                return;
+            }
+
+            if (!auth) {
+                await saveRegisteredCustomerRecord(email, null, false);
+                showAuthVerificationBanner(
+                    "Verification Email Re-sent!",
+                    `We sent a fresh verification link to ${email}. Please check your inbox and spam folder, click the link, then sign in.`,
+                    email
+                );
+                showToast("Verification Link Sent", `Verification email resent to ${email}.`);
+                return;
+            }
+
+            if (!password) {
+                setAuthModeTab('signin');
+                showAuthVerificationBanner(
+                    "Enter Password to Resend Link",
+                    `To resend the verification email to ${email}, enter your password below and click "Resend Verification Email" (or click "Forgot?" if you forgot your password).`,
+                    email
+                );
+                showToast("Password Needed", "Enter your password first so we can send a new verification link.", true);
+                pwdInput?.focus();
+                return;
+            }
+
+            startRetroLoading("RESENDING VERIFICATION EMAIL...");
+            try {
+                const res = await auth.signInWithEmailAndPassword(email, password);
+                let user = res.user;
+                try {
+                    await user.reload();
+                    user = auth.currentUser || user;
+                } catch (e) {}
+
+                if (user && user.emailVerified) {
+                    hideAuthVerificationBanner();
+                    currentUser = user;
+                    await saveRegisteredCustomerRecord(email, user.uid, true);
+                    localStorage.setItem('sweetopia_logged_in_email', email);
+                    await loadCustomerCartFromFirestore(user.uid);
+                    updateUIAfterLogin(currentUser);
+                    updateAdminChatUserDropdown();
+                    await finishRetroLoading('fast');
+                    showToast("Already Verified!", `Your email ${email} is already verified. Signing you in now!`);
+                    switchPage('dashboard');
+                    switchTab('catalog');
+                    updatePresence(email, true);
+                    return;
+                }
+
+                await saveRegisteredCustomerRecord(email, user?.uid, false);
+                await user.sendEmailVerification();
+                try {
+                    await auth.signOut();
+                } catch (e) {}
+
+                currentUser = null;
+                localStorage.removeItem('sweetopia_logged_in_email');
+                await finishRetroLoading('fast');
+
+                setAuthModeTab('signin');
+                showAuthVerificationBanner(
+                    "New Verification Email Sent!",
+                    `We sent a fresh verification link to ${email}. Please open your Gmail inbox (or Spam/Promotions folder), click the link to verify your account, and then sign in.`,
+                    email
+                );
+                showToast("Verification Sent!", `Check your inbox for ${email} and click the verification link.`);
+            } catch (err) {
+                cancelRetroLoading();
+                const code = err?.code || '';
+                if (code === 'auth/too-many-requests') {
+                    showAuthVerificationBanner(
+                        "Email Already Sent Recently",
+                        `Firebase recently sent a verification email to ${email}. Please check your Gmail inbox and Spam folder for the link, or wait a couple of minutes before requesting another.`,
+                        email
+                    );
+                    showToast("Please Wait", "A verification email was already sent recently. Check your inbox or spam folder.", true);
+                } else if (code === 'auth/invalid-credential' || code === 'auth/wrong-password') {
+                    showAuthVerificationBanner(
+                        "Incorrect Password",
+                        `The password entered for ${email} did not match. Enter the password you used when signing up, or click "Forgot?" to reset your password first.`,
+                        email
+                    );
+                    showToast("Incorrect Password", "Please enter the correct password for this account or click 'Forgot?'.", true);
+                } else if (code === 'auth/user-not-found') {
+                    setAuthModeTab('signup');
+                    showAuthVerificationBanner(
+                        "Account Not Registered Yet",
+                        `No account found for ${email}. Click "Register New Account" below to create your account and receive a verification link.`,
+                        email
+                    );
+                    showToast("Account Not Found", "Please register this email first under Customer Sign Up.", true);
+                } else {
+                    showToast("Resend Error", err.message || "Could not resend verification email.", true);
+                }
+            }
+        };
 
         function getUserAvatarForEmail(email) {
             if (!email) return DEFAULT_USER_AVATAR;
@@ -2594,7 +3302,6 @@
             const isAdmin = currentUser && isAdminUser(currentUser.email);
 
             if (isAdmin) {
-                // Admin sees the selected customer/user's avatar in the main left circle (replaces headphone icon)
                 const targetUser = activeChatSessionUser || document.getElementById('admin-active-chat-user')?.value;
                 if (targetUser) {
                     const userAvatar = getUserAvatarForEmail(targetUser);
@@ -2605,7 +3312,6 @@
                     headerMainBox.title = "Customer Avatar";
                 }
             } else {
-                // User/Customer only sees the Admin headphone icon in the chat widget header
                 headerMainBox.innerHTML = `<i class="fa-solid fa-headset text-white"></i>`;
                 headerMainBox.title = "Sweetopia Live Support";
             }
@@ -2901,8 +3607,295 @@
         };
 
         /* =========================================================================
-            RETRO Y2K ORDER SUCCESS WINDOW MODAL LOGIC
+            RETRO Y2K ORDER SUCCESS WINDOW MODAL & CUSTOMER FEEDBACK CAROUSEL LOGIC
            ========================================================================= */
+        let selectedFeedbackStars = 5;
+        const DEFAULT_SEEDED_FEEDBACKS = [
+            {
+                id: 'fb_seed_1',
+                name: 'Alyssa',
+                email: 'alyssa@kawaii.my',
+                avatar: 'https://digitalpastel.github.io/digital/sweetopiashop/Bratz2.webp',
+                rating: 5,
+                comment: 'Super fast delivery and the lenses are so comfortable all day long! Love the cute packaging too!',
+                createdAt: '2026-10-12T10:00:00.000Z'
+            },
+            {
+                id: 'fb_seed_2',
+                name: 'Sarah',
+                email: 'sarah@sweetlens.com',
+                avatar: 'https://digitalpastel.github.io/digital/sweetopiashop/Princess3.webp',
+                rating: 5,
+                comment: 'ToyyibPay FPX checkout was super smooth and my prescription power arrived accurate and fresh.',
+                createdAt: '2026-10-18T14:30:00.000Z'
+            }
+        ];
+        let customerFeedbackList = [];
+
+        function loadCustomerFeedbacks() {
+            try {
+                const stored = localStorage.getItem('sweetopia_customer_feedbacks');
+                if (stored) {
+                    const parsed = JSON.parse(stored);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        customerFeedbackList = parsed;
+                        return;
+                    }
+                }
+            } catch (e) { console.warn(e); }
+            customerFeedbackList = [...DEFAULT_SEEDED_FEEDBACKS];
+            saveCustomerFeedbacksLocal();
+        }
+
+        function saveCustomerFeedbacksLocal() {
+            try {
+                localStorage.setItem('sweetopia_customer_feedbacks', JSON.stringify(customerFeedbackList));
+            } catch (e) {}
+        }
+
+        function escapeHtmlText(str) {
+            return String(str || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        window.renderCustomerFeedbackWall = function() {
+            const track = document.getElementById('feedback-carousel-track');
+            const counterNote = document.getElementById('feedback-counter-note');
+            if (!track) return;
+
+            const isAdmin = currentUser && isAdminUser(currentUser.email);
+            const list = customerFeedbackList.length > 0 ? customerFeedbackList : DEFAULT_SEEDED_FEEDBACKS;
+
+            if (counterNote) {
+                counterNote.innerText = list.length > 1
+                    ? `${list.length} Customer Reviews • Scroll right to read more →`
+                    : `${list.length} Verified Customer Review`;
+            }
+
+            track.innerHTML = list.map((fb) => {
+                const starsCount = Math.min(5, Math.max(1, parseInt(fb.rating, 10) || 5));
+                const starsHtml = Array.from({ length: 5 }, (_, idx) =>
+                    `<span style="color: ${idx < starsCount ? '#ffca18' : '#d6d3c9'};">★</span>`
+                ).join('');
+
+                const avatarUrl = fb.avatar || getUserAvatarForEmail(fb.email) || DEFAULT_USER_AVATAR;
+                const displayName = escapeHtmlText(fb.name || (fb.email ? fb.email.split('@')[0] : 'Happy Customer'));
+                const quoteText = escapeHtmlText(fb.comment || 'Wonderful experience shopping at Sweetopia Shop!');
+
+                // Only Admin can delete feedback; customers cannot delete any feedback
+                const adminDeleteBtnHtml = isAdmin ? `
+                    <button type="button" onclick="adminDeleteFeedback('${fb.id}')" class="absolute -bottom-3 right-5 z-20 bg-rose-600 hover:bg-rose-700 active:scale-95 text-white text-[11px] font-extrabold px-3 py-1.5 rounded-full border-2 border-black shadow-[0_3px_0_0_#1e1b4b] flex items-center gap-1.5 cursor-pointer transition" title="Admin Only: Delete this customer feedback">
+                        <i class="fa-solid fa-trash-can text-[10px]"></i>
+                        <span>Delete Feedback</span>
+                    </button>
+                ` : '';
+
+                return `
+                    <div class="card-stage">
+                        <!-- Concentric 3D Ring Behind Card -->
+                        <div class="concentric-ring">
+                            <div class="ring-inner"></div>
+                        </div>
+
+                        <!-- Speech Bubble Card -->
+                        <div class="speech-bubble">
+                            <!-- Floating 3D Heart Badges -->
+                            <div class="heart-badge badge-top-left">
+                                <div class="heart-ring">
+                                    <svg viewBox="0 0 24 24" class="heart-icon">
+                                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="heart-badge badge-top-right">
+                                <div class="heart-ring">
+                                    <svg viewBox="0 0 24 24" class="heart-icon">
+                                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="heart-badge badge-bottom">
+                                <div class="heart-ring">
+                                    <svg viewBox="0 0 24 24" class="heart-icon">
+                                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <!-- Card Content with User Avatar & Name -->
+                            <div class="card-body">
+                                <div class="avatar-wrapper">
+                                    <img src="${avatarUrl}" alt="${displayName}" onerror="this.src='${DEFAULT_USER_AVATAR}'" class="avatar-img" />
+                                </div>
+                                <div class="testimonial-content">
+                                    <div class="stars" aria-label="${starsCount} out of 5 stars">
+                                        ${starsHtml}
+                                    </div>
+                                    <h3 class="client-name">${displayName}</h3>
+                                    <p class="client-quote">${quoteText}</p>
+                                </div>
+                            </div>
+
+                            ${adminDeleteBtnHtml}
+
+                            <!-- Speech Bubble Tail -->
+                            <div class="bubble-tail"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        };
+
+        window.scrollFeedbackCarousel = function(direction) {
+            const track = document.getElementById('feedback-carousel-track');
+            if (!track) return;
+            const step = Math.min(660, track.clientWidth * 0.85);
+            track.scrollBy({ left: direction * step, behavior: 'smooth' });
+        };
+
+        window.setFeedbackRating = function(starCount) {
+            selectedFeedbackStars = starCount;
+            const labels = {
+                1: '1 / 5 Stars — Needs Improvement',
+                2: '2 / 5 Stars — Fair',
+                3: '3 / 5 Stars — Good Experience',
+                4: '4 / 5 Stars — Great Experience!',
+                5: '5 / 5 Stars — Wonderful!'
+            };
+            const labelEl = document.getElementById('feedback-rating-label');
+            if (labelEl) labelEl.innerText = labels[starCount] || `${starCount} / 5 Stars`;
+
+            document.querySelectorAll('.feedback-star-btn').forEach(btn => {
+                const val = parseInt(btn.getAttribute('data-star'), 10);
+                if (val <= starCount) {
+                    btn.classList.remove('text-slate-300');
+                    btn.classList.add('text-amber-400');
+                } else {
+                    btn.classList.remove('text-amber-400');
+                    btn.classList.add('text-slate-300');
+                }
+            });
+        };
+
+        window.openFeedbackPromptModal = function() {
+            window.hideOrderSuccessModal();
+
+            const modal = document.getElementById('feedback-prompt-modal');
+            const frame = document.getElementById('feedback-prompt-frame');
+            const avatarPreview = document.getElementById('feedback-modal-avatar-preview');
+            const namePreview = document.getElementById('feedback-modal-name-preview');
+            const nameInput = document.getElementById('feedback-author-name');
+            const msgInput = document.getElementById('feedback-message-input');
+
+            const userEmail = currentUser?.email || '';
+            const defaultName = userEmail && !isGuestUser() ? userEmail.split('@')[0] : 'Happy Customer';
+            const userAvatar = getUserAvatarForEmail(userEmail);
+
+            if (avatarPreview) {
+                avatarPreview.innerHTML = renderAvatarSmallInnerHtml(userAvatar);
+            }
+            if (namePreview) namePreview.innerText = defaultName;
+            if (nameInput) nameInput.value = defaultName;
+            if (msgInput) msgInput.value = '';
+
+            window.setFeedbackRating(5);
+
+            if (modal) {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modal.classList.add('opacity-100');
+            }
+            if (frame) {
+                frame.classList.remove('scale-95');
+                frame.classList.add('scale-100');
+            }
+        };
+
+        window.closeFeedbackPromptModal = function() {
+            const modal = document.getElementById('feedback-prompt-modal');
+            const frame = document.getElementById('feedback-prompt-frame');
+            if (modal) {
+                modal.classList.remove('opacity-100');
+                modal.classList.add('opacity-0', 'pointer-events-none');
+            }
+            if (frame) {
+                frame.classList.remove('scale-100');
+                frame.classList.add('scale-95');
+            }
+        };
+
+        window.submitCustomerFeedback = async function(event) {
+            if (event) event.preventDefault();
+            const nameInput = document.getElementById('feedback-author-name');
+            const msgInput = document.getElementById('feedback-message-input');
+
+            const authorName = (nameInput?.value || '').trim() || (currentUser?.email ? currentUser.email.split('@')[0] : 'Happy Customer');
+            const comment = (msgInput?.value || '').trim();
+            if (!comment) {
+                showToast("Feedback Required", "Please write a short feedback message first.", true);
+                return;
+            }
+
+            const userEmail = (currentUser?.email || 'customer@sweetopiashop.my').trim().toLowerCase();
+            const avatarUrl = getUserAvatarForEmail(userEmail);
+            const fbId = 'fb_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+
+            const newFeedback = {
+                id: fbId,
+                name: authorName,
+                email: userEmail,
+                avatar: avatarUrl,
+                rating: selectedFeedbackStars || 5,
+                comment: comment,
+                createdAt: new Date().toISOString()
+            };
+
+            customerFeedbackList.unshift(newFeedback);
+            saveCustomerFeedbacksLocal();
+            window.renderCustomerFeedbackWall();
+            window.closeFeedbackPromptModal();
+
+            if (db) {
+                try {
+                    await db.collection("lumilens_feedbacks").doc(fbId).set(newFeedback);
+                } catch (e) {
+                    console.warn("Feedback Firestore save error:", e);
+                }
+            }
+
+            showToast("Thank You!", "Your feedback and star rating have been published!");
+            const wallEl = document.getElementById('feedback-wall-section');
+            if (wallEl) {
+                wallEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                const track = document.getElementById('feedback-carousel-track');
+                if (track) track.scrollTo({ left: 0, behavior: 'smooth' });
+            }
+        };
+
+        window.adminDeleteFeedback = async function(feedbackId) {
+            // Strict Admin-only permission check: customers cannot delete feedback
+            if (!currentUser || !isAdminUser(currentUser.email)) {
+                showToast("Permission Denied", "Only Administrators can delete customer feedback.", true);
+                return;
+            }
+
+            customerFeedbackList = customerFeedbackList.filter(item => item.id !== feedbackId);
+            saveCustomerFeedbacksLocal();
+            window.renderCustomerFeedbackWall();
+
+            if (db) {
+                try {
+                    await db.collection("lumilens_feedbacks").doc(feedbackId).delete();
+                } catch (e) {
+                    console.warn("Feedback Firestore delete error:", e);
+                }
+            }
+            showToast("Feedback Deleted", "Customer feedback has been removed by Admin.");
+        };
+
         window.showOrderSuccessModal = function() {
             const modal = document.getElementById('order-success-modal');
             const frame = document.getElementById('order-success-frame');
@@ -2929,11 +3922,17 @@
 
         window.handleClose = function() {
             window.hideOrderSuccessModal();
+            setTimeout(() => {
+                window.openFeedbackPromptModal();
+            }, 220);
         };
 
         window.handleContinue = function() {
             window.hideOrderSuccessModal();
             switchTab('catalog');
+            setTimeout(() => {
+                window.openFeedbackPromptModal();
+            }, 250);
         };
 
         function checkToyyibPayPaymentCallback() {
@@ -3896,7 +4895,13 @@
                 window.renderDeliveryAddresses(); 
                 renderCustomerVouchersUI(); 
             }
-            if (tabName === 'admin-workspace') { renderAdminOrdersList(); renderAdminProductsList(); renderAdminPowerStockCheckboxes(); renderAdminVoucherCustomerDropdowns(); }
+            if (tabName === 'admin-workspace') {
+                syncAllUsersFromServer();
+                renderAdminOrdersList();
+                renderAdminProductsList();
+                renderAdminPowerStockCheckboxes();
+                renderAdminVoucherCustomerDropdowns();
+            }
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -3922,8 +4927,15 @@
 
         async function handleAuthSubmit(event) {
             event.preventDefault();
-            const email = document.getElementById('auth-email').value.trim();
-            const password = document.getElementById('auth-password').value;
+            const emailInput = document.getElementById('auth-email');
+            const pwdInput = document.getElementById('auth-password');
+            const email = (emailInput?.value || '').trim().toLowerCase();
+            const password = pwdInput?.value || '';
+
+            if (!email || !password) {
+                showToast("Missing Credentials", "Please enter both email address and password.", true);
+                return;
+            }
 
             const isSigningIn = authMode === 'signin';
             const statusMsg = isSigningIn ? "AUTHENTICATING USER..." : "CREATING USER ACCOUNT...";
@@ -3931,11 +4943,42 @@
             startRetroLoading(statusMsg);
 
             if (!auth) {
-                currentUser = { email: email, isGuest: false };
+                if (!isSigningIn) {
+                    lastPendingVerificationEmail = email;
+                    lastPendingVerificationPassword = password;
+                    await saveRegisteredCustomerRecord(email, null, false);
+                    await finishRetroLoading('fast');
+                    if (pwdInput) pwdInput.value = '';
+                    setAuthModeTab('signin');
+                    showAuthVerificationBanner(
+                        "Verification Email Sent!",
+                        `A verification link has been sent to ${email}. Please click the link in your email first, then sign in with your password.`,
+                        email
+                    );
+                    showToast("Verify Your Email", "Registration saved! Please verify your email before signing in.");
+                    return;
+                }
+
+                // Offline mode check for unverified accounts
+                if (!isAdminUser(email) && verifiedEmailsMap[email] === false) {
+                    lastPendingVerificationEmail = email;
+                    lastPendingVerificationPassword = password;
+                    cancelRetroLoading();
+                    showAuthVerificationBanner(
+                        "Email Not Verified Yet",
+                        `Your account (${email}) is not verified yet. Please click the verification link sent to your email before signing in, or click "Resend Verification Email" below.`,
+                        email
+                    );
+                    showToast("Verification Required", "Please verify your email address before signing in.", true);
+                    return;
+                }
+
+                hideAuthVerificationBanner();
+                currentUser = { email: email, isGuest: false, emailVerified: true };
+                await saveRegisteredCustomerRecord(email, null, true);
+                localStorage.setItem('sweetopia_logged_in_email', email);
                 updateUIAfterLogin(currentUser);
-
                 await finishRetroLoading('fast');
-
                 switchPage('dashboard');
                 switchTab(isAdminUser(email) ? 'admin-workspace' : 'catalog');
                 showToast("Signed In (Offline)", `Welcome ${email}`);
@@ -3946,27 +4989,119 @@
             try {
                 if (authMode === 'signin') {
                     const res = await auth.signInWithEmailAndPassword(email, password);
-                    currentUser = res.user;
+                    let user = res.user;
+                    try {
+                        await user.reload();
+                        user = auth.currentUser || user;
+                    } catch (reloadErr) {}
+
+                    // Strict Email Verification Enforcement (Admins are exempt)
+                    if (!isAdminUser(email) && user && user.emailVerified === false) {
+                        lastPendingVerificationEmail = email;
+                        lastPendingVerificationPassword = password;
+                        await saveRegisteredCustomerRecord(email, user?.uid, false);
+                        try {
+                            await user.sendEmailVerification();
+                        } catch (resendErr) {}
+                        try {
+                            await auth.signOut();
+                        } catch (signOutErr) {}
+
+                        currentUser = null;
+                        localStorage.removeItem('sweetopia_logged_in_email');
+                        cancelRetroLoading();
+
+                        showAuthVerificationBanner(
+                            "Email Verification Required",
+                            `Your email (${email}) has not been verified yet. We sent a verification link to your inbox—please click the link in your email and then sign in again, or click "Resend Verification Email" below.`,
+                            email
+                        );
+                        showToast("Email Not Verified", "Please click the verification link in your email before signing in.", true);
+                        return;
+                    }
+
+                    hideAuthVerificationBanner();
+                    currentUser = user;
+                    await saveRegisteredCustomerRecord(email, user?.uid, true);
+                    localStorage.setItem('sweetopia_logged_in_email', email);
+                    await loadCustomerCartFromFirestore(user?.uid);
+                    updateUIAfterLogin(currentUser);
+                    updateAdminChatUserDropdown();
                     await finishRetroLoading('fast');
+
                     showToast("Signed In", `Welcome back, ${email}!`);
+                    switchPage('dashboard');
+                    switchTab(isAdminUser(email) ? 'admin-workspace' : 'catalog');
+                    updatePresence(email, true);
                 } else {
+                    // STRICT SIGN UP FLOW:
+                    // 1. Create account in Firebase Auth
                     const res = await auth.createUserWithEmailAndPassword(email, password);
-                    currentUser = res.user;
-                    try { await currentUser.sendEmailVerification(); } catch(e){}
-                    await saveRegisteredCustomerRecord(email, res.user?.uid);
+                    const newUser = res.user;
+                    lastPendingVerificationEmail = email;
+                    lastPendingVerificationPassword = password;
+
+                    // 2. Save customer profile to central Cloud Firestore lumilens_users (and users fallback) BEFORE signing out while authenticated
+                    await saveRegisteredCustomerRecord(email, newUser?.uid, false);
+
+                    // 3. Send verification email
+                    let emailSentOk = true;
+                    try {
+                        await newUser.sendEmailVerification();
+                    } catch (verErr) {
+                        emailSentOk = false;
+                        console.warn("Verification email error:", verErr);
+                    }
+
+                    // 4. Immediately sign out so unverified account cannot bypass login
+                    try {
+                        await auth.signOut();
+                    } catch (soErr) {}
+
+                    currentUser = null;
+                    localStorage.removeItem('sweetopia_logged_in_email');
+                    sessionStorage.removeItem('sweetopia_active_page');
+                    sessionStorage.removeItem('sweetopia_active_tab');
+
                     await finishRetroLoading('fast');
-                    showToast("Account Created", "Registration successful! Verification email sent.");
+
+                    // 5. Switch back to Sign In tab & show verification instructions + Resend button
+                    setAuthModeTab('signin');
+                    switchPage('auth');
+
+                    showAuthVerificationBanner(
+                        "Verification Email Sent!",
+                        emailSentOk
+                            ? `Account created for ${email}! We sent a verification link to your email. Please open your inbox (or spam folder), click the verification link, and then sign in. Need a new link? Click "Resend Verification Email" below.`
+                            : `Account created for ${email}! Please verify your email address via the link sent to your inbox, or click "Resend Verification Email" below.`,
+                        email
+                    );
+                    showToast("Verify Your Email", "Verification email sent! Please click the link in your email before signing in.");
                 }
-                await saveRegisteredCustomerRecord(email, currentUser?.uid);
-                localStorage.setItem('sweetopia_logged_in_email', email);
-                updateUIAfterLogin(currentUser);
-                updateAdminChatUserDropdown();
-                switchPage('dashboard');
-                switchTab(isAdminUser(email) ? 'admin-workspace' : 'catalog');
-                updatePresence(email, true);
             } catch (err) {
                 cancelRetroLoading();
-                showToast("Authentication Error", err.message, true);
+                const code = err?.code || '';
+                if (code === 'auth/email-already-in-use') {
+                    lastPendingVerificationEmail = email;
+                    lastPendingVerificationPassword = password;
+                    await saveRegisteredCustomerRecord(email, null, false);
+                    setAuthModeTab('signin');
+                    showAuthVerificationBanner(
+                        "Account Already Registered",
+                        `${email} is already registered in Firebase. If you haven't verified your email yet, click "Resend Verification Email" below to receive a fresh link—or enter your password to Sign In / click "Forgot?" to reset your password.`,
+                        email
+                    );
+                    showToast("Email Already Registered", "Switched to Sign In. Click 'Resend Verification Email' if you didn't verify yet.", true);
+                } else if (code === 'auth/invalid-credential' || code === 'auth/wrong-password' || code === 'auth/user-not-found') {
+                    showAuthVerificationBanner(
+                        "Incorrect Email or Password",
+                        `The password entered for ${email} did not match Firebase records (check caps lock or extra spaces). Click "Forgot?" to send a password reset link to ${email}.`,
+                        email
+                    );
+                    showToast("Sign In Failed", "Incorrect password or unverified credentials. Click 'Forgot?' to reset password.", true);
+                } else {
+                    showToast("Authentication Error", err.message, true);
+                }
             }
         }
 
@@ -4087,6 +5222,7 @@
             updateSupportIndicator();
             renderCustomerInvoicesTabList();
             window.renderCustomerNotifications();
+            window.renderCustomerFeedbackWall();
         }
 
         function renderStoreProducts(list) {
@@ -5513,16 +6649,19 @@
                 userAvatarsMap[cleanEmail] = avatarValue;
                 if (db && !isGuestUser()) {
                     const docKey = cleanEmail.replace(/[^a-zA-Z0-9]/g, '_');
-                    db.collection("lumilens_users").doc(docKey).set({
+                    const avatarPayload = {
                         email: cleanEmail,
                         avatar: avatarValue,
                         updatedAt: new Date().toISOString()
-                    }, { merge: true }).catch(() => {});
+                    };
+                    db.collection("lumilens_users").doc(docKey).set(avatarPayload, { merge: true }).catch(() => {});
+                    db.collection("users").doc(docKey).set(avatarPayload, { merge: true }).catch(() => {});
                 }
             }
             applySavedMobileAvatar();
             updateChatHeaderAvatars();
             renderActiveChatMessages();
+            window.renderCustomerFeedbackWall();
             window.closeAvatarModal();
             showToast("Avatar Updated", "Your profile avatar has been updated.");
         };
@@ -5539,16 +6678,19 @@
                     userAvatarsMap[cleanEmail] = avatarData;
                     if (db && !isGuestUser()) {
                         const docKey = cleanEmail.replace(/[^a-zA-Z0-9]/g, '_');
-                        db.collection("lumilens_users").doc(docKey).set({
+                        const avatarPayload = {
                             email: cleanEmail,
                             avatar: avatarData,
                             updatedAt: new Date().toISOString()
-                        }, { merge: true }).catch(() => {});
+                        };
+                        db.collection("lumilens_users").doc(docKey).set(avatarPayload, { merge: true }).catch(() => {});
+                        db.collection("users").doc(docKey).set(avatarPayload, { merge: true }).catch(() => {});
                     }
                 }
                 applySavedMobileAvatar();
                 updateChatHeaderAvatars();
                 renderActiveChatMessages();
+                window.renderCustomerFeedbackWall();
                 window.closeAvatarModal();
                 showToast("Photo Uploaded", "Your custom profile photo has been updated.");
             };
@@ -5667,27 +6809,6 @@
             });
         }
 
-        function toggleWidgetChat() {
-            const win = document.getElementById('sweetopiaChatWindow');
-            if (!win) return;
-            const isClosed = win.classList.contains('hidden') || win.classList.contains('opacity-0');
-            if (isClosed) {
-                renderStickerSlotsGrid();
-                updateChatHeaderAvatars();
-                win.classList.remove('hidden');
-                requestAnimationFrame(() => {
-                    win.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
-                    win.classList.add('opacity-100', 'scale-100');
-                });
-                renderActiveChatMessages();
-                updateSupportIndicator();
-            } else {
-                win.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
-                win.classList.remove('opacity-100', 'scale-100');
-                setTimeout(() => win.classList.add('hidden'), 180);
-            }
-        }
-
         async function sendTextMessage() {
             const input = document.getElementById('chatInput');
             const text = input ? input.value.trim() : '';
@@ -5703,13 +6824,13 @@
             }
 
             const isAdmin = isAdminUser(currentUser.email);
-            let targetSessionUser = currentUser.email;
+            let targetSessionUser = (currentUser.email || '').trim().toLowerCase();
 
             if (isAdmin) {
                 const select = document.getElementById('admin-active-chat-user');
-                targetSessionUser = activeChatSessionUser || select?.value;
+                targetSessionUser = ((activeChatSessionUser || select?.value) || '').trim().toLowerCase();
                 if (!targetSessionUser) {
-                    showToast("No User Selected", "Select a customer or guest from the dropdown to reply.", true);
+                    showToast("No User Selected", "Select a customer from the dropdown to reply.", true);
                     return;
                 }
             }
@@ -5718,7 +6839,7 @@
 
             const newMsg = {
                 id: 'msg_' + Date.now(),
-                sender: currentUser.email,
+                sender: (currentUser.email || '').trim().toLowerCase(),
                 senderName: isAdmin ? 'Admin Support' : (currentUser.guestId || currentUser.email.split('@')[0]),
                 senderAvatar: senderAvatar,
                 text: msgPayload.text || '',
@@ -5757,9 +6878,9 @@
         }
 
         async function clearWidgetChat() {
-            let targetUser = currentUser?.email;
+            let targetUser = (currentUser?.email || '').trim().toLowerCase();
             if (currentUser && isAdminUser(currentUser.email)) {
-                targetUser = activeChatSessionUser || document.getElementById('admin-active-chat-user')?.value;
+                targetUser = ((activeChatSessionUser || document.getElementById('admin-active-chat-user')?.value) || '').trim().toLowerCase();
             }
             if (!targetUser) return;
 
@@ -6239,7 +7360,7 @@
             } catch (e) {}
         }
 
-        async function saveRegisteredCustomerRecord(email, uid = null) {
+        async function saveRegisteredCustomerRecord(email, uid = null, isVerified = false) {
             if (!email) return;
             const cleanEmail = email.trim().toLowerCase();
             if (isAdminUser(cleanEmail)) return;
@@ -6247,6 +7368,9 @@
 
             if (!registeredCustomersList.includes(cleanEmail)) {
                 registeredCustomersList.push(cleanEmail);
+            }
+            if (isVerified || verifiedEmailsMap[cleanEmail] === undefined) {
+                verifiedEmailsMap[cleanEmail] = !!isVerified;
             }
             try {
                 localStorage.setItem('sweetopia_registered_customers', JSON.stringify(registeredCustomersList));
@@ -6259,18 +7383,29 @@
             if (db) {
                 try {
                     const docKey = cleanEmail.replace(/[^a-zA-Z0-9]/g, '_');
-                    await db.collection("lumilens_users").doc(docKey).set({
+                    const nowIso = new Date().toISOString();
+                    const userProfilePayload = {
                         email: cleanEmail,
                         uid: uid || null,
                         role: 'customer',
-                        registeredAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString()
-                    }, { merge: true });
+                        emailVerified: !!isVerified,
+                        registeredAt: nowIso,
+                        updatedAt: nowIso
+                    };
 
-                    await db.collection("lumilens_chats").doc(docKey).set({
-                        userEmail: cleanEmail,
-                        lastUpdated: new Date().toISOString()
-                    }, { merge: true });
+                    // Central Cloud Firestore user directory + users fallback + public directory array
+                    await Promise.all([
+                        db.collection("lumilens_users").doc(docKey).set(userProfilePayload, { merge: true }).catch(() => {}),
+                        db.collection("users").doc(docKey).set(userProfilePayload, { merge: true }).catch(() => {}),
+                        db.collection("lumilens_public_directory").doc("registered_customers").set({
+                            emails: firebase.firestore.FieldValue.arrayUnion(cleanEmail),
+                            updatedAt: nowIso
+                        }, { merge: true }).catch(() => {}),
+                        db.collection("lumilens_chats").doc(docKey).set({
+                            userEmail: cleanEmail,
+                            lastUpdated: nowIso
+                        }, { merge: true }).catch(() => {})
+                    ]);
                 } catch (e) { console.warn("Save registered user error:", e); }
             }
 
@@ -6278,36 +7413,86 @@
             updateAdminChatUserDropdown();
         }
 
+        async function syncAllUsersFromServer() {
+            if (!db) return;
+            try {
+                const [lumiSnap, usersFallbackSnap, chatsSnap, presenceSnap, dirSnap] = await Promise.all([
+                    db.collection("lumilens_users").get({ source: 'server' }).catch(() => db.collection("lumilens_users").get().catch(() => null)),
+                    db.collection("users").get({ source: 'server' }).catch(() => db.collection("users").get().catch(() => null)),
+                    db.collection("lumilens_chats").get({ source: 'server' }).catch(() => db.collection("lumilens_chats").get().catch(() => null)),
+                    db.collection("lumilens_presence").get({ source: 'server' }).catch(() => db.collection("lumilens_presence").get().catch(() => null)),
+                    db.collection("lumilens_public_directory").doc("registered_customers").get({ source: 'server' }).catch(() => db.collection("lumilens_public_directory").doc("registered_customers").get().catch(() => null))
+                ]);
+
+                const merged = new Set([
+                    ...SEEDED_REGISTERED_CUSTOMERS.map(e => e.toLowerCase()),
+                    ...(registeredCustomersList || [])
+                ]);
+
+                const addCandidateEmail = (rawEmail, avatar = null, emailVerified = null) => {
+                    if (!rawEmail || typeof rawEmail !== 'string') return;
+                    const cleanEm = rawEmail.trim().toLowerCase();
+                    if (!cleanEm || isAdminUser(cleanEm) || cleanEm.startsWith('guest_') || cleanEm.endsWith('@sweetopiashop.my')) return;
+                    merged.add(cleanEm);
+                    if (avatar) userAvatarsMap[cleanEm] = avatar;
+                    if (typeof emailVerified === 'boolean') verifiedEmailsMap[cleanEm] = emailVerified;
+                    if (!userSessionsMap[cleanEm]) userSessionsMap[cleanEm] = [];
+                };
+
+                const processSnapshot = (snap) => {
+                    if (!snap) return;
+                    snap.forEach(docSnap => {
+                        const data = docSnap.data();
+                        if (!data) return;
+                        addCandidateEmail(data.email || data.userEmail, data.avatar || data.userAvatar, data.emailVerified);
+                    });
+                };
+
+                processSnapshot(lumiSnap);
+                processSnapshot(usersFallbackSnap);
+                processSnapshot(chatsSnap);
+                processSnapshot(presenceSnap);
+
+                if (dirSnap && dirSnap.exists && Array.isArray(dirSnap.data()?.emails)) {
+                    dirSnap.data().emails.forEach(em => addCandidateEmail(em));
+                }
+
+                registeredCustomersList = Array.from(merged);
+                try {
+                    localStorage.setItem('sweetopia_registered_customers', JSON.stringify(registeredCustomersList));
+                } catch (e) {}
+
+                renderAdminVoucherCustomerDropdowns();
+                updateAdminChatUserDropdown();
+                updateChatHeaderAvatars();
+            } catch (e) {
+                console.warn("Server-level user directory sync warning:", e);
+            }
+        }
+
         function renderAdminVoucherCustomerDropdowns() {
             const knownUsersSet = new Set();
 
-            (registeredCustomersList || []).forEach(u => {
-                if (u && typeof u === 'string') knownUsersSet.add(u.trim().toLowerCase());
-            });
+            const tryAddUser = (rawEmail) => {
+                if (!rawEmail || typeof rawEmail !== 'string') return;
+                const clean = rawEmail.trim().toLowerCase();
+                if (!clean || isAdminUser(clean)) return;
+                if (clean.startsWith('guest_') || clean.endsWith('@sweetopiashop.my')) return;
+                knownUsersSet.add(clean);
+            };
 
-            Object.keys(presenceMap || {}).forEach(u => {
-                if (u && typeof u === 'string') knownUsersSet.add(u.trim().toLowerCase());
-            });
-
-            Object.keys(userSessionsMap || {}).forEach(u => {
-                if (u && typeof u === 'string') knownUsersSet.add(u.trim().toLowerCase());
-            });
-
-            (allOrders || []).forEach(o => {
-                if (o && o.customer) knownUsersSet.add(o.customer.trim().toLowerCase());
-            });
-
-            Object.keys(assignedVouchersMap || {}).forEach(u => {
-                if (u && typeof u === 'string') knownUsersSet.add(u.trim().toLowerCase());
-            });
+            SEEDED_REGISTERED_CUSTOMERS.forEach(tryAddUser);
+            (registeredCustomersList || []).forEach(tryAddUser);
+            Object.keys(presenceMap || {}).forEach(tryAddUser);
+            Object.keys(userSessionsMap || {}).forEach(tryAddUser);
+            (allOrders || []).forEach(o => { if (o && o.customer) tryAddUser(o.customer); });
+            Object.keys(assignedVouchersMap || {}).forEach(tryAddUser);
 
             if (currentUser && currentUser.email && !isGuestUser()) {
-                knownUsersSet.add(currentUser.email.trim().toLowerCase());
+                tryAddUser(currentUser.email);
             }
 
-            const userList = Array.from(knownUsersSet)
-                .filter(u => u && !isAdminUser(u) && !u.startsWith('guest_') && !u.endsWith('@sweetopiashop.my'))
-                .sort();
+            const userList = Array.from(knownUsersSet).sort((a, b) => a.localeCompare(b));
 
             ['code1', 'code2', 'code3', 'code4', 'code5'].forEach(codeId => {
                 const select = document.getElementById(`customer-${codeId}`);
@@ -6345,13 +7530,47 @@
 
         async function updatePresence(email, isOnline) {
             if (!db || !email) return;
+            const cleanEmail = email.trim().toLowerCase();
+            const nowIso = new Date().toISOString();
+            const isAdmin = isAdminUser(cleanEmail);
+
+            presenceMap[cleanEmail] = !!isOnline;
+            if (isAdmin) {
+                adminSupportOnlineFlag = !!isOnline;
+            }
+            updateSupportIndicator();
+
             try {
-                const userKey = email.replace(/[^a-zA-Z0-9]/g, '_');
-                await db.collection("lumilens_presence").doc(userKey).set({
-                    email: email,
-                    isOnline: isOnline,
-                    lastSeen: new Date().toISOString()
-                }, { merge: true });
+                const userKey = cleanEmail.replace(/[^a-zA-Z0-9]/g, '_');
+                const tasks = [
+                    db.collection("lumilens_presence").doc(userKey).set({
+                        email: cleanEmail,
+                        isOnline: !!isOnline,
+                        isAdmin: isAdmin,
+                        lastSeen: nowIso,
+                        clientTs: Date.now()
+                    }, { merge: true }).catch(() => {})
+                ];
+
+                if (isAdmin) {
+                    tasks.push(
+                        db.collection("lumilens_presence").doc("admin_support_status").set({
+                            email: cleanEmail,
+                            isOnline: !!isOnline,
+                            lastSeen: nowIso,
+                            clientTs: Date.now()
+                        }, { merge: true }).catch(() => {})
+                    );
+                } else if (!isGuestUser()) {
+                    tasks.push(
+                        db.collection("lumilens_public_directory").doc("registered_customers").set({
+                            emails: firebase.firestore.FieldValue.arrayUnion(cleanEmail),
+                            updatedAt: nowIso
+                        }, { merge: true }).catch(() => {})
+                    );
+                }
+
+                await Promise.all(tasks);
             } catch(e) { }
         }
 
@@ -6423,35 +7642,74 @@
                 renderChosenCustomerPromoBanner();
             });
 
-            db.collection("lumilens_users").onSnapshot((snapshot) => {
-                if (snapshot) {
-                    const merged = new Set([
-                        ...SEEDED_REGISTERED_CUSTOMERS.map(e => e.toLowerCase()),
-                        ...(registeredCustomersList || [])
-                    ]);
-                    snapshot.forEach(docSnap => {
-                        const data = docSnap.data();
-                        if (data && data.email && !isAdminUser(data.email)) {
-                            const cleanEm = data.email.trim().toLowerCase();
+            const handleUserDirectorySnapshot = (snapshot) => {
+                if (!snapshot) return;
+                const merged = new Set([
+                    ...SEEDED_REGISTERED_CUSTOMERS.map(e => e.toLowerCase()),
+                    ...(registeredCustomersList || [])
+                ]);
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    if (data && data.email && typeof data.email === 'string') {
+                        const cleanEm = data.email.trim().toLowerCase();
+                        if (!isAdminUser(cleanEm) && !cleanEm.startsWith('guest_') && !cleanEm.endsWith('@sweetopiashop.my')) {
                             merged.add(cleanEm);
                             if (data.avatar) {
                                 userAvatarsMap[cleanEm] = data.avatar;
                             }
+                            if (typeof data.emailVerified === 'boolean') {
+                                verifiedEmailsMap[cleanEm] = data.emailVerified;
+                            }
+                            if (!userSessionsMap[cleanEm]) {
+                                userSessionsMap[cleanEm] = [];
+                            }
                         }
-                    });
-                    registeredCustomersList = Array.from(merged);
-                    try {
-                        localStorage.setItem('sweetopia_registered_customers', JSON.stringify(registeredCustomersList));
-                    } catch (e) {}
-                    renderAdminVoucherCustomerDropdowns();
-                    updateAdminChatUserDropdown();
-                    updateChatHeaderAvatars();
-                    renderActiveChatMessages();
-                }
-            }, () => {
+                    }
+                });
+                registeredCustomersList = Array.from(merged);
+                try {
+                    localStorage.setItem('sweetopia_registered_customers', JSON.stringify(registeredCustomersList));
+                } catch (e) {}
+                renderAdminVoucherCustomerDropdowns();
+                updateAdminChatUserDropdown();
+                updateChatHeaderAvatars();
+                renderActiveChatMessages();
+            };
+
+            // Real-time listener on central lumilens_users collection
+            db.collection("lumilens_users").onSnapshot(handleUserDirectorySnapshot, () => {
                 renderAdminVoucherCustomerDropdowns();
                 updateAdminChatUserDropdown();
             });
+
+            // Real-time listener on users fallback collection
+            db.collection("users").onSnapshot(handleUserDirectorySnapshot, () => {});
+
+            // Real-time listener on shared public customer directory document
+            db.collection("lumilens_public_directory").doc("registered_customers").onSnapshot((docSnap) => {
+                if (!docSnap || !docSnap.exists) return;
+                const emails = docSnap.data()?.emails;
+                if (!Array.isArray(emails)) return;
+                const merged = new Set([
+                    ...SEEDED_REGISTERED_CUSTOMERS.map(e => e.toLowerCase()),
+                    ...(registeredCustomersList || [])
+                ]);
+                emails.forEach(em => {
+                    if (em && typeof em === 'string') {
+                        const cleanEm = em.trim().toLowerCase();
+                        if (!isAdminUser(cleanEm) && !cleanEm.startsWith('guest_') && !cleanEm.endsWith('@sweetopiashop.my')) {
+                            merged.add(cleanEm);
+                            if (!userSessionsMap[cleanEm]) userSessionsMap[cleanEm] = [];
+                        }
+                    }
+                });
+                registeredCustomersList = Array.from(merged);
+                try {
+                    localStorage.setItem('sweetopia_registered_customers', JSON.stringify(registeredCustomersList));
+                } catch (e) {}
+                renderAdminVoucherCustomerDropdowns();
+                updateAdminChatUserDropdown();
+            }, () => {});
 
             db.collection("lumilens_product_vouchers").onSnapshot((snapshot) => {
                 if (snapshot) {
@@ -6467,6 +7725,28 @@
             }, () => {
                 renderStoreProducts(products);
             });
+
+            // Real-time listener on customer feedback wall
+            db.collection("lumilens_feedbacks").onSnapshot((snapshot) => {
+                if (!snapshot) return;
+                const loadedFeedbacks = [];
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    if (data && data.comment) {
+                        loadedFeedbacks.push({ id: docSnap.id, ...data });
+                    }
+                });
+                if (loadedFeedbacks.length > 0) {
+                    loadedFeedbacks.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+                    customerFeedbackList = loadedFeedbacks;
+                    saveCustomerFeedbacksLocal();
+                } else if (customerFeedbackList.length === 0) {
+                    customerFeedbackList = [...DEFAULT_SEEDED_FEEDBACKS];
+                }
+                window.renderCustomerFeedbackWall();
+            }, () => {
+                window.renderCustomerFeedbackWall();
+            });
         }
 
         function initChatListeners() {
@@ -6474,12 +7754,36 @@
             db.collection("lumilens_presence").onSnapshot((snapshot) => {
                 if (snapshot) {
                     const now = Date.now();
+                    let sharedAdminOnline = false;
+                    const updatedPresence = {};
+
                     snapshot.forEach(docSnap => {
                         const data = docSnap.data();
+                        if (!data) return;
                         const lastSeenTime = new Date(data.lastSeen || 0).getTime();
-                        const isReallyOnline = data.isOnline && (now - lastSeenTime < 60000);
-                        presenceMap[data.email] = isReallyOnline;
+                        // Allow 90-second heartbeat window to prevent cross-device clock skew from showing false offline
+                        const isRecent = !lastSeenTime || isNaN(lastSeenTime) || (now - lastSeenTime < 90000);
+                        const isReallyOnline = Boolean(data.isOnline) && isRecent;
+
+                        if (docSnap.id === 'admin_support_status') {
+                            if (isReallyOnline) sharedAdminOnline = true;
+                        }
+                        if (data.email && typeof data.email === 'string') {
+                            const cleanEm = data.email.trim().toLowerCase();
+                            updatedPresence[cleanEm] = isReallyOnline;
+                            if (isAdminUser(cleanEm) && isReallyOnline) {
+                                sharedAdminOnline = true;
+                            }
+                            if (!isAdminUser(cleanEm) && !cleanEm.startsWith('guest_') && !cleanEm.endsWith('@sweetopiashop.my')) {
+                                if (!registeredCustomersList.includes(cleanEm)) {
+                                    registeredCustomersList.push(cleanEm);
+                                }
+                            }
+                        }
                     });
+
+                    presenceMap = updatedPresence;
+                    adminSupportOnlineFlag = sharedAdminOnline;
                     updateAdminChatUserDropdown();
                     updateSupportIndicator();
                     renderAdminVoucherCustomerDropdowns();
@@ -6491,15 +7795,22 @@
                     snapshot.forEach(docSnap => {
                         const data = docSnap.data();
                         if (data && data.userEmail) {
-                            userSessionsMap[data.userEmail] = data.messages || [];
+                            const cleanEmail = data.userEmail.trim().toLowerCase();
+                            userSessionsMap[cleanEmail] = data.messages || [];
                             if (data.userAvatar) {
-                                userAvatarsMap[data.userEmail.trim().toLowerCase()] = data.userAvatar;
+                                userAvatarsMap[cleanEmail] = data.userAvatar;
+                            }
+                            if (!isAdminUser(cleanEmail) && !cleanEmail.startsWith('guest_') && !cleanEmail.endsWith('@sweetopiashop.my')) {
+                                if (!registeredCustomersList.includes(cleanEmail)) {
+                                    registeredCustomersList.push(cleanEmail);
+                                }
                             }
                         }
                     });
                     updateAdminChatUserDropdown();
                     updateChatHeaderAvatars();
                     renderActiveChatMessages();
+                    renderAdminVoucherCustomerDropdowns();
                 }
             }, () => {});
         }
@@ -6509,15 +7820,19 @@
             const txt = document.getElementById('widgetStatusText');
             if (!dot || !txt) return;
 
-            const isCustomer = currentUser && !isAdminUser(currentUser.email);
+            const isCustomer = !currentUser || !isAdminUser(currentUser.email);
             let hasActiveOnline = false;
 
             if (isCustomer) {
-                hasActiveOnline = ADMIN_EMAILS.some(adminEmail => !!presenceMap[adminEmail.toLowerCase()]);
+                hasActiveOnline = adminSupportOnlineFlag || ADMIN_EMAILS.some(adminEmail => {
+                    const cleanAdmin = adminEmail.trim().toLowerCase();
+                    return !!presenceMap[cleanAdmin];
+                });
             } else {
                 hasActiveOnline = Object.keys(presenceMap).some(email => {
-                    const notMe = !currentUser || email.toLowerCase() !== currentUser.email.toLowerCase();
-                    return notMe && !!presenceMap[email];
+                    const cleanEm = email.trim().toLowerCase();
+                    const notMe = !currentUser || cleanEm !== (currentUser.email || '').trim().toLowerCase();
+                    return notMe && !isAdminUser(cleanEm) && !!presenceMap[cleanEm];
                 });
             }
 
@@ -6594,6 +7909,7 @@
             const isClosed = win.classList.contains('hidden') || win.classList.contains('opacity-0');
             if (isClosed) {
                 renderStickerSlotsGrid();
+                syncAllUsersFromServer();
                 updateAdminChatUserDropdown();
                 updateChatHeaderAvatars();
                 win.classList.remove('hidden');
@@ -6632,11 +7948,11 @@
             const container = document.getElementById('widget-chat-messages');
             if (!container) return;
 
-            let targetUser = currentUser?.email;
+            let targetUser = (currentUser?.email || '').trim().toLowerCase();
             const isAdmin = currentUser && isAdminUser(currentUser.email);
 
             if (isAdmin) {
-                targetUser = activeChatSessionUser || document.getElementById('admin-active-chat-user')?.value;
+                targetUser = ((activeChatSessionUser || document.getElementById('admin-active-chat-user')?.value) || '').trim().toLowerCase();
             }
 
             if (!targetUser) {
@@ -6652,7 +7968,7 @@
             }
 
             container.innerHTML = msgs.map(m => {
-                const isMe = m.sender === currentUser?.email;
+                const isMe = (m.sender || '').trim().toLowerCase() === (currentUser?.email || '').trim().toLowerCase();
                 const isAdminMsg = m.isAdmin;
                 const isSticker = m.type === 'sticker';
 
@@ -6680,7 +7996,6 @@
                     ? `max-w-[80%] rounded-2xl px-3.5 py-2 text-xs bg-[transparent] ${isMe ? 'rounded-tr-none text-slate-600 text-right' : 'rounded-tl-none text-slate-600 text-left'}`
                     : `max-w-[80%] rounded-2xl px-3.5 py-2 text-xs shadow-sm ${isMe ? 'bg-[#65a30d] text-white rounded-tr-none' : (isAdminMsg ? 'bg-amber-100 text-amber-950 border border-amber-200 rounded-tl-none' : 'bg-white text-slate-800 border border-slate-200 rounded-tl-none')}`;
 
-                // Admin only sees user avatars (no headphone icon for Admin self); Users only see Admin headphone icon (no own avatar)
                 let avatarBadgeHtml = '';
                 if (isAdmin) {
                     if (!isAdminMsg) {
@@ -6843,6 +8158,17 @@
                 }, { passive: false });
             }
 
+            // Enable smooth wheel horizontal scrolling on Feedback carousel track
+            const fbTrack = document.getElementById('feedback-carousel-track');
+            if (fbTrack) {
+                fbTrack.addEventListener('wheel', (e) => {
+                    if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+                        e.preventDefault();
+                        fbTrack.scrollBy({ left: e.deltaY * 1.6, behavior: 'smooth' });
+                    }
+                }, { passive: false });
+            }
+
             window.addEventListener('beforeunload', (e) => {
                 if (hasActiveUnpaidCartVoucher()) {
                     e.preventDefault();
@@ -6856,6 +8182,8 @@
             loadAssignedVouchers();
             loadRegisteredCustomers();
             loadReadNotifications();
+            loadCustomerFeedbacks();
+            window.renderCustomerFeedbackWall();
 
             const cSuffixInput = document.getElementById('c_voucherSuffix');
             if (cSuffixInput) {
@@ -6907,9 +8235,30 @@
             if (auth) {
                 auth.onAuthStateChanged(async (user) => {
                     if (user && !user.isAnonymous) {
+                        try {
+                            await user.reload();
+                            user = auth.currentUser || user;
+                        } catch (e) {}
+
+                        // Strict verification enforcement on session restore: unverified non-admin accounts cannot stay signed in
+                        if (!isAdminUser(user.email) && user.emailVerified === false) {
+                            await saveRegisteredCustomerRecord(user.email, user.uid, false);
+                            try { await auth.signOut(); } catch (e) {}
+                            currentUser = null;
+                            localStorage.removeItem('sweetopia_logged_in_email');
+                            switchPage('auth');
+                            setAuthModeTab('signin');
+                            showAuthVerificationBanner(
+                                "Email Verification Required",
+                                `Please verify your email (${user.email}) by clicking the verification link sent to your inbox before signing in, or click "Resend Verification Email" below.`,
+                                user.email
+                            );
+                            return;
+                        }
+
                         currentUser = user;
                         localStorage.setItem('sweetopia_logged_in_email', user.email);
-                        await saveRegisteredCustomerRecord(user.email, user.uid);
+                        await saveRegisteredCustomerRecord(user.email, user.uid, true);
                         await loadCustomerCartFromFirestore(user.uid);
                         updateUIAfterLogin(user);
                         updatePresence(user.email, true);
@@ -6951,29 +8300,19 @@
                     }
                 } catch(e) { }
 
+                await syncAllUsersFromServer();
+
                 try {
-                    const uSnap = await db.collection("lumilens_users").get({ source: 'server' }).catch(() => null);
-                    if (uSnap) {
-                        const merged = new Set([
-                            ...SEEDED_REGISTERED_CUSTOMERS.map(e => e.toLowerCase()),
-                            ...(registeredCustomersList || [])
-                        ]);
-                        uSnap.forEach(docSnap => {
-                            const data = docSnap.data();
-                            if (data && data.email && !isAdminUser(data.email)) {
-                                merged.add(data.email.trim().toLowerCase());
-                            }
-                        });
-                        registeredCustomersList = Array.from(merged);
-                        localStorage.setItem('sweetopia_registered_customers', JSON.stringify(registeredCustomersList));
-                    }
-                    // Ensure seeded registered users exist in Firestore lumilens_users so Admin sees them across all devices
+                    // Ensure seeded registered users exist in Firestore lumilens_users & users fallback so Admin sees them across all devices
                     for (const seededEmail of SEEDED_REGISTERED_CUSTOMERS) {
                         const docKey = seededEmail.replace(/[^a-zA-Z0-9]/g, '_');
-                        await db.collection("lumilens_users").doc(docKey).set({
+                        const seedDoc = {
                             email: seededEmail,
-                            role: 'customer'
-                        }, { merge: true }).catch(() => {});
+                            role: 'customer',
+                            emailVerified: true
+                        };
+                        await db.collection("lumilens_users").doc(docKey).set(seedDoc, { merge: true }).catch(() => {});
+                        await db.collection("users").doc(docKey).set(seedDoc, { merge: true }).catch(() => {});
                     }
                 } catch(e) { }
             }
@@ -6991,6 +8330,7 @@
             updateAdminChatUserDropdown();
             renderChosenCustomerPromoBanner();
             window.renderCustomerNotifications();
+            window.renderCustomerFeedbackWall();
             enforceMobileNavForRole();
 
             checkToyyibPayPaymentCallback();
@@ -6999,7 +8339,14 @@
                 if (currentUser && currentUser.email) {
                     updatePresence(currentUser.email, true);
                 }
-            }, 30000);
+            }, 20000);
+
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible' && currentUser && currentUser.email) {
+                    updatePresence(currentUser.email, true);
+                    syncAllUsersFromServer();
+                }
+            });
         });
     </script>
 </body>
