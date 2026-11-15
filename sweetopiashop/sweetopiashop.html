@@ -5,18 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light">
     <meta name="supported-color-schemes" content="light">
-    <!-- Cache Busting & No-Cache Directives (v=1.0.2) -->
-    <meta name="app-version" content="1.0.2">
+    <!-- Cache Busting & No-Cache Directives (v=1.0.3) -->
+    <meta name="app-version" content="1.0.3">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Sweetopia Shop - Premium Contact Lens Store &amp; FPX Checkout</title>
-    <!-- App Icons & Stylesheet with Cache Busting Version (?v=1.0.2) -->
-    <link rel="stylesheet" href="style.css?v=1.0.2">
-    <link rel="icon" type="image/png" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.2">
-    <link rel="apple-touch-icon" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.2">
-    <link rel="icon" type="image/png" sizes="512x512" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png?v=1.0.2">
-    <link rel="manifest" href="https://digitalpastel.github.io/digital/sweetopiashop/manifest.json?v=1.0.2">
+    <!-- App Icons & Stylesheet with Cache Busting Version (?v=1.0.3) -->
+    <link rel="stylesheet" href="style.css?v=1.0.3">
+    <link rel="icon" type="image/png" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.3">
+    <link rel="apple-touch-icon" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.3">
+    <link rel="icon" type="image/png" sizes="512x512" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png?v=1.0.3">
+    <link rel="manifest" href="https://digitalpastel.github.io/digital/sweetopiashop/manifest.json?v=1.0.3">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&amp;family=Fredoka:wght@600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
     <!-- Retro Pixel Font for 10-Bar Window matching reference image -->
@@ -30,8 +30,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script>
-        // Cache Busting Controller: Increment APP_VERSION to 1.0.3, 1.0.4, etc. whenever updating GitHub
-        const APP_VERSION = '1.0.2';
+        // Cache Busting Controller: Increment APP_VERSION whenever updating GitHub
+        const APP_VERSION = '1.0.3';
         (function enforceCacheBustingVersion() {
             try {
                 const storedVersion = localStorage.getItem('sweetopia_app_version');
@@ -98,7 +98,6 @@
             overflow-x: hidden;
         }
 
-        /* Smooth momentum scrolling on all scrollable containers without global '*' GPU layer tearing */
         .overflow-y-auto,
         .overflow-x-auto,
         .overflow-auto,
@@ -109,7 +108,6 @@
             overscroll-behavior: contain;
         }
 
-        /* Clean hardware-accelerated modal overlay (eliminates Android WebView backdrop-blur tearing & white bands) */
         .modal-backdrop-clean {
             background-color: rgba(15, 23, 42, 0.72) !important;
             backdrop-filter: none !important;
@@ -127,7 +125,6 @@
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Exact Horizontal Scrollbar Matching Reference Image with Left & Right Buttons */
         .cute-h-scrollbar {
             scrollbar-width: thin !important;
             scrollbar-color: #d946ef #edd7f5 !important;
@@ -151,7 +148,6 @@
             background: linear-gradient(90deg, #c026d3 0%, #a21caf 100%) !important;
         }
 
-        /* Left Arrow Button (<) */
         .cute-h-scrollbar::-webkit-scrollbar-button:single-button:horizontal:decrement {
             display: block !important;
             width: 14px !important;
@@ -164,7 +160,6 @@
             cursor: pointer !important;
         }
 
-        /* Right Arrow Button (>) */
         .cute-h-scrollbar::-webkit-scrollbar-button:single-button:horizontal:increment {
             display: block !important;
             width: 14px !important;
@@ -177,7 +172,6 @@
             cursor: pointer !important;
         }
 
-        /* Slideshow Container */
         .expert-slideshow-section {
             position: relative;
             width: 100%;
@@ -237,7 +231,6 @@
         .expert-dot { width: 10px; height: 10px; background: rgba(255, 255, 255, 0.5); border-radius: 50%; cursor: pointer; transition: background 0.3s ease, transform 0.3s ease; }
         .expert-dot.active { background: #ffffff; transform: scale(1.2); }
 
-        /* A4 Invoice Preview Container styling - Responsive on Mobile & Clean Print */
         .invoice-a4-page {
             width: 100%;
             max-width: 800px;
@@ -266,7 +259,6 @@
             .invoice-a4-page { box-shadow: none; margin: 0; width: 100%; height: 100%; padding: 15mm; }
         }
 
-        /* Retro Comic Pink-Purple Image Frame Window Modal */
         .pink-purple-window-container {
             position: relative;
             width: 482px;
@@ -341,7 +333,6 @@
             background: #ffffff;
         }
 
-        /* Retro 10-Bar Pink Window Pixel Styling matching reference image */
         .retro-loading-window {
             background-color: #f7a5d9;
             border: 4px solid #b82b79;
@@ -362,7 +353,6 @@
             box-shadow: inset -1px -1px 0px #b82b79, inset 1px 1px 0px #ffffff;
         }
 
-        /* 10-Segment Pixel Loading Bar */
         .retro-progress-bar-slot {
             background-color: #f2d5e6;
             transition: background-color 0.15s steps(2);
@@ -398,9 +388,6 @@
             animation: smoothFadeSlide 0.28s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
-        /* =========================================================================
-           FEEDBACK POST SECTION (ABOVE FOOTER) WITH HORIZONTAL RIGHT SCROLL
-           ========================================================================= */
         .feedback-section {
             position: relative;
             width: 100%;
@@ -525,7 +512,6 @@
             text-shadow: 0 4px 15px rgba(0, 12, 120, 0.25);
         }
 
-        /* Horizontal Right-Scrollable Carousel Track */
         .feedback-carousel-wrapper {
             position: relative;
             width: 100%;
@@ -851,26 +837,18 @@
 
     <!-- RETRO Y2K ORDER SUCCESS WINDOW MODAL (APPEARS ONLY WHEN AMOUNT IS PAID/DRAWN AT TOYYIBPAY) -->
     <div id="order-success-modal" class="fixed inset-0 z-[150] modal-backdrop-clean flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200">
-        <!-- Retro Y2K Window Frame -->
         <div class="w-[440px] max-w-full bg-[#d8b4fe] border-[3px] border-[#7c3aed] rounded-xl shadow-[8px_8px_0_0_#4c1d95] overflow-hidden transform transition-transform duration-200 scale-95" id="order-success-frame">
-
-            <!-- Window Title Bar -->
             <div class="bg-[#a855f7] px-3 py-2 flex justify-between items-center border-b-[3px] border-[#7c3aed]">
                 <div class="flex items-center space-x-2">
                     <span class="text-white text-[10px] tracking-wider font-bold uppercase">order_success.exe</span>
                 </div>
                 <div class="flex space-x-1.5">
-                    <!-- Minimize Button -->
                     <div class="w-5 h-5 bg-[#e9d5ff] border-2 border-black flex items-center justify-center text-[10px] font-bold shadow-[1px_1px_0_0_#000] cursor-pointer hover:bg-white transition-colors">_</div>
-                    <!-- Close Button -->
                     <div onclick="handleClose()" class="w-5 h-5 bg-[#f472b6] border-2 border-black flex items-center justify-center text-[12px] font-bold text-white shadow-[1px_1px_0_0_#000] cursor-pointer hover:bg-[#ec4899] transition-colors">×</div>
                 </div>
             </div>
 
-            <!-- Window Inner Body -->
             <div class="bg-[#f3e8ff] p-6 flex flex-col items-center text-center space-y-6 m-2 border-2 border-[#9333ea] rounded-lg">
-
-                <!-- Multi-colored Retro Title Blocks -->
                 <div class="space-y-2 py-2">
                     <div class="inline-block bg-[#fef08a] border-2 border-black px-3 py-1.5 transform -rotate-1 shadow-[3px_3px_0_0_#000]">
                         <span class="text-sm font-extrabold text-[#713f12] tracking-wider">THANK YOU</span>
@@ -883,12 +861,10 @@
                     </div>
                 </div>
 
-                <!-- Subtitle message -->
                 <p class="text-xs font-bold text-slate-700 tracking-wide max-w-[280px]">
                     Your package is getting prepared in our digital warehouse. We'll email you tracking updates soon!
                 </p>
 
-                <!-- Action Buttons -->
                 <div class="w-full space-y-2.5">
                     <button onclick="openFeedbackPromptModal()" class="w-full py-3 bg-[#f472b6] hover:bg-[#ec4899] text-white text-xs font-extrabold rounded-full border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all uppercase tracking-widest flex items-center justify-center gap-2 cursor-pointer">
                         <i class="fa-solid fa-star text-yellow-200"></i>
@@ -898,7 +874,6 @@
                         Continue Shopping
                     </button>
                 </div>
-
             </div>
         </div>
     </div>
@@ -906,7 +881,6 @@
     <!-- POST-PURCHASE CUSTOMER FEEDBACK & STAR RATING MODAL -->
     <div id="feedback-prompt-modal" class="fixed inset-0 z-[155] modal-backdrop-clean flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200">
         <div class="w-[460px] max-w-full bg-[#d8b4fe] border-[3px] border-[#7c3aed] rounded-xl shadow-[8px_8px_0_0_#4c1d95] overflow-hidden transform transition-transform duration-200 scale-95" id="feedback-prompt-frame">
-            <!-- Window Title Bar -->
             <div class="bg-[#a855f7] px-3 py-2 flex justify-between items-center border-b-[3px] border-[#7c3aed]">
                 <div class="flex items-center space-x-2">
                     <i class="fa-solid fa-heart text-pink-200 text-xs"></i>
@@ -915,7 +889,6 @@
                 <button type="button" onclick="closeFeedbackPromptModal()" class="w-5 h-5 bg-[#f472b6] border-2 border-black flex items-center justify-center text-[12px] font-bold text-white shadow-[1px_1px_0_0_#000] cursor-pointer hover:bg-[#ec4899] transition-colors">×</button>
             </div>
 
-            <!-- Modal Inner Body -->
             <form onsubmit="submitCustomerFeedback(event)" class="bg-[#f3e8ff] p-5 sm:p-6 m-2 border-2 border-[#9333ea] rounded-lg space-y-4">
                 <div class="text-center space-y-1">
                     <span class="inline-block bg-[#fef08a] border-2 border-black px-3 py-1 rounded-full text-[10px] font-black text-[#713f12] uppercase shadow-[2px_2px_0_0_#000]">
@@ -925,7 +898,6 @@
                     <p class="text-[11px] text-slate-600 font-medium">Tap the stars below and leave a review to appear on our live Feedback Wall!</p>
                 </div>
 
-                <!-- Customer Preview Chip -->
                 <div class="flex items-center justify-center gap-3 bg-white/90 p-2.5 rounded-2xl border-2 border-black shadow-[2px_2px_0_0_#1e1b4b]">
                     <div id="feedback-modal-avatar-preview" class="w-10 h-10 rounded-full border-2 border-[#65a30d] overflow-hidden shrink-0 bg-amber-100">
                         <img src="https://digitalpastel.github.io/digital/sweetopiashop/Bratz1.webp" alt="Your Avatar" class="w-full h-full object-cover">
@@ -936,7 +908,6 @@
                     </div>
                 </div>
 
-                <!-- Interactive 5-Star Selector -->
                 <div class="flex flex-col items-center space-y-1">
                     <div class="flex items-center justify-center gap-2" id="feedback-star-buttons">
                         <button type="button" onclick="setFeedbackRating(1)" data-star="1" class="feedback-star-btn text-3xl text-amber-400 hover:scale-110 transition-transform cursor-pointer drop-shadow" aria-label="1 Star">★</button>
@@ -948,13 +919,11 @@
                     <span id="feedback-rating-label" class="text-[11px] font-extrabold text-purple-800">5 / 5 Stars — Wonderful!</span>
                 </div>
 
-                <!-- Display Name Input -->
                 <div>
                     <label class="block text-[11px] font-bold text-slate-800 mb-1">Display Name</label>
                     <input type="text" id="feedback-author-name" required maxlength="40" placeholder="Enter your name" class="w-full bg-white border-2 border-black rounded-xl px-3.5 py-2 text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-pink-400">
                 </div>
 
-                <!-- Written Experience -->
                 <div>
                     <label class="block text-[11px] font-bold text-slate-800 mb-1">Your Feedback Message</label>
                     <textarea id="feedback-message-input" rows="3" required maxlength="260" placeholder="Share what you loved about Sweetopia Shop..." class="w-full bg-white border-2 border-black rounded-xl p-3 text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-pink-400 resize-none"></textarea>
@@ -973,25 +942,22 @@
         </div>
     </div>
 
-    <!-- RETRO 10-BAR LOADING WINDOW MODAL -->
+    <!-- RETRO 10-BAR LOADING WINDOW MODAL (WITH EMERGENCY CLOSE BUTTON SO IT CAN NEVER GET STUCK) -->
     <div id="retro-auth-loading-modal" class="fixed inset-0 z-[150] modal-backdrop-clean flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200">
         <div class="retro-loading-window w-full max-w-lg p-3 sm:p-4 rounded-none select-none">
-            <!-- Window Title bar -->
             <div class="flex items-center justify-between pb-3 sm:pb-3.5">
                 <span class="text-xs sm:text-sm font-bold tracking-wider text-[#5a0c3f]">LOADING...</span>
                 <div class="flex items-center gap-1.5">
                     <button type="button" class="retro-window-btn w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center text-[10px] sm:text-xs font-bold leading-none cursor-default">_</button>
-                    <button type="button" class="retro-window-btn w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center text-[10px] sm:text-xs font-bold leading-none cursor-default">X</button>
+                    <button type="button" onclick="cancelRetroLoading()" class="retro-window-btn w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center text-[10px] sm:text-xs font-bold leading-none cursor-pointer hover:bg-rose-200" title="Close Loading Window">X</button>
                 </div>
             </div>
 
-            <!-- Inner White Box -->
             <div class="retro-loading-inner p-4 sm:p-5">
                 <p id="retro-loading-status" class="text-[10px] sm:text-xs font-bold text-[#5a0c3f] tracking-wide mb-4 uppercase">
                     AUTHENTICATING USER...
                 </p>
 
-                <!-- 10 Distinct Bars Grid -->
                 <div class="grid grid-cols-10 gap-1.5 sm:gap-2 h-10 sm:h-12 w-full" id="retro-loading-bars-container">
                     <div class="retro-progress-bar-slot" id="retro-bar-0"></div>
                     <div class="retro-progress-bar-slot" id="retro-bar-1"></div>
@@ -1023,7 +989,7 @@
                     </div>
                 </div>
 
-                <!-- Mobile Header Bell Shortcut & Sign Out / Sign Up Button (Visible only on mobile view) -->
+                <!-- Mobile Header Bell Shortcut & Sign Out / Sign Up Button -->
                 <div class="sm:hidden flex items-center space-x-2">
                     <div id="mobile-header-user-avatar-container" class="hidden w-10 h-10 rounded-full bg-[#65a30d]/20 border-2 border-[#65a30d] flex items-center justify-center text-[#84cc16] text-lg font-bold shadow-sm overflow-hidden"><i id="mobile-header-user-avatar-icon" class="fa-solid fa-user text-sm"></i></div>
                     <div id="mobile-header-bell-container" class="hidden relative">
@@ -1041,7 +1007,6 @@
             </div>
 
             <div class="flex items-center space-x-3 relative" id="header-nav-actions">
-                <!-- CUSTOMER NOTIFICATION BELL WIDGET (Shown for Registered Customers on Desktop/PC, Page 2 only) -->
                 <div id="customer-notification-bell-wrapper" class="hidden relative">
                     <button type="button" id="customer-notif-bell-btn" onclick="toggleCustomerNotifications(event)" class="flex px-4 py-2 rounded-full bg-white hover:bg-amber-50 text-slate-800 border-2 border-black shadow-[0_3px_0_0_#1e1b4b] active:translate-y-0.5 active:shadow-none transition-all items-center space-x-2 relative cursor-pointer" title="Order & Payment Notifications">
                         <i class="fa-solid fa-bell text-amber-500 text-sm" id="desktop-bell-icon"></i>
@@ -1050,7 +1015,6 @@
                     </button>
                 </div>
 
-                <!-- NOTIFICATION DROPDOWN PANEL -->
                 <div id="customer-notifications-dropdown" class="hidden fixed sm:absolute right-3 sm:right-0 top-28 sm:top-12 w-[calc(100vw-1.5rem)] sm:w-[390px] max-w-md bg-white rounded-3xl border-2 border-black shadow-[6px_6px_0_0_#1e1b4b] z-[110] overflow-hidden flex flex-col" onclick="event.stopPropagation()">
                     <div class="bg-gradient-to-r from-amber-400 via-pink-400 to-fuchsia-500 px-4 py-3 border-b-2 border-black flex items-center justify-between text-slate-900">
                         <div class="flex items-center space-x-2">
@@ -1077,7 +1041,6 @@
                     </div>
 
                     <div id="customer-notifications-list" class="max-h-80 overflow-y-auto divide-y divide-slate-100 bg-white">
-                        <!-- Dynamically populated notifications -->
                     </div>
 
                     <div class="p-2.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-[11px]">
@@ -1113,19 +1076,19 @@
                             </div>
                             <div>
                                 <p class="text-xs font-semibold text-slate-900">Firebase Authentication Active</p>
-                                <p class="text-[10px] text-slate-600 mt-0.5 leading-relaxed">Sign in with your verified email and password. New customer accounts must click the email verification link before signing in.</p>
+                                <p class="text-[10px] text-slate-600 mt-0.5 leading-relaxed">Sign in directly with your email and password. New accounts created under Customer Sign Up will receive a verification email once upon registration.</p>
                             </div>
                         </div>
 
-                        <!-- EMAIL VERIFICATION NOTICE BANNER (Appears after registration or if unverified sign-in is attempted) -->
+                        <!-- EMAIL VERIFICATION NOTICE BANNER (Appears ONLY after Customer Sign Up) -->
                         <div id="auth-verification-banner" class="hidden bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 mb-5 flex items-start gap-3 shadow-xs">
                             <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0 mt-0.5 border border-amber-300">
                                 <i class="fa-solid fa-envelope-circle-check text-sm"></i>
                             </div>
                             <div class="flex-1 min-w-0">
-                                <p id="auth-verification-banner-title" class="text-xs font-extrabold text-amber-950">Email Verification Required</p>
+                                <p id="auth-verification-banner-title" class="text-xs font-extrabold text-amber-950">Verification Email Sent!</p>
                                 <p id="auth-verification-banner-msg" class="text-[11px] text-amber-800 mt-0.5 leading-relaxed">
-                                    We sent a verification link to your email. Please click the link in your inbox (or spam folder) to verify your account, then sign in here.
+                                    We sent a verification link to your email after sign up. Please click the link in your inbox (or spam folder) to verify your account, then sign in directly.
                                 </p>
                                 <div class="mt-2.5 flex flex-wrap items-center gap-2">
                                     <button type="button" id="resend-verification-btn" onclick="resendVerificationEmailFromPage1()" class="inline-flex items-center gap-1.5 bg-amber-600 hover:bg-amber-700 active:scale-95 text-white text-[11px] font-bold px-3 py-1.5 rounded-xl shadow-xs transition cursor-pointer">
@@ -1164,7 +1127,7 @@
                             </button>
                             <div class="text-center pt-1 flex flex-col items-center gap-1.5">
                                 <button type="button" onclick="resendVerificationEmailFromPage1()" class="text-[11px] text-amber-700 font-bold hover:text-amber-800 hover:underline transition-colors cursor-pointer">
-                                    <i class="fa-solid fa-envelope-open-text mr-1"></i> Didn't receive verification email? Resend link
+                                    <i class="fa-solid fa-envelope-open-text mr-1"></i> Resend verification email (new sign up)
                                 </button>
                                 <button type="button" onclick="continueAsGuest()" class="text-[11px] text-slate-600 font-semibold hover:text-slate-900 transition-colors">
                                     <i class="fa-solid fa-arrow-left mr-1"></i> Continue as guest
@@ -1212,18 +1175,13 @@
                     </div>
 
                     <div class="hidden sm:flex items-center space-x-4 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200">
-                        <!-- Avatar & Email Group (Centered and stacked vertically) -->
                         <div class="flex flex-col items-center justify-center space-y-1">
-                            <!-- Avatar Container -->
                             <div id="header-user-avatar-container" class="w-12 h-12 rounded-full bg-[#65a30d]/20 border-2 border-[#65a30d] flex items-center justify-center text-[#84cc16] text-lg font-bold shadow-sm overflow-hidden">
                                 <i id="header-user-avatar-icon" class="fa-solid fa-user text-sm"></i>
                             </div>
-
-                            <!-- User Email at the Bottom of Avatar -->
                             <span id="user-email-display" class="text-[10px] text-slate-600 font-medium truncate max-w-[140px] text-center">useremail@gmail.com</span>
                         </div>
 
-                        <!-- Sign Out Button -->
                         <button type="button" id="desktop-customer-auth-btn" onclick="handleSignOut()" class="px-4 py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 hover:bg-fuchsia-600 text-white border-2 border-black shadow-[0_3px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all shrink-0 cursor-pointer">Sign Out</button>
                     </div>
                 </div>
@@ -1253,7 +1211,6 @@
                 <!-- 5-PHOTO SLIDESHOW -->
                 <section id="hero-slideshow-section" class="expert-slideshow-section">
                     <div class="expert-slideshow-wrapper">
-                        <!-- Slide 1 -->
                         <div class="expert-slide">
                             <img src="https://digitalpastel.github.io/digital/sweetopiashop/moliconbp10.webp" alt="Premium Colored Contact Lenses">
                             <div class="expert-slide-caption">
@@ -1262,7 +1219,6 @@
                                 <a href="#store-product-grid" class="expert-btn">Explore Lenses</a>
                             </div>
                         </div>
-                        <!-- Slide 2 -->
                         <div class="expert-slide">
                             <img src="https://digitalpastel.github.io/digital/sweetopiashop/newmoliconcover.webp" alt="Crystal Clear Vision Lenses">
                             <div class="expert-slide-caption">
@@ -1271,7 +1227,6 @@
                                 <a href="#store-product-grid" class="expert-btn">Shop Ready Stock</a>
                             </div>
                         </div>
-                        <!-- Slide 3 -->
                         <div class="expert-slide">
                             <img src="https://digitalpastel.github.io/digital/sweetopiashop/moliconcover.webp" alt="Mystic Grey and Natural Shades">
                             <div class="expert-slide-caption">
@@ -1280,7 +1235,6 @@
                                 <a href="#store-product-grid" class="expert-btn">View Collection</a>
                             </div>
                         </div>
-                        <!-- Slide 4 -->
                         <div class="expert-slide">
                             <img src="https://digitalpastel.github.io/digital/sweetopiashop/uyaaicover.webp" alt="Emerald Green Elegance">
                             <div class="expert-slide-caption">
@@ -1289,7 +1243,6 @@
                                 <a href="#store-product-grid" class="expert-btn">Discover Colors</a>
                             </div>
                         </div>
-                        <!-- Slide 5 -->
                         <div class="expert-slide active">
                             <img src="https://digitalpastel.github.io/digital/sweetopiashop/casingmolicon.webp" alt="ToyyibPay Secure Checkout">
                             <div class="expert-slide-caption">
@@ -1327,7 +1280,6 @@
                                 <button onclick="filterCatalog('Mill Creek', this)" class="cat-btn px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 shrink-0 border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all">Mill Creek</button>
                             </div>
 
-                            <!-- Rabbit Search Bar -->
                             <div class="relative w-full md:w-72">
                                 <div class="relative w-full">
                                     <div class="absolute -top-7 right-12 flex space-x-1.5 pointer-events-none z-10">
@@ -1339,7 +1291,6 @@
                             </div>
                         </div>
 
-                        <!-- 2 columns for mobile phones (grid-cols-2), 3 for tablets, 4 for desktop -->
                         <div id="store-product-grid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6"></div>
                     </div>
 
@@ -1447,7 +1398,6 @@
                             <span class="text-xs bg-[#f7fee7] text-[#65a30d] border border-[#ecfccb] px-3 py-1.5 rounded-xl font-bold">Active Shopper</span>
                         </div>
 
-                        <!-- PROFILE CARD (DESKTOP & MOBILE) -->
                         <div class="block">
                             <div class="flex items-center space-x-4 bg-slate-900 p-4 rounded-3xl border border-slate-800 shadow-lg mb-4 relative">
                                 <div class="relative flex-shrink-0">
@@ -1465,7 +1415,6 @@
                                 </div>
                             </div>
 
-                            <!-- Admin Workspace Link: Modern Amber Accent -->
                             <div id="mobile-admin-workspace-link" class="mb-4 hidden">
                                 <div onclick="switchTab('admin-workspace')" class="bg-amber-500/10 hover:bg-amber-500/20 p-4 rounded-2xl border border-amber-500/30 flex items-center justify-between cursor-pointer transition-all shadow-sm group">
                                     <div class="flex items-center space-x-3 text-amber-500">
@@ -1511,7 +1460,6 @@
 
                         <!-- ACCORDIONS -->
                         <div class="space-y-3">
-                            <!-- 1. ORDER HISTORY -->
                             <div class="rounded-2xl border border-slate-200 overflow-hidden bg-white shadow-sm transition">
                                 <button type="button" onclick="toggleCustomerSection('order-history')" class="w-full p-4 flex items-center justify-between bg-slate-50 hover:bg-slate-100 transition text-left">
                                     <div class="flex items-center space-x-3">
@@ -1531,7 +1479,6 @@
                                 </div>
                             </div>
 
-                            <!-- 2. INVOICES -->
                             <div class="rounded-2xl border border-slate-200 overflow-hidden bg-white shadow-sm transition">
                                 <button type="button" onclick="toggleCustomerSection('invoices')" class="w-full p-4 flex items-center justify-between bg-slate-50 hover:bg-slate-100 transition text-left">
                                     <div class="flex items-center space-x-3">
@@ -1556,7 +1503,6 @@
                                 </div>
                             </div>
 
-                            <!-- 3. DELIVERY ADDRESSES -->
                             <div class="rounded-2xl border border-slate-200 overflow-hidden bg-white shadow-sm transition">
                                 <button type="button" onclick="toggleCustomerSection('addresses')" class="w-full p-4 flex items-center justify-between bg-slate-50 hover:bg-slate-100 transition text-left">
                                     <div class="flex items-center space-x-3">
@@ -1631,7 +1577,6 @@
 
                             <form id="voucherFormSection1" onsubmit="handleCreateCustomerVoucher(event)" class="p-6 space-y-6">
                                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                    <!-- Voucher Name -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                                             Voucher Title / Name <span class="text-rose-500">*</span>
@@ -1639,7 +1584,6 @@
                                         <input type="text" id="c_voucherName" required="" placeholder="e.g. VIP Kawaii Special" class="block w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-pink-500 focus:bg-white focus:outline-none transition-all">
                                     </div>
 
-                                    <!-- Prefix Code SWEET[...] -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                                             Voucher Code / Prefix <span class="text-rose-500">*</span>
@@ -1654,7 +1598,6 @@
                                         <p class="text-[11px] text-pink-600 font-medium">Resulting Code: <span class="font-mono font-bold" id="c_previewFullCode">SWEET[...]</span></p>
                                     </div>
 
-                                    <!-- Discount Amount -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                                             Discount Amount / Value <span class="text-rose-500">*</span>
@@ -1668,7 +1611,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Limit per customer -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                                             Usage Limit per Customer
@@ -1677,7 +1619,6 @@
                                         <p class="text-[11px] text-slate-500">★ Limit: 1 use per customer ★</p>
                                     </div>
 
-                                    <!-- Min Spend -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                                             Min. Order Spend (RM)
@@ -1686,7 +1627,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Chosen Customer Assignment Area -->
                                 <div class="p-5 bg-pink-50/70 border border-pink-200 rounded-2xl space-y-4">
                                     <div class="flex items-center justify-between">
                                         <div>
@@ -1711,7 +1651,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Voucher Display Settings & Sale Mode Badge -->
                                 <div class="border-t border-pink-100 pt-5 space-y-4">
                                     <div class="flex items-center justify-between flex-wrap gap-4">
                                         <div>
@@ -1739,7 +1678,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Publish Action Button -->
                                 <div class="pt-4 flex items-center justify-end space-x-3 border-t border-slate-100">
                                     <button type="button" onclick="resetSection1Form()" class="px-5 py-2.5 border border-slate-300 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-100 transition">
                                         Cancel
@@ -1774,7 +1712,6 @@
 
                             <form id="voucherFormSection2" onsubmit="handleCreateProductVoucher(event)" class="p-6 space-y-6">
                                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                    <!-- Voucher Name -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                                             Voucher Title / Name <span class="text-rose-500">*</span>
@@ -1782,7 +1719,6 @@
                                         <input type="text" id="p_voucherName" required="" placeholder="e.g. Kawaii Plushie Special" class="block w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-purple-500 focus:bg-white focus:outline-none transition-all">
                                     </div>
 
-                                    <!-- Prefix Code SWEET[...] -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                                             Voucher Code / Prefix <span class="text-rose-500">*</span>
@@ -1797,7 +1733,6 @@
                                         <p class="text-[11px] text-purple-600 font-medium">Resulting Code: <span class="font-mono font-bold" id="p_previewFullCode">SWEET[...]</span></p>
                                     </div>
 
-                                    <!-- Discount Amount -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                                             Discount Amount / Value <span class="text-rose-500">*</span>
@@ -1811,7 +1746,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Usage Limit -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                                             Total Usage Limit <span class="text-rose-500">*</span>
@@ -1819,7 +1753,6 @@
                                         <input type="number" id="p_usageLimit" required="" min="1" value="100" placeholder="100" class="block w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-purple-500 focus:outline-none">
                                     </div>
 
-                                    <!-- Min Order Spend -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                                             Min. Order Spend (RM)
@@ -1828,7 +1761,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Chosen Product Frame Assignment Area -->
                                 <div class="p-5 bg-purple-50/70 border border-purple-200 rounded-2xl space-y-4">
                                     <div class="flex items-center justify-between flex-wrap gap-3">
                                         <div>
@@ -1855,7 +1787,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Voucher Display Settings & Notice -->
                                 <div class="border-t border-purple-100 pt-5 space-y-4">
                                     <div class="flex items-center justify-between flex-wrap gap-4">
                                         <div>
@@ -1883,7 +1814,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Save & Publish Product Frame Action Button -->
                                 <div class="pt-4 flex items-center justify-end space-x-3 border-t border-slate-100">
                                     <button type="button" onclick="resetSection2Form()" class="px-5 py-2.5 border border-slate-300 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-100 transition">
                                         Cancel
@@ -2078,7 +2008,6 @@
                                 <p class="text-[11px] text-slate-500">Assign tracking numbers, save and publish to customer dashboards.</p>
                             </div>
 
-                            <!-- Admin Batch Control Toolbar -->
                             <div class="bg-slate-50 p-3 sm:p-4 rounded-2xl border border-slate-200 flex flex-wrap items-center justify-between gap-3 shadow-xs">
                                 <div class="flex items-center gap-2.5">
                                     <input type="checkbox" id="confirm-clear-checkbox" onchange="toggleClearAllButton()" class="w-4 h-4 text-rose-600 rounded border-slate-300 focus:ring-rose-500 cursor-pointer">
@@ -2109,14 +2038,12 @@
 
                 <!-- CUSTOMER FEEDBACK POST SECTION (ABOVE FOOTER - HORIZONTAL RIGHT SCROLL) -->
                 <section id="feedback-wall-section" class="feedback-section">
-                    <!-- Background Watermark Text -->
                     <div class="bg-watermark" aria-hidden="true">
                         <span>Feedback</span>
                         <span>Feedback</span>
                         <span>Feedback</span>
                     </div>
 
-                    <!-- Ambient Glows & Decorative Yellow Curves -->
                     <div class="glow glow-top-right"></div>
                     <div class="glow glow-center"></div>
                     <div class="glow glow-bottom-left"></div>
@@ -2128,22 +2055,17 @@
                         <path d="M620 10 C 420 110, 260 220, 80 260" stroke="#FFD600" stroke-width="11" stroke-linecap="round"/>
                     </svg>
 
-                    <!-- Main Content Container -->
                     <div class="feedback-container">
-                        <!-- Header -->
                         <header class="feedback-header">
                             <h2 class="title-main">Feedback Post</h2>
                             <span class="title-script">Customer Reviews</span>
                         </header>
 
-                        <!-- Horizontal Right-Scrollable Centerpiece Graphic & Speech Bubble Cards -->
                         <div class="feedback-carousel-wrapper">
                             <div id="feedback-carousel-track" class="feedback-carousel-track">
-                                <!-- Dynamically populated feedback cards (with user avatar, name, stars, and Admin-only Delete button) -->
                             </div>
                         </div>
 
-                        <!-- Bottom Footer Meta & Scroll Controls -->
                         <footer class="feedback-footer">
                             <span id="feedback-counter-note" class="footer-note">Swipe or scroll right for more reviews →</span>
                             <div class="flex items-center gap-2">
@@ -2162,33 +2084,25 @@
                 <!-- PAGE 2 FOOTER -->
                 <footer class="w-full bg-[#d8b4fe] border-t-4 border-[#7c3aed] py-6 px-6 shadow-[0_-4px_0_0_#4c1d95] mt-auto">
                     <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 items-center gap-4">
-
-                        <!-- Left: Social Media Icons (Y2K Chunky Style) -->
                         <div class="flex items-center justify-center md:justify-start space-x-3">
-                            <!-- Facebook -->
                             <a href="https://www.facebook.com/share/1C455cr2u5/" target="_blank" rel="noopener noreferrer" class="w-9 h-9 bg-[#f472b6] hover:bg-[#ec4899] text-white rounded-full border-2 border-black flex items-center justify-center shadow-[2px_2px_0_0_#000] active:translate-y-0.5 active:shadow-[0_0_0_0_#000] transition-all">
                                 <i class="fa-brands fa-facebook-f text-sm"></i>
                             </a>
-                            <!-- Instagram -->
                             <a href="https://www.instagram.com/sweetopialens" target="_blank" rel="noopener noreferrer" class="w-9 h-9 bg-[#fb7185] hover:bg-[#f43f5e] text-white rounded-full border-2 border-black flex items-center justify-center shadow-[2px_2px_0_0_#000] active:translate-y-0.5 active:shadow-[0_0_0_0_#000] transition-all">
                                 <i class="fa-brands fa-instagram text-sm"></i>
                             </a>
-                            <!-- TikTok -->
                             <a href="https://www.tiktok.com/@sweetopiashop6" target="_blank" rel="noopener noreferrer" class="w-9 h-9 bg-[#38bdf8] hover:bg-[#0ea5e9] text-white rounded-full border-2 border-black flex items-center justify-center shadow-[2px_2px_0_0_#000] active:translate-y-0.5 active:shadow-[0_0_0_0_#000] transition-all">
                                 <i class="fa-brands fa-tiktok text-sm"></i>
                             </a>
                         </div>
 
-                        <!-- Center: Copyright Text Only -->
                         <div class="text-center flex justify-center">
                             <p class="text-[11px] text-[#581c87] font-extrabold tracking-wider">
-                                © Brand Works Empire 2026, all rights reserved <span class="opacity-75 font-mono text-[10px]">(v1.0.2)</span>
+                                © Brand Works Empire 2026, all rights reserved <span class="opacity-75 font-mono text-[10px]">(v1.0.3)</span>
                             </p>
                         </div>
 
-                        <!-- Right: ToyyibPay Widget & Verified Logo Side-by-Side -->
                         <div class="flex items-center justify-center md:justify-end gap-3">
-                            <!-- ToyyibPay Widget -->
                             <div class="bg-white border-2 border-black rounded-lg p-1.5 shadow-[2px_2px_0_0_#000] flex flex-col items-center">
                                 <div class="text-[10px] font-black text-slate-800 pb-1">
                                     toyyib<span class="text-purple-600">Pay</span>
@@ -2198,7 +2112,6 @@
                                 </div>
                             </div>
 
-                            <!-- Verified Logo Frame -->
                             <div class="bg-white border-2 border-black rounded-lg p-1.5 shadow-[2px_2px_0_0_#000] flex flex-col items-center">
                                 <div class="text-[10px] font-black text-purple-700 pb-1">
                                     Verified
@@ -2208,7 +2121,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </footer>
 
@@ -2242,7 +2154,6 @@
                         <div class="cat-ear-left-green"><div class="cat-ear-left-inner-green"></div></div>
                         <div class="cat-ear-right-green"><div class="cat-ear-right-inner-green"></div></div>
 
-                        <!-- Header -->
                         <div class="bg-gradient-to-r from-[#65a30d] to-[#4d7c0f] text-white px-4 py-3.5 rounded-t-3xl flex items-center justify-between shadow-md relative z-10">
                             <div class="flex items-center space-x-2.5">
                                 <div id="chat-header-avatar-box" class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center font-bold text-sm border border-white/30 overflow-hidden shrink-0">
@@ -2264,7 +2175,6 @@
                             </div>
                         </div>
 
-                        <!-- Admin Session Switcher Bar -->
                         <div id="admin-chat-session-bar" class="bg-[#f7fee7] px-3 py-2 border-b border-[#ecfccb] flex items-center justify-between text-[11px]">
                             <span id="chat-session-bar-label" class="font-bold text-[#4d7c0f]">User Session:</span>
                             <div class="flex items-center space-x-2">
@@ -2273,12 +2183,9 @@
                             </div>
                         </div>
 
-                        <!-- Messages Box -->
                         <div id="widget-chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/50 text-xs"><div class="text-center text-slate-400 py-10"><i class="fa-solid fa-heart text-2xl text-lime-500 mb-2"></i><p class="text-xs">Chatting with <b class="text-slate-700">admin</b>.<br>Leave a message or sticker to start conversation.</p></div></div>
 
-                        <!-- Footer Input & Multimedia Toolbar -->
                         <div class="p-3 bg-white border-t border-pink-100 flex flex-col space-y-2 rounded-b-3xl">
-                            <!-- Multimedia & Sticker Toolbar Icons -->
                             <div class="flex items-center space-x-2 sm:space-x-3 px-1 text-slate-500">
                                 <button type="button" onclick="toggleStickerPicker()" class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl hover:bg-pink-100/80 hover:text-pink-600 flex items-center justify-center transition text-sm sm:text-base" title="Stickers">
                                     <i class="fa-solid fa-face-smile"></i>
@@ -2300,7 +2207,6 @@
                                 </label>
                             </div>
 
-                            <!-- Textarea and Send Button -->
                             <div class="flex items-center space-x-2 bg-pink-50/70 rounded-2xl p-2 border border-pink-200 focus-within:border-pink-400 transition">
                                 <textarea id="chatInput" rows="1" placeholder="Type a message here..." class="flex-1 bg-transparent border-none focus:outline-none text-slate-700 text-xs px-2 resize-none" onkeypress="handleKeypress(event)"></textarea>
                                 <button id="sendBtn" onclick="sendTextMessage()" class="px-3.5 py-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold rounded-xl shadow-md hover:opacity-95 transition text-xs flex items-center space-x-1.5 shrink-0">
@@ -2311,7 +2217,6 @@
                         </div>
                     </div>
 
-                    <!-- Floating Chat Toggle Button -->
                     <button onclick="toggleWidgetChat()" class="w-14 h-14 rounded-full bg-gradient-to-r from-[#65a30d] to-[#4d7c0f] hover:from-[#4d7c0f] hover:to-[#3f6212] text-white shadow-2xl flex items-center justify-center text-xl transition-all transform hover:scale-105 border-2 border-white relative group">
                         <i class="fa-solid fa-comments"></i>
                         <span id="widget-unread-badge" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-extrabold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-md hidden">0</span>
@@ -2319,7 +2224,7 @@
                 </div>
             </div>
 
-            <!-- SHOPEE STYLE STICKER PICKER MODAL (15 STICKER PACKS - INSTANT LOAD) -->
+            <!-- SHOPEE STYLE STICKER PICKER MODAL -->
             <div id="screen-sticker-modal" class="fixed inset-0 z-[150] modal-backdrop-clean flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-200 p-3 sm:p-4" onclick="closeStickerPicker()">
                 <div class="w-full max-w-sm bg-white rounded-3xl border-2 border-pink-300 overflow-hidden shadow-2xl flex flex-col max-h-[85vh] relative z-10" onclick="event.stopPropagation()">
                     <div class="px-5 py-3.5 bg-gradient-to-r from-pink-100 to-purple-100 border-b border-pink-200 flex items-center justify-between shrink-0">
@@ -2367,7 +2272,7 @@
                 </div>
             </div>
 
-            <!-- PRODUCT IMAGE ZOOM MODAL (PINK-PURPLE RETRO WINDOW FRAME) -->
+            <!-- PRODUCT IMAGE ZOOM MODAL -->
             <div id="screen-image-zoom" class="fixed inset-0 z-[160] modal-backdrop-clean flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-200 p-4" onclick="closeImageZoomModal()">
                 <div class="pink-purple-window-container" onclick="event.stopPropagation()">
                     <div class="pink-purple-window-tab">
@@ -2420,7 +2325,7 @@
                 </div>
             </div>
 
-            <!-- MODAL DROPDOWN: SELECT PRESCRIPTION POWER (WITH 'X' CLOSE BUTTON) -->
+            <!-- MODAL DROPDOWN: SELECT PRESCRIPTION POWER -->
             <div id="screen-prescription-modal" class="fixed inset-0 z-[150] modal-backdrop-clean flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-200 p-4">
                 <div class="w-full max-w-lg bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-2xl flex flex-col max-h-[85vh]">
                     <div class="px-5 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
@@ -2589,7 +2494,7 @@
                 </div>
             </div>
 
-            <!-- MOBILE & DESKTOP AVATAR SELECTOR MODAL (BRATZ + 15 PRINCESS AVATARS) -->
+            <!-- MOBILE & DESKTOP AVATAR SELECTOR MODAL -->
             <div id="avatar-selector-modal" class="fixed inset-0 z-[150] modal-backdrop-clean flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200" onclick="closeAvatarModal()">
                 <div class="w-full max-w-sm bg-white rounded-3xl border-2 border-black shadow-[6px_6px_0_0_#1e1b4b] overflow-hidden flex flex-col p-5 space-y-4 max-h-[88vh]" onclick="event.stopPropagation()">
                     <div class="flex items-center justify-between border-b border-slate-200 pb-3 shrink-0">
@@ -2602,7 +2507,6 @@
                         </button>
                     </div>
                     <div class="grid grid-cols-4 gap-2.5 text-center overflow-y-auto max-h-64 pr-1 py-0.5">
-                        <!-- 4 Bratz Avatars -->
                         <button type="button" onclick="selectUserAvatar('https://digitalpastel.github.io/digital/sweetopiashop/Bratz1.webp')" class="p-1.5 rounded-2xl bg-slate-50 hover:bg-pink-50 border-2 border-slate-200 hover:border-pink-500 flex items-center justify-center transition overflow-hidden aspect-square shadow-xs active:scale-95" title="Bratz Avatar 1">
                             <img src="https://digitalpastel.github.io/digital/sweetopiashop/Bratz1.webp" alt="Bratz 1" loading="eager" class="w-full h-full object-cover rounded-xl">
                         </button>
@@ -2615,8 +2519,6 @@
                         <button type="button" onclick="selectUserAvatar('https://digitalpastel.github.io/digital/sweetopiashop/Bratz4.webp')" class="p-1.5 rounded-2xl bg-slate-50 hover:bg-pink-50 border-2 border-slate-200 hover:border-pink-500 flex items-center justify-center transition overflow-hidden aspect-square shadow-xs active:scale-95" title="Bratz Avatar 4">
                             <img src="https://digitalpastel.github.io/digital/sweetopiashop/Bratz4.webp" alt="Bratz 4" loading="eager" class="w-full h-full object-cover rounded-xl">
                         </button>
-
-                        <!-- 15 Princess Avatars -->
                         <button type="button" onclick="selectUserAvatar('https://digitalpastel.github.io/digital/sweetopiashop/Princess1.webp')" class="p-1.5 rounded-2xl bg-slate-50 hover:bg-purple-50 border-2 border-slate-200 hover:border-purple-500 flex items-center justify-center transition overflow-hidden aspect-square shadow-xs active:scale-95" title="Princess Avatar 1">
                             <img src="https://digitalpastel.github.io/digital/sweetopiashop/Princess1.webp" alt="Princess 1" loading="eager" class="w-full h-full object-cover rounded-xl">
                         </button>
@@ -2702,7 +2604,6 @@
             <!-- A4 INVOICE PNG DOWNLOAD & VIEW MODAL -->
             <div id="invoice-modal" class="fixed inset-0 z-[999] modal-backdrop-clean flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-200 p-2 sm:p-4 overflow-y-auto">
                 <div class="relative w-full max-w-4xl bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[96vh] my-auto">
-                    <!-- Modal Header Bar -->
                     <div class="px-3.5 sm:px-6 py-3 sm:py-4 bg-slate-100 border-b border-slate-200 flex items-center justify-between shrink-0 no-print">
                         <div class="flex items-center space-x-2">
                             <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-lime-100 text-[#4d7c0f] flex items-center justify-center text-xs">
@@ -2722,12 +2623,9 @@
                         </div>
                     </div>
 
-                    <!-- Scrollable Modal Body -->
                     <div class="flex-1 overflow-y-auto p-2 sm:p-6 bg-slate-100/70 flex justify-center w-full">
                         <div class="w-full flex justify-center overflow-x-auto pb-4">
-                            <!-- Printable Area -->
                             <div id="invoice-printable-area" class="invoice-a4-page bg-white">
-                                <!-- Top Invoice Brand & Header -->
                                 <div class="flex flex-col sm:flex-row sm:items-start justify-between border-b-2 border-slate-200 pb-5 mb-5 gap-3">
                                     <div>
                                         <h1 class="text-2xl sm:text-3xl font-black text-[#19a8ea]">Sweetopia <span class="text-[#65a30d]">Shop</span></h1>
@@ -2744,7 +2642,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Customer Details & Merchant Details -->
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 text-xs">
                                     <div class="bg-slate-50 p-3 sm:p-4 rounded-xl border border-slate-200">
                                         <h3 class="font-bold text-slate-900 uppercase tracking-wider mb-1 text-[11px] text-[#4d7c0f]">Billed &amp; Shipped To:</h3>
@@ -2765,7 +2662,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Line Items Table -->
                                 <div class="w-full overflow-x-auto mb-6">
                                     <table class="w-full text-xs border-collapse min-w-[340px]">
                                         <thead>
@@ -2790,7 +2686,6 @@
                                     </table>
                                 </div>
 
-                                <!-- Financial Totals Calculation Box -->
                                 <div class="w-full sm:w-72 sm:ml-auto space-y-1.5 text-xs border-t-2 border-slate-200 pt-3">
                                     <div class="flex justify-between text-slate-600">
                                         <span>Subtotal:</span>
@@ -2810,7 +2705,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Invoice Footer Note -->
                                 <div class="mt-10 sm:mt-14 text-center text-[10px] sm:text-[11px] text-slate-400 border-t border-slate-100 pt-4">
                                     <p>Thank you for shopping with Sweetopia Shop! Your order is processed for fast nationwide delivery.</p>
                                     <p class="mt-1">Official Digital Invoice Generated Automatically via Sweetopia Shop System.</p>
@@ -2844,7 +2738,7 @@
         </button>
     </div>
 
-    <!-- SCRIPT LOGIC (CLEANED, GLITCH-FREE & INSTANT STICKERS) -->
+    <!-- SCRIPT LOGIC -->
     <script>
         let deferredInstallPrompt = null;
         window.addEventListener('beforeinstallprompt', (e) => {
@@ -2903,7 +2797,6 @@
             }
         } catch(e) { console.warn("Firebase init:", e); }
 
-        /* HELPER: DETECT IF CURRENT USER IS A GUEST */
         function isGuestUser() {
             if (!currentUser) return true;
             if (currentUser.isGuest === true) return true;
@@ -2911,7 +2804,6 @@
             return em.startsWith('guest_') || em.endsWith('@sweetopiashop.my');
         }
 
-        /* REDIRECT GUEST DIRECTLY TO CUSTOMER SIGN UP FORM */
         window.redirectGuestToSignUp = function(reasonMsg = "Please create a customer account before adding items to cart or checking out.") {
             closeProductDetail();
             closePrescriptionPickerModal();
@@ -2920,10 +2812,12 @@
             showToast("Sign Up Account Required", reasonMsg, true);
         };
 
-        /* ADAPTIVE 10-BAR RETRO PROGRESS CONTROLLER */
+        /* =========================================================================
+           NON-BLOCKING RETRO 10-BAR PROGRESS CONTROLLER (NEVER GETS STUCK)
+           ========================================================================= */
         let loadingBarsProgress = 0;
         let loadingIntervalTimer = null;
-        let loadingResolveFn = null;
+        let loadingSafetyTimeout = null;
 
         function setRetroBars(count) {
             loadingBarsProgress = Math.min(10, Math.max(0, count));
@@ -2936,6 +2830,22 @@
                         bar.classList.remove('filled');
                     }
                 }
+            }
+        }
+
+        function hideRetroModalImmediate() {
+            if (loadingIntervalTimer) {
+                clearInterval(loadingIntervalTimer);
+                loadingIntervalTimer = null;
+            }
+            if (loadingSafetyTimeout) {
+                clearTimeout(loadingSafetyTimeout);
+                loadingSafetyTimeout = null;
+            }
+            const modal = document.getElementById('retro-auth-loading-modal');
+            if (modal) {
+                modal.classList.remove('opacity-100');
+                modal.classList.add('opacity-0', 'pointer-events-none');
             }
         }
 
@@ -2952,59 +2862,81 @@
             }
 
             if (loadingIntervalTimer) clearInterval(loadingIntervalTimer);
+            if (loadingSafetyTimeout) clearTimeout(loadingSafetyTimeout);
 
             let current = 0;
             loadingIntervalTimer = setInterval(() => {
-                if (current < 8) {
+                if (current < 9) {
                     current++;
                     setRetroBars(current);
                 }
-            }, 180);
+            }, 140);
 
-            return new Promise(resolve => {
-                loadingResolveFn = resolve;
-            });
+            // Fail-safe auto-close after 7 seconds so loading can never get stuck on slow networks
+            loadingSafetyTimeout = setTimeout(() => {
+                hideRetroModalImmediate();
+            }, 7000);
         }
 
-        function finishRetroLoading(speed = 'normal') {
-            if (loadingIntervalTimer) clearInterval(loadingIntervalTimer);
-
+        function finishRetroLoading() {
+            if (loadingIntervalTimer) {
+                clearInterval(loadingIntervalTimer);
+                loadingIntervalTimer = null;
+            }
+            if (loadingSafetyTimeout) {
+                clearTimeout(loadingSafetyTimeout);
+                loadingSafetyTimeout = null;
+            }
+            setRetroBars(10);
             return new Promise((resolve) => {
-                const stepDelay = speed === 'fast' ? 30 : 60;
-                const fillRest = () => {
-                    if (loadingBarsProgress < 10) {
-                        setRetroBars(loadingBarsProgress + 1);
-                        setTimeout(fillRest, stepDelay);
-                    } else {
-                        setTimeout(() => {
-                            const modal = document.getElementById('retro-auth-loading-modal');
-                            if (modal) {
-                                modal.classList.remove('opacity-100');
-                                modal.classList.add('opacity-0', 'pointer-events-none');
-                            }
-                            if (loadingResolveFn) {
-                                loadingResolveFn();
-                                loadingResolveFn = null;
-                            }
-                            resolve();
-                        }, 220);
-                    }
-                };
-                fillRest();
+                setTimeout(() => {
+                    hideRetroModalImmediate();
+                    resolve();
+                }, 160);
             });
         }
 
         function cancelRetroLoading() {
-            if (loadingIntervalTimer) clearInterval(loadingIntervalTimer);
-            const modal = document.getElementById('retro-auth-loading-modal');
-            if (modal) {
-                modal.classList.remove('opacity-100');
-                modal.classList.add('opacity-0', 'pointer-events-none');
+            hideRetroModalImmediate();
+        }
+
+        /* =========================================================================
+           TRACKING WHICH EMAILS JUST REGISTERED (VERIFICATION REQUIRED ONLY AFTER SIGN UP)
+           ========================================================================= */
+        function getNewlyRegisteredUnverifiedSet() {
+            try {
+                const raw = localStorage.getItem('sweetopia_pending_signup_verify');
+                const arr = raw ? JSON.parse(raw) : [];
+                return new Set(Array.isArray(arr) ? arr.map(e => String(e).toLowerCase()) : []);
+            } catch (e) {
+                return new Set();
             }
-            if (loadingResolveFn) {
-                loadingResolveFn();
-                loadingResolveFn = null;
+        }
+
+        function markEmailRequiresPostSignupVerification(email) {
+            if (!email) return;
+            const clean = email.trim().toLowerCase();
+            const set = getNewlyRegisteredUnverifiedSet();
+            set.add(clean);
+            try {
+                localStorage.setItem('sweetopia_pending_signup_verify', JSON.stringify(Array.from(set)));
+            } catch (e) {}
+        }
+
+        function clearEmailPostSignupVerification(email) {
+            if (!email) return;
+            const clean = email.trim().toLowerCase();
+            const set = getNewlyRegisteredUnverifiedSet();
+            if (set.delete(clean)) {
+                try {
+                    localStorage.setItem('sweetopia_pending_signup_verify', JSON.stringify(Array.from(set)));
+                } catch (e) {}
             }
+        }
+
+        function isEmailPendingPostSignupVerification(email) {
+            if (!email) return false;
+            return getNewlyRegisteredUnverifiedSet().has(email.trim().toLowerCase());
         }
 
         let products = [
@@ -3084,7 +3016,6 @@
                 return "In Stock";
             }
 
-            // Aggregate across all available powers for store catalog badge
             let hasWarehouse = false;
             let hasVendor = false;
             let anyAvailable = false;
@@ -3194,10 +3125,10 @@
                 setAuthModeTab('signin');
                 showAuthVerificationBanner(
                     "Enter Password to Resend Link",
-                    `To resend the verification email to ${email}, enter your password below and click "Resend Verification Email" (or click "Forgot?" if you forgot your password).`,
+                    `To resend the verification email for your new sign up (${email}), enter your password below and click "Resend Verification Email".`,
                     email
                 );
-                showToast("Password Needed", "Enter your password first so we can send a new verification link.", true);
+                showToast("Password Needed", "Enter your password first so we can resend your sign-up verification link.", true);
                 pwdInput?.focus();
                 return;
             }
@@ -3212,14 +3143,15 @@
                 } catch (e) {}
 
                 if (user && user.emailVerified) {
+                    clearEmailPostSignupVerification(email);
                     hideAuthVerificationBanner();
                     currentUser = user;
-                    await saveRegisteredCustomerRecord(email, user.uid, true);
                     localStorage.setItem('sweetopia_logged_in_email', email);
-                    await loadCustomerCartFromFirestore(user.uid);
+                    saveRegisteredCustomerRecord(email, user.uid, true).catch(() => {});
+                    loadCustomerCartFromFirestore(user.uid).catch(() => {});
                     updateUIAfterLogin(currentUser);
                     updateAdminChatUserDropdown();
-                    await finishRetroLoading('fast');
+                    await finishRetroLoading();
                     showToast("Already Verified!", `Your email ${email} is already verified. Signing you in now!`);
                     switchPage('dashboard');
                     switchTab('catalog');
@@ -3227,7 +3159,6 @@
                     return;
                 }
 
-                await saveRegisteredCustomerRecord(email, user?.uid, false);
                 await user.sendEmailVerification();
                 try {
                     await auth.signOut();
@@ -3235,7 +3166,7 @@
 
                 currentUser = null;
                 localStorage.removeItem('sweetopia_logged_in_email');
-                await finishRetroLoading('fast');
+                await finishRetroLoading();
 
                 setAuthModeTab('signin');
                 showAuthVerificationBanner(
@@ -3327,9 +3258,6 @@
             }
         ];
 
-        /* =========================================================================
-            CUSTOMER NOTIFICATION BELL SYSTEM (DEDUPLICATED & INTERACTIVE)
-           ========================================================================= */
         function loadReadNotifications() {
             try {
                 const stored = localStorage.getItem('sweetopia_read_notif_keys');
@@ -3686,7 +3614,6 @@
                 const displayName = escapeHtmlText(fb.name || (fb.email ? fb.email.split('@')[0] : 'Happy Customer'));
                 const quoteText = escapeHtmlText(fb.comment || 'Wonderful experience shopping at Sweetopia Shop!');
 
-                // Only Admin can delete feedback; customers cannot delete any feedback
                 const adminDeleteBtnHtml = isAdmin ? `
                     <button type="button" onclick="adminDeleteFeedback('${fb.id}')" class="absolute -bottom-3 right-5 z-20 bg-rose-600 hover:bg-rose-700 active:scale-95 text-white text-[11px] font-extrabold px-3 py-1.5 rounded-full border-2 border-black shadow-[0_3px_0_0_#1e1b4b] flex items-center gap-1.5 cursor-pointer transition" title="Admin Only: Delete this customer feedback">
                         <i class="fa-solid fa-trash-can text-[10px]"></i>
@@ -3696,14 +3623,11 @@
 
                 return `
                     <div class="card-stage">
-                        <!-- Concentric 3D Ring Behind Card -->
                         <div class="concentric-ring">
                             <div class="ring-inner"></div>
                         </div>
 
-                        <!-- Speech Bubble Card -->
                         <div class="speech-bubble">
-                            <!-- Floating 3D Heart Badges -->
                             <div class="heart-badge badge-top-left">
                                 <div class="heart-ring">
                                     <svg viewBox="0 0 24 24" class="heart-icon">
@@ -3726,7 +3650,6 @@
                                 </div>
                             </div>
 
-                            <!-- Card Content with User Avatar & Name -->
                             <div class="card-body">
                                 <div class="avatar-wrapper">
                                     <img src="${avatarUrl}" alt="${displayName}" onerror="this.src='${DEFAULT_USER_AVATAR}'" class="avatar-img" />
@@ -3742,7 +3665,6 @@
 
                             ${adminDeleteBtnHtml}
 
-                            <!-- Speech Bubble Tail -->
                             <div class="bubble-tail"></div>
                         </div>
                     </div>
@@ -3876,7 +3798,6 @@
         };
 
         window.adminDeleteFeedback = async function(feedbackId) {
-            // Strict Admin-only permission check: customers cannot delete feedback
             if (!currentUser || !isAdminUser(currentUser.email)) {
                 showToast("Permission Denied", "Only Administrators can delete customer feedback.", true);
                 return;
@@ -4152,9 +4073,6 @@
             }
         };
 
-        /* =========================================================================
-            CUSTOMER DELIVERY ADDRESSES CRUD MODAL & STORAGE
-           ========================================================================= */
         function loadSavedAddresses() {
             try {
                 const stored = localStorage.getItem('sweetopia_saved_addresses');
@@ -4691,7 +4609,7 @@
             updateCartBadge();
             updateUIAfterLogin(currentUser);
 
-            await finishRetroLoading('fast');
+            await finishRetroLoading();
 
             switchPage('dashboard');
             switchTab('catalog');
@@ -4946,48 +4864,38 @@
                 if (!isSigningIn) {
                     lastPendingVerificationEmail = email;
                     lastPendingVerificationPassword = password;
-                    await saveRegisteredCustomerRecord(email, null, false);
-                    await finishRetroLoading('fast');
+                    markEmailRequiresPostSignupVerification(email);
+                    saveRegisteredCustomerRecord(email, null, false).catch(() => {});
+                    await finishRetroLoading();
                     if (pwdInput) pwdInput.value = '';
                     setAuthModeTab('signin');
                     showAuthVerificationBanner(
                         "Verification Email Sent!",
-                        `A verification link has been sent to ${email}. Please click the link in your email first, then sign in with your password.`,
+                        `A verification link has been sent to ${email} after sign up. Please click the link in your email first, then sign in with your password.`,
                         email
                     );
-                    showToast("Verify Your Email", "Registration saved! Please verify your email before signing in.");
+                    showToast("Verify Your Email", "Registration saved! Please verify your email once before signing in.");
                     return;
                 }
 
-                // Offline mode check for unverified accounts
-                if (!isAdminUser(email) && verifiedEmailsMap[email] === false) {
-                    lastPendingVerificationEmail = email;
-                    lastPendingVerificationPassword = password;
-                    cancelRetroLoading();
-                    showAuthVerificationBanner(
-                        "Email Not Verified Yet",
-                        `Your account (${email}) is not verified yet. Please click the verification link sent to your email before signing in, or click "Resend Verification Email" below.`,
-                        email
-                    );
-                    showToast("Verification Required", "Please verify your email address before signing in.", true);
-                    return;
-                }
-
+                // Offline mode: sign in directly without needing verification again
+                clearEmailPostSignupVerification(email);
                 hideAuthVerificationBanner();
                 currentUser = { email: email, isGuest: false, emailVerified: true };
-                await saveRegisteredCustomerRecord(email, null, true);
+                saveRegisteredCustomerRecord(email, null, true).catch(() => {});
                 localStorage.setItem('sweetopia_logged_in_email', email);
                 updateUIAfterLogin(currentUser);
-                await finishRetroLoading('fast');
+                await finishRetroLoading();
                 switchPage('dashboard');
                 switchTab(isAdminUser(email) ? 'admin-workspace' : 'catalog');
-                showToast("Signed In (Offline)", `Welcome ${email}`);
+                showToast("Signed In", `Welcome ${email}!`);
                 updatePresence(email, true);
                 return;
             }
 
             try {
-                if (authMode === 'signin') {
+                if (isSigningIn) {
+                    // SIGN IN FLOW: Never send verification email on Sign In; allow immediate sign in once verified after sign up
                     const res = await auth.signInWithEmailAndPassword(email, password);
                     let user = res.user;
                     try {
@@ -4995,14 +4903,10 @@
                         user = auth.currentUser || user;
                     } catch (reloadErr) {}
 
-                    // Strict Email Verification Enforcement (Admins are exempt)
-                    if (!isAdminUser(email) && user && user.emailVerified === false) {
+                    // Only block if this user JUST signed up on this device and still hasn't clicked their sign-up verification link
+                    if (!isAdminUser(email) && user && user.emailVerified === false && isEmailPendingPostSignupVerification(email)) {
                         lastPendingVerificationEmail = email;
                         lastPendingVerificationPassword = password;
-                        await saveRegisteredCustomerRecord(email, user?.uid, false);
-                        try {
-                            await user.sendEmailVerification();
-                        } catch (resendErr) {}
                         try {
                             await auth.signOut();
                         } catch (signOutErr) {}
@@ -5012,39 +4916,43 @@
                         cancelRetroLoading();
 
                         showAuthVerificationBanner(
-                            "Email Verification Required",
-                            `Your email (${email}) has not been verified yet. We sent a verification link to your inbox—please click the link in your email and then sign in again, or click "Resend Verification Email" below.`,
+                            "Please Click Your Sign-Up Verification Link First",
+                            `You recently signed up with ${email} and haven't clicked the verification link in your inbox yet. Please click the link sent to your email (or click "Resend Verification Email" below), then sign in.`,
                             email
                         );
-                        showToast("Email Not Verified", "Please click the verification link in your email before signing in.", true);
+                        showToast("Complete Sign-Up Verification", "Click the verification link in your inbox from sign up, then sign in.", true);
                         return;
                     }
 
+                    // Verified or existing account: sign in directly without any further verification!
+                    clearEmailPostSignupVerification(email);
                     hideAuthVerificationBanner();
                     currentUser = user;
-                    await saveRegisteredCustomerRecord(email, user?.uid, true);
                     localStorage.setItem('sweetopia_logged_in_email', email);
-                    await loadCustomerCartFromFirestore(user?.uid);
+
+                    // Run Firestore sync in background so Sign In completes fast and never stalls
+                    saveRegisteredCustomerRecord(email, user?.uid, true).catch(() => {});
+                    loadCustomerCartFromFirestore(user?.uid).catch(() => {});
+
                     updateUIAfterLogin(currentUser);
                     updateAdminChatUserDropdown();
-                    await finishRetroLoading('fast');
+                    await finishRetroLoading();
 
                     showToast("Signed In", `Welcome back, ${email}!`);
                     switchPage('dashboard');
                     switchTab(isAdminUser(email) ? 'admin-workspace' : 'catalog');
                     updatePresence(email, true);
                 } else {
-                    // STRICT SIGN UP FLOW:
-                    // 1. Create account in Firebase Auth
+                    // SIGN UP FLOW: Send verification email ONCE after registration
                     const res = await auth.createUserWithEmailAndPassword(email, password);
                     const newUser = res.user;
                     lastPendingVerificationEmail = email;
                     lastPendingVerificationPassword = password;
+                    markEmailRequiresPostSignupVerification(email);
 
-                    // 2. Save customer profile to central Cloud Firestore lumilens_users (and users fallback) BEFORE signing out while authenticated
+                    // Save customer profile to central Cloud Firestore directory before signing out
                     await saveRegisteredCustomerRecord(email, newUser?.uid, false);
 
-                    // 3. Send verification email
                     let emailSentOk = true;
                     try {
                         await newUser.sendEmailVerification();
@@ -5053,7 +4961,7 @@
                         console.warn("Verification email error:", verErr);
                     }
 
-                    // 4. Immediately sign out so unverified account cannot bypass login
+                    // Sign out immediately after sign up so user clicks their verification email link first
                     try {
                         await auth.signOut();
                     } catch (soErr) {}
@@ -5063,20 +4971,19 @@
                     sessionStorage.removeItem('sweetopia_active_page');
                     sessionStorage.removeItem('sweetopia_active_tab');
 
-                    await finishRetroLoading('fast');
+                    await finishRetroLoading();
 
-                    // 5. Switch back to Sign In tab & show verification instructions + Resend button
                     setAuthModeTab('signin');
                     switchPage('auth');
 
                     showAuthVerificationBanner(
                         "Verification Email Sent!",
                         emailSentOk
-                            ? `Account created for ${email}! We sent a verification link to your email. Please open your inbox (or spam folder), click the verification link, and then sign in. Need a new link? Click "Resend Verification Email" below.`
-                            : `Account created for ${email}! Please verify your email address via the link sent to your inbox, or click "Resend Verification Email" below.`,
+                            ? `Account created for ${email}! We sent a verification link to your email. Please click the link in your inbox (or spam folder) to verify your account, and then sign in directly.`
+                            : `Account created for ${email}! Please click the verification link sent to your email, then sign in directly.`,
                         email
                     );
-                    showToast("Verify Your Email", "Verification email sent! Please click the link in your email before signing in.");
+                    showToast("Verify Your Email", "Verification email sent! Click the link in your email, then sign in.");
                 }
             } catch (err) {
                 cancelRetroLoading();
@@ -5084,21 +4991,21 @@
                 if (code === 'auth/email-already-in-use') {
                     lastPendingVerificationEmail = email;
                     lastPendingVerificationPassword = password;
-                    await saveRegisteredCustomerRecord(email, null, false);
+                    saveRegisteredCustomerRecord(email, null, true).catch(() => {});
                     setAuthModeTab('signin');
                     showAuthVerificationBanner(
                         "Account Already Registered",
-                        `${email} is already registered in Firebase. If you haven't verified your email yet, click "Resend Verification Email" below to receive a fresh link—or enter your password to Sign In / click "Forgot?" to reset your password.`,
+                        `${email} is already registered. You can sign in directly with your email and password now (or click "Forgot?" if you need to reset your password).`,
                         email
                     );
-                    showToast("Email Already Registered", "Switched to Sign In. Click 'Resend Verification Email' if you didn't verify yet.", true);
+                    showToast("Already Registered", "Account exists—switched to Sign In tab so you can sign in directly.");
                 } else if (code === 'auth/invalid-credential' || code === 'auth/wrong-password' || code === 'auth/user-not-found') {
                     showAuthVerificationBanner(
                         "Incorrect Email or Password",
                         `The password entered for ${email} did not match Firebase records (check caps lock or extra spaces). Click "Forgot?" to send a password reset link to ${email}.`,
                         email
                     );
-                    showToast("Sign In Failed", "Incorrect password or unverified credentials. Click 'Forgot?' to reset password.", true);
+                    showToast("Sign In Failed", "Incorrect email or password. Click 'Forgot?' to reset password.", true);
                 } else {
                     showToast("Authentication Error", err.message, true);
                 }
@@ -7086,7 +6993,6 @@
             return `SWEET[${s}]`;
         }
 
-        /* ADMIN BATCH SELECTION & ACTIONS LOGIC */
         window.toggleClearAllButton = function() {
             const masterCheckbox = document.getElementById('confirm-clear-checkbox');
             const isEnabled = masterCheckbox ? masterCheckbox.checked : false;
@@ -7380,6 +7286,9 @@
                 userSessionsMap[cleanEmail] = [];
             }
 
+            renderAdminVoucherCustomerDropdowns();
+            updateAdminChatUserDropdown();
+
             if (db) {
                 try {
                     const docKey = cleanEmail.replace(/[^a-zA-Z0-9]/g, '_');
@@ -7393,7 +7302,6 @@
                         updatedAt: nowIso
                     };
 
-                    // Central Cloud Firestore user directory + users fallback + public directory array
                     await Promise.all([
                         db.collection("lumilens_users").doc(docKey).set(userProfilePayload, { merge: true }).catch(() => {}),
                         db.collection("users").doc(docKey).set(userProfilePayload, { merge: true }).catch(() => {}),
@@ -7408,9 +7316,6 @@
                     ]);
                 } catch (e) { console.warn("Save registered user error:", e); }
             }
-
-            renderAdminVoucherCustomerDropdowns();
-            updateAdminChatUserDropdown();
         }
 
         async function syncAllUsersFromServer() {
@@ -7676,16 +7581,13 @@
                 renderActiveChatMessages();
             };
 
-            // Real-time listener on central lumilens_users collection
             db.collection("lumilens_users").onSnapshot(handleUserDirectorySnapshot, () => {
                 renderAdminVoucherCustomerDropdowns();
                 updateAdminChatUserDropdown();
             });
 
-            // Real-time listener on users fallback collection
             db.collection("users").onSnapshot(handleUserDirectorySnapshot, () => {});
 
-            // Real-time listener on shared public customer directory document
             db.collection("lumilens_public_directory").doc("registered_customers").onSnapshot((docSnap) => {
                 if (!docSnap || !docSnap.exists) return;
                 const emails = docSnap.data()?.emails;
@@ -7726,7 +7628,6 @@
                 renderStoreProducts(products);
             });
 
-            // Real-time listener on customer feedback wall
             db.collection("lumilens_feedbacks").onSnapshot((snapshot) => {
                 if (!snapshot) return;
                 const loadedFeedbacks = [];
@@ -7761,7 +7662,6 @@
                         const data = docSnap.data();
                         if (!data) return;
                         const lastSeenTime = new Date(data.lastSeen || 0).getTime();
-                        // Allow 90-second heartbeat window to prevent cross-device clock skew from showing false offline
                         const isRecent = !lastSeenTime || isNaN(lastSeenTime) || (now - lastSeenTime < 90000);
                         const isReallyOnline = Boolean(data.isOnline) && isRecent;
 
@@ -7854,7 +7754,6 @@
                 if (!rawEmail || typeof rawEmail !== 'string') return;
                 const clean = rawEmail.trim().toLowerCase();
                 if (!clean || isAdminUser(clean)) return;
-                // Exclude guest accounts so only registered accounts appear in Admin User Session dropdown
                 if (clean.startsWith('guest_') || clean.endsWith('@sweetopiashop.my')) return;
                 if (!knownUsersMap.has(clean)) {
                     knownUsersMap.set(clean, clean);
@@ -8128,8 +8027,8 @@
         window.shareProductInChat = shareProductInChat;
         window.switchAdminChatSession = switchAdminChatSession;
         window.adminDeleteSelectedChatSession = adminDeleteSelectedChatSession;
+        window.cancelRetroLoading = cancelRetroLoading;
 
-        // Close notification dropdown when clicking outside
         document.addEventListener('click', (e) => {
             const dropdown = document.getElementById('customer-notifications-dropdown');
             const bellWrapper = document.getElementById('customer-notification-bell-wrapper');
@@ -8141,13 +8040,10 @@
             }
         });
 
-        // Startup lifecycle
         document.addEventListener('DOMContentLoaded', async () => {
-            // Preload & pre-render all 15 stickers and all 19 Bratz & Princess avatars immediately for zero-lag display
             preloadStickerImages();
             renderStickerSlotsGrid(true);
 
-            // Enable smooth wheel horizontal scrolling on category strip
             const catStrip = document.getElementById('category-scroll-strip');
             if (catStrip) {
                 catStrip.addEventListener('wheel', (e) => {
@@ -8158,7 +8054,6 @@
                 }, { passive: false });
             }
 
-            // Enable smooth wheel horizontal scrolling on Feedback carousel track
             const fbTrack = document.getElementById('feedback-carousel-track');
             if (fbTrack) {
                 fbTrack.addEventListener('wheel', (e) => {
@@ -8240,26 +8135,27 @@
                             user = auth.currentUser || user;
                         } catch (e) {}
 
-                        // Strict verification enforcement on session restore: unverified non-admin accounts cannot stay signed in
-                        if (!isAdminUser(user.email) && user.emailVerified === false) {
-                            await saveRegisteredCustomerRecord(user.email, user.uid, false);
+                        // Only enforce verification on session restore if this user just signed up and hasn't verified yet
+                        if (!isAdminUser(user.email) && user.emailVerified === false && isEmailPendingPostSignupVerification(user.email)) {
+                            saveRegisteredCustomerRecord(user.email, user.uid, false).catch(() => {});
                             try { await auth.signOut(); } catch (e) {}
                             currentUser = null;
                             localStorage.removeItem('sweetopia_logged_in_email');
                             switchPage('auth');
                             setAuthModeTab('signin');
                             showAuthVerificationBanner(
-                                "Email Verification Required",
-                                `Please verify your email (${user.email}) by clicking the verification link sent to your inbox before signing in, or click "Resend Verification Email" below.`,
+                                "Please Verify Your New Account First",
+                                `Please click the verification link sent to ${user.email} after sign up before signing in.`,
                                 user.email
                             );
                             return;
                         }
 
+                        clearEmailPostSignupVerification(user.email);
                         currentUser = user;
                         localStorage.setItem('sweetopia_logged_in_email', user.email);
-                        await saveRegisteredCustomerRecord(user.email, user.uid, true);
-                        await loadCustomerCartFromFirestore(user.uid);
+                        saveRegisteredCustomerRecord(user.email, user.uid, true).catch(() => {});
+                        loadCustomerCartFromFirestore(user.uid).catch(() => {});
                         updateUIAfterLogin(user);
                         updatePresence(user.email, true);
                     } else {
@@ -8303,7 +8199,6 @@
                 await syncAllUsersFromServer();
 
                 try {
-                    // Ensure seeded registered users exist in Firestore lumilens_users & users fallback so Admin sees them across all devices
                     for (const seededEmail of SEEDED_REGISTERED_CUSTOMERS) {
                         const docKey = seededEmail.replace(/[^a-zA-Z0-9]/g, '_');
                         const seedDoc = {
