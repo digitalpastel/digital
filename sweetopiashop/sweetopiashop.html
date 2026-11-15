@@ -5,18 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light">
     <meta name="supported-color-schemes" content="light">
-    <!-- Cache Busting & No-Cache Directives (v=1.0.4) -->
-    <meta name="app-version" content="1.0.4">
+    <!-- Cache Busting & No-Cache Directives (v=1.0.3) -->
+    <meta name="app-version" content="1.0.3">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Sweetopia Shop - Premium Contact Lens Store &amp; FPX Checkout</title>
-    <!-- App Icons & Stylesheet with Cache Busting Version (?v=1.0.4) -->
-    <link rel="stylesheet" href="style.css?v=1.0.4">
-    <link rel="icon" type="image/png" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.4">
-    <link rel="apple-touch-icon" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.4">
-    <link rel="icon" type="image/png" sizes="512x512" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png?v=1.0.4">
-    <link rel="manifest" href="https://digitalpastel.github.io/digital/sweetopiashop/manifest.json?v=1.0.4">
+    <!-- App Icons & Stylesheet with Cache Busting Version (?v=1.0.3) -->
+    <link rel="stylesheet" href="style.css?v=1.0.3">
+    <link rel="icon" type="image/png" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.3">
+    <link rel="apple-touch-icon" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.3">
+    <link rel="icon" type="image/png" sizes="512x512" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png?v=1.0.3">
+    <link rel="manifest" href="https://digitalpastel.github.io/digital/sweetopiashop/manifest.json?v=1.0.3">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&amp;family=Fredoka:wght@600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
     <!-- Retro Pixel Font for 10-Bar Window matching reference image -->
@@ -31,7 +31,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script>
         // Cache Busting Controller: Increment APP_VERSION whenever updating GitHub
-        const APP_VERSION = '1.0.4';
+        const APP_VERSION = '1.0.3';
         (function enforceCacheBustingVersion() {
             try {
                 const storedVersion = localStorage.getItem('sweetopia_app_version');
@@ -1076,7 +1076,7 @@
                             </div>
                             <div>
                                 <p class="text-xs font-semibold text-slate-900">Firebase Authentication Active</p>
-                                <p class="text-[10px] text-slate-600 mt-0.5 leading-relaxed">Sign in directly with your email and password. New accounts created under Customer Sign Up will receive a verification email from <b class="text-slate-800">noreply@sweeetopialens.firebaseapp.com</b> once upon registration.</p>
+                                <p class="text-[10px] text-slate-600 mt-0.5 leading-relaxed">Sign in directly with your email and password. New accounts created under Customer Sign Up will receive a verification email once upon registration.</p>
                             </div>
                         </div>
 
@@ -1086,9 +1086,9 @@
                                 <i class="fa-solid fa-envelope-circle-check text-sm"></i>
                             </div>
                             <div class="flex-1 min-w-0">
-                                <p id="auth-verification-banner-title" class="text-xs font-extrabold text-amber-950">Verification Email Sent from noreply@sweeetopialens.firebaseapp.com!</p>
+                                <p id="auth-verification-banner-title" class="text-xs font-extrabold text-amber-950">Verification Email Sent!</p>
                                 <p id="auth-verification-banner-msg" class="text-[11px] text-amber-800 mt-0.5 leading-relaxed">
-                                    We sent a verification link from <b>noreply@sweeetopialens.firebaseapp.com</b> to your email after sign up. Please click the link in your inbox (or spam folder) to verify your account, then sign in directly.
+                                    We sent a verification link to your email after sign up. Please click the link in your inbox (or spam folder) to verify your account, then sign in directly.
                                 </p>
                                 <div class="mt-2.5 flex flex-wrap items-center gap-2">
                                     <button type="button" id="resend-verification-btn" onclick="resendVerificationEmailFromPage1()" class="inline-flex items-center gap-1.5 bg-amber-600 hover:bg-amber-700 active:scale-95 text-white text-[11px] font-bold px-3 py-1.5 rounded-xl shadow-xs transition cursor-pointer">
@@ -2098,7 +2098,7 @@
 
                         <div class="text-center flex justify-center">
                             <p class="text-[11px] text-[#581c87] font-extrabold tracking-wider">
-                                © Brand Works Empire 2026, all rights reserved <span class="opacity-75 font-mono text-[10px]">(v1.0.4)</span>
+                                © Brand Works Empire 2026, all rights reserved <span class="opacity-75 font-mono text-[10px]">(v1.0.3)</span>
                             </p>
                         </div>
 
@@ -2797,16 +2797,13 @@
             }
         } catch(e) { console.warn("Firebase init:", e); }
 
-        /* HELPER: DETECT IF CURRENT USER IS A GUEST */
         function isGuestUser() {
             if (!currentUser) return true;
             if (currentUser.isGuest === true) return true;
             const em = (currentUser.email || '').toLowerCase();
             return em.startsWith('guest_') || em.endsWith('@sweetopiashop.my');
         }
-        window.isGuestUser = isGuestUser;
 
-        /* REDIRECT GUEST DIRECTLY TO CUSTOMER SIGN UP FORM */
         window.redirectGuestToSignUp = function(reasonMsg = "Please create a customer account before adding items to cart or checking out.") {
             closeProductDetail();
             closePrescriptionPickerModal();
@@ -2815,7 +2812,9 @@
             showToast("Sign Up Account Required", reasonMsg, true);
         };
 
-        /* ADAPTIVE 10-BAR RETRO PROGRESS CONTROLLER */
+        /* =========================================================================
+           NON-BLOCKING RETRO 10-BAR PROGRESS CONTROLLER (NEVER GETS STUCK)
+           ========================================================================= */
         let loadingBarsProgress = 0;
         let loadingIntervalTimer = null;
         let loadingSafetyTimeout = null;
@@ -2831,22 +2830,6 @@
                         bar.classList.remove('filled');
                     }
                 }
-            }
-        }
-
-        // Explicit ActionCodeSettings so all verification emails are dispatched via noreply@sweeetopialens.firebaseapp.com
-        const SWEET_AUTH_ACTION_SETTINGS = {
-            url: 'https://sweeetopialens.firebaseapp.com/',
-            handleCodeInApp: false
-        };
-
-        async function sendSweetopiaVerificationEmail(firebaseUser) {
-            if (!firebaseUser || typeof firebaseUser.sendEmailVerification !== 'function') return;
-            try {
-                await firebaseUser.sendEmailVerification(SWEET_AUTH_ACTION_SETTINGS);
-            } catch (err) {
-                // Fallback to default Firebase project authDomain handler (noreply@sweeetopialens.firebaseapp.com)
-                await firebaseUser.sendEmailVerification();
             }
         }
 
@@ -3176,7 +3159,7 @@
                     return;
                 }
 
-                await sendSweetopiaVerificationEmail(user);
+                await user.sendEmailVerification();
                 try {
                     await auth.signOut();
                 } catch (e) {}
@@ -3188,20 +3171,20 @@
                 setAuthModeTab('signin');
                 showAuthVerificationBanner(
                     "New Verification Email Sent!",
-                    `We sent a fresh verification link from noreply@sweeetopialens.firebaseapp.com to ${email}. Please open your Gmail inbox (or Spam/Promotions folder), click the link to verify your account, and then sign in.`,
+                    `We sent a fresh verification link to ${email}. Please open your Gmail inbox (or Spam/Promotions folder), click the link to verify your account, and then sign in.`,
                     email
                 );
-                showToast("Verification Sent!", `Check ${email} for an email from noreply@sweeetopialens.firebaseapp.com.`);
+                showToast("Verification Sent!", `Check your inbox for ${email} and click the verification link.`);
             } catch (err) {
                 cancelRetroLoading();
                 const code = err?.code || '';
                 if (code === 'auth/too-many-requests') {
                     showAuthVerificationBanner(
                         "Email Already Sent Recently",
-                        `A verification email from noreply@sweeetopialens.firebaseapp.com was recently sent to ${email}. Please check your Gmail inbox and Spam folder for the link, or wait a couple of minutes before requesting another.`,
+                        `Firebase recently sent a verification email to ${email}. Please check your Gmail inbox and Spam folder for the link, or wait a couple of minutes before requesting another.`,
                         email
                     );
-                    showToast("Please Wait", "Verification email from noreply@sweeetopialens.firebaseapp.com was already sent recently.", true);
+                    showToast("Please Wait", "A verification email was already sent recently. Check your inbox or spam folder.", true);
                 } else if (code === 'auth/invalid-credential' || code === 'auth/wrong-password') {
                     showAuthVerificationBanner(
                         "Incorrect Password",
@@ -4972,7 +4955,7 @@
 
                     let emailSentOk = true;
                     try {
-                        await sendSweetopiaVerificationEmail(newUser);
+                        await newUser.sendEmailVerification();
                     } catch (verErr) {
                         emailSentOk = false;
                         console.warn("Verification email error:", verErr);
@@ -4994,13 +4977,13 @@
                     switchPage('auth');
 
                     showAuthVerificationBanner(
-                        "Verification Email Sent from noreply@sweeetopialens.firebaseapp.com!",
+                        "Verification Email Sent!",
                         emailSentOk
-                            ? `Account created for ${email}! We sent a verification link from noreply@sweeetopialens.firebaseapp.com to your email. Please click the link in your inbox (or spam folder) to verify your account, and then sign in directly.`
-                            : `Account created for ${email}! Please check your inbox for the verification link from noreply@sweeetopialens.firebaseapp.com, then sign in directly.`,
+                            ? `Account created for ${email}! We sent a verification link to your email. Please click the link in your inbox (or spam folder) to verify your account, and then sign in directly.`
+                            : `Account created for ${email}! Please click the verification link sent to your email, then sign in directly.`,
                         email
                     );
-                    showToast("Verify Your Email", "Check your inbox for noreply@sweeetopialens.firebaseapp.com and click the link!");
+                    showToast("Verify Your Email", "Verification email sent! Click the link in your email, then sign in.");
                 }
             } catch (err) {
                 cancelRetroLoading();
