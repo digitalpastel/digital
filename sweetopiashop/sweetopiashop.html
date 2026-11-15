@@ -1076,11 +1076,11 @@
                             </div>
                             <div>
                                 <p class="text-xs font-semibold text-slate-900">Firebase Authentication Active</p>
-                                <p class="text-[10px] text-slate-600 mt-0.5 leading-relaxed">Sign in directly with your email and password. New accounts created under Customer Sign Up will receive a verification email once upon registration.</p>
+                                <p class="text-[10px] text-slate-600 mt-0.5 leading-relaxed">Sign in directly with your email and password. New accounts created under Customer Sign Up will receive a verification email from <span class="font-mono font-bold text-slate-800">noreply@sweeetopialens.firebaseapp.com</span>.</p>
                             </div>
                         </div>
 
-                        <!-- EMAIL VERIFICATION NOTICE BANNER (Appears ONLY after Customer Sign Up) -->
+                        <!-- EMAIL VERIFICATION NOTICE BANNER (Appears ONLY after Customer Sign Up or Resend Verification) -->
                         <div id="auth-verification-banner" class="hidden bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 mb-5 flex items-start gap-3 shadow-xs">
                             <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0 mt-0.5 border border-amber-300">
                                 <i class="fa-solid fa-envelope-circle-check text-sm"></i>
@@ -1088,7 +1088,7 @@
                             <div class="flex-1 min-w-0">
                                 <p id="auth-verification-banner-title" class="text-xs font-extrabold text-amber-950">Verification Email Sent!</p>
                                 <p id="auth-verification-banner-msg" class="text-[11px] text-amber-800 mt-0.5 leading-relaxed">
-                                    We sent a verification link to your email after sign up. Please click the link in your inbox (or spam folder) to verify your account, then sign in directly.
+                                    We sent a verification link from <b class="font-mono">noreply@sweeetopialens.firebaseapp.com</b> after sign up. Please click the link in your inbox (or spam folder) to verify your account, then sign in directly.
                                 </p>
                                 <div class="mt-2.5 flex flex-wrap items-center gap-2">
                                     <button type="button" id="resend-verification-btn" onclick="resendVerificationEmailFromPage1()" class="inline-flex items-center gap-1.5 bg-amber-600 hover:bg-amber-700 active:scale-95 text-white text-[11px] font-bold px-3 py-1.5 rounded-xl shadow-xs transition cursor-pointer">
@@ -2483,7 +2483,7 @@
                             <i class="fa-solid fa-xmark text-xs"></i>
                         </button>
                     </div>
-                    <p class="text-xs text-slate-600">Enter your email address to receive password reset instructions.</p>
+                    <p class="text-xs text-slate-600">Enter your email address to receive password reset instructions from <span class="font-mono font-bold text-slate-800">noreply@sweeetopialens.firebaseapp.com</span>.</p>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">Email Address</label>
                         <input type="email" id="forgot-email" placeholder="name@example.com" class="w-full bg-slate-50 border border-slate-300 text-xs text-slate-900 rounded-xl p-3 shadow-sm">
@@ -2777,12 +2777,63 @@
             appId: "1:524168545709:web:7e52448f1cd3964f858d24"
         };
 
+        const FIREBASE_SENDER_EMAIL = "noreply@sweeetopialens.firebaseapp.com";
+        const FALLBACK_APP_REDIRECT_URL = "https://digitalpastel.github.io/digital/sweetopiashop/";
+
+        function getFirebaseActionCodeSettings() {
+            let targetUrl = FALLBACK_APP_REDIRECT_URL;
+            try {
+                const origin = window.location.origin || "";
+                const href = window.location.href || "";
+                if (origin.startsWith("http://") || origin.startsWith("https://")) {
+                    const cleanUrl = href.split("#")[0].split("?")[0];
+                    targetUrl = cleanUrl || origin;
+                }
+            } catch (e) {}
+            return {
+                url: targetUrl,
+                handleCodeInApp: false
+            };
+        }
+
+        async function sendFirebaseVerificationWithFallback(user) {
+            if (!user) throw new Error("No user instance provided for verification email.");
+            const actionCodeSettings = getFirebaseActionCodeSettings();
+            try {
+                await user.sendEmailVerification(actionCodeSettings);
+            } catch (err) {
+                if (err && (err.code === "auth/unauthorized-continue-uri" || err.code === "auth/invalid-continue-uri" || err.code === "auth/missing-continue-uri")) {
+                    await user.sendEmailVerification();
+                } else {
+                    throw err;
+                }
+            }
+        }
+
+        async function sendFirebasePasswordResetWithFallback(email) {
+            if (!auth || !email) throw new Error("Email address is required.");
+            const actionCodeSettings = getFirebaseActionCodeSettings();
+            try {
+                await auth.sendPasswordResetEmail(email, actionCodeSettings);
+            } catch (err) {
+                if (err && (err.code === "auth/unauthorized-continue-uri" || err.code === "auth/invalid-continue-uri" || err.code === "auth/missing-continue-uri")) {
+                    await auth.sendPasswordResetEmail(email);
+                } else {
+                    throw err;
+                }
+            }
+        }
+
         let app = null, db = null, auth = null;
         try {
             if (typeof firebase !== 'undefined') {
                 app = firebase.initializeApp(firebaseConfig);
                 db = firebase.firestore();
                 auth = firebase.auth();
+
+                if (auth && typeof auth.useDeviceLanguage === 'function') {
+                    auth.useDeviceLanguage();
+                }
 
                 if (db && typeof db.settings === 'function') {
                     db.settings({
@@ -3084,7 +3135,7 @@
                 lastPendingVerificationEmail = targetEmail.trim().toLowerCase();
             }
             if (titleEl && title) titleEl.innerText = title;
-            if (msgEl && message) msgEl.innerText = message;
+            if (msgEl && message) msgEl.innerHTML = message;
             banner.classList.remove('hidden');
         }
 
@@ -3114,10 +3165,10 @@
                 await saveRegisteredCustomerRecord(email, null, false);
                 showAuthVerificationBanner(
                     "Verification Email Re-sent!",
-                    `We sent a fresh verification link to ${email}. Please check your inbox and spam folder, click the link, then sign in.`,
+                    `We sent a fresh verification link from <b>${FIREBASE_SENDER_EMAIL}</b> to <b>${email}</b>. Please check your inbox and spam folder, click the link, then sign in.`,
                     email
                 );
-                showToast("Verification Link Sent", `Verification email resent to ${email}.`);
+                showToast("Verification Link Sent", `Verification email resent from ${FIREBASE_SENDER_EMAIL} to ${email}.`);
                 return;
             }
 
@@ -3125,7 +3176,7 @@
                 setAuthModeTab('signin');
                 showAuthVerificationBanner(
                     "Enter Password to Resend Link",
-                    `To resend the verification email for your new sign up (${email}), enter your password below and click "Resend Verification Email".`,
+                    `To resend the verification email from <b>${FIREBASE_SENDER_EMAIL}</b> for your new sign up (<b>${email}</b>), enter your password below and click <b>"Resend Verification Email"</b>.`,
                     email
                 );
                 showToast("Password Needed", "Enter your password first so we can resend your sign-up verification link.", true);
@@ -3135,8 +3186,12 @@
 
             startRetroLoading("RESENDING VERIFICATION EMAIL...");
             try {
-                const res = await auth.signInWithEmailAndPassword(email, password);
-                let user = res.user;
+                let user = auth.currentUser;
+                if (!user || (user.email || '').toLowerCase() !== email) {
+                    const res = await auth.signInWithEmailAndPassword(email, password);
+                    user = res.user;
+                }
+
                 try {
                     await user.reload();
                     user = auth.currentUser || user;
@@ -3159,7 +3214,9 @@
                     return;
                 }
 
-                await user.sendEmailVerification();
+                await sendFirebaseVerificationWithFallback(user);
+                markEmailRequiresPostSignupVerification(email);
+
                 try {
                     await auth.signOut();
                 } catch (e) {}
@@ -3171,24 +3228,24 @@
                 setAuthModeTab('signin');
                 showAuthVerificationBanner(
                     "New Verification Email Sent!",
-                    `We sent a fresh verification link to ${email}. Please open your Gmail inbox (or Spam/Promotions folder), click the link to verify your account, and then sign in.`,
+                    `We sent a fresh verification link from <b>${FIREBASE_SENDER_EMAIL}</b> to <b>${email}</b>. Please open your inbox (or Spam/Promotions folder), click the verification link, and then sign in.`,
                     email
                 );
-                showToast("Verification Sent!", `Check your inbox for ${email} and click the verification link.`);
+                showToast("Verification Sent!", `Email sent from ${FIREBASE_SENDER_EMAIL} to ${email}.`);
             } catch (err) {
                 cancelRetroLoading();
                 const code = err?.code || '';
                 if (code === 'auth/too-many-requests') {
                     showAuthVerificationBanner(
                         "Email Already Sent Recently",
-                        `Firebase recently sent a verification email to ${email}. Please check your Gmail inbox and Spam folder for the link, or wait a couple of minutes before requesting another.`,
+                        `Firebase (<b>${FIREBASE_SENDER_EMAIL}</b>) recently sent a verification email to <b>${email}</b>. Please check your inbox and Spam folder for the link, or wait a couple of minutes before requesting another.`,
                         email
                     );
                     showToast("Please Wait", "A verification email was already sent recently. Check your inbox or spam folder.", true);
                 } else if (code === 'auth/invalid-credential' || code === 'auth/wrong-password') {
                     showAuthVerificationBanner(
                         "Incorrect Password",
-                        `The password entered for ${email} did not match. Enter the password you used when signing up, or click "Forgot?" to reset your password first.`,
+                        `The password entered for <b>${email}</b> did not match. Enter the password you used when signing up, or click <b>"Forgot?"</b> to reset your password first.`,
                         email
                     );
                     showToast("Incorrect Password", "Please enter the correct password for this account or click 'Forgot?'.", true);
@@ -3196,7 +3253,7 @@
                     setAuthModeTab('signup');
                     showAuthVerificationBanner(
                         "Account Not Registered Yet",
-                        `No account found for ${email}. Click "Register New Account" below to create your account and receive a verification link.`,
+                        `No account found for <b>${email}</b>. Click <b>"Register New Account"</b> below to create your account and receive a verification link from <b>${FIREBASE_SENDER_EMAIL}</b>.`,
                         email
                     );
                     showToast("Account Not Found", "Please register this email first under Customer Sign Up.", true);
@@ -4871,10 +4928,10 @@
                     setAuthModeTab('signin');
                     showAuthVerificationBanner(
                         "Verification Email Sent!",
-                        `A verification link has been sent to ${email} after sign up. Please click the link in your email first, then sign in with your password.`,
+                        `A verification link has been sent from <b>${FIREBASE_SENDER_EMAIL}</b> to <b>${email}</b> after sign up. Please click the link in your email first, then sign in with your password.`,
                         email
                     );
-                    showToast("Verify Your Email", "Registration saved! Please verify your email once before signing in.");
+                    showToast("Verify Your Email", `Verification email sent from ${FIREBASE_SENDER_EMAIL}.`);
                     return;
                 }
 
@@ -4917,10 +4974,10 @@
 
                         showAuthVerificationBanner(
                             "Please Click Your Sign-Up Verification Link First",
-                            `You recently signed up with ${email} and haven't clicked the verification link in your inbox yet. Please click the link sent to your email (or click "Resend Verification Email" below), then sign in.`,
+                            `You recently signed up with <b>${email}</b> and haven't clicked the verification link from <b>${FIREBASE_SENDER_EMAIL}</b> in your inbox yet. Please click the link sent to your email (or click <b>"Resend Verification Email"</b> below), then sign in.`,
                             email
                         );
-                        showToast("Complete Sign-Up Verification", "Click the verification link in your inbox from sign up, then sign in.", true);
+                        showToast("Complete Sign-Up Verification", `Click the verification link from ${FIREBASE_SENDER_EMAIL}, then sign in.`, true);
                         return;
                     }
 
@@ -4943,7 +5000,7 @@
                     switchTab(isAdminUser(email) ? 'admin-workspace' : 'catalog');
                     updatePresence(email, true);
                 } else {
-                    // SIGN UP FLOW: Send verification email ONCE after registration
+                    // SIGN UP FLOW: Send verification email ONCE from noreply@sweeetopialens.firebaseapp.com after registration
                     const res = await auth.createUserWithEmailAndPassword(email, password);
                     const newUser = res.user;
                     lastPendingVerificationEmail = email;
@@ -4951,13 +5008,15 @@
                     markEmailRequiresPostSignupVerification(email);
 
                     // Save customer profile to central Cloud Firestore directory before signing out
-                    await saveRegisteredCustomerRecord(email, newUser?.uid, false);
+                    saveRegisteredCustomerRecord(email, newUser?.uid, false).catch(() => {});
 
                     let emailSentOk = true;
+                    let sendErrMsg = "";
                     try {
-                        await newUser.sendEmailVerification();
+                        await sendFirebaseVerificationWithFallback(newUser);
                     } catch (verErr) {
                         emailSentOk = false;
+                        sendErrMsg = verErr?.message || "";
                         console.warn("Verification email error:", verErr);
                     }
 
@@ -4977,13 +5036,17 @@
                     switchPage('auth');
 
                     showAuthVerificationBanner(
-                        "Verification Email Sent!",
+                        emailSentOk ? "Verification Email Sent!" : "Account Created — Click Resend Verification",
                         emailSentOk
-                            ? `Account created for ${email}! We sent a verification link to your email. Please click the link in your inbox (or spam folder) to verify your account, and then sign in directly.`
-                            : `Account created for ${email}! Please click the verification link sent to your email, then sign in directly.`,
+                            ? `Account created for <b>${email}</b>! We sent a verification link from <b>${FIREBASE_SENDER_EMAIL}</b> to your email. Please click the link in your inbox (or spam folder) to verify your account, and then sign in directly.`
+                            : `Account created for <b>${email}</b>, but Firebase delayed sending the email (${sendErrMsg}). Please click <b>"Resend Verification Email"</b> below to send from <b>${FIREBASE_SENDER_EMAIL}</b>.`,
                         email
                     );
-                    showToast("Verify Your Email", "Verification email sent! Click the link in your email, then sign in.");
+                    showToast(
+                        emailSentOk ? "Verify Your Email" : "Resend Verification Needed",
+                        emailSentOk ? `Verification email sent from ${FIREBASE_SENDER_EMAIL}!` : "Click 'Resend Verification Email' to receive your link.",
+                        !emailSentOk
+                    );
                 }
             } catch (err) {
                 cancelRetroLoading();
@@ -4995,17 +5058,19 @@
                     setAuthModeTab('signin');
                     showAuthVerificationBanner(
                         "Account Already Registered",
-                        `${email} is already registered. You can sign in directly with your email and password now (or click "Forgot?" if you need to reset your password).`,
+                        `<b>${email}</b> is already registered. You can sign in directly with your email and password now (or click <b>"Resend Verification Email"</b> / <b>"Forgot?"</b> if needed).`,
                         email
                     );
                     showToast("Already Registered", "Account exists—switched to Sign In tab so you can sign in directly.");
                 } else if (code === 'auth/invalid-credential' || code === 'auth/wrong-password' || code === 'auth/user-not-found') {
                     showAuthVerificationBanner(
                         "Incorrect Email or Password",
-                        `The password entered for ${email} did not match Firebase records (check caps lock or extra spaces). Click "Forgot?" to send a password reset link to ${email}.`,
+                        `The password entered for <b>${email}</b> did not match Firebase records (check caps lock or extra spaces). Click <b>"Forgot?"</b> to send a password reset link from <b>${FIREBASE_SENDER_EMAIL}</b> to <b>${email}</b>.`,
                         email
                     );
                     showToast("Sign In Failed", "Incorrect email or password. Click 'Forgot?' to reset password.", true);
+                } else if (code === 'auth/weak-password') {
+                    showToast("Weak Password", "Password should be at least 6 characters long.", true);
                 } else {
                     showToast("Authentication Error", err.message, true);
                 }
@@ -6376,6 +6441,11 @@
         }
 
         function openForgotPassword() {
+            const authEmailVal = (document.getElementById('auth-email')?.value || lastPendingVerificationEmail || '').trim();
+            const forgotInput = document.getElementById('forgot-email');
+            if (forgotInput && authEmailVal) {
+                forgotInput.value = authEmailVal;
+            }
             const modal = document.getElementById('forgot-modal');
             modal?.classList.remove('opacity-0', 'pointer-events-none');
             modal?.classList.add('opacity-100');
@@ -6389,22 +6459,25 @@
 
         async function submitForgotPassword() {
             const emailInput = document.getElementById('forgot-email');
-            const email = emailInput ? emailInput.value.trim() : '';
+            const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
             if (!email) {
                 showToast("Email Required", "Please enter your account email address.", true);
                 return;
             }
 
             if (auth) {
+                startRetroLoading("SENDING PASSWORD RESET EMAIL...");
                 try {
-                    await auth.sendPasswordResetEmail(email);
-                    showToast("Email Sent", `Password reset instructions sent to ${email}.`);
+                    await sendFirebasePasswordResetWithFallback(email);
+                    await finishRetroLoading();
+                    showToast("Email Sent", `Password reset instructions sent from ${FIREBASE_SENDER_EMAIL} to ${email}.`);
                     closeForgotPassword();
                 } catch(err) {
+                    cancelRetroLoading();
                     showToast("Error", err.message, true);
                 }
             } else {
-                showToast("Email Sent", `Password reset instructions sent to ${email}.`);
+                showToast("Email Sent", `Password reset instructions sent from ${FIREBASE_SENDER_EMAIL} to ${email}.`);
                 closeForgotPassword();
             }
         }
@@ -8145,7 +8218,7 @@
                             setAuthModeTab('signin');
                             showAuthVerificationBanner(
                                 "Please Verify Your New Account First",
-                                `Please click the verification link sent to ${user.email} after sign up before signing in.`,
+                                `Please click the verification link sent from <b>${FIREBASE_SENDER_EMAIL}</b> to <b>${user.email}</b> after sign up before signing in.`,
                                 user.email
                             );
                             return;
