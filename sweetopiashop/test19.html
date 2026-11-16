@@ -5,14 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light">
     <meta name="supported-color-schemes" content="light">
+    <!-- Cache Busting & No-Cache Directives (v=1.0.4) -->
+    <meta name="app-version" content="1.0.4">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Sweetopia Shop - Premium Contact Lens Store &amp; FPX Checkout</title>
-    <!-- App Icons -->
-    <link rel="icon" type="image/png" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png">
-    <link rel="apple-touch-icon" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png">
-    <link rel="manifest" href="https://digitalpastel.github.io/digital/sweetopiashop/manifest.json">
+    <!-- App Icons & Stylesheet with Cache Busting Version (?v=1.0.4) -->
+    <link rel="stylesheet" href="style.css?v=1.0.4">
+    <link rel="icon" type="image/png" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.4">
+    <link rel="apple-touch-icon" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.4">
+    <link rel="icon" type="image/png" sizes="512x512" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png?v=1.0.4">
+    <link rel="manifest" href="https://digitalpastel.github.io/digital/sweetopiashop/manifest.json?v=1.0.4">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&amp;family=Fredoka:wght@600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
     <!-- Retro Pixel Font for 10-Bar Window matching reference image -->
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -24,6 +30,30 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script>
+        // Cache Busting Controller: Increment APP_VERSION whenever updating GitHub
+        const APP_VERSION = '1.0.4';
+        (function enforceCacheBustingVersion() {
+            try {
+                const storedVersion = localStorage.getItem('sweetopia_app_version');
+                if (storedVersion && storedVersion !== APP_VERSION) {
+                    localStorage.setItem('sweetopia_app_version', APP_VERSION);
+                    if ('caches' in window) {
+                        caches.keys().then(names => names.forEach(name => caches.delete(name))).catch(() => {});
+                    }
+                    if ('serviceWorker' in navigator) {
+                        navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.update())).catch(() => {});
+                    }
+                    const url = new URL(window.location.href);
+                    if (url.searchParams.get('v') !== APP_VERSION) {
+                        url.searchParams.set('v', APP_VERSION);
+                        window.location.replace(url.toString());
+                    }
+                } else {
+                    localStorage.setItem('sweetopia_app_version', APP_VERSION);
+                }
+            } catch (e) {}
+        })();
+
         // Suppress Firestore verbose connection warning in sandboxed iframe environments
         if (typeof firebase !== 'undefined' && firebase.firestore) {
             try {
@@ -68,7 +98,6 @@
             overflow-x: hidden;
         }
 
-        /* Smooth momentum scrolling on all scrollable containers without global '*' GPU layer tearing */
         .overflow-y-auto,
         .overflow-x-auto,
         .overflow-auto,
@@ -79,7 +108,6 @@
             overscroll-behavior: contain;
         }
 
-        /* Clean hardware-accelerated modal overlay (eliminates Android WebView backdrop-blur tearing & white bands) */
         .modal-backdrop-clean {
             background-color: rgba(15, 23, 42, 0.72) !important;
             backdrop-filter: none !important;
@@ -97,7 +125,6 @@
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Exact Horizontal Scrollbar Matching Reference Image with Left & Right Buttons */
         .cute-h-scrollbar {
             scrollbar-width: thin !important;
             scrollbar-color: #d946ef #edd7f5 !important;
@@ -121,7 +148,6 @@
             background: linear-gradient(90deg, #c026d3 0%, #a21caf 100%) !important;
         }
 
-        /* Left Arrow Button (<) */
         .cute-h-scrollbar::-webkit-scrollbar-button:single-button:horizontal:decrement {
             display: block !important;
             width: 14px !important;
@@ -134,7 +160,6 @@
             cursor: pointer !important;
         }
 
-        /* Right Arrow Button (>) */
         .cute-h-scrollbar::-webkit-scrollbar-button:single-button:horizontal:increment {
             display: block !important;
             width: 14px !important;
@@ -147,7 +172,6 @@
             cursor: pointer !important;
         }
 
-        /* Slideshow Container */
         .expert-slideshow-section {
             position: relative;
             width: 100%;
@@ -207,7 +231,6 @@
         .expert-dot { width: 10px; height: 10px; background: rgba(255, 255, 255, 0.5); border-radius: 50%; cursor: pointer; transition: background 0.3s ease, transform 0.3s ease; }
         .expert-dot.active { background: #ffffff; transform: scale(1.2); }
 
-        /* A4 Invoice Preview Container styling - Responsive on Mobile & Clean Print */
         .invoice-a4-page {
             width: 100%;
             max-width: 800px;
@@ -236,7 +259,6 @@
             .invoice-a4-page { box-shadow: none; margin: 0; width: 100%; height: 100%; padding: 15mm; }
         }
 
-        /* Retro Comic Pink-Purple Image Frame Window Modal */
         .pink-purple-window-container {
             position: relative;
             width: 482px;
@@ -311,7 +333,6 @@
             background: #ffffff;
         }
 
-        /* Retro 10-Bar Pink Window Pixel Styling matching reference image */
         .retro-loading-window {
             background-color: #f7a5d9;
             border: 4px solid #b82b79;
@@ -332,7 +353,6 @@
             box-shadow: inset -1px -1px 0px #b82b79, inset 1px 1px 0px #ffffff;
         }
 
-        /* 10-Segment Pixel Loading Bar */
         .retro-progress-bar-slot {
             background-color: #f2d5e6;
             transition: background-color 0.15s steps(2);
@@ -367,10 +387,419 @@
         .tab-panel-animate {
             animation: smoothFadeSlide 0.28s cubic-bezier(0.22, 1, 0.36, 1);
         }
+
+        .feedback-section {
+            position: relative;
+            width: 100%;
+            min-height: 680px;
+            background: radial-gradient(circle at 50% 45%, #163eff 0%, #0522e8 55%, #0015c9 100%);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1.25rem;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            border-top: 4px solid #0012a8;
+        }
+
+        .bg-watermark {
+            position: absolute;
+            inset: -10%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            pointer-events: none;
+            user-select: none;
+            transform: rotate(-10deg);
+            opacity: 0.14;
+            z-index: 1;
+        }
+        .bg-watermark span {
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(6rem, 18vw, 15rem);
+            font-weight: 700;
+            color: #6a8cff;
+            line-height: 0.85;
+            letter-spacing: -0.03em;
+            white-space: nowrap;
+        }
+
+        .glow {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            filter: blur(75px);
+            z-index: 1;
+        }
+        .glow-top-right {
+            width: 320px;
+            height: 320px;
+            top: -60px;
+            right: -40px;
+            background: rgba(255, 118, 92, 0.55);
+        }
+        .glow-center {
+            width: 340px;
+            height: 340px;
+            top: 26%;
+            left: 22%;
+            background: rgba(255, 224, 240, 0.35);
+        }
+        .glow-bottom-left {
+            width: 280px;
+            height: 280px;
+            bottom: -80px;
+            left: -60px;
+            background: rgba(255, 112, 88, 0.7);
+            filter: blur(45px);
+        }
+
+        .curve-top-left {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 170px;
+            height: auto;
+            z-index: 2;
+            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.25));
+            pointer-events: none;
+        }
+        .curve-bottom-right {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: min(65vw, 520px);
+            height: auto;
+            z-index: 2;
+            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.25));
+            pointer-events: none;
+        }
+
+        .feedback-container {
+            position: relative;
+            z-index: 5;
+            width: 100%;
+            max-width: 1120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .feedback-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .title-main {
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(2.2rem, 5vw, 3.6rem);
+            font-weight: 700;
+            color: #ffffff;
+            margin: 0;
+            letter-spacing: -0.01em;
+            text-shadow: 0 4px 20px rgba(0, 12, 120, 0.3);
+        }
+        .title-script {
+            display: block;
+            font-family: 'Caveat', cursive;
+            font-size: clamp(2.3rem, 5.5vw, 3.8rem);
+            font-weight: 700;
+            color: #ffffff;
+            margin-top: -0.65rem;
+            transform: rotate(-4deg);
+            text-shadow: 0 4px 15px rgba(0, 12, 120, 0.25);
+        }
+
+        .feedback-carousel-wrapper {
+            position: relative;
+            width: 100%;
+            display: flex;
+            align-items: center;
+        }
+        .feedback-carousel-track {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 2.5rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            padding: 3.5rem 2.5rem 4.25rem;
+            width: 100%;
+            -webkit-overflow-scrolling: touch;
+        }
+        .feedback-carousel-track::-webkit-scrollbar {
+            height: 10px;
+        }
+        .feedback-carousel-track::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 9999px;
+            margin: 0 2rem;
+        }
+        .feedback-carousel-track::-webkit-scrollbar-thumb {
+            background: #ffd600;
+            border-radius: 9999px;
+            border: 2px solid #0522e8;
+        }
+
+        .card-stage {
+            position: relative;
+            flex: 0 0 min(100%, 640px);
+            scroll-snap-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+
+        .concentric-ring {
+            position: absolute;
+            width: clamp(300px, 50vw, 440px);
+            height: clamp(300px, 50vw, 440px);
+            border-radius: 50%;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.85) 0%, rgba(160, 195, 255, 0.45) 45%, rgba(10, 45, 230, 0.9) 100%);
+            padding: 16px;
+            box-shadow: 0 25px 50px rgba(0, 10, 110, 0.55), inset 0 4px 12px rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .ring-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 30%, #4d79ff 0%, #1039f5 60%, #051eb8 100%);
+            border: 9px solid rgba(220, 232, 255, 0.75);
+            box-shadow: inset 0 10px 25px rgba(0, 10, 90, 0.5);
+        }
+
+        .speech-bubble {
+            position: relative;
+            z-index: 3;
+            width: 100%;
+            max-width: 610px;
+            background: #f5f2e6;
+            border-radius: 28px;
+            padding: 2.25rem 2.5rem;
+            box-shadow: 0 28px 55px rgba(2, 12, 105, 0.45), inset 0 2px 4px rgba(255, 255, 255, 0.9);
+        }
+        .bubble-tail {
+            position: absolute;
+            bottom: -34px;
+            left: 0;
+            width: 90px;
+            height: 52px;
+            background: #f5f2e6;
+            clip-path: polygon(0 0, 100% 0, 16% 100%, 0 100%);
+            border-bottom-left-radius: 18px;
+            box-shadow: -8px 18px 25px rgba(2, 12, 105, 0.25);
+        }
+        .card-body {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .avatar-wrapper {
+            flex-shrink: 0;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: #ffd23f;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid #ffffff;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15), inset 0 -6px 14px rgba(215, 145, 0, 0.25);
+        }
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+        }
+
+        .testimonial-content {
+            flex: 1;
+            min-width: 0;
+        }
+        .stars {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 0.45rem;
+            font-size: 1.4rem;
+            color: #ffca18;
+            text-shadow: 0 2px 3px rgba(160, 105, 0, 0.35);
+        }
+        .client-name {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.55rem;
+            font-weight: 700;
+            color: #1f1f1f;
+            margin: 0 0 0.5rem;
+            word-break: break-word;
+        }
+        .client-quote {
+            font-size: 1.02rem;
+            line-height: 1.55;
+            color: #2c2c2c;
+            margin: 0;
+            font-weight: 500;
+            word-break: break-word;
+        }
+
+        .heart-badge {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #ff4b3e 0%, #d90b00 100%);
+            padding: 6px;
+            box-shadow: 0 14px 25px rgba(180, 10, 0, 0.4), inset 0 3px 6px rgba(255, 180, 175, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 6;
+            pointer-events: none;
+        }
+        .heart-ring {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2.5px solid rgba(255, 225, 225, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at 30% 30%, #ff584d, #d80c00);
+        }
+        .heart-icon {
+            width: 56%;
+            height: 56%;
+            fill: #f7f4eb;
+            filter: drop-shadow(0 3px 4px rgba(110, 0, 0, 0.35));
+        }
+
+        .badge-top-right {
+            width: 92px;
+            height: 92px;
+            top: -38px;
+            right: 32px;
+            transform: rotate(8deg);
+        }
+        .badge-top-left {
+            width: 72px;
+            height: 72px;
+            top: -30px;
+            left: 44px;
+            transform: rotate(-16deg);
+            filter: blur(1.8px);
+            opacity: 0.92;
+        }
+        .badge-bottom {
+            width: 90px;
+            height: 90px;
+            bottom: -50px;
+            left: 155px;
+            transform: rotate(-18deg);
+            filter: blur(2.8px);
+            opacity: 0.94;
+        }
+
+        .feedback-footer {
+            width: 100%;
+            max-width: 680px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 1rem;
+            color: #ffffff;
+            gap: 1rem;
+        }
+        .footer-note {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+        }
+        .footer-line {
+            flex: 1;
+            max-width: 220px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        @media (max-width: 640px) {
+            .feedback-carousel-track {
+                padding: 3rem 0.75rem 3.75rem;
+                gap: 1.5rem;
+            }
+            .speech-bubble {
+                padding: 1.75rem 1.25rem;
+            }
+            .card-body {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+            .stars {
+                justify-content: center;
+            }
+            .avatar-wrapper {
+                width: 112px;
+                height: 112px;
+            }
+            .badge-top-right {
+                width: 72px;
+                height: 72px;
+                top: -28px;
+                right: 14px;
+            }
+            .badge-top-left {
+                width: 54px;
+                height: 54px;
+                top: -22px;
+                left: 16px;
+            }
+            .badge-bottom {
+                width: 68px;
+                height: 68px;
+                bottom: -36px;
+                left: auto;
+                right: 26px;
+            }
+            .footer-line {
+                max-width: 90px;
+            }
+        }
     </style>
 </head>
 
 <body class="min-h-screen flex flex-col items-center justify-start p-3 sm:p-4 md:p-6 text-slate-800">
+
+    <!-- LIVE NEW VERSION UPDATE BANNER (Appears when Admin publishes a newer version via Firestore) -->
+    <div id="live-version-update-banner" class="w-full max-w-[1280px] mb-3 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 text-white px-4 py-3 rounded-2xl hidden items-center justify-between border-2 border-emerald-300 shadow-lg transition-all">
+        <div class="flex items-center space-x-3 overflow-hidden">
+            <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center text-yellow-300 text-lg shrink-0 border border-white/30 animate-bounce">
+                <i class="fa-solid fa-rocket"></i>
+            </div>
+            <div class="truncate">
+                <div class="flex items-center gap-2">
+                    <span class="bg-yellow-300 text-slate-950 text-[10px] font-black uppercase px-2 py-0.5 rounded-full shadow-xs">New Update Available</span>
+                    <span id="live-update-version-badge" class="text-xs sm:text-sm font-extrabold tracking-tight truncate">Sweetopia Shop v1.0.5 is Live!</span>
+                </div>
+                <p id="live-update-notes-text" class="text-[11px] text-emerald-50 font-medium truncate mt-0.5">A fresh update has been published. Refresh now to load the latest features &amp; catalog.</p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-2 shrink-0 ml-3">
+            <button type="button" onclick="applyLiveVersionUpdate()" class="bg-white hover:bg-yellow-100 text-emerald-800 active:scale-95 text-xs font-black px-4 py-2 rounded-xl shadow-md transition flex items-center gap-1.5 border border-emerald-200 cursor-pointer">
+                <i class="fa-solid fa-arrows-rotate text-xs text-emerald-600"></i>
+                <span>Update Now</span>
+            </button>
+        </div>
+    </div>
 
     <!-- TOP ANDROID APP DOWNLOAD & SHORTCUT BANNER -->
     <div id="app-download-banner" class="w-full max-w-[1280px] mb-3 bg-slate-900 text-white px-3.5 sm:px-4 py-2.5 rounded-2xl flex items-center justify-between border border-slate-700 shadow-md transition-all">
@@ -428,28 +857,20 @@
         </div>
     </div>
 
-    <!-- RETRO Y2K ORDER SUCCESS WINDOW MODAL (APPEARS ONLY WHEN AMOUNT IS PAID/DRAWN AT TOYYIBPAY) -->
+    <!-- RETRO Y2K ORDER SUCCESS WINDOW MODAL -->
     <div id="order-success-modal" class="fixed inset-0 z-[150] modal-backdrop-clean flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200">
-        <!-- Retro Y2K Window Frame -->
         <div class="w-[440px] max-w-full bg-[#d8b4fe] border-[3px] border-[#7c3aed] rounded-xl shadow-[8px_8px_0_0_#4c1d95] overflow-hidden transform transition-transform duration-200 scale-95" id="order-success-frame">
-
-            <!-- Window Title Bar -->
             <div class="bg-[#a855f7] px-3 py-2 flex justify-between items-center border-b-[3px] border-[#7c3aed]">
                 <div class="flex items-center space-x-2">
                     <span class="text-white text-[10px] tracking-wider font-bold uppercase">order_success.exe</span>
                 </div>
                 <div class="flex space-x-1.5">
-                    <!-- Minimize Button -->
                     <div class="w-5 h-5 bg-[#e9d5ff] border-2 border-black flex items-center justify-center text-[10px] font-bold shadow-[1px_1px_0_0_#000] cursor-pointer hover:bg-white transition-colors">_</div>
-                    <!-- Close Button -->
                     <div onclick="handleClose()" class="w-5 h-5 bg-[#f472b6] border-2 border-black flex items-center justify-center text-[12px] font-bold text-white shadow-[1px_1px_0_0_#000] cursor-pointer hover:bg-[#ec4899] transition-colors">×</div>
                 </div>
             </div>
 
-            <!-- Window Inner Body -->
             <div class="bg-[#f3e8ff] p-6 flex flex-col items-center text-center space-y-6 m-2 border-2 border-[#9333ea] rounded-lg">
-
-                <!-- Multi-colored Retro Title Blocks -->
                 <div class="space-y-2 py-2">
                     <div class="inline-block bg-[#fef08a] border-2 border-black px-3 py-1.5 transform -rotate-1 shadow-[3px_3px_0_0_#000]">
                         <span class="text-sm font-extrabold text-[#713f12] tracking-wider">THANK YOU</span>
@@ -462,39 +883,103 @@
                     </div>
                 </div>
 
-                <!-- Subtitle message -->
                 <p class="text-xs font-bold text-slate-700 tracking-wide max-w-[280px]">
                     Your package is getting prepared in our digital warehouse. We'll email you tracking updates soon!
                 </p>
 
-                <!-- Single Action Button -->
-                <button onclick="handleContinue()" class="w-full py-3 bg-[#f472b6] hover:bg-[#ec4899] text-white text-xs font-extrabold rounded-full border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all uppercase tracking-widest">
-                    Continue Shopping
-                </button>
-
+                <div class="w-full space-y-2.5">
+                    <button onclick="openFeedbackPromptModal()" class="w-full py-3 bg-[#f472b6] hover:bg-[#ec4899] text-white text-xs font-extrabold rounded-full border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all uppercase tracking-widest flex items-center justify-center gap-2 cursor-pointer">
+                        <i class="fa-solid fa-star text-yellow-200"></i>
+                        <span>Rate &amp; Share Feedback</span>
+                    </button>
+                    <button onclick="handleContinue()" class="w-full py-2.5 bg-white hover:bg-purple-100 text-purple-900 text-[11px] font-extrabold rounded-full border-2 border-black shadow-[0_3px_0_0_#1e1b4b] active:translate-y-0.5 active:shadow-none transition-all uppercase tracking-wider cursor-pointer">
+                        Continue Shopping
+                    </button>
+                </div>
             </div>
+        </div>
+    </div>
+
+    <!-- POST-PURCHASE CUSTOMER FEEDBACK & STAR RATING MODAL -->
+    <div id="feedback-prompt-modal" class="fixed inset-0 z-[155] modal-backdrop-clean flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200">
+        <div class="w-[460px] max-w-full bg-[#d8b4fe] border-[3px] border-[#7c3aed] rounded-xl shadow-[8px_8px_0_0_#4c1d95] overflow-hidden transform transition-transform duration-200 scale-95" id="feedback-prompt-frame">
+            <div class="bg-[#a855f7] px-3 py-2 flex justify-between items-center border-b-[3px] border-[#7c3aed]">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-heart text-pink-200 text-xs"></i>
+                    <span class="text-white text-[10px] tracking-wider font-bold uppercase">customer_feedback.exe</span>
+                </div>
+                <button type="button" onclick="closeFeedbackPromptModal()" class="w-5 h-5 bg-[#f472b6] border-2 border-black flex items-center justify-center text-[12px] font-bold text-white shadow-[1px_1px_0_0_#000] cursor-pointer hover:bg-[#ec4899] transition-colors">×</button>
+            </div>
+
+            <form onsubmit="submitCustomerFeedback(event)" class="bg-[#f3e8ff] p-5 sm:p-6 m-2 border-2 border-[#9333ea] rounded-lg space-y-4">
+                <div class="text-center space-y-1">
+                    <span class="inline-block bg-[#fef08a] border-2 border-black px-3 py-1 rounded-full text-[10px] font-black text-[#713f12] uppercase shadow-[2px_2px_0_0_#000]">
+                        ★ Share Your Experience ★
+                    </span>
+                    <h3 class="text-base sm:text-lg font-black text-slate-900 pt-1">How was your Sweetopia Shop experience?</h3>
+                    <p class="text-[11px] text-slate-600 font-medium">Tap the stars below and leave a review to appear on our live Feedback Wall!</p>
+                </div>
+
+                <div class="flex items-center justify-center gap-3 bg-white/90 p-2.5 rounded-2xl border-2 border-black shadow-[2px_2px_0_0_#1e1b4b]">
+                    <div id="feedback-modal-avatar-preview" class="w-10 h-10 rounded-full border-2 border-[#65a30d] overflow-hidden shrink-0 bg-amber-100">
+                        <img src="https://digitalpastel.github.io/digital/sweetopiashop/Bratz1.webp" alt="Your Avatar" class="w-full h-full object-cover">
+                    </div>
+                    <div class="text-left min-w-0">
+                        <p id="feedback-modal-name-preview" class="text-xs font-extrabold text-slate-900 truncate">Customer</p>
+                        <p class="text-[10px] text-slate-500 font-medium">Verified Sweetopia Shopper</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-col items-center space-y-1">
+                    <div class="flex items-center justify-center gap-2" id="feedback-star-buttons">
+                        <button type="button" onclick="setFeedbackRating(1)" data-star="1" class="feedback-star-btn text-3xl text-amber-400 hover:scale-110 transition-transform cursor-pointer drop-shadow" aria-label="1 Star">★</button>
+                        <button type="button" onclick="setFeedbackRating(2)" data-star="2" class="feedback-star-btn text-3xl text-amber-400 hover:scale-110 transition-transform cursor-pointer drop-shadow" aria-label="2 Stars">★</button>
+                        <button type="button" onclick="setFeedbackRating(3)" data-star="3" class="feedback-star-btn text-3xl text-amber-400 hover:scale-110 transition-transform cursor-pointer drop-shadow" aria-label="3 Stars">★</button>
+                        <button type="button" onclick="setFeedbackRating(4)" data-star="4" class="feedback-star-btn text-3xl text-amber-400 hover:scale-110 transition-transform cursor-pointer drop-shadow" aria-label="4 Stars">★</button>
+                        <button type="button" onclick="setFeedbackRating(5)" data-star="5" class="feedback-star-btn text-3xl text-amber-400 hover:scale-110 transition-transform cursor-pointer drop-shadow" aria-label="5 Stars">★</button>
+                    </div>
+                    <span id="feedback-rating-label" class="text-[11px] font-extrabold text-purple-800">5 / 5 Stars — Wonderful!</span>
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-800 mb-1">Display Name</label>
+                    <input type="text" id="feedback-author-name" required maxlength="40" placeholder="Enter your name" class="w-full bg-white border-2 border-black rounded-xl px-3.5 py-2 text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-pink-400">
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-800 mb-1">Your Feedback Message</label>
+                    <textarea id="feedback-message-input" rows="3" required maxlength="260" placeholder="Share what you loved about Sweetopia Shop..." class="w-full bg-white border-2 border-black rounded-xl p-3 text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-pink-400 resize-none"></textarea>
+                    <p class="text-[10px] text-slate-500 mt-1"><i class="fa-solid fa-lock text-[9px] mr-1"></i>Note: Submitted reviews are permanent on our store wall (only Admin can moderate/remove).</p>
+                </div>
+
+                <div class="flex items-center gap-2.5 pt-1">
+                    <button type="button" onclick="closeFeedbackPromptModal()" class="px-4 py-2.5 bg-white hover:bg-slate-100 text-slate-700 text-xs font-extrabold rounded-full border-2 border-black shadow-[0_3px_0_0_#1e1b4b] transition-all cursor-pointer">
+                        Skip
+                    </button>
+                    <button type="submit" class="flex-1 py-2.5 bg-[#65a30d] hover:bg-[#4d7c0f] text-white text-xs font-extrabold rounded-full border-2 border-black shadow-[0_3px_0_0_#1e1b4b] active:translate-y-0.5 active:shadow-none transition-all uppercase tracking-wider cursor-pointer">
+                        Post My Feedback
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
     <!-- RETRO 10-BAR LOADING WINDOW MODAL -->
     <div id="retro-auth-loading-modal" class="fixed inset-0 z-[150] modal-backdrop-clean flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200">
         <div class="retro-loading-window w-full max-w-lg p-3 sm:p-4 rounded-none select-none">
-            <!-- Window Title bar -->
             <div class="flex items-center justify-between pb-3 sm:pb-3.5">
                 <span class="text-xs sm:text-sm font-bold tracking-wider text-[#5a0c3f]">LOADING...</span>
                 <div class="flex items-center gap-1.5">
                     <button type="button" class="retro-window-btn w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center text-[10px] sm:text-xs font-bold leading-none cursor-default">_</button>
-                    <button type="button" class="retro-window-btn w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center text-[10px] sm:text-xs font-bold leading-none cursor-default">X</button>
+                    <button type="button" onclick="cancelRetroLoading()" class="retro-window-btn w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center text-[10px] sm:text-xs font-bold leading-none cursor-pointer hover:bg-rose-200" title="Close Loading Window">X</button>
                 </div>
             </div>
 
-            <!-- Inner White Box -->
             <div class="retro-loading-inner p-4 sm:p-5">
                 <p id="retro-loading-status" class="text-[10px] sm:text-xs font-bold text-[#5a0c3f] tracking-wide mb-4 uppercase">
                     AUTHENTICATING USER...
                 </p>
 
-                <!-- 10 Distinct Bars Grid -->
                 <div class="grid grid-cols-10 gap-1.5 sm:gap-2 h-10 sm:h-12 w-full" id="retro-loading-bars-container">
                     <div class="retro-progress-bar-slot" id="retro-bar-0"></div>
                     <div class="retro-progress-bar-slot" id="retro-bar-1"></div>
@@ -526,7 +1011,7 @@
                     </div>
                 </div>
 
-                <!-- Mobile Header Bell Shortcut & Sign Out / Sign Up Button (Visible only on mobile view) -->
+                <!-- Mobile Header Bell Shortcut & Sign Out / Sign Up Button -->
                 <div class="sm:hidden flex items-center space-x-2">
                     <div id="mobile-header-user-avatar-container" class="hidden w-10 h-10 rounded-full bg-[#65a30d]/20 border-2 border-[#65a30d] flex items-center justify-center text-[#84cc16] text-lg font-bold shadow-sm overflow-hidden"><i id="mobile-header-user-avatar-icon" class="fa-solid fa-user text-sm"></i></div>
                     <div id="mobile-header-bell-container" class="hidden relative">
@@ -544,7 +1029,6 @@
             </div>
 
             <div class="flex items-center space-x-3 relative" id="header-nav-actions">
-                <!-- CUSTOMER NOTIFICATION BELL WIDGET (Shown for Registered Customers on Desktop/PC, Page 2 only) -->
                 <div id="customer-notification-bell-wrapper" class="hidden relative">
                     <button type="button" id="customer-notif-bell-btn" onclick="toggleCustomerNotifications(event)" class="flex px-4 py-2 rounded-full bg-white hover:bg-amber-50 text-slate-800 border-2 border-black shadow-[0_3px_0_0_#1e1b4b] active:translate-y-0.5 active:shadow-none transition-all items-center space-x-2 relative cursor-pointer" title="Order & Payment Notifications">
                         <i class="fa-solid fa-bell text-amber-500 text-sm" id="desktop-bell-icon"></i>
@@ -553,7 +1037,6 @@
                     </button>
                 </div>
 
-                <!-- NOTIFICATION DROPDOWN PANEL -->
                 <div id="customer-notifications-dropdown" class="hidden fixed sm:absolute right-3 sm:right-0 top-28 sm:top-12 w-[calc(100vw-1.5rem)] sm:w-[390px] max-w-md bg-white rounded-3xl border-2 border-black shadow-[6px_6px_0_0_#1e1b4b] z-[110] overflow-hidden flex flex-col" onclick="event.stopPropagation()">
                     <div class="bg-gradient-to-r from-amber-400 via-pink-400 to-fuchsia-500 px-4 py-3 border-b-2 border-black flex items-center justify-between text-slate-900">
                         <div class="flex items-center space-x-2">
@@ -580,7 +1063,6 @@
                     </div>
 
                     <div id="customer-notifications-list" class="max-h-80 overflow-y-auto divide-y divide-slate-100 bg-white">
-                        <!-- Dynamically populated notifications -->
                     </div>
 
                     <div class="p-2.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-[11px]">
@@ -615,21 +1097,27 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-check animate-pulse h-[18px] w-[18px]"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg>
                             </div>
                             <div>
-                                <p class="text-xs font-semibold text-slate-900">Firebase Authentication Active</p>
-                                <p class="text-[10px] text-slate-600 mt-0.5 leading-relaxed">Sign in with your verified email and password. New customer accounts must click the email verification link before signing in.</p>
+                                <p class="text-xs font-semibold text-slate-900">sweetopialens Auth Verification Active</p>
+                                <p class="text-[10px] text-slate-600 mt-0.5 leading-relaxed">Sign in directly with your email and password. New accounts created under Customer Sign Up will receive a confirmation email from <b>sweetopialens</b> (<span class="font-mono font-bold text-slate-800">noreply@sweeetopialens.firebaseapp.com</span>).</p>
                             </div>
                         </div>
 
-                        <!-- EMAIL VERIFICATION NOTICE BANNER (Appears after registration or if unverified sign-in is attempted) -->
+                        <!-- EMAIL VERIFICATION NOTICE BANNER (Appears after Customer Sign Up or Resend Verification) -->
                         <div id="auth-verification-banner" class="hidden bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 mb-5 flex items-start gap-3 shadow-xs">
                             <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0 mt-0.5 border border-amber-300">
                                 <i class="fa-solid fa-envelope-circle-check text-sm"></i>
                             </div>
                             <div class="flex-1 min-w-0">
-                                <p id="auth-verification-banner-title" class="text-xs font-extrabold text-amber-950">Email Verification Required</p>
+                                <p id="auth-verification-banner-title" class="text-xs font-extrabold text-amber-950">Verification Email Sent!</p>
                                 <p id="auth-verification-banner-msg" class="text-[11px] text-amber-800 mt-0.5 leading-relaxed">
-                                    We sent a verification link to your email. Please click the link in your inbox (or spam folder) to verify your account, then sign in here.
+                                    We sent a confirmation email from <b>sweetopialens</b> (<b class="font-mono">noreply@sweeetopialens.firebaseapp.com</b>) after sign up. Please click the verification link in your inbox (or spam folder) to verify your account, then sign in directly.
                                 </p>
+                                <div class="mt-2.5 flex flex-wrap items-center gap-2">
+                                    <button type="button" id="resend-verification-btn" onclick="resendVerificationEmailFromPage1()" class="inline-flex items-center gap-1.5 bg-amber-600 hover:bg-amber-700 active:scale-95 text-white text-[11px] font-bold px-3 py-1.5 rounded-xl shadow-xs transition cursor-pointer">
+                                        <i class="fa-solid fa-paper-plane text-[10px]"></i>
+                                        <span>Resend Verification Email</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
@@ -659,7 +1147,10 @@
                             <button type="submit" id="auth-submit-btn" class="w-full bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold py-3.5 rounded-xl text-xs sm:text-sm shadow-md transition-all mt-2">
                                 Sign In To Dashboard
                             </button>
-                            <div class="text-center pt-1">
+                            <div class="text-center pt-1 flex flex-col items-center gap-1.5">
+                                <button type="button" onclick="resendVerificationEmailFromPage1()" class="text-[11px] text-amber-700 font-bold hover:text-amber-800 hover:underline transition-colors cursor-pointer">
+                                    <i class="fa-solid fa-envelope-open-text mr-1"></i> Resend verification email (new sign up)
+                                </button>
                                 <button type="button" onclick="continueAsGuest()" class="text-[11px] text-slate-600 font-semibold hover:text-slate-900 transition-colors">
                                     <i class="fa-solid fa-arrow-left mr-1"></i> Continue as guest
                                 </button>
@@ -706,23 +1197,18 @@
                     </div>
 
                     <div class="hidden sm:flex items-center space-x-4 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200">
-                        <!-- Avatar & Email Group (Centered and stacked vertically) -->
                         <div class="flex flex-col items-center justify-center space-y-1">
-                            <!-- Avatar Container -->
                             <div id="header-user-avatar-container" class="w-12 h-12 rounded-full bg-[#65a30d]/20 border-2 border-[#65a30d] flex items-center justify-center text-[#84cc16] text-lg font-bold shadow-sm overflow-hidden">
                                 <i id="header-user-avatar-icon" class="fa-solid fa-user text-sm"></i>
                             </div>
-
-                            <!-- User Email at the Bottom of Avatar -->
                             <span id="user-email-display" class="text-[10px] text-slate-600 font-medium truncate max-w-[140px] text-center">useremail@gmail.com</span>
                         </div>
 
-                        <!-- Sign Out Button -->
                         <button type="button" id="desktop-customer-auth-btn" onclick="handleSignOut()" class="px-4 py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 hover:bg-fuchsia-600 text-white border-2 border-black shadow-[0_3px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all shrink-0 cursor-pointer">Sign Out</button>
                     </div>
                 </div>
 
-                <!-- ADMIN NAVIGATION BAR (Desktop Only - Strictly for Admins) -->
+                <!-- ADMIN NAVIGATION BAR -->
                 <div id="admin-nav-bar" class="hidden px-4 sm:px-6 md:px-10 py-4 bg-slate-50 border-b border-slate-200 flex-wrap items-center justify-between gap-3">
                     <div class="flex items-center space-x-3 overflow-x-auto hide-scrollbar w-full sm:w-auto pb-3">
                         <button onclick="switchTab('catalog')" id="dtab-admin-catalog" class="px-5 py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 text-white transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] shrink-0 flex items-center space-x-2">
@@ -747,7 +1233,6 @@
                 <!-- 5-PHOTO SLIDESHOW -->
                 <section id="hero-slideshow-section" class="expert-slideshow-section">
                     <div class="expert-slideshow-wrapper">
-                        <!-- Slide 1 -->
                         <div class="expert-slide">
                             <img src="https://digitalpastel.github.io/digital/sweetopiashop/moliconbp10.webp" alt="Premium Colored Contact Lenses">
                             <div class="expert-slide-caption">
@@ -756,7 +1241,6 @@
                                 <a href="#store-product-grid" class="expert-btn">Explore Lenses</a>
                             </div>
                         </div>
-                        <!-- Slide 2 -->
                         <div class="expert-slide">
                             <img src="https://digitalpastel.github.io/digital/sweetopiashop/newmoliconcover.webp" alt="Crystal Clear Vision Lenses">
                             <div class="expert-slide-caption">
@@ -765,7 +1249,6 @@
                                 <a href="#store-product-grid" class="expert-btn">Shop Ready Stock</a>
                             </div>
                         </div>
-                        <!-- Slide 3 -->
                         <div class="expert-slide">
                             <img src="https://digitalpastel.github.io/digital/sweetopiashop/moliconcover.webp" alt="Mystic Grey and Natural Shades">
                             <div class="expert-slide-caption">
@@ -774,7 +1257,6 @@
                                 <a href="#store-product-grid" class="expert-btn">View Collection</a>
                             </div>
                         </div>
-                        <!-- Slide 4 -->
                         <div class="expert-slide">
                             <img src="https://digitalpastel.github.io/digital/sweetopiashop/uyaaicover.webp" alt="Emerald Green Elegance">
                             <div class="expert-slide-caption">
@@ -783,7 +1265,6 @@
                                 <a href="#store-product-grid" class="expert-btn">Discover Colors</a>
                             </div>
                         </div>
-                        <!-- Slide 5 -->
                         <div class="expert-slide active">
                             <img src="https://digitalpastel.github.io/digital/sweetopiashop/casingmolicon.webp" alt="ToyyibPay Secure Checkout">
                             <div class="expert-slide-caption">
@@ -821,7 +1302,6 @@
                                 <button onclick="filterCatalog('Mill Creek', this)" class="cat-btn px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 shrink-0 border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all">Mill Creek</button>
                             </div>
 
-                            <!-- Rabbit Search Bar -->
                             <div class="relative w-full md:w-72">
                                 <div class="relative w-full">
                                     <div class="absolute -top-7 right-12 flex space-x-1.5 pointer-events-none z-10">
@@ -833,7 +1313,6 @@
                             </div>
                         </div>
 
-                        <!-- 2 columns for mobile phones (grid-cols-2), 3 for tablets, 4 for desktop -->
                         <div id="store-product-grid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6"></div>
                     </div>
 
@@ -941,7 +1420,6 @@
                             <span class="text-xs bg-[#f7fee7] text-[#65a30d] border border-[#ecfccb] px-3 py-1.5 rounded-xl font-bold">Active Shopper</span>
                         </div>
 
-                        <!-- PROFILE CARD (DESKTOP & MOBILE) -->
                         <div class="block">
                             <div class="flex items-center space-x-4 bg-slate-900 p-4 rounded-3xl border border-slate-800 shadow-lg mb-4 relative">
                                 <div class="relative flex-shrink-0">
@@ -959,7 +1437,6 @@
                                 </div>
                             </div>
 
-                            <!-- Admin Workspace Link: Modern Amber Accent -->
                             <div id="mobile-admin-workspace-link" class="mb-4 hidden">
                                 <div onclick="switchTab('admin-workspace')" class="bg-amber-500/10 hover:bg-amber-500/20 p-4 rounded-2xl border border-amber-500/30 flex items-center justify-between cursor-pointer transition-all shadow-sm group">
                                     <div class="flex items-center space-x-3 text-amber-500">
@@ -1005,7 +1482,6 @@
 
                         <!-- ACCORDIONS -->
                         <div class="space-y-3">
-                            <!-- 1. ORDER HISTORY -->
                             <div class="rounded-2xl border border-slate-200 overflow-hidden bg-white shadow-sm transition">
                                 <button type="button" onclick="toggleCustomerSection('order-history')" class="w-full p-4 flex items-center justify-between bg-slate-50 hover:bg-slate-100 transition text-left">
                                     <div class="flex items-center space-x-3">
@@ -1025,7 +1501,6 @@
                                 </div>
                             </div>
 
-                            <!-- 2. INVOICES -->
                             <div class="rounded-2xl border border-slate-200 overflow-hidden bg-white shadow-sm transition">
                                 <button type="button" onclick="toggleCustomerSection('invoices')" class="w-full p-4 flex items-center justify-between bg-slate-50 hover:bg-slate-100 transition text-left">
                                     <div class="flex items-center space-x-3">
@@ -1050,7 +1525,6 @@
                                 </div>
                             </div>
 
-                            <!-- 3. DELIVERY ADDRESSES -->
                             <div class="rounded-2xl border border-slate-200 overflow-hidden bg-white shadow-sm transition">
                                 <button type="button" onclick="toggleCustomerSection('addresses')" class="w-full p-4 flex items-center justify-between bg-slate-50 hover:bg-slate-100 transition text-left">
                                     <div class="flex items-center space-x-3">
@@ -1085,7 +1559,7 @@
                         </div>
                     </div>
 
-                    <!-- TAB 4: ADMIN WORKSPACE (Accessible for Admin only) -->
+                    <!-- TAB 4: ADMIN WORKSPACE -->
                     <div id="tab-section-admin-workspace" class="space-y-6 hidden tab-panel-animate">
                         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 border-b border-slate-200 bg-amber-50 p-4 rounded-2xl border border-amber-200 gap-3">
                             <div class="flex items-center space-x-3">
@@ -1102,6 +1576,59 @@
                                 <span>Export Invoices CSV</span>
                             </button>
                         </div>
+
+                        <!-- LIVE APP VERSION & CACHE-BUSTING CONTROL PANEL -->
+                        <section class="bg-white rounded-3xl shadow-sm border border-emerald-200 overflow-hidden">
+                            <div class="bg-gradient-to-r from-emerald-600 to-teal-600 px-6 py-4 flex flex-wrap items-center justify-between gap-3 text-white">
+                                <div class="flex items-center space-x-3">
+                                    <div class="p-2.5 bg-white/15 rounded-xl">
+                                        <i class="fa-solid fa-rocket text-emerald-100"></i>
+                                    </div>
+                                    <div>
+                                        <h2 class="text-base font-bold flex items-center space-x-2">
+                                            <span>Live App Version &amp; Force Cache Refresh</span>
+                                            <span id="admin-live-version-pill" class="bg-white text-emerald-800 text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full shadow-xs">Active: v1.0.4</span>
+                                        </h2>
+                                        <p class="text-xs text-emerald-100">Publish a new version to Firestore to instantly notify &amp; refresh all open customer sessions</p>
+                                    </div>
+                                </div>
+                                <span id="admin-version-sync-status" class="text-[11px] font-semibold bg-white/15 px-3 py-1 rounded-lg border border-white/20">
+                                    <i class="fa-solid fa-circle-check text-yellow-300 mr-1"></i> Listener Active
+                                </span>
+                            </div>
+
+                            <div class="p-5 sm:p-6 bg-emerald-50/30 grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+                                <div class="md:col-span-3 space-y-1.5">
+                                    <label for="admin-new-version-input" class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                                        New Version Tag <span class="text-rose-500">*</span>
+                                    </label>
+                                    <div class="flex items-center gap-1.5">
+                                        <input type="text" id="admin-new-version-input" placeholder="e.g. 1.0.5" class="block w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm font-mono font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                                        <button type="button" onclick="bumpNextPatchVersion()" class="px-2.5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold rounded-xl transition shrink-0 cursor-pointer" title="Auto-increment patch version">
+                                            +0.0.1
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="md:col-span-5 space-y-1.5">
+                                    <label for="admin-version-notes-input" class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                                        Release Notes / Banner Message
+                                    </label>
+                                    <input type="text" id="admin-version-notes-input" placeholder="e.g. New lenses added &amp; checkout improvements!" class="block w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                                </div>
+
+                                <div class="md:col-span-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+                                    <label class="inline-flex items-center space-x-2 text-xs font-semibold text-slate-700 bg-white px-3 py-2.5 rounded-xl border border-slate-200 cursor-pointer select-none shrink-0">
+                                        <input type="checkbox" id="admin-force-auto-reload" checked class="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500">
+                                        <span>Auto-reload clients</span>
+                                    </label>
+                                    <button type="button" onclick="publishNewAppVersion()" class="flex-1 px-4 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 active:scale-95 text-white font-bold text-xs sm:text-sm rounded-xl shadow-md shadow-emerald-200 transition flex items-center justify-center space-x-2 cursor-pointer">
+                                        <i class="fa-solid fa-paper-plane text-xs"></i>
+                                        <span>Publish New Version</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </section>
 
                         <!-- Section 1: Create New Voucher & Chosen Customer Only Settings -->
                         <section class="bg-white rounded-3xl shadow-sm border border-pink-100 overflow-hidden transition-all-300">
@@ -1125,7 +1652,6 @@
 
                             <form id="voucherFormSection1" onsubmit="handleCreateCustomerVoucher(event)" class="p-6 space-y-6">
                                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                    <!-- Voucher Name -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                                             Voucher Title / Name <span class="text-rose-500">*</span>
@@ -1133,7 +1659,6 @@
                                         <input type="text" id="c_voucherName" required="" placeholder="e.g. VIP Kawaii Special" class="block w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-pink-500 focus:bg-white focus:outline-none transition-all">
                                     </div>
 
-                                    <!-- Prefix Code SWEET[...] -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                                             Voucher Code / Prefix <span class="text-rose-500">*</span>
@@ -1148,7 +1673,6 @@
                                         <p class="text-[11px] text-pink-600 font-medium">Resulting Code: <span class="font-mono font-bold" id="c_previewFullCode">SWEET[...]</span></p>
                                     </div>
 
-                                    <!-- Discount Amount -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                                             Discount Amount / Value <span class="text-rose-500">*</span>
@@ -1162,7 +1686,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Limit per customer -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                                             Usage Limit per Customer
@@ -1171,7 +1694,6 @@
                                         <p class="text-[11px] text-slate-500">★ Limit: 1 use per customer ★</p>
                                     </div>
 
-                                    <!-- Min Spend -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                                             Min. Order Spend (RM)
@@ -1180,7 +1702,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Chosen Customer Assignment Area -->
                                 <div class="p-5 bg-pink-50/70 border border-pink-200 rounded-2xl space-y-4">
                                     <div class="flex items-center justify-between">
                                         <div>
@@ -1205,7 +1726,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Voucher Display Settings & Sale Mode Badge -->
                                 <div class="border-t border-pink-100 pt-5 space-y-4">
                                     <div class="flex items-center justify-between flex-wrap gap-4">
                                         <div>
@@ -1233,7 +1753,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Publish Action Button -->
                                 <div class="pt-4 flex items-center justify-end space-x-3 border-t border-slate-100">
                                     <button type="button" onclick="resetSection1Form()" class="px-5 py-2.5 border border-slate-300 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-100 transition">
                                         Cancel
@@ -1268,7 +1787,6 @@
 
                             <form id="voucherFormSection2" onsubmit="handleCreateProductVoucher(event)" class="p-6 space-y-6">
                                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                    <!-- Voucher Name -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                                             Voucher Title / Name <span class="text-rose-500">*</span>
@@ -1276,7 +1794,6 @@
                                         <input type="text" id="p_voucherName" required="" placeholder="e.g. Kawaii Plushie Special" class="block w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-purple-500 focus:bg-white focus:outline-none transition-all">
                                     </div>
 
-                                    <!-- Prefix Code SWEET[...] -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                                             Voucher Code / Prefix <span class="text-rose-500">*</span>
@@ -1291,7 +1808,6 @@
                                         <p class="text-[11px] text-purple-600 font-medium">Resulting Code: <span class="font-mono font-bold" id="p_previewFullCode">SWEET[...]</span></p>
                                     </div>
 
-                                    <!-- Discount Amount -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                                             Discount Amount / Value <span class="text-rose-500">*</span>
@@ -1305,7 +1821,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Usage Limit -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                                             Total Usage Limit <span class="text-rose-500">*</span>
@@ -1313,7 +1828,6 @@
                                         <input type="number" id="p_usageLimit" required="" min="1" value="100" placeholder="100" class="block w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-purple-500 focus:outline-none">
                                     </div>
 
-                                    <!-- Min Order Spend -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                                             Min. Order Spend (RM)
@@ -1322,7 +1836,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Chosen Product Frame Assignment Area -->
                                 <div class="p-5 bg-purple-50/70 border border-purple-200 rounded-2xl space-y-4">
                                     <div class="flex items-center justify-between flex-wrap gap-3">
                                         <div>
@@ -1349,7 +1862,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Voucher Display Settings & Notice -->
                                 <div class="border-t border-purple-100 pt-5 space-y-4">
                                     <div class="flex items-center justify-between flex-wrap gap-4">
                                         <div>
@@ -1377,7 +1889,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Save & Publish Product Frame Action Button -->
                                 <div class="pt-4 flex items-center justify-end space-x-3 border-t border-slate-100">
                                     <button type="button" onclick="resetSection2Form()" class="px-5 py-2.5 border border-slate-300 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-100 transition">
                                         Cancel
@@ -1556,7 +2067,7 @@
                                     <img id="admin-image-preview-tag" src="" class="w-12 h-12 object-cover rounded-xl border border-slate-300 shadow-sm">
                                 </div>
                                 <div class="flex space-x-2 pt-2">
-                                    <button onclick="saveAdminProduct()" class="bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold px-4 py-2 rounded-xl text-xs flex items-space-x-1.5 shadow-sm">
+                                    <button onclick="saveAdminProduct()" class="bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center space-x-1.5 shadow-sm">
                                         <i class="fa-solid fa-plus mr-1.5"></i>
                                         <span>Save &amp; Publish Live</span>
                                     </button>
@@ -1572,7 +2083,6 @@
                                 <p class="text-[11px] text-slate-500">Assign tracking numbers, save and publish to customer dashboards.</p>
                             </div>
 
-                            <!-- Admin Batch Control Toolbar -->
                             <div class="bg-slate-50 p-3 sm:p-4 rounded-2xl border border-slate-200 flex flex-wrap items-center justify-between gap-3 shadow-xs">
                                 <div class="flex items-center gap-2.5">
                                     <input type="checkbox" id="confirm-clear-checkbox" onchange="toggleClearAllButton()" class="w-4 h-4 text-rose-600 rounded border-slate-300 focus:ring-rose-500 cursor-pointer">
@@ -1601,36 +2111,73 @@
                     </div>
                 </div>
 
+                <!-- CUSTOMER FEEDBACK POST SECTION -->
+                <section id="feedback-wall-section" class="feedback-section">
+                    <div class="bg-watermark" aria-hidden="true">
+                        <span>Feedback</span>
+                        <span>Feedback</span>
+                        <span>Feedback</span>
+                    </div>
+
+                    <div class="glow glow-top-right"></div>
+                    <div class="glow glow-center"></div>
+                    <div class="glow glow-bottom-left"></div>
+
+                    <svg class="curve-top-left" viewBox="0 0 200 300" fill="none">
+                        <path d="M160 -20 C 175 80, 70 180, -20 270" stroke="#FFD600" stroke-width="11" stroke-linecap="round"/>
+                    </svg>
+                    <svg class="curve-bottom-right" viewBox="0 0 600 250" fill="none">
+                        <path d="M620 10 C 420 110, 260 220, 80 260" stroke="#FFD600" stroke-width="11" stroke-linecap="round"/>
+                    </svg>
+
+                    <div class="feedback-container">
+                        <header class="feedback-header">
+                            <h2 class="title-main">Feedback Post</h2>
+                            <span class="title-script">Customer Reviews</span>
+                        </header>
+
+                        <div class="feedback-carousel-wrapper">
+                            <div id="feedback-carousel-track" class="feedback-carousel-track">
+                            </div>
+                        </div>
+
+                        <footer class="feedback-footer">
+                            <span id="feedback-counter-note" class="footer-note">Swipe or scroll right for more reviews →</span>
+                            <div class="flex items-center gap-2">
+                                <button type="button" onclick="scrollFeedbackCarousel(-1)" class="w-9 h-9 rounded-full bg-white/20 hover:bg-white/30 text-white border border-white/40 flex items-center justify-center transition cursor-pointer" aria-label="Scroll feedback left">
+                                    <i class="fa-solid fa-chevron-left text-xs"></i>
+                                </button>
+                                <button type="button" onclick="scrollFeedbackCarousel(1)" class="w-9 h-9 rounded-full bg-[#FFD600] hover:bg-yellow-300 text-slate-950 font-black flex items-center justify-center shadow-md transition cursor-pointer" aria-label="Scroll feedback right">
+                                    <i class="fa-solid fa-chevron-right text-xs"></i>
+                                </button>
+                            </div>
+                            <span class="footer-line hidden sm:block"></span>
+                        </footer>
+                    </div>
+                </section>
+
                 <!-- PAGE 2 FOOTER -->
                 <footer class="w-full bg-[#d8b4fe] border-t-4 border-[#7c3aed] py-6 px-6 shadow-[0_-4px_0_0_#4c1d95] mt-auto">
                     <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 items-center gap-4">
-
-                        <!-- Left: Social Media Icons (Y2K Chunky Style) -->
                         <div class="flex items-center justify-center md:justify-start space-x-3">
-                            <!-- Facebook -->
                             <a href="https://www.facebook.com/share/1C455cr2u5/" target="_blank" rel="noopener noreferrer" class="w-9 h-9 bg-[#f472b6] hover:bg-[#ec4899] text-white rounded-full border-2 border-black flex items-center justify-center shadow-[2px_2px_0_0_#000] active:translate-y-0.5 active:shadow-[0_0_0_0_#000] transition-all">
                                 <i class="fa-brands fa-facebook-f text-sm"></i>
                             </a>
-                            <!-- Instagram -->
                             <a href="https://www.instagram.com/sweetopialens" target="_blank" rel="noopener noreferrer" class="w-9 h-9 bg-[#fb7185] hover:bg-[#f43f5e] text-white rounded-full border-2 border-black flex items-center justify-center shadow-[2px_2px_0_0_#000] active:translate-y-0.5 active:shadow-[0_0_0_0_#000] transition-all">
                                 <i class="fa-brands fa-instagram text-sm"></i>
                             </a>
-                            <!-- TikTok -->
                             <a href="https://www.tiktok.com/@sweetopiashop6" target="_blank" rel="noopener noreferrer" class="w-9 h-9 bg-[#38bdf8] hover:bg-[#0ea5e9] text-white rounded-full border-2 border-black flex items-center justify-center shadow-[2px_2px_0_0_#000] active:translate-y-0.5 active:shadow-[0_0_0_0_#000] transition-all">
                                 <i class="fa-brands fa-tiktok text-sm"></i>
                             </a>
                         </div>
 
-                        <!-- Center: Copyright Text Only -->
                         <div class="text-center flex justify-center">
                             <p class="text-[11px] text-[#581c87] font-extrabold tracking-wider">
-                                © Brand Works Empire 2026, all rights reserved
+                                © Brand Works Empire 2026, all rights reserved <span id="footer-app-version-tag" class="opacity-75 font-mono text-[10px]">(v1.0.4)</span>
                             </p>
                         </div>
 
-                        <!-- Right: ToyyibPay Widget & Verified Logo Side-by-Side -->
                         <div class="flex items-center justify-center md:justify-end gap-3">
-                            <!-- ToyyibPay Widget -->
                             <div class="bg-white border-2 border-black rounded-lg p-1.5 shadow-[2px_2px_0_0_#000] flex flex-col items-center">
                                 <div class="text-[10px] font-black text-slate-800 pb-1">
                                     toyyib<span class="text-purple-600">Pay</span>
@@ -1640,7 +2187,6 @@
                                 </div>
                             </div>
 
-                            <!-- Verified Logo Frame -->
                             <div class="bg-white border-2 border-black rounded-lg p-1.5 shadow-[2px_2px_0_0_#000] flex flex-col items-center">
                                 <div class="text-[10px] font-black text-purple-700 pb-1">
                                     Verified
@@ -1650,7 +2196,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </footer>
 
@@ -1684,7 +2229,6 @@
                         <div class="cat-ear-left-green"><div class="cat-ear-left-inner-green"></div></div>
                         <div class="cat-ear-right-green"><div class="cat-ear-right-inner-green"></div></div>
 
-                        <!-- Header -->
                         <div class="bg-gradient-to-r from-[#65a30d] to-[#4d7c0f] text-white px-4 py-3.5 rounded-t-3xl flex items-center justify-between shadow-md relative z-10">
                             <div class="flex items-center space-x-2.5">
                                 <div id="chat-header-avatar-box" class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center font-bold text-sm border border-white/30 overflow-hidden shrink-0">
@@ -1706,7 +2250,6 @@
                             </div>
                         </div>
 
-                        <!-- Admin Session Switcher Bar -->
                         <div id="admin-chat-session-bar" class="bg-[#f7fee7] px-3 py-2 border-b border-[#ecfccb] flex items-center justify-between text-[11px]">
                             <span id="chat-session-bar-label" class="font-bold text-[#4d7c0f]">User Session:</span>
                             <div class="flex items-center space-x-2">
@@ -1715,12 +2258,9 @@
                             </div>
                         </div>
 
-                        <!-- Messages Box -->
                         <div id="widget-chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/50 text-xs"><div class="text-center text-slate-400 py-10"><i class="fa-solid fa-heart text-2xl text-lime-500 mb-2"></i><p class="text-xs">Chatting with <b class="text-slate-700">admin</b>.<br>Leave a message or sticker to start conversation.</p></div></div>
 
-                        <!-- Footer Input & Multimedia Toolbar -->
                         <div class="p-3 bg-white border-t border-pink-100 flex flex-col space-y-2 rounded-b-3xl">
-                            <!-- Multimedia & Sticker Toolbar Icons -->
                             <div class="flex items-center space-x-2 sm:space-x-3 px-1 text-slate-500">
                                 <button type="button" onclick="toggleStickerPicker()" class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl hover:bg-pink-100/80 hover:text-pink-600 flex items-center justify-center transition text-sm sm:text-base" title="Stickers">
                                     <i class="fa-solid fa-face-smile"></i>
@@ -1742,7 +2282,6 @@
                                 </label>
                             </div>
 
-                            <!-- Textarea and Send Button -->
                             <div class="flex items-center space-x-2 bg-pink-50/70 rounded-2xl p-2 border border-pink-200 focus-within:border-pink-400 transition">
                                 <textarea id="chatInput" rows="1" placeholder="Type a message here..." class="flex-1 bg-transparent border-none focus:outline-none text-slate-700 text-xs px-2 resize-none" onkeypress="handleKeypress(event)"></textarea>
                                 <button id="sendBtn" onclick="sendTextMessage()" class="px-3.5 py-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold rounded-xl shadow-md hover:opacity-95 transition text-xs flex items-center space-x-1.5 shrink-0">
@@ -1753,7 +2292,6 @@
                         </div>
                     </div>
 
-                    <!-- Floating Chat Toggle Button -->
                     <button onclick="toggleWidgetChat()" class="w-14 h-14 rounded-full bg-gradient-to-r from-[#65a30d] to-[#4d7c0f] hover:from-[#4d7c0f] hover:to-[#3f6212] text-white shadow-2xl flex items-center justify-center text-xl transition-all transform hover:scale-105 border-2 border-white relative group">
                         <i class="fa-solid fa-comments"></i>
                         <span id="widget-unread-badge" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-extrabold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-md hidden">0</span>
@@ -1761,7 +2299,7 @@
                 </div>
             </div>
 
-            <!-- SHOPEE STYLE STICKER PICKER MODAL (15 STICKER PACKS - INSTANT LOAD) -->
+            <!-- SHOPEE STYLE STICKER PICKER MODAL -->
             <div id="screen-sticker-modal" class="fixed inset-0 z-[150] modal-backdrop-clean flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-200 p-3 sm:p-4" onclick="closeStickerPicker()">
                 <div class="w-full max-w-sm bg-white rounded-3xl border-2 border-pink-300 overflow-hidden shadow-2xl flex flex-col max-h-[85vh] relative z-10" onclick="event.stopPropagation()">
                     <div class="px-5 py-3.5 bg-gradient-to-r from-pink-100 to-purple-100 border-b border-pink-200 flex items-center justify-between shrink-0">
@@ -1809,7 +2347,7 @@
                 </div>
             </div>
 
-            <!-- PRODUCT IMAGE ZOOM MODAL (PINK-PURPLE RETRO WINDOW FRAME) -->
+            <!-- PRODUCT IMAGE ZOOM MODAL -->
             <div id="screen-image-zoom" class="fixed inset-0 z-[160] modal-backdrop-clean flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-200 p-4" onclick="closeImageZoomModal()">
                 <div class="pink-purple-window-container" onclick="event.stopPropagation()">
                     <div class="pink-purple-window-tab">
@@ -1862,7 +2400,7 @@
                 </div>
             </div>
 
-            <!-- MODAL DROPDOWN: SELECT PRESCRIPTION POWER (WITH 'X' CLOSE BUTTON) -->
+            <!-- MODAL DROPDOWN: SELECT PRESCRIPTION POWER -->
             <div id="screen-prescription-modal" class="fixed inset-0 z-[150] modal-backdrop-clean flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-200 p-4">
                 <div class="w-full max-w-lg bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-2xl flex flex-col max-h-[85vh]">
                     <div class="px-5 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
@@ -2020,7 +2558,7 @@
                             <i class="fa-solid fa-xmark text-xs"></i>
                         </button>
                     </div>
-                    <p class="text-xs text-slate-600">Enter your email address to receive password reset instructions.</p>
+                    <p class="text-xs text-slate-600">Enter your email address to receive password reset instructions from <b>sweetopialens</b> (<span class="font-mono font-bold text-slate-800">noreply@sweeetopialens.firebaseapp.com</span>).</p>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">Email Address</label>
                         <input type="email" id="forgot-email" placeholder="name@example.com" class="w-full bg-slate-50 border border-slate-300 text-xs text-slate-900 rounded-xl p-3 shadow-sm">
@@ -2031,7 +2569,7 @@
                 </div>
             </div>
 
-            <!-- MOBILE & DESKTOP AVATAR SELECTOR MODAL (BRATZ + 15 PRINCESS AVATARS) -->
+            <!-- MOBILE & DESKTOP AVATAR SELECTOR MODAL -->
             <div id="avatar-selector-modal" class="fixed inset-0 z-[150] modal-backdrop-clean flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200" onclick="closeAvatarModal()">
                 <div class="w-full max-w-sm bg-white rounded-3xl border-2 border-black shadow-[6px_6px_0_0_#1e1b4b] overflow-hidden flex flex-col p-5 space-y-4 max-h-[88vh]" onclick="event.stopPropagation()">
                     <div class="flex items-center justify-between border-b border-slate-200 pb-3 shrink-0">
@@ -2044,7 +2582,6 @@
                         </button>
                     </div>
                     <div class="grid grid-cols-4 gap-2.5 text-center overflow-y-auto max-h-64 pr-1 py-0.5">
-                        <!-- 4 Bratz Avatars -->
                         <button type="button" onclick="selectUserAvatar('https://digitalpastel.github.io/digital/sweetopiashop/Bratz1.webp')" class="p-1.5 rounded-2xl bg-slate-50 hover:bg-pink-50 border-2 border-slate-200 hover:border-pink-500 flex items-center justify-center transition overflow-hidden aspect-square shadow-xs active:scale-95" title="Bratz Avatar 1">
                             <img src="https://digitalpastel.github.io/digital/sweetopiashop/Bratz1.webp" alt="Bratz 1" loading="eager" class="w-full h-full object-cover rounded-xl">
                         </button>
@@ -2057,8 +2594,6 @@
                         <button type="button" onclick="selectUserAvatar('https://digitalpastel.github.io/digital/sweetopiashop/Bratz4.webp')" class="p-1.5 rounded-2xl bg-slate-50 hover:bg-pink-50 border-2 border-slate-200 hover:border-pink-500 flex items-center justify-center transition overflow-hidden aspect-square shadow-xs active:scale-95" title="Bratz Avatar 4">
                             <img src="https://digitalpastel.github.io/digital/sweetopiashop/Bratz4.webp" alt="Bratz 4" loading="eager" class="w-full h-full object-cover rounded-xl">
                         </button>
-
-                        <!-- 15 Princess Avatars -->
                         <button type="button" onclick="selectUserAvatar('https://digitalpastel.github.io/digital/sweetopiashop/Princess1.webp')" class="p-1.5 rounded-2xl bg-slate-50 hover:bg-purple-50 border-2 border-slate-200 hover:border-purple-500 flex items-center justify-center transition overflow-hidden aspect-square shadow-xs active:scale-95" title="Princess Avatar 1">
                             <img src="https://digitalpastel.github.io/digital/sweetopiashop/Princess1.webp" alt="Princess 1" loading="eager" class="w-full h-full object-cover rounded-xl">
                         </button>
@@ -2144,7 +2679,6 @@
             <!-- A4 INVOICE PNG DOWNLOAD & VIEW MODAL -->
             <div id="invoice-modal" class="fixed inset-0 z-[999] modal-backdrop-clean flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-200 p-2 sm:p-4 overflow-y-auto">
                 <div class="relative w-full max-w-4xl bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[96vh] my-auto">
-                    <!-- Modal Header Bar -->
                     <div class="px-3.5 sm:px-6 py-3 sm:py-4 bg-slate-100 border-b border-slate-200 flex items-center justify-between shrink-0 no-print">
                         <div class="flex items-center space-x-2">
                             <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-lime-100 text-[#4d7c0f] flex items-center justify-center text-xs">
@@ -2164,12 +2698,9 @@
                         </div>
                     </div>
 
-                    <!-- Scrollable Modal Body -->
                     <div class="flex-1 overflow-y-auto p-2 sm:p-6 bg-slate-100/70 flex justify-center w-full">
                         <div class="w-full flex justify-center overflow-x-auto pb-4">
-                            <!-- Printable Area -->
                             <div id="invoice-printable-area" class="invoice-a4-page bg-white">
-                                <!-- Top Invoice Brand & Header -->
                                 <div class="flex flex-col sm:flex-row sm:items-start justify-between border-b-2 border-slate-200 pb-5 mb-5 gap-3">
                                     <div>
                                         <h1 class="text-2xl sm:text-3xl font-black text-[#19a8ea]">Sweetopia <span class="text-[#65a30d]">Shop</span></h1>
@@ -2186,7 +2717,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Customer Details & Merchant Details -->
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 text-xs">
                                     <div class="bg-slate-50 p-3 sm:p-4 rounded-xl border border-slate-200">
                                         <h3 class="font-bold text-slate-900 uppercase tracking-wider mb-1 text-[11px] text-[#4d7c0f]">Billed &amp; Shipped To:</h3>
@@ -2207,7 +2737,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Line Items Table -->
                                 <div class="w-full overflow-x-auto mb-6">
                                     <table class="w-full text-xs border-collapse min-w-[340px]">
                                         <thead>
@@ -2232,7 +2761,6 @@
                                     </table>
                                 </div>
 
-                                <!-- Financial Totals Calculation Box -->
                                 <div class="w-full sm:w-72 sm:ml-auto space-y-1.5 text-xs border-t-2 border-slate-200 pt-3">
                                     <div class="flex justify-between text-slate-600">
                                         <span>Subtotal:</span>
@@ -2252,7 +2780,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Invoice Footer Note -->
                                 <div class="mt-10 sm:mt-14 text-center text-[10px] sm:text-[11px] text-slate-400 border-t border-slate-100 pt-4">
                                     <p>Thank you for shopping with Sweetopia Shop! Your order is processed for fast nationwide delivery.</p>
                                     <p class="mt-1">Official Digital Invoice Generated Automatically via Sweetopia Shop System.</p>
@@ -2286,7 +2813,7 @@
         </button>
     </div>
 
-    <!-- SCRIPT LOGIC (CLEANED, GLITCH-FREE & INSTANT STICKERS) -->
+    <!-- SCRIPT LOGIC -->
     <script>
         let deferredInstallPrompt = null;
         window.addEventListener('beforeinstallprompt', (e) => {
@@ -2310,7 +2837,9 @@
 
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js').catch(() => {});
+                navigator.serviceWorker.register(`./sw.js?v=${APP_VERSION}`).then(reg => {
+                    reg.update().catch(() => {});
+                }).catch(() => {});
             });
         }
 
@@ -2323,12 +2852,56 @@
             appId: "1:524168545709:web:7e52448f1cd3964f858d24"
         };
 
+        const FIREBASE_SENDER_NAME = "sweetopialens";
+        const FIREBASE_SENDER_EMAIL = "noreply@sweeetopialens.firebaseapp.com";
+        const FIREBASE_REPLY_TO_EMAIL = "yeegummy@gmail.com";
+        const AUTHORIZED_FIREBASE_URL = "https://sweeetopialens.firebaseapp.com";
+
+        async function sendFirebaseVerificationWithFallback(user) {
+            if (!user) throw new Error("No user instance provided for verification email.");
+            try {
+                const displayName = (user.email || "").split("@")[0];
+                if (!user.displayName && displayName && typeof user.updateProfile === "function") {
+                    await user.updateProfile({ displayName }).catch(() => {});
+                }
+            } catch (e) {}
+
+            try {
+                await user.sendEmailVerification();
+                return;
+            } catch (primaryErr) {
+                console.warn("Primary sendEmailVerification attempt:", primaryErr);
+                await user.sendEmailVerification({
+                    url: AUTHORIZED_FIREBASE_URL,
+                    handleCodeInApp: false
+                });
+            }
+        }
+
+        async function sendFirebasePasswordResetWithFallback(email) {
+            if (!auth || !email) throw new Error("Email address is required.");
+            try {
+                await auth.sendPasswordResetEmail(email);
+                return;
+            } catch (primaryErr) {
+                console.warn("Primary sendPasswordResetEmail attempt:", primaryErr);
+                await auth.sendPasswordResetEmail(email, {
+                    url: AUTHORIZED_FIREBASE_URL,
+                    handleCodeInApp: false
+                });
+            }
+        }
+
         let app = null, db = null, auth = null;
         try {
             if (typeof firebase !== 'undefined') {
                 app = firebase.initializeApp(firebaseConfig);
                 db = firebase.firestore();
                 auth = firebase.auth();
+
+                if (auth && typeof auth.useDeviceLanguage === 'function') {
+                    auth.useDeviceLanguage();
+                }
 
                 if (db && typeof db.settings === 'function') {
                     db.settings({
@@ -2343,7 +2916,250 @@
             }
         } catch(e) { console.warn("Firebase init:", e); }
 
-        /* HELPER: DETECT IF CURRENT USER IS A GUEST */
+        /* =========================================================================
+           FIRESTORE LIVE VERSION LISTENER & ADMIN "PUBLISH NEW VERSION" CONTROLLER
+           ========================================================================= */
+        let latestPublishedServerVersion = APP_VERSION;
+        let versionUpdateReloadScheduled = false;
+
+        function compareSemanticVersions(vA, vB) {
+            const cleanA = String(vA || '0.0.0').replace(/^v/i, '').split('.').map(n => parseInt(n, 10) || 0);
+            const cleanB = String(vB || '0.0.0').replace(/^v/i, '').split('.').map(n => parseInt(n, 10) || 0);
+            const len = Math.max(cleanA.length, cleanB.length);
+            for (let i = 0; i < len; i++) {
+                const a = cleanA[i] || 0;
+                const b = cleanB[i] || 0;
+                if (a > b) return 1;
+                if (a < b) return -1;
+            }
+            return 0;
+        }
+
+        function computeNextPatchVersion(baseVersion) {
+            const parts = String(baseVersion || APP_VERSION).replace(/^v/i, '').split('.').map(n => parseInt(n, 10) || 0);
+            while (parts.length < 3) parts.push(0);
+            parts[2] = (parts[2] || 0) + 1;
+            return parts.join('.');
+        }
+
+        window.bumpNextPatchVersion = function() {
+            const input = document.getElementById('admin-new-version-input');
+            if (!input) return;
+            const currentVal = (input.value || latestPublishedServerVersion || APP_VERSION).trim();
+            input.value = computeNextPatchVersion(currentVal);
+        };
+
+        window.applyLiveVersionUpdate = async function(targetVersion = null) {
+            const nextVer = (targetVersion || latestPublishedServerVersion || APP_VERSION).replace(/^v/i, '');
+            try {
+                localStorage.setItem('sweetopia_app_version', nextVer);
+                if ('caches' in window) {
+                    const names = await caches.keys();
+                    await Promise.all(names.map(name => caches.delete(name)));
+                }
+                if ('serviceWorker' in navigator) {
+                    const regs = await navigator.serviceWorker.getRegistrations();
+                    await Promise.all(regs.map(r => r.update()));
+                }
+            } catch (e) {}
+
+            try {
+                const url = new URL(window.location.href);
+                url.searchParams.set('v', nextVer);
+                window.location.replace(url.toString());
+            } catch (e) {
+                window.location.reload(true);
+            }
+        };
+
+        window.publishNewAppVersion = async function() {
+            if (!currentUser || !isAdminUser(currentUser.email)) {
+                showToast("Permission Denied", "Only Administrators can publish a new live app version.", true);
+                return;
+            }
+
+            const versionInput = document.getElementById('admin-new-version-input');
+            const notesInput = document.getElementById('admin-version-notes-input');
+            const autoReloadChk = document.getElementById('admin-force-auto-reload');
+
+            const rawVersion = (versionInput?.value || '').trim().replace(/^v/i, '');
+            if (!rawVersion || !/^\d+(\.\d+){1,3}$/.test(rawVersion)) {
+                showToast("Invalid Version Format", "Please enter a valid version number such as 1.0.5 or 1.1.0.", true);
+                versionInput?.focus();
+                return;
+            }
+
+            const releaseNotes = (notesInput?.value || '').trim() || `Sweetopia Shop v${rawVersion} is now live with fresh updates!`;
+            const forceAutoReload = autoReloadChk ? autoReloadChk.checked : true;
+            const publishedAt = new Date().toISOString();
+
+            latestPublishedServerVersion = rawVersion;
+            try {
+                localStorage.setItem('sweetopia_app_version', rawVersion);
+            } catch (e) {}
+
+            const pillEl = document.getElementById('admin-live-version-pill');
+            if (pillEl) pillEl.innerText = `Active: v${rawVersion}`;
+
+            const footerVerEl = document.getElementById('footer-app-version-tag');
+            if (footerVerEl) footerVerEl.innerText = `(v${rawVersion})`;
+
+            if (versionInput) {
+                versionInput.value = computeNextPatchVersion(rawVersion);
+            }
+
+            if (db) {
+                try {
+                    await db.collection("lumilens_config").doc("app_version").set({
+                        version: rawVersion,
+                        releaseNotes: releaseNotes,
+                        forceAutoReload: forceAutoReload,
+                        publishedBy: currentUser.email,
+                        publishedAt: publishedAt,
+                        nonce: Date.now()
+                    }, { merge: true });
+                } catch (err) {
+                    console.warn("Firestore version publish warning:", err);
+                    showToast("Sync Warning", "Version saved locally, check Firestore permissions if clients didn't sync.", true);
+                    return;
+                }
+            }
+
+            showToast("New Version Published!", `Live app version v${rawVersion} broadcasted to all connected shoppers!`);
+        };
+
+        function initLiveVersionListener() {
+            const verInput = document.getElementById('admin-new-version-input');
+            if (verInput && !verInput.value) {
+                verInput.value = computeNextPatchVersion(APP_VERSION);
+            }
+
+            if (!db) return;
+
+            db.collection("lumilens_config").doc("app_version").onSnapshot((docSnap) => {
+                if (!docSnap || !docSnap.exists) return;
+                const data = docSnap.data();
+                if (!data || !data.version) return;
+
+                const serverVer = String(data.version).trim().replace(/^v/i, '');
+                latestPublishedServerVersion = serverVer;
+
+                const pillEl = document.getElementById('admin-live-version-pill');
+                if (pillEl) pillEl.innerText = `Active: v${serverVer}`;
+
+                const footerVerEl = document.getElementById('footer-app-version-tag');
+                if (footerVerEl) footerVerEl.innerText = `(v${serverVer})`;
+
+                if (verInput && document.activeElement !== verInput) {
+                    verInput.value = computeNextPatchVersion(serverVer);
+                }
+
+                const isNewerOnServer = compareSemanticVersions(serverVer, APP_VERSION) > 0;
+                const alreadyUpdatedToThis = localStorage.getItem('sweetopia_app_version') === serverVer &&
+                    new URLSearchParams(window.location.search).get('v') === serverVer;
+
+                if (isNewerOnServer && !alreadyUpdatedToThis) {
+                    const banner = document.getElementById('live-version-update-banner');
+                    const badgeEl = document.getElementById('live-update-version-badge');
+                    const notesEl = document.getElementById('live-update-notes-text');
+
+                    if (badgeEl) badgeEl.innerText = `Sweetopia Shop v${serverVer} is Live!`;
+                    if (notesEl) {
+                        notesEl.innerText = data.releaseNotes || `New update v${serverVer} published by Admin. Refreshing to latest version...`;
+                    }
+
+                    if (banner) {
+                        banner.classList.remove('hidden');
+                        banner.classList.add('flex');
+                    }
+
+                    const isCurrentAdmin = currentUser && isAdminUser(currentUser.email);
+                    if (data.forceAutoReload && !isCurrentAdmin && !versionUpdateReloadScheduled) {
+                        versionUpdateReloadScheduled = true;
+                        showToast("App Update Live!", `Updating Sweetopia Shop to v${serverVer}...`);
+                        setTimeout(() => {
+                            window.applyLiveVersionUpdate(serverVer);
+                        }, 2400);
+                    }
+                }
+            }, () => {});
+        }
+
+        /* =========================================================================
+           HANDLE FIREBASE EMAIL VERIFICATION LINK CALLBACK (?mode=verifyEmail&oobCode=...)
+           ========================================================================= */
+        async function handleFirebaseEmailActionCallback() {
+            if (!auth) return false;
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const mode = urlParams.get('mode');
+                const oobCode = urlParams.get('oobCode');
+
+                if (mode === 'verifyEmail' && oobCode) {
+                    startRetroLoading("VERIFYING EMAIL ADDRESS...");
+                    let verifiedEmail = '';
+                    try {
+                        const info = await auth.checkActionCode(oobCode);
+                        verifiedEmail = (info?.data?.email || '').trim().toLowerCase();
+                    } catch (e) {}
+
+                    await auth.applyActionCode(oobCode);
+
+                    if (auth.currentUser) {
+                        try {
+                            await auth.currentUser.reload();
+                            if (!verifiedEmail && auth.currentUser.email) {
+                                verifiedEmail = auth.currentUser.email.trim().toLowerCase();
+                            }
+                        } catch (e) {}
+                    }
+
+                    if (verifiedEmail) {
+                        clearEmailPostSignupVerification(verifiedEmail);
+                        saveRegisteredCustomerRecord(verifiedEmail, auth.currentUser?.uid || null, true).catch(() => {});
+                        const emailInput = document.getElementById('auth-email');
+                        if (emailInput) emailInput.value = verifiedEmail;
+                    }
+
+                    window.history.replaceState({}, document.title, window.location.pathname);
+
+                    await finishRetroLoading();
+
+                    if (auth.currentUser && auth.currentUser.emailVerified) {
+                        currentUser = auth.currentUser;
+                        localStorage.setItem('sweetopia_logged_in_email', currentUser.email.toLowerCase());
+                        updateUIAfterLogin(currentUser);
+                        switchPage('dashboard');
+                        switchTab(isAdminUser(currentUser.email) ? 'admin-workspace' : 'catalog');
+                        showToast("Email Verified!", `Your email ${currentUser.email} is now verified!`);
+                        return true;
+                    } else {
+                        switchPage('auth');
+                        setAuthModeTab('signin');
+                        showAuthVerificationBanner(
+                            "Email Address Verified!",
+                            `Thank you! Your email${verifiedEmail ? ` (<b>${verifiedEmail}</b>)` : ''} has been verified with <b>${FIREBASE_SENDER_NAME}</b>. You can now sign in with your password.`,
+                            verifiedEmail
+                        );
+                        showToast("Email Verified!", "Your email address is verified. Please sign in now!");
+                        return true;
+                    }
+                }
+            } catch (err) {
+                cancelRetroLoading();
+                window.history.replaceState({}, document.title, window.location.pathname);
+                switchPage('auth');
+                setAuthModeTab('signin');
+                showAuthVerificationBanner(
+                    "Verification Link Expired or Already Used",
+                    `This verification link from <b>${FIREBASE_SENDER_NAME}</b> (<b class="font-mono">${FIREBASE_SENDER_EMAIL}</b>) has already been used or expired. Try signing in directly, or click <b>"Resend verification email (new sign up)"</b> below to get a fresh link.`
+                );
+                showToast("Verification Notice", "Link already used or expired. Try signing in or click Resend.", true);
+                return true;
+            }
+            return false;
+        }
+
         function isGuestUser() {
             if (!currentUser) return true;
             if (currentUser.isGuest === true) return true;
@@ -2351,7 +3167,6 @@
             return em.startsWith('guest_') || em.endsWith('@sweetopiashop.my');
         }
 
-        /* REDIRECT GUEST DIRECTLY TO CUSTOMER SIGN UP FORM */
         window.redirectGuestToSignUp = function(reasonMsg = "Please create a customer account before adding items to cart or checking out.") {
             closeProductDetail();
             closePrescriptionPickerModal();
@@ -2360,10 +3175,12 @@
             showToast("Sign Up Account Required", reasonMsg, true);
         };
 
-        /* ADAPTIVE 10-BAR RETRO PROGRESS CONTROLLER */
+        /* =========================================================================
+           NON-BLOCKING RETRO 10-BAR PROGRESS CONTROLLER
+           ========================================================================= */
         let loadingBarsProgress = 0;
         let loadingIntervalTimer = null;
-        let loadingResolveFn = null;
+        let loadingSafetyTimeout = null;
 
         function setRetroBars(count) {
             loadingBarsProgress = Math.min(10, Math.max(0, count));
@@ -2376,6 +3193,22 @@
                         bar.classList.remove('filled');
                     }
                 }
+            }
+        }
+
+        function hideRetroModalImmediate() {
+            if (loadingIntervalTimer) {
+                clearInterval(loadingIntervalTimer);
+                loadingIntervalTimer = null;
+            }
+            if (loadingSafetyTimeout) {
+                clearTimeout(loadingSafetyTimeout);
+                loadingSafetyTimeout = null;
+            }
+            const modal = document.getElementById('retro-auth-loading-modal');
+            if (modal) {
+                modal.classList.remove('opacity-100');
+                modal.classList.add('opacity-0', 'pointer-events-none');
             }
         }
 
@@ -2392,59 +3225,80 @@
             }
 
             if (loadingIntervalTimer) clearInterval(loadingIntervalTimer);
+            if (loadingSafetyTimeout) clearTimeout(loadingSafetyTimeout);
 
             let current = 0;
             loadingIntervalTimer = setInterval(() => {
-                if (current < 8) {
+                if (current < 9) {
                     current++;
                     setRetroBars(current);
                 }
-            }, 180);
+            }, 140);
 
-            return new Promise(resolve => {
-                loadingResolveFn = resolve;
-            });
+            loadingSafetyTimeout = setTimeout(() => {
+                hideRetroModalImmediate();
+            }, 7000);
         }
 
-        function finishRetroLoading(speed = 'normal') {
-            if (loadingIntervalTimer) clearInterval(loadingIntervalTimer);
-
+        function finishRetroLoading() {
+            if (loadingIntervalTimer) {
+                clearInterval(loadingIntervalTimer);
+                loadingIntervalTimer = null;
+            }
+            if (loadingSafetyTimeout) {
+                clearTimeout(loadingSafetyTimeout);
+                loadingSafetyTimeout = null;
+            }
+            setRetroBars(10);
             return new Promise((resolve) => {
-                const stepDelay = speed === 'fast' ? 30 : 60;
-                const fillRest = () => {
-                    if (loadingBarsProgress < 10) {
-                        setRetroBars(loadingBarsProgress + 1);
-                        setTimeout(fillRest, stepDelay);
-                    } else {
-                        setTimeout(() => {
-                            const modal = document.getElementById('retro-auth-loading-modal');
-                            if (modal) {
-                                modal.classList.remove('opacity-100');
-                                modal.classList.add('opacity-0', 'pointer-events-none');
-                            }
-                            if (loadingResolveFn) {
-                                loadingResolveFn();
-                                loadingResolveFn = null;
-                            }
-                            resolve();
-                        }, 220);
-                    }
-                };
-                fillRest();
+                setTimeout(() => {
+                    hideRetroModalImmediate();
+                    resolve();
+                }, 160);
             });
         }
 
         function cancelRetroLoading() {
-            if (loadingIntervalTimer) clearInterval(loadingIntervalTimer);
-            const modal = document.getElementById('retro-auth-loading-modal');
-            if (modal) {
-                modal.classList.remove('opacity-100');
-                modal.classList.add('opacity-0', 'pointer-events-none');
+            hideRetroModalImmediate();
+        }
+
+        /* =========================================================================
+           TRACKING WHICH EMAILS JUST REGISTERED (VERIFICATION REQUIRED AFTER SIGN UP)
+           ========================================================================= */
+        function getNewlyRegisteredUnverifiedSet() {
+            try {
+                const raw = localStorage.getItem('sweetopia_pending_signup_verify');
+                const arr = raw ? JSON.parse(raw) : [];
+                return new Set(Array.isArray(arr) ? arr.map(e => String(e).toLowerCase()) : []);
+            } catch (e) {
+                return new Set();
             }
-            if (loadingResolveFn) {
-                loadingResolveFn();
-                loadingResolveFn = null;
+        }
+
+        function markEmailRequiresPostSignupVerification(email) {
+            if (!email) return;
+            const clean = email.trim().toLowerCase();
+            const set = getNewlyRegisteredUnverifiedSet();
+            set.add(clean);
+            try {
+                localStorage.setItem('sweetopia_pending_signup_verify', JSON.stringify(Array.from(set)));
+            } catch (e) {}
+        }
+
+        function clearEmailPostSignupVerification(email) {
+            if (!email) return;
+            const clean = email.trim().toLowerCase();
+            const set = getNewlyRegisteredUnverifiedSet();
+            if (set.delete(clean)) {
+                try {
+                    localStorage.setItem('sweetopia_pending_signup_verify', JSON.stringify(Array.from(set)));
+                } catch (e) {}
             }
+        }
+
+        function isEmailPendingPostSignupVerification(email) {
+            if (!email) return false;
+            return getNewlyRegisteredUnverifiedSet().has(email.trim().toLowerCase());
         }
 
         let products = [
@@ -2524,7 +3378,6 @@
                 return "In Stock";
             }
 
-            // Aggregate across all available powers for store catalog badge
             let hasWarehouse = false;
             let hasVendor = false;
             let anyAvailable = false;
@@ -2579,15 +3432,21 @@
         let userAvatarsMap = {};
         let registeredCustomersList = [...SEEDED_REGISTERED_CUSTOMERS];
         let verifiedEmailsMap = {};
+        let adminSupportOnlineFlag = false;
+        let lastPendingVerificationEmail = '';
+        let lastPendingVerificationPassword = '';
         const DEFAULT_USER_AVATAR = "https://digitalpastel.github.io/digital/sweetopiashop/Bratz1.webp";
 
-        function showAuthVerificationBanner(title, message) {
+        function showAuthVerificationBanner(title, message, targetEmail = '') {
             const banner = document.getElementById('auth-verification-banner');
             const titleEl = document.getElementById('auth-verification-banner-title');
             const msgEl = document.getElementById('auth-verification-banner-msg');
             if (!banner) return;
+            if (targetEmail) {
+                lastPendingVerificationEmail = targetEmail.trim().toLowerCase();
+            }
             if (titleEl && title) titleEl.innerText = title;
-            if (msgEl && message) msgEl.innerText = message;
+            if (msgEl && message) msgEl.innerHTML = message;
             banner.classList.remove('hidden');
         }
 
@@ -2595,6 +3454,143 @@
             const banner = document.getElementById('auth-verification-banner');
             banner?.classList.add('hidden');
         }
+
+        window.resendVerificationEmailFromPage1 = async function() {
+            const emailInput = document.getElementById('auth-email');
+            const pwdInput = document.getElementById('auth-password');
+            const email = ((emailInput?.value || '') || lastPendingVerificationEmail || '').trim().toLowerCase();
+            const rawPwd = (pwdInput?.value || '') || lastPendingVerificationPassword || '';
+            const password = rawPwd.trim();
+
+            if (!email) {
+                showToast("Email Required", "Please type your registered email address in the Email box first.", true);
+                emailInput?.focus();
+                return;
+            }
+
+            if (isAdminUser(email)) {
+                showToast("Admin Account", "Admin accounts do not require email verification.");
+                return;
+            }
+
+            if (!auth) {
+                await saveRegisteredCustomerRecord(email, null, false);
+                showAuthVerificationBanner(
+                    "Verification Email Re-sent!",
+                    `We sent a fresh confirmation email from <b>${FIREBASE_SENDER_NAME}</b> (<b class="font-mono">${FIREBASE_SENDER_EMAIL}</b>) to <b>${email}</b>. Follow the link in your inbox (or spam folder) to verify your email address, then sign in.`,
+                    email
+                );
+                showToast("Verification Link Sent", `Verification email resent from ${FIREBASE_SENDER_NAME} (${FIREBASE_SENDER_EMAIL}).`);
+                return;
+            }
+
+            if (!password) {
+                setAuthModeTab('signin');
+                showAuthVerificationBanner(
+                    "Enter Password to Resend Link",
+                    `To resend the confirmation email from <b>${FIREBASE_SENDER_NAME}</b> (<b class="font-mono">${FIREBASE_SENDER_EMAIL}</b>) for <b>${email}</b>, enter your password below and click <b>"Resend Verification Email"</b>.`,
+                    email
+                );
+                showToast("Password Needed", "Enter your password first so we can resend your verification link.", true);
+                pwdInput?.focus();
+                return;
+            }
+
+            startRetroLoading("RESENDING VERIFICATION EMAIL...");
+            try {
+                let user = auth.currentUser;
+                if (!user || (user.email || '').toLowerCase() !== email) {
+                    try {
+                        const res = await auth.signInWithEmailAndPassword(email, password);
+                        user = res.user;
+                    } catch (signInErr) {
+                        const sCode = signInErr?.code || '';
+                        if (sCode === 'auth/user-not-found' || sCode === 'auth/invalid-credential' || sCode === 'auth/invalid-login-credentials') {
+                            try {
+                                const createRes = await auth.createUserWithEmailAndPassword(email, password);
+                                user = createRes.user;
+                                saveRegisteredCustomerRecord(email, user?.uid, false).catch(() => {});
+                            } catch (createErr) {
+                                throw signInErr;
+                            }
+                        } else {
+                            throw signInErr;
+                        }
+                    }
+                }
+
+                try {
+                    await user.reload();
+                    user = auth.currentUser || user;
+                } catch (e) {}
+
+                if (user && user.emailVerified) {
+                    clearEmailPostSignupVerification(email);
+                    hideAuthVerificationBanner();
+                    currentUser = user;
+                    localStorage.setItem('sweetopia_logged_in_email', email);
+                    saveRegisteredCustomerRecord(email, user.uid, true).catch(() => {});
+                    loadCustomerCartFromFirestore(user.uid).catch(() => {});
+                    updateUIAfterLogin(currentUser);
+                    updateAdminChatUserDropdown();
+                    await finishRetroLoading();
+                    showToast("Already Verified!", `Your email ${email} is already verified. Signing you in now!`);
+                    switchPage('dashboard');
+                    switchTab('catalog');
+                    updatePresence(email, true);
+                    return;
+                }
+
+                await sendFirebaseVerificationWithFallback(user);
+                markEmailRequiresPostSignupVerification(email);
+
+                try {
+                    await auth.signOut();
+                } catch (e) {}
+
+                currentUser = null;
+                localStorage.removeItem('sweetopia_logged_in_email');
+                await finishRetroLoading();
+
+                setAuthModeTab('signin');
+                showAuthVerificationBanner(
+                    "Confirmation Email Sent!",
+                    `We dispatched a verification email from <b>${FIREBASE_SENDER_NAME}</b> (<b class="font-mono">${FIREBASE_SENDER_EMAIL}</b>) to <b>${email}</b>. Check your Inbox, Promotions, or Spam folder (allow 1–2 minutes), click the link, then sign in.`,
+                    email
+                );
+                showToast("Verification Sent!", `Confirmation email sent from ${FIREBASE_SENDER_EMAIL} to ${email}.`);
+            } catch (err) {
+                cancelRetroLoading();
+                const code = err?.code || '';
+                if (code === 'auth/too-many-requests') {
+                    showAuthVerificationBanner(
+                        "Email Already Sent Recently",
+                        `<b>${FIREBASE_SENDER_NAME}</b> (<b class="font-mono">${FIREBASE_SENDER_EMAIL}</b>) already sent a verification email to <b>${email}</b>. Please check your inbox and Spam folder, or wait 2 minutes before requesting another.`,
+                        email
+                    );
+                    showToast("Please Wait", "A verification email was already sent recently. Check your inbox or spam folder.", true);
+                } else if (code === 'auth/invalid-credential' || code === 'auth/wrong-password' || code === 'auth/invalid-login-credentials') {
+                    showAuthVerificationBanner(
+                        "Account Password Differs From Email Password",
+                        `Firebase Authentication uses the password you registered for <b>${email}</b> on this website (not your Gmail/email inbox login password). Click <b>"Forgot?"</b> to send a password reset email from <b>${FIREBASE_SENDER_EMAIL}</b> to <b>${email}</b>.`,
+                        email
+                    );
+                    showToast("Password Mismatch", "Use your Sweetopia account password or click 'Forgot?' to reset it.", true);
+                } else if (code === 'auth/weak-password') {
+                    showToast("Weak Password", "Firebase requires a password of at least 6 characters.", true);
+                } else {
+                    showToast("Verification Error", `${err.code || ''}: ${err.message || "Could not send verification email."}`, true);
+                }
+            }
+        };
+
+        window.quickCreateAndVerifyFromSignIn = async function() {
+            setAuthModeTab('signup');
+            const form = document.getElementById('auth-form');
+            if (form) {
+                form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+            }
+        };
 
         function getUserAvatarForEmail(email) {
             if (!email) return DEFAULT_USER_AVATAR;
@@ -2648,9 +3644,6 @@
             }
         ];
 
-        /* =========================================================================
-            CUSTOMER NOTIFICATION BELL SYSTEM (DEDUPLICATED & INTERACTIVE)
-           ========================================================================= */
         function loadReadNotifications() {
             try {
                 const stored = localStorage.getItem('sweetopia_read_notif_keys');
@@ -2928,8 +3921,288 @@
         };
 
         /* =========================================================================
-            RETRO Y2K ORDER SUCCESS WINDOW MODAL LOGIC
+            RETRO Y2K ORDER SUCCESS WINDOW MODAL & CUSTOMER FEEDBACK CAROUSEL LOGIC
            ========================================================================= */
+        let selectedFeedbackStars = 5;
+        const DEFAULT_SEEDED_FEEDBACKS = [
+            {
+                id: 'fb_seed_1',
+                name: 'Alyssa',
+                email: 'alyssa@kawaii.my',
+                avatar: 'https://digitalpastel.github.io/digital/sweetopiashop/Bratz2.webp',
+                rating: 5,
+                comment: 'Super fast delivery and the lenses are so comfortable all day long! Love the cute packaging too!',
+                createdAt: '2026-10-12T10:00:00.000Z'
+            },
+            {
+                id: 'fb_seed_2',
+                name: 'Sarah',
+                email: 'sarah@sweetlens.com',
+                avatar: 'https://digitalpastel.github.io/digital/sweetopiashop/Princess3.webp',
+                rating: 5,
+                comment: 'ToyyibPay FPX checkout was super smooth and my prescription power arrived accurate and fresh.',
+                createdAt: '2026-10-18T14:30:00.000Z'
+            }
+        ];
+        let customerFeedbackList = [];
+
+        function loadCustomerFeedbacks() {
+            try {
+                const stored = localStorage.getItem('sweetopia_customer_feedbacks');
+                if (stored) {
+                    const parsed = JSON.parse(stored);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        customerFeedbackList = parsed;
+                        return;
+                    }
+                }
+            } catch (e) { console.warn(e); }
+            customerFeedbackList = [...DEFAULT_SEEDED_FEEDBACKS];
+            saveCustomerFeedbacksLocal();
+        }
+
+        function saveCustomerFeedbacksLocal() {
+            try {
+                localStorage.setItem('sweetopia_customer_feedbacks', JSON.stringify(customerFeedbackList));
+            } catch (e) {}
+        }
+
+        function escapeHtmlText(str) {
+            return String(str || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        window.renderCustomerFeedbackWall = function() {
+            const track = document.getElementById('feedback-carousel-track');
+            const counterNote = document.getElementById('feedback-counter-note');
+            if (!track) return;
+
+            const isAdmin = currentUser && isAdminUser(currentUser.email);
+            const list = customerFeedbackList.length > 0 ? customerFeedbackList : DEFAULT_SEEDED_FEEDBACKS;
+
+            if (counterNote) {
+                counterNote.innerText = list.length > 1
+                    ? `${list.length} Customer Reviews • Scroll right to read more →`
+                    : `${list.length} Verified Customer Review`;
+            }
+
+            track.innerHTML = list.map((fb) => {
+                const starsCount = Math.min(5, Math.max(1, parseInt(fb.rating, 10) || 5));
+                const starsHtml = Array.from({ length: 5 }, (_, idx) =>
+                    `<span style="color: ${idx < starsCount ? '#ffca18' : '#d6d3c9'};">★</span>`
+                ).join('');
+
+                const avatarUrl = fb.avatar || getUserAvatarForEmail(fb.email) || DEFAULT_USER_AVATAR;
+                const displayName = escapeHtmlText(fb.name || (fb.email ? fb.email.split('@')[0] : 'Happy Customer'));
+                const quoteText = escapeHtmlText(fb.comment || 'Wonderful experience shopping at Sweetopia Shop!');
+
+                const adminDeleteBtnHtml = isAdmin ? `
+                    <button type="button" onclick="adminDeleteFeedback('${fb.id}')" class="absolute -bottom-3 right-5 z-20 bg-rose-600 hover:bg-rose-700 active:scale-95 text-white text-[11px] font-extrabold px-3 py-1.5 rounded-full border-2 border-black shadow-[0_3px_0_0_#1e1b4b] flex items-center gap-1.5 cursor-pointer transition" title="Admin Only: Delete this customer feedback">
+                        <i class="fa-solid fa-trash-can text-[10px]"></i>
+                        <span>Delete Feedback</span>
+                    </button>
+                ` : '';
+
+                return `
+                    <div class="card-stage">
+                        <div class="concentric-ring">
+                            <div class="ring-inner"></div>
+                        </div>
+
+                        <div class="speech-bubble">
+                            <div class="heart-badge badge-top-left">
+                                <div class="heart-ring">
+                                    <svg viewBox="0 0 24 24" class="heart-icon">
+                                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="heart-badge badge-top-right">
+                                <div class="heart-ring">
+                                    <svg viewBox="0 0 24 24" class="heart-icon">
+                                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="heart-badge badge-bottom">
+                                <div class="heart-ring">
+                                    <svg viewBox="0 0 24 24" class="heart-icon">
+                                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <div class="card-body">
+                                <div class="avatar-wrapper">
+                                    <img src="${avatarUrl}" alt="${displayName}" onerror="this.src='${DEFAULT_USER_AVATAR}'" class="avatar-img" />
+                                </div>
+                                <div class="testimonial-content">
+                                    <div class="stars" aria-label="${starsCount} out of 5 stars">
+                                        ${starsHtml}
+                                    </div>
+                                    <h3 class="client-name">${displayName}</h3>
+                                    <p class="client-quote">${quoteText}</p>
+                                </div>
+                            </div>
+
+                            ${adminDeleteBtnHtml}
+
+                            <div class="bubble-tail"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        };
+
+        window.scrollFeedbackCarousel = function(direction) {
+            const track = document.getElementById('feedback-carousel-track');
+            if (!track) return;
+            const step = Math.min(660, track.clientWidth * 0.85);
+            track.scrollBy({ left: direction * step, behavior: 'smooth' });
+        };
+
+        window.setFeedbackRating = function(starCount) {
+            selectedFeedbackStars = starCount;
+            const labels = {
+                1: '1 / 5 Stars — Needs Improvement',
+                2: '2 / 5 Stars — Fair',
+                3: '3 / 5 Stars — Good Experience',
+                4: '4 / 5 Stars — Great Experience!',
+                5: '5 / 5 Stars — Wonderful!'
+            };
+            const labelEl = document.getElementById('feedback-rating-label');
+            if (labelEl) labelEl.innerText = labels[starCount] || `${starCount} / 5 Stars`;
+
+            document.querySelectorAll('.feedback-star-btn').forEach(btn => {
+                const val = parseInt(btn.getAttribute('data-star'), 10);
+                if (val <= starCount) {
+                    btn.classList.remove('text-slate-300');
+                    btn.classList.add('text-amber-400');
+                } else {
+                    btn.classList.remove('text-amber-400');
+                    btn.classList.add('text-slate-300');
+                }
+            });
+        };
+
+        window.openFeedbackPromptModal = function() {
+            window.hideOrderSuccessModal();
+
+            const modal = document.getElementById('feedback-prompt-modal');
+            const frame = document.getElementById('feedback-prompt-frame');
+            const avatarPreview = document.getElementById('feedback-modal-avatar-preview');
+            const namePreview = document.getElementById('feedback-modal-name-preview');
+            const nameInput = document.getElementById('feedback-author-name');
+            const msgInput = document.getElementById('feedback-message-input');
+
+            const userEmail = currentUser?.email || '';
+            const defaultName = userEmail && !isGuestUser() ? userEmail.split('@')[0] : 'Happy Customer';
+            const userAvatar = getUserAvatarForEmail(userEmail);
+
+            if (avatarPreview) {
+                avatarPreview.innerHTML = renderAvatarSmallInnerHtml(userAvatar);
+            }
+            if (namePreview) namePreview.innerText = defaultName;
+            if (nameInput) nameInput.value = defaultName;
+            if (msgInput) msgInput.value = '';
+
+            window.setFeedbackRating(5);
+
+            if (modal) {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modal.classList.add('opacity-100');
+            }
+            if (frame) {
+                frame.classList.remove('scale-95');
+                frame.classList.add('scale-100');
+            }
+        };
+
+        window.closeFeedbackPromptModal = function() {
+            const modal = document.getElementById('feedback-prompt-modal');
+            const frame = document.getElementById('feedback-prompt-frame');
+            if (modal) {
+                modal.classList.remove('opacity-100');
+                modal.classList.add('opacity-0', 'pointer-events-none');
+            }
+            if (frame) {
+                frame.classList.remove('scale-100');
+                frame.classList.add('scale-95');
+            }
+        };
+
+        window.submitCustomerFeedback = async function(event) {
+            if (event) event.preventDefault();
+            const nameInput = document.getElementById('feedback-author-name');
+            const msgInput = document.getElementById('feedback-message-input');
+
+            const authorName = (nameInput?.value || '').trim() || (currentUser?.email ? currentUser.email.split('@')[0] : 'Happy Customer');
+            const comment = (msgInput?.value || '').trim();
+            if (!comment) {
+                showToast("Feedback Required", "Please write a short feedback message first.", true);
+                return;
+            }
+
+            const userEmail = (currentUser?.email || 'customer@sweetopiashop.my').trim().toLowerCase();
+            const avatarUrl = getUserAvatarForEmail(userEmail);
+            const fbId = 'fb_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+
+            const newFeedback = {
+                id: fbId,
+                name: authorName,
+                email: userEmail,
+                avatar: avatarUrl,
+                rating: selectedFeedbackStars || 5,
+                comment: comment,
+                createdAt: new Date().toISOString()
+            };
+
+            customerFeedbackList.unshift(newFeedback);
+            saveCustomerFeedbacksLocal();
+            window.renderCustomerFeedbackWall();
+            window.closeFeedbackPromptModal();
+
+            if (db) {
+                try {
+                    await db.collection("lumilens_feedbacks").doc(fbId).set(newFeedback);
+                } catch (e) {
+                    console.warn("Feedback Firestore save error:", e);
+                }
+            }
+
+            showToast("Thank You!", "Your feedback and star rating have been published!");
+            const wallEl = document.getElementById('feedback-wall-section');
+            if (wallEl) {
+                wallEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                const track = document.getElementById('feedback-carousel-track');
+                if (track) track.scrollTo({ left: 0, behavior: 'smooth' });
+            }
+        };
+
+        window.adminDeleteFeedback = async function(feedbackId) {
+            if (!currentUser || !isAdminUser(currentUser.email)) {
+                showToast("Permission Denied", "Only Administrators can delete customer feedback.", true);
+                return;
+            }
+
+            customerFeedbackList = customerFeedbackList.filter(item => item.id !== feedbackId);
+            saveCustomerFeedbacksLocal();
+            window.renderCustomerFeedbackWall();
+
+            if (db) {
+                try {
+                    await db.collection("lumilens_feedbacks").doc(feedbackId).delete();
+                } catch (e) {
+                    console.warn("Feedback Firestore delete error:", e);
+                }
+            }
+            showToast("Feedback Deleted", "Customer feedback has been removed by Admin.");
+        };
+
         window.showOrderSuccessModal = function() {
             const modal = document.getElementById('order-success-modal');
             const frame = document.getElementById('order-success-frame');
@@ -2956,11 +4229,17 @@
 
         window.handleClose = function() {
             window.hideOrderSuccessModal();
+            setTimeout(() => {
+                window.openFeedbackPromptModal();
+            }, 220);
         };
 
         window.handleContinue = function() {
             window.hideOrderSuccessModal();
             switchTab('catalog');
+            setTimeout(() => {
+                window.openFeedbackPromptModal();
+            }, 250);
         };
 
         function checkToyyibPayPaymentCallback() {
@@ -3180,9 +4459,6 @@
             }
         };
 
-        /* =========================================================================
-            CUSTOMER DELIVERY ADDRESSES CRUD MODAL & STORAGE
-           ========================================================================= */
         function loadSavedAddresses() {
             try {
                 const stored = localStorage.getItem('sweetopia_saved_addresses');
@@ -3719,7 +4995,7 @@
             updateCartBadge();
             updateUIAfterLogin(currentUser);
 
-            await finishRetroLoading('fast');
+            await finishRetroLoading();
 
             switchPage('dashboard');
             switchTab('catalog');
@@ -3929,6 +5205,7 @@
                 renderAdminProductsList();
                 renderAdminPowerStockCheckboxes();
                 renderAdminVoucherCustomerDropdowns();
+                renderAdminVoucherProductDropdowns();
             }
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -3958,10 +5235,16 @@
             const emailInput = document.getElementById('auth-email');
             const pwdInput = document.getElementById('auth-password');
             const email = (emailInput?.value || '').trim().toLowerCase();
-            const password = pwdInput?.value || '';
+            const password = (pwdInput?.value || '').trim();
 
             if (!email || !password) {
                 showToast("Missing Credentials", "Please enter both email address and password.", true);
+                return;
+            }
+
+            if (password.length < 6) {
+                showToast("Password Too Short", "Please enter a password with at least 6 characters.", true);
+                pwdInput?.focus();
                 return;
             }
 
@@ -3972,44 +5255,38 @@
 
             if (!auth) {
                 if (!isSigningIn) {
-                    await saveRegisteredCustomerRecord(email, null, false);
-                    await finishRetroLoading('fast');
+                    lastPendingVerificationEmail = email;
+                    lastPendingVerificationPassword = password;
+                    markEmailRequiresPostSignupVerification(email);
+                    saveRegisteredCustomerRecord(email, null, false).catch(() => {});
+                    await finishRetroLoading();
                     if (pwdInput) pwdInput.value = '';
                     setAuthModeTab('signin');
                     showAuthVerificationBanner(
                         "Verification Email Sent!",
-                        `A verification link has been sent to ${email}. Please click the link in your email first, then sign in with your password.`
+                        `A confirmation email has been sent from <b>${FIREBASE_SENDER_NAME}</b> (<b class="font-mono">${FIREBASE_SENDER_EMAIL}</b>) to <b>${email}</b> after sign up. Follow the link to verify your email address, then sign in with your password.`,
+                        email
                     );
-                    showToast("Verify Your Email", "Registration saved! Please verify your email before signing in.");
+                    showToast("Verify Your Email", `Verification email sent from ${FIREBASE_SENDER_NAME} (${FIREBASE_SENDER_EMAIL}).`);
                     return;
                 }
 
-                // Offline mode check for unverified accounts
-                if (!isAdminUser(email) && verifiedEmailsMap[email] === false) {
-                    cancelRetroLoading();
-                    showAuthVerificationBanner(
-                        "Email Not Verified Yet",
-                        `Your account (${email}) is not verified yet. Please click the verification link sent to your email before signing in.`
-                    );
-                    showToast("Verification Required", "Please verify your email address before signing in.", true);
-                    return;
-                }
-
+                clearEmailPostSignupVerification(email);
                 hideAuthVerificationBanner();
                 currentUser = { email: email, isGuest: false, emailVerified: true };
-                await saveRegisteredCustomerRecord(email, null, true);
+                saveRegisteredCustomerRecord(email, null, true).catch(() => {});
                 localStorage.setItem('sweetopia_logged_in_email', email);
                 updateUIAfterLogin(currentUser);
-                await finishRetroLoading('fast');
+                await finishRetroLoading();
                 switchPage('dashboard');
                 switchTab(isAdminUser(email) ? 'admin-workspace' : 'catalog');
-                showToast("Signed In (Offline)", `Welcome ${email}`);
+                showToast("Signed In", `Welcome ${email}!`);
                 updatePresence(email, true);
                 return;
             }
 
             try {
-                if (authMode === 'signin') {
+                if (isSigningIn) {
                     const res = await auth.signInWithEmailAndPassword(email, password);
                     let user = res.user;
                     try {
@@ -4017,11 +5294,9 @@
                         user = auth.currentUser || user;
                     } catch (reloadErr) {}
 
-                    // Strict Email Verification Enforcement (Admins are exempt)
-                    if (!isAdminUser(email) && user && user.emailVerified === false) {
-                        try {
-                            await user.sendEmailVerification();
-                        } catch (resendErr) {}
+                    if (!isAdminUser(email) && user && user.emailVerified === false && isEmailPendingPostSignupVerification(email)) {
+                        lastPendingVerificationEmail = email;
+                        lastPendingVerificationPassword = password;
                         try {
                             await auth.signOut();
                         } catch (signOutErr) {}
@@ -4031,45 +5306,49 @@
                         cancelRetroLoading();
 
                         showAuthVerificationBanner(
-                            "Email Verification Required",
-                            `Your email (${email}) has not been verified yet. We have sent a verification link to your inbox—please click the link in your email and then sign in again.`
+                            "Please Click Your Sign-Up Verification Link First",
+                            `You signed up with <b>${email}</b> and haven't verified your email yet. Check your inbox (or spam folder) for the confirmation email from <b>${FIREBASE_SENDER_NAME}</b> (<b class="font-mono">${FIREBASE_SENDER_EMAIL}</b>), click the link, or click <b>"Resend Verification Email"</b> below.`,
+                            email
                         );
-                        showToast("Email Not Verified", "Please click the verification link in your email before signing in.", true);
+                        showToast("Complete Sign-Up Verification", `Click the verification link from ${FIREBASE_SENDER_NAME}, then sign in.`, true);
                         return;
                     }
 
+                    clearEmailPostSignupVerification(email);
                     hideAuthVerificationBanner();
                     currentUser = user;
-                    await saveRegisteredCustomerRecord(email, user?.uid, true);
                     localStorage.setItem('sweetopia_logged_in_email', email);
-                    await loadCustomerCartFromFirestore(user?.uid);
+
+                    saveRegisteredCustomerRecord(email, user?.uid, true).catch(() => {});
+                    loadCustomerCartFromFirestore(user?.uid).catch(() => {});
+
                     updateUIAfterLogin(currentUser);
                     updateAdminChatUserDropdown();
-                    await finishRetroLoading('fast');
+                    await finishRetroLoading();
 
                     showToast("Signed In", `Welcome back, ${email}!`);
                     switchPage('dashboard');
                     switchTab(isAdminUser(email) ? 'admin-workspace' : 'catalog');
                     updatePresence(email, true);
                 } else {
-                    // STRICT SIGN UP FLOW:
-                    // 1. Create account in Firebase Auth
                     const res = await auth.createUserWithEmailAndPassword(email, password);
                     const newUser = res.user;
+                    lastPendingVerificationEmail = email;
+                    lastPendingVerificationPassword = password;
+                    markEmailRequiresPostSignupVerification(email);
 
-                    // 2. Save customer profile to central Cloud Firestore lumilens_users (and users fallback) BEFORE signing out while authenticated
-                    await saveRegisteredCustomerRecord(email, newUser?.uid, false);
+                    saveRegisteredCustomerRecord(email, newUser?.uid, false).catch(() => {});
 
-                    // 3. Send verification email
                     let emailSentOk = true;
+                    let sendErrDetail = "";
                     try {
-                        await newUser.sendEmailVerification();
+                        await sendFirebaseVerificationWithFallback(newUser);
                     } catch (verErr) {
                         emailSentOk = false;
+                        sendErrDetail = `${verErr?.code || 'error'}: ${verErr?.message || ''}`;
                         console.warn("Verification email error:", verErr);
                     }
 
-                    // 4. Immediately sign out so unverified account cannot bypass login
                     try {
                         await auth.signOut();
                     } catch (soErr) {}
@@ -4079,30 +5358,60 @@
                     sessionStorage.removeItem('sweetopia_active_page');
                     sessionStorage.removeItem('sweetopia_active_tab');
 
-                    await finishRetroLoading('fast');
+                    await finishRetroLoading();
 
-                    // 5. Switch back to Sign In tab & show verification instructions
-                    if (pwdInput) pwdInput.value = '';
                     setAuthModeTab('signin');
                     switchPage('auth');
 
                     showAuthVerificationBanner(
-                        "Verification Email Sent!",
+                        emailSentOk ? "Confirmation Email Sent to Your Inbox!" : "Account Created — Click Resend Verification",
                         emailSentOk
-                            ? `Account created for ${email}! We sent a verification link to your email. Please open your inbox, click the verification link, and then sign in with your email and password.`
-                            : `Account created for ${email}! Please verify your email address via the link sent to your inbox, then sign in with your email and password.`
+                            ? `Account created for <b>${email}</b>! Firebase sent a verification email from <b>${FIREBASE_SENDER_NAME}</b> (<b class="font-mono">${FIREBASE_SENDER_EMAIL}</b>). Please check your <b>Inbox, Promotions, or Spam</b> folder (wait 1–2 mins), click the verification link, and then sign in.`
+                            : `Account created for <b>${email}</b>, but Firebase returned (${sendErrDetail}). Click <b>"Resend Verification Email"</b> below to retry sending from <b class="font-mono">${FIREBASE_SENDER_EMAIL}</b>.`,
+                        email
                     );
-                    showToast("Verify Your Email", "Verification email sent! Please click the link in your email before signing in.");
+                    showToast(
+                        emailSentOk ? "Verify Your Email" : "Resend Verification Needed",
+                        emailSentOk ? `Confirmation email sent from ${FIREBASE_SENDER_EMAIL}!` : "Click 'Resend Verification Email' below.",
+                        !emailSentOk
+                    );
                 }
             } catch (err) {
                 cancelRetroLoading();
-                showToast("Authentication Error", err.message, true);
+                const code = err?.code || '';
+                if (code === 'auth/email-already-in-use') {
+                    lastPendingVerificationEmail = email;
+                    lastPendingVerificationPassword = password;
+                    saveRegisteredCustomerRecord(email, null, true).catch(() => {});
+                    setAuthModeTab('signin');
+                    showAuthVerificationBanner(
+                        "Account Already Registered",
+                        `<b>${email}</b> is already registered in Firebase. Click <b>"Sign In To Dashboard"</b> below with your password, or click <b>"Resend Verification Email"</b> if you still need the link from <b class="font-mono">${FIREBASE_SENDER_EMAIL}</b>.`,
+                        email
+                    );
+                    showToast("Already Registered", "Account exists—switched to Sign In tab so you can sign in or resend verification.");
+                } else if (code === 'auth/invalid-credential' || code === 'auth/wrong-password' || code === 'auth/user-not-found' || code === 'auth/invalid-login-credentials') {
+                    lastPendingVerificationEmail = email;
+                    lastPendingVerificationPassword = password;
+                    showAuthVerificationBanner(
+                        "Not Registered Yet or Different Website Password",
+                        `Firebase could not sign in <b>${email}</b> because either:<br>1) This email hasn't been registered under <b>Customer Sign Up</b> yet, OR<br>2) The password differs from the one you created for this site (note: this is separate from your Gmail login password).<br><button type="button" onclick="quickCreateAndVerifyFromSignIn()" class="mt-2 inline-flex items-center gap-1.5 bg-[#65a30d] hover:bg-[#4d7c0f] text-white text-[11px] font-bold px-3 py-1.5 rounded-xl shadow-xs cursor-pointer"><i class="fa-solid fa-user-plus text-[10px]"></i> Register This Email &amp; Send Verification Now</button>`,
+                        email
+                    );
+                    showToast("Check Registration / Password", "Register under 'Customer Sign Up' first or click 'Forgot?' to reset.", true);
+                } else if (code === 'auth/weak-password') {
+                    showToast("Weak Password", "Password should be at least 6 characters long.", true);
+                } else if (code === 'auth/operation-not-allowed') {
+                    showToast("Enable Email/Password in Firebase", "Please enable Email/Password provider in Firebase Console > Authentication > Sign-in method.", true);
+                } else {
+                    showToast("Authentication Error", `${code}: ${err.message}`, true);
+                }
             }
         }
 
         async function handleSignOut() {
             if (currentUser && currentUser.email) {
-                await updatePresence(currentUser.email, false);
+                updatePresence(currentUser.email, false);
             }
             if (auth) {
                 try { await auth.signOut(); } catch(e){}
@@ -4217,6 +5526,7 @@
             updateSupportIndicator();
             renderCustomerInvoicesTabList();
             window.renderCustomerNotifications();
+            window.renderCustomerFeedbackWall();
         }
 
         function renderStoreProducts(list) {
@@ -5463,6 +6773,11 @@
         }
 
         function openForgotPassword() {
+            const authEmailVal = (document.getElementById('auth-email')?.value || lastPendingVerificationEmail || '').trim();
+            const forgotInput = document.getElementById('forgot-email');
+            if (forgotInput && authEmailVal) {
+                forgotInput.value = authEmailVal;
+            }
             const modal = document.getElementById('forgot-modal');
             modal?.classList.remove('opacity-0', 'pointer-events-none');
             modal?.classList.add('opacity-100');
@@ -5476,22 +6791,25 @@
 
         async function submitForgotPassword() {
             const emailInput = document.getElementById('forgot-email');
-            const email = emailInput ? emailInput.value.trim() : '';
+            const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
             if (!email) {
                 showToast("Email Required", "Please enter your account email address.", true);
                 return;
             }
 
             if (auth) {
+                startRetroLoading("SENDING PASSWORD RESET EMAIL...");
                 try {
-                    await auth.sendPasswordResetEmail(email);
-                    showToast("Email Sent", `Password reset instructions sent to ${email}.`);
+                    await sendFirebasePasswordResetWithFallback(email);
+                    await finishRetroLoading();
+                    showToast("Email Sent", `Password reset instructions sent from ${FIREBASE_SENDER_NAME} (${FIREBASE_SENDER_EMAIL}) to ${email}.`);
                     closeForgotPassword();
                 } catch(err) {
+                    cancelRetroLoading();
                     showToast("Error", err.message, true);
                 }
             } else {
-                showToast("Email Sent", `Password reset instructions sent to ${email}.`);
+                showToast("Email Sent", `Password reset instructions sent from ${FIREBASE_SENDER_NAME} (${FIREBASE_SENDER_EMAIL}) to ${email}.`);
                 closeForgotPassword();
             }
         }
@@ -5655,6 +6973,7 @@
             applySavedMobileAvatar();
             updateChatHeaderAvatars();
             renderActiveChatMessages();
+            window.renderCustomerFeedbackWall();
             window.closeAvatarModal();
             showToast("Avatar Updated", "Your profile avatar has been updated.");
         };
@@ -5683,6 +7002,7 @@
                 applySavedMobileAvatar();
                 updateChatHeaderAvatars();
                 renderActiveChatMessages();
+                window.renderCustomerFeedbackWall();
                 window.closeAvatarModal();
                 showToast("Photo Uploaded", "Your custom profile photo has been updated.");
             };
@@ -5816,11 +7136,11 @@
             }
 
             const isAdmin = isAdminUser(currentUser.email);
-            let targetSessionUser = currentUser.email.trim().toLowerCase();
+            let targetSessionUser = (currentUser.email || '').trim().toLowerCase();
 
             if (isAdmin) {
                 const select = document.getElementById('admin-active-chat-user');
-                targetSessionUser = (activeChatSessionUser || select?.value || '').trim().toLowerCase();
+                targetSessionUser = ((activeChatSessionUser || select?.value) || '').trim().toLowerCase();
                 if (!targetSessionUser) {
                     showToast("No User Selected", "Select a customer from the dropdown to reply.", true);
                     return;
@@ -5831,7 +7151,7 @@
 
             const newMsg = {
                 id: 'msg_' + Date.now(),
-                sender: currentUser.email.trim().toLowerCase(),
+                sender: (currentUser.email || '').trim().toLowerCase(),
                 senderName: isAdmin ? 'Admin Support' : (currentUser.guestId || currentUser.email.split('@')[0]),
                 senderAvatar: senderAvatar,
                 text: msgPayload.text || '',
@@ -5870,9 +7190,9 @@
         }
 
         async function clearWidgetChat() {
-            let targetUser = currentUser?.email?.trim().toLowerCase();
+            let targetUser = (currentUser?.email || '').trim().toLowerCase();
             if (currentUser && isAdminUser(currentUser.email)) {
-                targetUser = (activeChatSessionUser || document.getElementById('admin-active-chat-user')?.value || '').trim().toLowerCase();
+                targetUser = ((activeChatSessionUser || document.getElementById('admin-active-chat-user')?.value) || '').trim().toLowerCase();
             }
             if (!targetUser) return;
 
@@ -6078,7 +7398,6 @@
             return `SWEET[${s}]`;
         }
 
-        /* ADMIN BATCH SELECTION & ACTIONS LOGIC */
         window.toggleClearAllButton = function() {
             const masterCheckbox = document.getElementById('confirm-clear-checkbox');
             const isEnabled = masterCheckbox ? masterCheckbox.checked : false;
@@ -6372,6 +7691,9 @@
                 userSessionsMap[cleanEmail] = [];
             }
 
+            renderAdminVoucherCustomerDropdowns();
+            updateAdminChatUserDropdown();
+
             if (db) {
                 try {
                     const docKey = cleanEmail.replace(/[^a-zA-Z0-9]/g, '_');
@@ -6385,7 +7707,6 @@
                         updatedAt: nowIso
                     };
 
-                    // Write to central Cloud Firestore user directory, users fallback, public directory doc, and chat index
                     await Promise.all([
                         db.collection("lumilens_users").doc(docKey).set(userProfilePayload, { merge: true }).catch(() => {}),
                         db.collection("users").doc(docKey).set(userProfilePayload, { merge: true }).catch(() => {}),
@@ -6400,15 +7721,12 @@
                     ]);
                 } catch (e) { console.warn("Save registered user error:", e); }
             }
-
-            renderAdminVoucherCustomerDropdowns();
-            updateAdminChatUserDropdown();
         }
 
         async function syncAllUsersFromServer() {
             if (!db) return;
             try {
-                const [lumiSnap, usersFallbackSnap, chatsSnap, presenceSnap, publicDirSnap] = await Promise.all([
+                const [lumiSnap, usersFallbackSnap, chatsSnap, presenceSnap, dirSnap] = await Promise.all([
                     db.collection("lumilens_users").get({ source: 'server' }).catch(() => db.collection("lumilens_users").get().catch(() => null)),
                     db.collection("users").get({ source: 'server' }).catch(() => db.collection("users").get().catch(() => null)),
                     db.collection("lumilens_chats").get({ source: 'server' }).catch(() => db.collection("lumilens_chats").get().catch(() => null)),
@@ -6421,52 +7739,32 @@
                     ...(registeredCustomersList || [])
                 ]);
 
-                const addCleanEmail = (rawEmail, avatar = null, emailVerified = undefined) => {
+                const addCandidateEmail = (rawEmail, avatar = null, emailVerified = null) => {
                     if (!rawEmail || typeof rawEmail !== 'string') return;
                     const cleanEm = rawEmail.trim().toLowerCase();
                     if (!cleanEm || isAdminUser(cleanEm) || cleanEm.startsWith('guest_') || cleanEm.endsWith('@sweetopiashop.my')) return;
                     merged.add(cleanEm);
-                    if (avatar) {
-                        userAvatarsMap[cleanEm] = avatar;
-                    }
-                    if (typeof emailVerified === 'boolean') {
-                        verifiedEmailsMap[cleanEm] = emailVerified;
-                    }
+                    if (avatar) userAvatarsMap[cleanEm] = avatar;
+                    if (typeof emailVerified === 'boolean') verifiedEmailsMap[cleanEm] = emailVerified;
+                    if (!userSessionsMap[cleanEm]) userSessionsMap[cleanEm] = [];
                 };
 
                 const processSnapshot = (snap) => {
                     if (!snap) return;
                     snap.forEach(docSnap => {
                         const data = docSnap.data();
-                        if (data) {
-                            addCleanEmail(data.email || data.userEmail, data.avatar || data.userAvatar, data.emailVerified);
-                        }
+                        if (!data) return;
+                        addCandidateEmail(data.email || data.userEmail, data.avatar || data.userAvatar, data.emailVerified);
                     });
                 };
 
                 processSnapshot(lumiSnap);
                 processSnapshot(usersFallbackSnap);
                 processSnapshot(chatsSnap);
+                processSnapshot(presenceSnap);
 
-                if (publicDirSnap && publicDirSnap.exists && Array.isArray(publicDirSnap.data()?.emails)) {
-                    publicDirSnap.data().emails.forEach(em => addCleanEmail(em));
-                }
-
-                if (presenceSnap) {
-                    const now = Date.now();
-                    presenceSnap.forEach(docSnap => {
-                        const data = docSnap.data();
-                        if (data && data.email) {
-                            const cleanEm = data.email.trim().toLowerCase();
-                            const lastSeenMs = typeof data.lastSeenMs === 'number'
-                                ? data.lastSeenMs
-                                : new Date(data.lastSeen || 0).getTime();
-                            const isReallyOnline = !!data.isOnline && (Math.abs(now - lastSeenMs) < 90000);
-                            presenceMap[cleanEm] = isReallyOnline;
-                            presenceMap[data.email] = isReallyOnline;
-                            addCleanEmail(cleanEm);
-                        }
-                    });
+                if (dirSnap && dirSnap.exists && Array.isArray(dirSnap.data()?.emails)) {
+                    dirSnap.data().emails.forEach(em => addCandidateEmail(em));
                 }
 
                 registeredCustomersList = Array.from(merged);
@@ -6477,7 +7775,6 @@
                 renderAdminVoucherCustomerDropdowns();
                 updateAdminChatUserDropdown();
                 updateChatHeaderAvatars();
-                updateSupportIndicator();
             } catch (e) {
                 console.warn("Server-level user directory sync warning:", e);
             }
@@ -6542,47 +7839,49 @@
         }
 
         async function updatePresence(email, isOnline) {
-            if (!email) return;
+            if (!db || !email) return;
             const cleanEmail = email.trim().toLowerCase();
+            const nowIso = new Date().toISOString();
             const isAdmin = isAdminUser(cleanEmail);
-            const nowMs = Date.now();
-            const nowIso = new Date(nowMs).toISOString();
 
             presenceMap[cleanEmail] = !!isOnline;
-            presenceMap[email] = !!isOnline;
             if (isAdmin) {
-                presenceMap['admin_support_global'] = !!isOnline;
+                adminSupportOnlineFlag = !!isOnline;
             }
             updateSupportIndicator();
-            updateAdminChatUserDropdown();
 
-            if (!db) return;
             try {
                 const userKey = cleanEmail.replace(/[^a-zA-Z0-9]/g, '_');
                 const tasks = [
                     db.collection("lumilens_presence").doc(userKey).set({
                         email: cleanEmail,
-                        role: isAdmin ? 'admin' : 'customer',
                         isOnline: !!isOnline,
+                        isAdmin: isAdmin,
                         lastSeen: nowIso,
-                        lastSeenMs: nowMs
-                    }, { merge: true })
+                        clientTs: Date.now()
+                    }, { merge: true }).catch(() => {})
                 ];
 
                 if (isAdmin) {
                     tasks.push(
                         db.collection("lumilens_presence").doc("admin_support_status").set({
                             email: cleanEmail,
-                            role: 'admin',
                             isOnline: !!isOnline,
                             lastSeen: nowIso,
-                            lastSeenMs: nowMs
-                        }, { merge: true })
+                            clientTs: Date.now()
+                        }, { merge: true }).catch(() => {})
+                    );
+                } else if (!isGuestUser()) {
+                    tasks.push(
+                        db.collection("lumilens_public_directory").doc("registered_customers").set({
+                            emails: firebase.firestore.FieldValue.arrayUnion(cleanEmail),
+                            updatedAt: nowIso
+                        }, { merge: true }).catch(() => {})
                     );
                 }
 
                 await Promise.all(tasks);
-            } catch(e) { console.warn("Presence sync error:", e); }
+            } catch(e) { }
         }
 
         function initFirestoreListeners() {
@@ -6671,6 +7970,9 @@
                             if (typeof data.emailVerified === 'boolean') {
                                 verifiedEmailsMap[cleanEm] = data.emailVerified;
                             }
+                            if (!userSessionsMap[cleanEm]) {
+                                userSessionsMap[cleanEm] = [];
+                            }
                         }
                     }
                 });
@@ -6684,39 +7986,36 @@
                 renderActiveChatMessages();
             };
 
-            // Real-time listener on central lumilens_users collection
             db.collection("lumilens_users").onSnapshot(handleUserDirectorySnapshot, () => {
                 renderAdminVoucherCustomerDropdowns();
                 updateAdminChatUserDropdown();
             });
 
-            // Real-time listener on users fallback collection
             db.collection("users").onSnapshot(handleUserDirectorySnapshot, () => {});
 
-            // Real-time listener on shared public directory document
             db.collection("lumilens_public_directory").doc("registered_customers").onSnapshot((docSnap) => {
                 if (!docSnap || !docSnap.exists) return;
                 const emails = docSnap.data()?.emails;
-                if (Array.isArray(emails)) {
-                    const merged = new Set([
-                        ...SEEDED_REGISTERED_CUSTOMERS.map(e => e.toLowerCase()),
-                        ...(registeredCustomersList || [])
-                    ]);
-                    emails.forEach(rawEm => {
-                        if (typeof rawEm === 'string') {
-                            const cleanEm = rawEm.trim().toLowerCase();
-                            if (cleanEm && !isAdminUser(cleanEm) && !cleanEm.startsWith('guest_') && !cleanEm.endsWith('@sweetopiashop.my')) {
-                                merged.add(cleanEm);
-                            }
+                if (!Array.isArray(emails)) return;
+                const merged = new Set([
+                    ...SEEDED_REGISTERED_CUSTOMERS.map(e => e.toLowerCase()),
+                    ...(registeredCustomersList || [])
+                ]);
+                emails.forEach(em => {
+                    if (em && typeof em === 'string') {
+                        const cleanEm = em.trim().toLowerCase();
+                        if (!isAdminUser(cleanEm) && !cleanEm.startsWith('guest_') && !cleanEm.endsWith('@sweetopiashop.my')) {
+                            merged.add(cleanEm);
+                            if (!userSessionsMap[cleanEm]) userSessionsMap[cleanEm] = [];
                         }
-                    });
-                    registeredCustomersList = Array.from(merged);
-                    try {
-                        localStorage.setItem('sweetopia_registered_customers', JSON.stringify(registeredCustomersList));
-                    } catch (e) {}
-                    renderAdminVoucherCustomerDropdowns();
-                    updateAdminChatUserDropdown();
-                }
+                    }
+                });
+                registeredCustomersList = Array.from(merged);
+                try {
+                    localStorage.setItem('sweetopia_registered_customers', JSON.stringify(registeredCustomersList));
+                } catch (e) {}
+                renderAdminVoucherCustomerDropdowns();
+                updateAdminChatUserDropdown();
             }, () => {});
 
             db.collection("lumilens_product_vouchers").onSnapshot((snapshot) => {
@@ -6733,6 +8032,27 @@
             }, () => {
                 renderStoreProducts(products);
             });
+
+            db.collection("lumilens_feedbacks").onSnapshot((snapshot) => {
+                if (!snapshot) return;
+                const loadedFeedbacks = [];
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    if (data && data.comment) {
+                        loadedFeedbacks.push({ id: docSnap.id, ...data });
+                    }
+                });
+                if (loadedFeedbacks.length > 0) {
+                    loadedFeedbacks.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+                    customerFeedbackList = loadedFeedbacks;
+                    saveCustomerFeedbacksLocal();
+                } else if (customerFeedbackList.length === 0) {
+                    customerFeedbackList = [...DEFAULT_SEEDED_FEEDBACKS];
+                }
+                window.renderCustomerFeedbackWall();
+            }, () => {
+                window.renderCustomerFeedbackWall();
+            });
         }
 
         function initChatListeners() {
@@ -6740,23 +8060,35 @@
             db.collection("lumilens_presence").onSnapshot((snapshot) => {
                 if (snapshot) {
                     const now = Date.now();
-                    let anyAdminOnline = false;
+                    let sharedAdminOnline = false;
+                    const updatedPresence = {};
+
                     snapshot.forEach(docSnap => {
                         const data = docSnap.data();
-                        if (!data || !data.email) return;
-                        const cleanEm = data.email.trim().toLowerCase();
-                        const lastSeenTime = typeof data.lastSeenMs === 'number'
-                            ? data.lastSeenMs
-                            : new Date(data.lastSeen || 0).getTime();
-                        // 90s tolerance handles slight phone clock skew across different mobile devices
-                        const isReallyOnline = !!data.isOnline && (Math.abs(now - lastSeenTime) < 90000);
-                        presenceMap[cleanEm] = isReallyOnline;
-                        presenceMap[data.email] = isReallyOnline;
-                        if (isReallyOnline && (isAdminUser(cleanEm) || data.role === 'admin' || docSnap.id === 'admin_support_status')) {
-                            anyAdminOnline = true;
+                        if (!data) return;
+                        const lastSeenTime = new Date(data.lastSeen || 0).getTime();
+                        const isRecent = !lastSeenTime || isNaN(lastSeenTime) || (now - lastSeenTime < 90000);
+                        const isReallyOnline = Boolean(data.isOnline) && isRecent;
+
+                        if (docSnap.id === 'admin_support_status') {
+                            if (isReallyOnline) sharedAdminOnline = true;
+                        }
+                        if (data.email && typeof data.email === 'string') {
+                            const cleanEm = data.email.trim().toLowerCase();
+                            updatedPresence[cleanEm] = isReallyOnline;
+                            if (isAdminUser(cleanEm) && isReallyOnline) {
+                                sharedAdminOnline = true;
+                            }
+                            if (!isAdminUser(cleanEm) && !cleanEm.startsWith('guest_') && !cleanEm.endsWith('@sweetopiashop.my')) {
+                                if (!registeredCustomersList.includes(cleanEm)) {
+                                    registeredCustomersList.push(cleanEm);
+                                }
+                            }
                         }
                     });
-                    presenceMap['admin_support_global'] = anyAdminOnline;
+
+                    presenceMap = updatedPresence;
+                    adminSupportOnlineFlag = sharedAdminOnline;
                     updateAdminChatUserDropdown();
                     updateSupportIndicator();
                     renderAdminVoucherCustomerDropdowns();
@@ -6768,16 +8100,22 @@
                     snapshot.forEach(docSnap => {
                         const data = docSnap.data();
                         if (data && data.userEmail) {
-                            const cleanEm = data.userEmail.trim().toLowerCase();
-                            userSessionsMap[cleanEm] = data.messages || [];
+                            const cleanEmail = data.userEmail.trim().toLowerCase();
+                            userSessionsMap[cleanEmail] = data.messages || [];
                             if (data.userAvatar) {
-                                userAvatarsMap[cleanEm] = data.userAvatar;
+                                userAvatarsMap[cleanEmail] = data.userAvatar;
+                            }
+                            if (!isAdminUser(cleanEmail) && !cleanEmail.startsWith('guest_') && !cleanEmail.endsWith('@sweetopiashop.my')) {
+                                if (!registeredCustomersList.includes(cleanEmail)) {
+                                    registeredCustomersList.push(cleanEmail);
+                                }
                             }
                         }
                     });
                     updateAdminChatUserDropdown();
                     updateChatHeaderAvatars();
                     renderActiveChatMessages();
+                    renderAdminVoucherCustomerDropdowns();
                 }
             }, () => {});
         }
@@ -6791,23 +8129,20 @@
             let hasActiveOnline = false;
 
             if (isCustomer) {
-                hasActiveOnline = !!presenceMap['admin_support_global'] ||
-                    ADMIN_EMAILS.some(adminEmail => {
-                        const lower = adminEmail.toLowerCase();
-                        return !!presenceMap[lower] || !!presenceMap[adminEmail];
-                    });
+                hasActiveOnline = adminSupportOnlineFlag || ADMIN_EMAILS.some(adminEmail => {
+                    const cleanAdmin = adminEmail.trim().toLowerCase();
+                    return !!presenceMap[cleanAdmin];
+                });
             } else {
-                const myLower = (currentUser?.email || '').trim().toLowerCase();
                 hasActiveOnline = Object.keys(presenceMap).some(email => {
-                    const cleanKey = email.trim().toLowerCase();
-                    if (cleanKey === 'admin_support_global') return false;
-                    const notMe = !myLower || cleanKey !== myLower;
-                    return notMe && !!presenceMap[email];
+                    const cleanEm = email.trim().toLowerCase();
+                    const notMe = !currentUser || cleanEm !== (currentUser.email || '').trim().toLowerCase();
+                    return notMe && !isAdminUser(cleanEm) && !!presenceMap[cleanEm];
                 });
             }
 
             if (hasActiveOnline) {
-                dot.className = "w-2 h-2 rounded-full bg-emerald-400 inline-block mr-1 transition-colors animate-pulse";
+                dot.className = "w-2 h-2 rounded-full bg-emerald-400 inline-block mr-1 transition-colors";
                 txt.innerText = "Online & Active";
             } else {
                 dot.className = "w-2 h-2 rounded-full bg-slate-400 inline-block mr-1 transition-colors";
@@ -6824,7 +8159,6 @@
                 if (!rawEmail || typeof rawEmail !== 'string') return;
                 const clean = rawEmail.trim().toLowerCase();
                 if (!clean || isAdminUser(clean)) return;
-                // Exclude guest accounts so only registered accounts appear in Admin User Session dropdown
                 if (clean.startsWith('guest_') || clean.endsWith('@sweetopiashop.my')) return;
                 if (!knownUsersMap.has(clean)) {
                     knownUsersMap.set(clean, clean);
@@ -6918,11 +8252,11 @@
             const container = document.getElementById('widget-chat-messages');
             if (!container) return;
 
-            let targetUser = currentUser?.email?.trim().toLowerCase();
+            let targetUser = (currentUser?.email || '').trim().toLowerCase();
             const isAdmin = currentUser && isAdminUser(currentUser.email);
 
             if (isAdmin) {
-                targetUser = (activeChatSessionUser || document.getElementById('admin-active-chat-user')?.value || '').trim().toLowerCase();
+                targetUser = ((activeChatSessionUser || document.getElementById('admin-active-chat-user')?.value) || '').trim().toLowerCase();
             }
 
             if (!targetUser) {
@@ -6938,7 +8272,7 @@
             }
 
             container.innerHTML = msgs.map(m => {
-                const isMe = m.sender === currentUser?.email;
+                const isMe = (m.sender || '').trim().toLowerCase() === (currentUser?.email || '').trim().toLowerCase();
                 const isAdminMsg = m.isAdmin;
                 const isSticker = m.type === 'sticker';
 
@@ -7028,7 +8362,6 @@
             modal.classList.add('opacity-0', 'pointer-events-none');
         }
 
-        // Global window bindings
         window.switchPage = switchPage;
         window.switchTab = switchTab;
         window.setAuthModeTab = setAuthModeTab;
@@ -7098,8 +8431,8 @@
         window.shareProductInChat = shareProductInChat;
         window.switchAdminChatSession = switchAdminChatSession;
         window.adminDeleteSelectedChatSession = adminDeleteSelectedChatSession;
+        window.cancelRetroLoading = cancelRetroLoading;
 
-        // Close notification dropdown when clicking outside
         document.addEventListener('click', (e) => {
             const dropdown = document.getElementById('customer-notifications-dropdown');
             const bellWrapper = document.getElementById('customer-notification-bell-wrapper');
@@ -7111,19 +8444,26 @@
             }
         });
 
-        // Startup lifecycle
         document.addEventListener('DOMContentLoaded', async () => {
-            // Preload & pre-render all 15 stickers and all 19 Bratz & Princess avatars immediately for zero-lag display
             preloadStickerImages();
             renderStickerSlotsGrid(true);
 
-            // Enable smooth wheel horizontal scrolling on category strip
             const catStrip = document.getElementById('category-scroll-strip');
             if (catStrip) {
                 catStrip.addEventListener('wheel', (e) => {
                     if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
                         e.preventDefault();
                         catStrip.scrollBy({ left: e.deltaY * 1.5, behavior: 'smooth' });
+                    }
+                }, { passive: false });
+            }
+
+            const fbTrack = document.getElementById('feedback-carousel-track');
+            if (fbTrack) {
+                fbTrack.addEventListener('wheel', (e) => {
+                    if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+                        e.preventDefault();
+                        fbTrack.scrollBy({ left: e.deltaY * 1.6, behavior: 'smooth' });
                     }
                 }, { passive: false });
             }
@@ -7141,6 +8481,8 @@
             loadAssignedVouchers();
             loadRegisteredCustomers();
             loadReadNotifications();
+            loadCustomerFeedbacks();
+            window.renderCustomerFeedbackWall();
 
             const cSuffixInput = document.getElementById('c_voucherSuffix');
             if (cSuffixInput) {
@@ -7170,23 +8512,27 @@
 
             renderPresetsTable();
 
+            const handledActionCallback = await handleFirebaseEmailActionCallback();
+
             const savedEmail = localStorage.getItem('sweetopia_logged_in_email');
 
-            if (savedEmail) {
-                currentUser = { email: savedEmail, isGuest: false };
-                updateUIAfterLogin(currentUser);
-                const savedPage = sessionStorage.getItem('sweetopia_active_page') || 'dashboard';
-                const defaultTab = isAdminUser(savedEmail) ? 'admin-workspace' : 'catalog';
-                const savedTab = sessionStorage.getItem('sweetopia_active_tab') || defaultTab;
-                switchPage(savedPage);
-                switchTab(savedTab, false);
-                if (savedTab === 'admin-workspace' && isAdminUser(savedEmail)) {
-                    const savedSubTab = sessionStorage.getItem('sweetopia_admin_subtab') || 'stock';
-                    switchAdminSubTab(savedSubTab, false);
+            if (!handledActionCallback) {
+                if (savedEmail) {
+                    currentUser = { email: savedEmail, isGuest: false };
+                    updateUIAfterLogin(currentUser);
+                    const savedPage = sessionStorage.getItem('sweetopia_active_page') || 'dashboard';
+                    const defaultTab = isAdminUser(savedEmail) ? 'admin-workspace' : 'catalog';
+                    const savedTab = sessionStorage.getItem('sweetopia_active_tab') || defaultTab;
+                    switchPage(savedPage);
+                    switchTab(savedTab, false);
+                    if (savedTab === 'admin-workspace' && isAdminUser(savedEmail)) {
+                        const savedSubTab = sessionStorage.getItem('sweetopia_admin_subtab') || 'stock';
+                        switchAdminSubTab(savedSubTab, false);
+                    }
+                    updatePresence(savedEmail, true);
+                } else {
+                    switchPage('auth');
                 }
-                updatePresence(savedEmail, true);
-            } else {
-                switchPage('auth');
             }
 
             if (auth) {
@@ -7197,25 +8543,26 @@
                             user = auth.currentUser || user;
                         } catch (e) {}
 
-                        // Strict verification enforcement on session restore: unverified non-admin accounts cannot stay signed in
-                        if (!isAdminUser(user.email) && user.emailVerified === false) {
-                            await saveRegisteredCustomerRecord(user.email, user.uid, false);
+                        if (!isAdminUser(user.email) && user.emailVerified === false && isEmailPendingPostSignupVerification(user.email)) {
+                            saveRegisteredCustomerRecord(user.email, user.uid, false).catch(() => {});
                             try { await auth.signOut(); } catch (e) {}
                             currentUser = null;
                             localStorage.removeItem('sweetopia_logged_in_email');
                             switchPage('auth');
                             setAuthModeTab('signin');
                             showAuthVerificationBanner(
-                                "Email Verification Required",
-                                `Please verify your email (${user.email}) by clicking the verification link sent to your inbox before signing in.`
+                                "Please Verify Your New Account First",
+                                `Please follow the verification link sent from <b>${FIREBASE_SENDER_NAME}</b> (<b class="font-mono">${FIREBASE_SENDER_EMAIL}</b>) to <b>${user.email}</b> after sign up before signing in.`,
+                                user.email
                             );
                             return;
                         }
 
+                        clearEmailPostSignupVerification(user.email);
                         currentUser = user;
                         localStorage.setItem('sweetopia_logged_in_email', user.email);
-                        await saveRegisteredCustomerRecord(user.email, user.uid, true);
-                        await loadCustomerCartFromFirestore(user.uid);
+                        saveRegisteredCustomerRecord(user.email, user.uid, true).catch(() => {});
+                        loadCustomerCartFromFirestore(user.uid).catch(() => {});
                         updateUIAfterLogin(user);
                         updatePresence(user.email, true);
                     } else {
@@ -7259,7 +8606,6 @@
                 await syncAllUsersFromServer();
 
                 try {
-                    // Ensure seeded registered users exist in Firestore lumilens_users & users fallback so Admin sees them across all devices
                     for (const seededEmail of SEEDED_REGISTERED_CUSTOMERS) {
                         const docKey = seededEmail.replace(/[^a-zA-Z0-9]/g, '_');
                         const seedDoc = {
@@ -7277,6 +8623,7 @@
             renderAdminProductsList();
             renderAdminPowerStockCheckboxes();
             renderAdminVoucherProductDropdowns();
+            initLiveVersionListener();
             initFirestoreListeners();
             initChatListeners();
             onAdminPowerRangeChange();
@@ -7286,6 +8633,7 @@
             updateAdminChatUserDropdown();
             renderChosenCustomerPromoBanner();
             window.renderCustomerNotifications();
+            window.renderCustomerFeedbackWall();
             enforceMobileNavForRole();
 
             checkToyyibPayPaymentCallback();
@@ -7297,11 +8645,9 @@
             }, 20000);
 
             document.addEventListener('visibilitychange', () => {
-                if (document.visibilityState === 'visible') {
+                if (document.visibilityState === 'visible' && currentUser && currentUser.email) {
+                    updatePresence(currentUser.email, true);
                     syncAllUsersFromServer();
-                    if (currentUser && currentUser.email) {
-                        updatePresence(currentUser.email, true);
-                    }
                 }
             });
         });
