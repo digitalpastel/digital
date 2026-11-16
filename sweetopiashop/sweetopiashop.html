@@ -5,18 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light">
     <meta name="supported-color-schemes" content="light">
-    <!-- Cache Busting & No-Cache Directives (v=1.0.3) -->
-    <meta name="app-version" content="1.0.3">
+    <!-- Cache Busting & No-Cache Directives (v=1.0.4) -->
+    <meta name="app-version" content="1.0.4">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Sweetopia Shop - Premium Contact Lens Store &amp; FPX Checkout</title>
-    <!-- App Icons & Stylesheet with Cache Busting Version (?v=1.0.3) -->
-    <link rel="stylesheet" href="style.css?v=1.0.3">
-    <link rel="icon" type="image/png" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.3">
-    <link rel="apple-touch-icon" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.3">
-    <link rel="icon" type="image/png" sizes="512x512" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png?v=1.0.3">
-    <link rel="manifest" href="https://digitalpastel.github.io/digital/sweetopiashop/manifest.json?v=1.0.3">
+    <!-- App Icons & Stylesheet with Cache Busting Version (?v=1.0.4) -->
+    <link rel="stylesheet" href="style.css?v=1.0.4">
+    <link rel="icon" type="image/png" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.4">
+    <link rel="apple-touch-icon" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.4">
+    <link rel="icon" type="image/png" sizes="512x512" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png?v=1.0.4">
+    <link rel="manifest" href="https://digitalpastel.github.io/digital/sweetopiashop/manifest.json?v=1.0.4">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&amp;family=Fredoka:wght@600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
     <!-- Retro Pixel Font for 10-Bar Window matching reference image -->
@@ -31,7 +31,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script>
         // Cache Busting Controller: Increment APP_VERSION whenever updating GitHub
-        const APP_VERSION = '1.0.3';
+        const APP_VERSION = '1.0.4';
         (function enforceCacheBustingVersion() {
             try {
                 const storedVersion = localStorage.getItem('sweetopia_app_version');
@@ -779,6 +779,28 @@
 
 <body class="min-h-screen flex flex-col items-center justify-start p-3 sm:p-4 md:p-6 text-slate-800">
 
+    <!-- LIVE NEW VERSION UPDATE BANNER (Appears when Admin publishes a newer version via Firestore) -->
+    <div id="live-version-update-banner" class="w-full max-w-[1280px] mb-3 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 text-white px-4 py-3 rounded-2xl hidden items-center justify-between border-2 border-emerald-300 shadow-lg transition-all">
+        <div class="flex items-center space-x-3 overflow-hidden">
+            <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center text-yellow-300 text-lg shrink-0 border border-white/30 animate-bounce">
+                <i class="fa-solid fa-rocket"></i>
+            </div>
+            <div class="truncate">
+                <div class="flex items-center gap-2">
+                    <span class="bg-yellow-300 text-slate-950 text-[10px] font-black uppercase px-2 py-0.5 rounded-full shadow-xs">New Update Available</span>
+                    <span id="live-update-version-badge" class="text-xs sm:text-sm font-extrabold tracking-tight truncate">Sweetopia Shop v1.0.5 is Live!</span>
+                </div>
+                <p id="live-update-notes-text" class="text-[11px] text-emerald-50 font-medium truncate mt-0.5">A fresh update has been published. Refresh now to load the latest features &amp; catalog.</p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-2 shrink-0 ml-3">
+            <button type="button" onclick="applyLiveVersionUpdate()" class="bg-white hover:bg-yellow-100 text-emerald-800 active:scale-95 text-xs font-black px-4 py-2 rounded-xl shadow-md transition flex items-center gap-1.5 border border-emerald-200 cursor-pointer">
+                <i class="fa-solid fa-arrows-rotate text-xs text-emerald-600"></i>
+                <span>Update Now</span>
+            </button>
+        </div>
+    </div>
+
     <!-- TOP ANDROID APP DOWNLOAD & SHORTCUT BANNER -->
     <div id="app-download-banner" class="w-full max-w-[1280px] mb-3 bg-slate-900 text-white px-3.5 sm:px-4 py-2.5 rounded-2xl flex items-center justify-between border border-slate-700 shadow-md transition-all">
         <div class="flex items-center space-x-2.5 sm:space-x-3 overflow-hidden">
@@ -835,7 +857,7 @@
         </div>
     </div>
 
-    <!-- RETRO Y2K ORDER SUCCESS WINDOW MODAL (APPEARS ONLY WHEN AMOUNT IS PAID/DRAWN AT TOYYIBPAY) -->
+    <!-- RETRO Y2K ORDER SUCCESS WINDOW MODAL -->
     <div id="order-success-modal" class="fixed inset-0 z-[150] modal-backdrop-clean flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200">
         <div class="w-[440px] max-w-full bg-[#d8b4fe] border-[3px] border-[#7c3aed] rounded-xl shadow-[8px_8px_0_0_#4c1d95] overflow-hidden transform transition-transform duration-200 scale-95" id="order-success-frame">
             <div class="bg-[#a855f7] px-3 py-2 flex justify-between items-center border-b-[3px] border-[#7c3aed]">
@@ -942,7 +964,7 @@
         </div>
     </div>
 
-    <!-- RETRO 10-BAR LOADING WINDOW MODAL (WITH EMERGENCY CLOSE BUTTON SO IT CAN NEVER GET STUCK) -->
+    <!-- RETRO 10-BAR LOADING WINDOW MODAL -->
     <div id="retro-auth-loading-modal" class="fixed inset-0 z-[150] modal-backdrop-clean flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200">
         <div class="retro-loading-window w-full max-w-lg p-3 sm:p-4 rounded-none select-none">
             <div class="flex items-center justify-between pb-3 sm:pb-3.5">
@@ -1075,12 +1097,12 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-check animate-pulse h-[18px] w-[18px]"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg>
                             </div>
                             <div>
-                                <p class="text-xs font-semibold text-slate-900">Firebase Authentication Active</p>
-                                <p class="text-[10px] text-slate-600 mt-0.5 leading-relaxed">Sign in directly with your email and password. New accounts created under Customer Sign Up will receive a verification email from <span class="font-mono font-bold text-slate-800">noreply@sweeetopialens.firebaseapp.com</span>.</p>
+                                <p class="text-xs font-semibold text-slate-900">sweetopialens Auth Verification Active</p>
+                                <p class="text-[10px] text-slate-600 mt-0.5 leading-relaxed">Sign in directly with your email and password. New accounts created under Customer Sign Up will receive a confirmation email from <b>sweetopialens</b> (<span class="font-mono font-bold text-slate-800">noreply@sweeetopialens.firebaseapp.com</span>).</p>
                             </div>
                         </div>
 
-                        <!-- EMAIL VERIFICATION NOTICE BANNER (Appears ONLY after Customer Sign Up or Resend Verification) -->
+                        <!-- EMAIL VERIFICATION NOTICE BANNER (Appears after Customer Sign Up or Resend Verification) -->
                         <div id="auth-verification-banner" class="hidden bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 mb-5 flex items-start gap-3 shadow-xs">
                             <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0 mt-0.5 border border-amber-300">
                                 <i class="fa-solid fa-envelope-circle-check text-sm"></i>
@@ -1088,7 +1110,7 @@
                             <div class="flex-1 min-w-0">
                                 <p id="auth-verification-banner-title" class="text-xs font-extrabold text-amber-950">Verification Email Sent!</p>
                                 <p id="auth-verification-banner-msg" class="text-[11px] text-amber-800 mt-0.5 leading-relaxed">
-                                    We sent a verification link from <b class="font-mono">noreply@sweeetopialens.firebaseapp.com</b> after sign up. Please click the link in your inbox (or spam folder) to verify your account, then sign in directly.
+                                    We sent a confirmation email from <b>sweetopialens</b> (<b class="font-mono">noreply@sweeetopialens.firebaseapp.com</b>) after sign up. Please click the verification link in your inbox (or spam folder) to verify your account, then sign in directly.
                                 </p>
                                 <div class="mt-2.5 flex flex-wrap items-center gap-2">
                                     <button type="button" id="resend-verification-btn" onclick="resendVerificationEmailFromPage1()" class="inline-flex items-center gap-1.5 bg-amber-600 hover:bg-amber-700 active:scale-95 text-white text-[11px] font-bold px-3 py-1.5 rounded-xl shadow-xs transition cursor-pointer">
@@ -1186,7 +1208,7 @@
                     </div>
                 </div>
 
-                <!-- ADMIN NAVIGATION BAR (Desktop Only - Strictly for Admins) -->
+                <!-- ADMIN NAVIGATION BAR -->
                 <div id="admin-nav-bar" class="hidden px-4 sm:px-6 md:px-10 py-4 bg-slate-50 border-b border-slate-200 flex-wrap items-center justify-between gap-3">
                     <div class="flex items-center space-x-3 overflow-x-auto hide-scrollbar w-full sm:w-auto pb-3">
                         <button onclick="switchTab('catalog')" id="dtab-admin-catalog" class="px-5 py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 text-white transition-all border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] shrink-0 flex items-center space-x-2">
@@ -1537,7 +1559,7 @@
                         </div>
                     </div>
 
-                    <!-- TAB 4: ADMIN WORKSPACE (Accessible for Admin only) -->
+                    <!-- TAB 4: ADMIN WORKSPACE -->
                     <div id="tab-section-admin-workspace" class="space-y-6 hidden tab-panel-animate">
                         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 border-b border-slate-200 bg-amber-50 p-4 rounded-2xl border border-amber-200 gap-3">
                             <div class="flex items-center space-x-3">
@@ -1554,6 +1576,59 @@
                                 <span>Export Invoices CSV</span>
                             </button>
                         </div>
+
+                        <!-- LIVE APP VERSION & CACHE-BUSTING CONTROL PANEL -->
+                        <section class="bg-white rounded-3xl shadow-sm border border-emerald-200 overflow-hidden">
+                            <div class="bg-gradient-to-r from-emerald-600 to-teal-600 px-6 py-4 flex flex-wrap items-center justify-between gap-3 text-white">
+                                <div class="flex items-center space-x-3">
+                                    <div class="p-2.5 bg-white/15 rounded-xl">
+                                        <i class="fa-solid fa-rocket text-emerald-100"></i>
+                                    </div>
+                                    <div>
+                                        <h2 class="text-base font-bold flex items-center space-x-2">
+                                            <span>Live App Version &amp; Force Cache Refresh</span>
+                                            <span id="admin-live-version-pill" class="bg-white text-emerald-800 text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full shadow-xs">Active: v1.0.4</span>
+                                        </h2>
+                                        <p class="text-xs text-emerald-100">Publish a new version to Firestore to instantly notify &amp; refresh all open customer sessions</p>
+                                    </div>
+                                </div>
+                                <span id="admin-version-sync-status" class="text-[11px] font-semibold bg-white/15 px-3 py-1 rounded-lg border border-white/20">
+                                    <i class="fa-solid fa-circle-check text-yellow-300 mr-1"></i> Listener Active
+                                </span>
+                            </div>
+
+                            <div class="p-5 sm:p-6 bg-emerald-50/30 grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+                                <div class="md:col-span-3 space-y-1.5">
+                                    <label for="admin-new-version-input" class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                                        New Version Tag <span class="text-rose-500">*</span>
+                                    </label>
+                                    <div class="flex items-center gap-1.5">
+                                        <input type="text" id="admin-new-version-input" placeholder="e.g. 1.0.5" class="block w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm font-mono font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                                        <button type="button" onclick="bumpNextPatchVersion()" class="px-2.5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold rounded-xl transition shrink-0 cursor-pointer" title="Auto-increment patch version">
+                                            +0.0.1
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="md:col-span-5 space-y-1.5">
+                                    <label for="admin-version-notes-input" class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                                        Release Notes / Banner Message
+                                    </label>
+                                    <input type="text" id="admin-version-notes-input" placeholder="e.g. New lenses added &amp; checkout improvements!" class="block w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                                </div>
+
+                                <div class="md:col-span-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+                                    <label class="inline-flex items-center space-x-2 text-xs font-semibold text-slate-700 bg-white px-3 py-2.5 rounded-xl border border-slate-200 cursor-pointer select-none shrink-0">
+                                        <input type="checkbox" id="admin-force-auto-reload" checked class="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500">
+                                        <span>Auto-reload clients</span>
+                                    </label>
+                                    <button type="button" onclick="publishNewAppVersion()" class="flex-1 px-4 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 active:scale-95 text-white font-bold text-xs sm:text-sm rounded-xl shadow-md shadow-emerald-200 transition flex items-center justify-center space-x-2 cursor-pointer">
+                                        <i class="fa-solid fa-paper-plane text-xs"></i>
+                                        <span>Publish New Version</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </section>
 
                         <!-- Section 1: Create New Voucher & Chosen Customer Only Settings -->
                         <section class="bg-white rounded-3xl shadow-sm border border-pink-100 overflow-hidden transition-all-300">
@@ -1992,7 +2067,7 @@
                                     <img id="admin-image-preview-tag" src="" class="w-12 h-12 object-cover rounded-xl border border-slate-300 shadow-sm">
                                 </div>
                                 <div class="flex space-x-2 pt-2">
-                                    <button onclick="saveAdminProduct()" class="bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold px-4 py-2 rounded-xl text-xs flex items-space-x-1.5 shadow-sm">
+                                    <button onclick="saveAdminProduct()" class="bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center space-x-1.5 shadow-sm">
                                         <i class="fa-solid fa-plus mr-1.5"></i>
                                         <span>Save &amp; Publish Live</span>
                                     </button>
@@ -2036,7 +2111,7 @@
                     </div>
                 </div>
 
-                <!-- CUSTOMER FEEDBACK POST SECTION (ABOVE FOOTER - HORIZONTAL RIGHT SCROLL) -->
+                <!-- CUSTOMER FEEDBACK POST SECTION -->
                 <section id="feedback-wall-section" class="feedback-section">
                     <div class="bg-watermark" aria-hidden="true">
                         <span>Feedback</span>
@@ -2098,7 +2173,7 @@
 
                         <div class="text-center flex justify-center">
                             <p class="text-[11px] text-[#581c87] font-extrabold tracking-wider">
-                                © Brand Works Empire 2026, all rights reserved <span class="opacity-75 font-mono text-[10px]">(v1.0.3)</span>
+                                © Brand Works Empire 2026, all rights reserved <span id="footer-app-version-tag" class="opacity-75 font-mono text-[10px]">(v1.0.4)</span>
                             </p>
                         </div>
 
@@ -2483,7 +2558,7 @@
                             <i class="fa-solid fa-xmark text-xs"></i>
                         </button>
                     </div>
-                    <p class="text-xs text-slate-600">Enter your email address to receive password reset instructions from <span class="font-mono font-bold text-slate-800">noreply@sweeetopialens.firebaseapp.com</span>.</p>
+                    <p class="text-xs text-slate-600">Enter your email address to receive password reset instructions from <b>sweetopialens</b> (<span class="font-mono font-bold text-slate-800">noreply@sweeetopialens.firebaseapp.com</span>).</p>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">Email Address</label>
                         <input type="email" id="forgot-email" placeholder="name@example.com" class="w-full bg-slate-50 border border-slate-300 text-xs text-slate-900 rounded-xl p-3 shadow-sm">
@@ -2777,50 +2852,43 @@
             appId: "1:524168545709:web:7e52448f1cd3964f858d24"
         };
 
+        const FIREBASE_SENDER_NAME = "sweetopialens";
         const FIREBASE_SENDER_EMAIL = "noreply@sweeetopialens.firebaseapp.com";
-        const FALLBACK_APP_REDIRECT_URL = "https://digitalpastel.github.io/digital/sweetopiashop/";
-
-        function getFirebaseActionCodeSettings() {
-            let targetUrl = FALLBACK_APP_REDIRECT_URL;
-            try {
-                const origin = window.location.origin || "";
-                const href = window.location.href || "";
-                if (origin.startsWith("http://") || origin.startsWith("https://")) {
-                    const cleanUrl = href.split("#")[0].split("?")[0];
-                    targetUrl = cleanUrl || origin;
-                }
-            } catch (e) {}
-            return {
-                url: targetUrl,
-                handleCodeInApp: false
-            };
-        }
+        const FIREBASE_REPLY_TO_EMAIL = "yeegummy@gmail.com";
+        const AUTHORIZED_FIREBASE_URL = "https://sweeetopialens.firebaseapp.com";
 
         async function sendFirebaseVerificationWithFallback(user) {
             if (!user) throw new Error("No user instance provided for verification email.");
-            const actionCodeSettings = getFirebaseActionCodeSettings();
             try {
-                await user.sendEmailVerification(actionCodeSettings);
-            } catch (err) {
-                if (err && (err.code === "auth/unauthorized-continue-uri" || err.code === "auth/invalid-continue-uri" || err.code === "auth/missing-continue-uri")) {
-                    await user.sendEmailVerification();
-                } else {
-                    throw err;
+                const displayName = (user.email || "").split("@")[0];
+                if (!user.displayName && displayName && typeof user.updateProfile === "function") {
+                    await user.updateProfile({ displayName }).catch(() => {});
                 }
+            } catch (e) {}
+
+            try {
+                await user.sendEmailVerification();
+                return;
+            } catch (primaryErr) {
+                console.warn("Primary sendEmailVerification attempt:", primaryErr);
+                await user.sendEmailVerification({
+                    url: AUTHORIZED_FIREBASE_URL,
+                    handleCodeInApp: false
+                });
             }
         }
 
         async function sendFirebasePasswordResetWithFallback(email) {
             if (!auth || !email) throw new Error("Email address is required.");
-            const actionCodeSettings = getFirebaseActionCodeSettings();
             try {
-                await auth.sendPasswordResetEmail(email, actionCodeSettings);
-            } catch (err) {
-                if (err && (err.code === "auth/unauthorized-continue-uri" || err.code === "auth/invalid-continue-uri" || err.code === "auth/missing-continue-uri")) {
-                    await auth.sendPasswordResetEmail(email);
-                } else {
-                    throw err;
-                }
+                await auth.sendPasswordResetEmail(email);
+                return;
+            } catch (primaryErr) {
+                console.warn("Primary sendPasswordResetEmail attempt:", primaryErr);
+                await auth.sendPasswordResetEmail(email, {
+                    url: AUTHORIZED_FIREBASE_URL,
+                    handleCodeInApp: false
+                });
             }
         }
 
@@ -2848,6 +2916,250 @@
             }
         } catch(e) { console.warn("Firebase init:", e); }
 
+        /* =========================================================================
+           FIRESTORE LIVE VERSION LISTENER & ADMIN "PUBLISH NEW VERSION" CONTROLLER
+           ========================================================================= */
+        let latestPublishedServerVersion = APP_VERSION;
+        let versionUpdateReloadScheduled = false;
+
+        function compareSemanticVersions(vA, vB) {
+            const cleanA = String(vA || '0.0.0').replace(/^v/i, '').split('.').map(n => parseInt(n, 10) || 0);
+            const cleanB = String(vB || '0.0.0').replace(/^v/i, '').split('.').map(n => parseInt(n, 10) || 0);
+            const len = Math.max(cleanA.length, cleanB.length);
+            for (let i = 0; i < len; i++) {
+                const a = cleanA[i] || 0;
+                const b = cleanB[i] || 0;
+                if (a > b) return 1;
+                if (a < b) return -1;
+            }
+            return 0;
+        }
+
+        function computeNextPatchVersion(baseVersion) {
+            const parts = String(baseVersion || APP_VERSION).replace(/^v/i, '').split('.').map(n => parseInt(n, 10) || 0);
+            while (parts.length < 3) parts.push(0);
+            parts[2] = (parts[2] || 0) + 1;
+            return parts.join('.');
+        }
+
+        window.bumpNextPatchVersion = function() {
+            const input = document.getElementById('admin-new-version-input');
+            if (!input) return;
+            const currentVal = (input.value || latestPublishedServerVersion || APP_VERSION).trim();
+            input.value = computeNextPatchVersion(currentVal);
+        };
+
+        window.applyLiveVersionUpdate = async function(targetVersion = null) {
+            const nextVer = (targetVersion || latestPublishedServerVersion || APP_VERSION).replace(/^v/i, '');
+            try {
+                localStorage.setItem('sweetopia_app_version', nextVer);
+                if ('caches' in window) {
+                    const names = await caches.keys();
+                    await Promise.all(names.map(name => caches.delete(name)));
+                }
+                if ('serviceWorker' in navigator) {
+                    const regs = await navigator.serviceWorker.getRegistrations();
+                    await Promise.all(regs.map(r => r.update()));
+                }
+            } catch (e) {}
+
+            try {
+                const url = new URL(window.location.href);
+                url.searchParams.set('v', nextVer);
+                window.location.replace(url.toString());
+            } catch (e) {
+                window.location.reload(true);
+            }
+        };
+
+        window.publishNewAppVersion = async function() {
+            if (!currentUser || !isAdminUser(currentUser.email)) {
+                showToast("Permission Denied", "Only Administrators can publish a new live app version.", true);
+                return;
+            }
+
+            const versionInput = document.getElementById('admin-new-version-input');
+            const notesInput = document.getElementById('admin-version-notes-input');
+            const autoReloadChk = document.getElementById('admin-force-auto-reload');
+
+            const rawVersion = (versionInput?.value || '').trim().replace(/^v/i, '');
+            if (!rawVersion || !/^\d+(\.\d+){1,3}$/.test(rawVersion)) {
+                showToast("Invalid Version Format", "Please enter a valid version number such as 1.0.5 or 1.1.0.", true);
+                versionInput?.focus();
+                return;
+            }
+
+            const releaseNotes = (notesInput?.value || '').trim() || `Sweetopia Shop v${rawVersion} is now live with fresh updates!`;
+            const forceAutoReload = autoReloadChk ? autoReloadChk.checked : true;
+            const publishedAt = new Date().toISOString();
+
+            latestPublishedServerVersion = rawVersion;
+            try {
+                localStorage.setItem('sweetopia_app_version', rawVersion);
+            } catch (e) {}
+
+            const pillEl = document.getElementById('admin-live-version-pill');
+            if (pillEl) pillEl.innerText = `Active: v${rawVersion}`;
+
+            const footerVerEl = document.getElementById('footer-app-version-tag');
+            if (footerVerEl) footerVerEl.innerText = `(v${rawVersion})`;
+
+            if (versionInput) {
+                versionInput.value = computeNextPatchVersion(rawVersion);
+            }
+
+            if (db) {
+                try {
+                    await db.collection("lumilens_config").doc("app_version").set({
+                        version: rawVersion,
+                        releaseNotes: releaseNotes,
+                        forceAutoReload: forceAutoReload,
+                        publishedBy: currentUser.email,
+                        publishedAt: publishedAt,
+                        nonce: Date.now()
+                    }, { merge: true });
+                } catch (err) {
+                    console.warn("Firestore version publish warning:", err);
+                    showToast("Sync Warning", "Version saved locally, check Firestore permissions if clients didn't sync.", true);
+                    return;
+                }
+            }
+
+            showToast("New Version Published!", `Live app version v${rawVersion} broadcasted to all connected shoppers!`);
+        };
+
+        function initLiveVersionListener() {
+            const verInput = document.getElementById('admin-new-version-input');
+            if (verInput && !verInput.value) {
+                verInput.value = computeNextPatchVersion(APP_VERSION);
+            }
+
+            if (!db) return;
+
+            db.collection("lumilens_config").doc("app_version").onSnapshot((docSnap) => {
+                if (!docSnap || !docSnap.exists) return;
+                const data = docSnap.data();
+                if (!data || !data.version) return;
+
+                const serverVer = String(data.version).trim().replace(/^v/i, '');
+                latestPublishedServerVersion = serverVer;
+
+                const pillEl = document.getElementById('admin-live-version-pill');
+                if (pillEl) pillEl.innerText = `Active: v${serverVer}`;
+
+                const footerVerEl = document.getElementById('footer-app-version-tag');
+                if (footerVerEl) footerVerEl.innerText = `(v${serverVer})`;
+
+                if (verInput && document.activeElement !== verInput) {
+                    verInput.value = computeNextPatchVersion(serverVer);
+                }
+
+                const isNewerOnServer = compareSemanticVersions(serverVer, APP_VERSION) > 0;
+                const alreadyUpdatedToThis = localStorage.getItem('sweetopia_app_version') === serverVer &&
+                    new URLSearchParams(window.location.search).get('v') === serverVer;
+
+                if (isNewerOnServer && !alreadyUpdatedToThis) {
+                    const banner = document.getElementById('live-version-update-banner');
+                    const badgeEl = document.getElementById('live-update-version-badge');
+                    const notesEl = document.getElementById('live-update-notes-text');
+
+                    if (badgeEl) badgeEl.innerText = `Sweetopia Shop v${serverVer} is Live!`;
+                    if (notesEl) {
+                        notesEl.innerText = data.releaseNotes || `New update v${serverVer} published by Admin. Refreshing to latest version...`;
+                    }
+
+                    if (banner) {
+                        banner.classList.remove('hidden');
+                        banner.classList.add('flex');
+                    }
+
+                    const isCurrentAdmin = currentUser && isAdminUser(currentUser.email);
+                    if (data.forceAutoReload && !isCurrentAdmin && !versionUpdateReloadScheduled) {
+                        versionUpdateReloadScheduled = true;
+                        showToast("App Update Live!", `Updating Sweetopia Shop to v${serverVer}...`);
+                        setTimeout(() => {
+                            window.applyLiveVersionUpdate(serverVer);
+                        }, 2400);
+                    }
+                }
+            }, () => {});
+        }
+
+        /* =========================================================================
+           HANDLE FIREBASE EMAIL VERIFICATION LINK CALLBACK (?mode=verifyEmail&oobCode=...)
+           ========================================================================= */
+        async function handleFirebaseEmailActionCallback() {
+            if (!auth) return false;
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const mode = urlParams.get('mode');
+                const oobCode = urlParams.get('oobCode');
+
+                if (mode === 'verifyEmail' && oobCode) {
+                    startRetroLoading("VERIFYING EMAIL ADDRESS...");
+                    let verifiedEmail = '';
+                    try {
+                        const info = await auth.checkActionCode(oobCode);
+                        verifiedEmail = (info?.data?.email || '').trim().toLowerCase();
+                    } catch (e) {}
+
+                    await auth.applyActionCode(oobCode);
+
+                    if (auth.currentUser) {
+                        try {
+                            await auth.currentUser.reload();
+                            if (!verifiedEmail && auth.currentUser.email) {
+                                verifiedEmail = auth.currentUser.email.trim().toLowerCase();
+                            }
+                        } catch (e) {}
+                    }
+
+                    if (verifiedEmail) {
+                        clearEmailPostSignupVerification(verifiedEmail);
+                        saveRegisteredCustomerRecord(verifiedEmail, auth.currentUser?.uid || null, true).catch(() => {});
+                        const emailInput = document.getElementById('auth-email');
+                        if (emailInput) emailInput.value = verifiedEmail;
+                    }
+
+                    window.history.replaceState({}, document.title, window.location.pathname);
+
+                    await finishRetroLoading();
+
+                    if (auth.currentUser && auth.currentUser.emailVerified) {
+                        currentUser = auth.currentUser;
+                        localStorage.setItem('sweetopia_logged_in_email', currentUser.email.toLowerCase());
+                        updateUIAfterLogin(currentUser);
+                        switchPage('dashboard');
+                        switchTab(isAdminUser(currentUser.email) ? 'admin-workspace' : 'catalog');
+                        showToast("Email Verified!", `Your email ${currentUser.email} is now verified!`);
+                        return true;
+                    } else {
+                        switchPage('auth');
+                        setAuthModeTab('signin');
+                        showAuthVerificationBanner(
+                            "Email Address Verified!",
+                            `Thank you! Your email${verifiedEmail ? ` (<b>${verifiedEmail}</b>)` : ''} has been verified with <b>${FIREBASE_SENDER_NAME}</b>. You can now sign in with your password.`,
+                            verifiedEmail
+                        );
+                        showToast("Email Verified!", "Your email address is verified. Please sign in now!");
+                        return true;
+                    }
+                }
+            } catch (err) {
+                cancelRetroLoading();
+                window.history.replaceState({}, document.title, window.location.pathname);
+                switchPage('auth');
+                setAuthModeTab('signin');
+                showAuthVerificationBanner(
+                    "Verification Link Expired or Already Used",
+                    `This verification link from <b>${FIREBASE_SENDER_NAME}</b> (<b class="font-mono">${FIREBASE_SENDER_EMAIL}</b>) has already been used or expired. Try signing in directly, or click <b>"Resend verification email (new sign up)"</b> below to get a fresh link.`
+                );
+                showToast("Verification Notice", "Link already used or expired. Try signing in or click Resend.", true);
+                return true;
+            }
+            return false;
+        }
+
         function isGuestUser() {
             if (!currentUser) return true;
             if (currentUser.isGuest === true) return true;
@@ -2864,7 +3176,7 @@
         };
 
         /* =========================================================================
-           NON-BLOCKING RETRO 10-BAR PROGRESS CONTROLLER (NEVER GETS STUCK)
+           NON-BLOCKING RETRO 10-BAR PROGRESS CONTROLLER
            ========================================================================= */
         let loadingBarsProgress = 0;
         let loadingIntervalTimer = null;
@@ -2923,7 +3235,6 @@
                 }
             }, 140);
 
-            // Fail-safe auto-close after 7 seconds so loading can never get stuck on slow networks
             loadingSafetyTimeout = setTimeout(() => {
                 hideRetroModalImmediate();
             }, 7000);
@@ -2952,7 +3263,7 @@
         }
 
         /* =========================================================================
-           TRACKING WHICH EMAILS JUST REGISTERED (VERIFICATION REQUIRED ONLY AFTER SIGN UP)
+           TRACKING WHICH EMAILS JUST REGISTERED (VERIFICATION REQUIRED AFTER SIGN UP)
            ========================================================================= */
         function getNewlyRegisteredUnverifiedSet() {
             try {
@@ -2990,13 +3301,64 @@
             return getNewlyRegisteredUnverifiedSet().has(email.trim().toLowerCase());
         }
 
-        let products = [
+        const DEFAULT_SEED_PRODUCTS = [
             { id: "p1", name: "HAZEL NATURAL", brand: "Molicon", price: "25.00", category: "3 Months Disposable", image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500", badge: "In Stock" },
             { id: "p2", name: "CRYSTAL CLEAR", brand: "Uyaai", price: "25.00", category: "1 Month Disposable", image: "https://images.unsplash.com/photo-1583946099066-764f2537f136?auto=format&fit=crop&q=80&w=500", badge: "In Stock" },
             { id: "p3", name: "EMERALD GREEN", brand: "Western Eyes", price: "25.00", category: "3 Months Disposable", image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&q=80&w=500", badge: "In Stock" },
             { id: "p4", name: "MYSTIC GREY", brand: "Mill Creek", price: "25.00", category: "3 Months Disposable", image: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&q=80&w=500", badge: "In Stock" },
             { id: "p5", name: "MONTHLY COMFORT", brand: "Molicon", price: "25.00", category: "1 Day Disposable", image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500", badge: "In Stock" }
         ];
+
+        let products = [...DEFAULT_SEED_PRODUCTS];
+
+        function saveProductsToLocalBackup() {
+            try {
+                const serialized = products.map(p => ({
+                    ...p,
+                    powerStock: window.productPowerStock[p.id] || p.powerStock || {},
+                    powerLocations: window.productPowerLocations[p.id] || p.powerLocations || {}
+                }));
+                localStorage.setItem('sweetopia_managed_products', JSON.stringify(serialized));
+            } catch (e) { console.warn("Local products backup warning:", e); }
+        }
+
+        function loadProductsFromLocalBackup() {
+            try {
+                const raw = localStorage.getItem('sweetopia_managed_products');
+                if (!raw) return false;
+                const parsed = JSON.parse(raw);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                    products = parsed;
+                    products.forEach(p => {
+                        if (p.powerStock) window.productPowerStock[p.id] = p.powerStock;
+                        if (p.powerLocations) window.productPowerLocations[p.id] = p.powerLocations;
+                    });
+                    return true;
+                }
+            } catch (e) { console.warn("Load products local backup warning:", e); }
+            return false;
+        }
+
+        function ensureProductStockDefaults(prodList) {
+            (prodList || products).forEach(p => {
+                if (!window.productPowerStock[p.id]) {
+                    window.productPowerStock[p.id] = p.powerStock || {};
+                    powersList.forEach(pw => {
+                        if (window.productPowerStock[p.id][pw] === undefined) {
+                            window.productPowerStock[p.id][pw] = true;
+                        }
+                    });
+                }
+                if (!window.productPowerLocations[p.id]) {
+                    window.productPowerLocations[p.id] = p.powerLocations || {};
+                    powersList.forEach(pw => {
+                        if (!window.productPowerLocations[p.id][pw]) {
+                            window.productPowerLocations[p.id][pw] = { warehouse: true, vendor: false };
+                        }
+                    });
+                }
+            });
+        }
 
         const defaultStickerAssets = [
             "https://digitalpastel.github.io/digital/sweetopiashop/sweetcall.webp",
@@ -3148,7 +3510,8 @@
             const emailInput = document.getElementById('auth-email');
             const pwdInput = document.getElementById('auth-password');
             const email = ((emailInput?.value || '') || lastPendingVerificationEmail || '').trim().toLowerCase();
-            const password = (pwdInput?.value || '') || lastPendingVerificationPassword || '';
+            const rawPwd = (pwdInput?.value || '') || lastPendingVerificationPassword || '';
+            const password = rawPwd.trim();
 
             if (!email) {
                 showToast("Email Required", "Please type your registered email address in the Email box first.", true);
@@ -3165,10 +3528,10 @@
                 await saveRegisteredCustomerRecord(email, null, false);
                 showAuthVerificationBanner(
                     "Verification Email Re-sent!",
-                    `We sent a fresh verification link from <b>${FIREBASE_SENDER_EMAIL}</b> to <b>${email}</b>. Please check your inbox and spam folder, click the link, then sign in.`,
+                    `We sent a fresh confirmation email from <b>${FIREBASE_SENDER_NAME}</b> (<b class="font-mono">${FIREBASE_SENDER_EMAIL}</b>) to <b>${email}</b>. Follow the link in your inbox (or spam folder) to verify your email address, then sign in.`,
                     email
                 );
-                showToast("Verification Link Sent", `Verification email resent from ${FIREBASE_SENDER_EMAIL} to ${email}.`);
+                showToast("Verification Link Sent", `Verification email resent from ${FIREBASE_SENDER_NAME} (${FIREBASE_SENDER_EMAIL}).`);
                 return;
             }
 
@@ -3176,10 +3539,10 @@
                 setAuthModeTab('signin');
                 showAuthVerificationBanner(
                     "Enter Password to Resend Link",
-                    `To resend the verification email from <b>${FIREBASE_SENDER_EMAIL}</b> for your new sign up (<b>${email}</b>), enter your password below and click <b>"Resend Verification Email"</b>.`,
+                    `To resend the confirmation email from <b>${FIREBASE_SENDER_NAME}</b> (<b class="font-mono">${FIREBASE_SENDER_EMAIL}</b>) for <b>${email}</b>, enter your password below and click <b>"Resend Verification Email"</b>.`,
                     email
                 );
-                showToast("Password Needed", "Enter your password first so we can resend your sign-up verification link.", true);
+                showToast("Password Needed", "Enter your password first so we can resend your verification link.", true);
                 pwdInput?.focus();
                 return;
             }
@@ -3188,8 +3551,23 @@
             try {
                 let user = auth.currentUser;
                 if (!user || (user.email || '').toLowerCase() !== email) {
-                    const res = await auth.signInWithEmailAndPassword(email, password);
-                    user = res.user;
+                    try {
+                        const res = await auth.signInWithEmailAndPassword(email, password);
+                        user = res.user;
+                    } catch (signInErr) {
+                        const sCode = signInErr?.code || '';
+                        if (sCode === 'auth/user-not-found' || sCode === 'auth/invalid-credential' || sCode === 'auth/invalid-login-credentials') {
+                            try {
+                                const createRes = await auth.createUserWithEmailAndPassword(email, password);
+                                user = createRes.user;
+                                saveRegisteredCustomerRecord(email, user?.uid, false).catch(() => {});
+                            } catch (createErr) {
+                                throw signInErr;
+                            }
+                        } else {
+                            throw signInErr;
+                        }
+                    }
                 }
 
                 try {
@@ -3227,39 +3605,41 @@
 
                 setAuthModeTab('signin');
                 showAuthVerificationBanner(
-                    "New Verification Email Sent!",
-                    `We sent a fresh verification link from <b>${FIREBASE_SENDER_EMAIL}</b> to <b>${email}</b>. Please open your inbox (or Spam/Promotions folder), click the verification link, and then sign in.`,
+                    "Confirmation Email Sent!",
+                    `We dispatched a verification email from <b>${FIREBASE_SENDER_NAME}</b> (<b class="font-mono">${FIREBASE_SENDER_EMAIL}</b>) to <b>${email}</b>. Check your Inbox, Promotions, or Spam folder (allow 1–2 minutes), click the link, then sign in.`,
                     email
                 );
-                showToast("Verification Sent!", `Email sent from ${FIREBASE_SENDER_EMAIL} to ${email}.`);
+                showToast("Verification Sent!", `Confirmation email sent from ${FIREBASE_SENDER_EMAIL} to ${email}.`);
             } catch (err) {
                 cancelRetroLoading();
                 const code = err?.code || '';
                 if (code === 'auth/too-many-requests') {
                     showAuthVerificationBanner(
                         "Email Already Sent Recently",
-                        `Firebase (<b>${FIREBASE_SENDER_EMAIL}</b>) recently sent a verification email to <b>${email}</b>. Please check your inbox and Spam folder for the link, or wait a couple of minutes before requesting another.`,
+                        `<b>${FIREBASE_SENDER_NAME}</b> (<b class="font-mono">${FIREBASE_SENDER_EMAIL}</b>) already sent a verification email to <b>${email}</b>. Please check your inbox and Spam folder, or wait 2 minutes before requesting another.`,
                         email
                     );
                     showToast("Please Wait", "A verification email was already sent recently. Check your inbox or spam folder.", true);
-                } else if (code === 'auth/invalid-credential' || code === 'auth/wrong-password') {
+                } else if (code === 'auth/invalid-credential' || code === 'auth/wrong-password' || code === 'auth/invalid-login-credentials') {
                     showAuthVerificationBanner(
-                        "Incorrect Password",
-                        `The password entered for <b>${email}</b> did not match. Enter the password you used when signing up, or click <b>"Forgot?"</b> to reset your password first.`,
+                        "Account Password Differs From Email Password",
+                        `Firebase Authentication uses the password you registered for <b>${email}</b> on this website (not your Gmail/email inbox login password). Click <b>"Forgot?"</b> to send a password reset email from <b>${FIREBASE_SENDER_EMAIL}</b> to <b>${email}</b>.`,
                         email
                     );
-                    showToast("Incorrect Password", "Please enter the correct password for this account or click 'Forgot?'.", true);
-                } else if (code === 'auth/user-not-found') {
-                    setAuthModeTab('signup');
-                    showAuthVerificationBanner(
-                        "Account Not Registered Yet",
-                        `No account found for <b>${email}</b>. Click <b>"Register New Account"</b> below to create your account and receive a verification link from <b>${FIREBASE_SENDER_EMAIL}</b>.`,
-                        email
-                    );
-                    showToast("Account Not Found", "Please register this email first under Customer Sign Up.", true);
+                    showToast("Password Mismatch", "Use your Sweetopia account password or click 'Forgot?' to reset it.", true);
+                } else if (code === 'auth/weak-password') {
+                    showToast("Weak Password", "Firebase requires a password of at least 6 characters.", true);
                 } else {
-                    showToast("Resend Error", err.message || "Could not resend verification email.", true);
+                    showToast("Verification Error", `${err.code || ''}: ${err.message || "Could not send verification email."}`, true);
                 }
+            }
+        };
+
+        window.quickCreateAndVerifyFromSignIn = async function() {
+            setAuthModeTab('signup');
+            const form = document.getElementById('auth-form');
+            if (form) {
+                form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
             }
         };
 
@@ -3591,9 +3971,6 @@
             showToast("Notifications Cleared", "All order notifications have been cleared.");
         };
 
-        /* =========================================================================
-            RETRO Y2K ORDER SUCCESS WINDOW MODAL & CUSTOMER FEEDBACK CAROUSEL LOGIC
-           ========================================================================= */
         let selectedFeedbackStars = 5;
         const DEFAULT_SEEDED_FEEDBACKS = [
             {
@@ -4905,10 +5282,16 @@
             const emailInput = document.getElementById('auth-email');
             const pwdInput = document.getElementById('auth-password');
             const email = (emailInput?.value || '').trim().toLowerCase();
-            const password = pwdInput?.value || '';
+            const password = (pwdInput?.value || '').trim();
 
             if (!email || !password) {
                 showToast("Missing Credentials", "Please enter both email address and password.", true);
+                return;
+            }
+
+            if (password.length < 6) {
+                showToast("Password Too Short", "Please enter a password with at least 6 characters.", true);
+                pwdInput?.focus();
                 return;
             }
 
@@ -4928,14 +5311,13 @@
                     setAuthModeTab('signin');
                     showAuthVerificationBanner(
                         "Verification Email Sent!",
-                        `A verification link has been sent from <b>${FIREBASE_SENDER_EMAIL}</b> to <b>${email}</b> after sign up. Please click the link in your email first, then sign in with your password.`,
+                        `A confirmation email has been sent from <b>${FIREBASE_SENDER_NAME}</b> (<b class="font-mono">${FIREBASE_SENDER_EMAIL}</b>) to <b>${email}</b> after sign up. Follow the link to verify your email address, then sign in with your password.`,
                         email
                     );
-                    showToast("Verify Your Email", `Verification email sent from ${FIREBASE_SENDER_EMAIL}.`);
+                    showToast("Verify Your Email", `Verification email sent from ${FIREBASE_SENDER_NAME} (${FIREBASE_SENDER_EMAIL}).`);
                     return;
                 }
 
-                // Offline mode: sign in directly without needing verification again
                 clearEmailPostSignupVerification(email);
                 hideAuthVerificationBanner();
                 currentUser = { email: email, isGuest: false, emailVerified: true };
@@ -4952,7 +5334,6 @@
 
             try {
                 if (isSigningIn) {
-                    // SIGN IN FLOW: Never send verification email on Sign In; allow immediate sign in once verified after sign up
                     const res = await auth.signInWithEmailAndPassword(email, password);
                     let user = res.user;
                     try {
@@ -4960,7 +5341,6 @@
                         user = auth.currentUser || user;
                     } catch (reloadErr) {}
 
-                    // Only block if this user JUST signed up on this device and still hasn't clicked their sign-up verification link
                     if (!isAdminUser(email) && user && user.emailVerified === false && isEmailPendingPostSignupVerification(email)) {
                         lastPendingVerificationEmail = email;
                         lastPendingVerificationPassword = password;
@@ -4974,20 +5354,18 @@
 
                         showAuthVerificationBanner(
                             "Please Click Your Sign-Up Verification Link First",
-                            `You recently signed up with <b>${email}</b> and haven't clicked the verification link from <b>${FIREBASE_SENDER_EMAIL}</b> in your inbox yet. Please click the link sent to your email (or click <b>"Resend Verification Email"</b> below), then sign in.`,
+                            `You signed up with <b>${email}</b> and haven't verified your email yet. Check your inbox (or spam folder) for the confirmation email from <b>${FIREBASE_SENDER_NAME}</b> (<b class="font-mono">${FIREBASE_SENDER_EMAIL}</b>), click the link, or click <b>"Resend Verification Email"</b> below.`,
                             email
                         );
-                        showToast("Complete Sign-Up Verification", `Click the verification link from ${FIREBASE_SENDER_EMAIL}, then sign in.`, true);
+                        showToast("Complete Sign-Up Verification", `Click the verification link from ${FIREBASE_SENDER_NAME}, then sign in.`, true);
                         return;
                     }
 
-                    // Verified or existing account: sign in directly without any further verification!
                     clearEmailPostSignupVerification(email);
                     hideAuthVerificationBanner();
                     currentUser = user;
                     localStorage.setItem('sweetopia_logged_in_email', email);
 
-                    // Run Firestore sync in background so Sign In completes fast and never stalls
                     saveRegisteredCustomerRecord(email, user?.uid, true).catch(() => {});
                     loadCustomerCartFromFirestore(user?.uid).catch(() => {});
 
@@ -5000,27 +5378,24 @@
                     switchTab(isAdminUser(email) ? 'admin-workspace' : 'catalog');
                     updatePresence(email, true);
                 } else {
-                    // SIGN UP FLOW: Send verification email ONCE from noreply@sweeetopialens.firebaseapp.com after registration
                     const res = await auth.createUserWithEmailAndPassword(email, password);
                     const newUser = res.user;
                     lastPendingVerificationEmail = email;
                     lastPendingVerificationPassword = password;
                     markEmailRequiresPostSignupVerification(email);
 
-                    // Save customer profile to central Cloud Firestore directory before signing out
                     saveRegisteredCustomerRecord(email, newUser?.uid, false).catch(() => {});
 
                     let emailSentOk = true;
-                    let sendErrMsg = "";
+                    let sendErrDetail = "";
                     try {
                         await sendFirebaseVerificationWithFallback(newUser);
                     } catch (verErr) {
                         emailSentOk = false;
-                        sendErrMsg = verErr?.message || "";
+                        sendErrDetail = `${verErr?.code || 'error'}: ${verErr?.message || ''}`;
                         console.warn("Verification email error:", verErr);
                     }
 
-                    // Sign out immediately after sign up so user clicks their verification email link first
                     try {
                         await auth.signOut();
                     } catch (soErr) {}
@@ -5036,15 +5411,15 @@
                     switchPage('auth');
 
                     showAuthVerificationBanner(
-                        emailSentOk ? "Verification Email Sent!" : "Account Created — Click Resend Verification",
+                        emailSentOk ? "Confirmation Email Sent to Your Inbox!" : "Account Created — Click Resend Verification",
                         emailSentOk
-                            ? `Account created for <b>${email}</b>! We sent a verification link from <b>${FIREBASE_SENDER_EMAIL}</b> to your email. Please click the link in your inbox (or spam folder) to verify your account, and then sign in directly.`
-                            : `Account created for <b>${email}</b>, but Firebase delayed sending the email (${sendErrMsg}). Please click <b>"Resend Verification Email"</b> below to send from <b>${FIREBASE_SENDER_EMAIL}</b>.`,
+                            ? `Account created for <b>${email}</b>! Firebase sent a verification email from <b>${FIREBASE_SENDER_NAME}</b> (<b class="font-mono">${FIREBASE_SENDER_EMAIL}</b>). Please check your <b>Inbox, Promotions, or Spam</b> folder (wait 1–2 mins), click the verification link, and then sign in.`
+                            : `Account created for <b>${email}</b>, but Firebase returned (${sendErrDetail}). Click <b>"Resend Verification Email"</b> below to retry sending from <b class="font-mono">${FIREBASE_SENDER_EMAIL}</b>.`,
                         email
                     );
                     showToast(
                         emailSentOk ? "Verify Your Email" : "Resend Verification Needed",
-                        emailSentOk ? `Verification email sent from ${FIREBASE_SENDER_EMAIL}!` : "Click 'Resend Verification Email' to receive your link.",
+                        emailSentOk ? `Confirmation email sent from ${FIREBASE_SENDER_EMAIL}!` : "Click 'Resend Verification Email' below.",
                         !emailSentOk
                     );
                 }
@@ -5058,21 +5433,25 @@
                     setAuthModeTab('signin');
                     showAuthVerificationBanner(
                         "Account Already Registered",
-                        `<b>${email}</b> is already registered. You can sign in directly with your email and password now (or click <b>"Resend Verification Email"</b> / <b>"Forgot?"</b> if needed).`,
+                        `<b>${email}</b> is already registered in Firebase. Click <b>"Sign In To Dashboard"</b> below with your password, or click <b>"Resend Verification Email"</b> if you still need the link from <b class="font-mono">${FIREBASE_SENDER_EMAIL}</b>.`,
                         email
                     );
-                    showToast("Already Registered", "Account exists—switched to Sign In tab so you can sign in directly.");
-                } else if (code === 'auth/invalid-credential' || code === 'auth/wrong-password' || code === 'auth/user-not-found') {
+                    showToast("Already Registered", "Account exists—switched to Sign In tab so you can sign in or resend verification.");
+                } else if (code === 'auth/invalid-credential' || code === 'auth/wrong-password' || code === 'auth/user-not-found' || code === 'auth/invalid-login-credentials') {
+                    lastPendingVerificationEmail = email;
+                    lastPendingVerificationPassword = password;
                     showAuthVerificationBanner(
-                        "Incorrect Email or Password",
-                        `The password entered for <b>${email}</b> did not match Firebase records (check caps lock or extra spaces). Click <b>"Forgot?"</b> to send a password reset link from <b>${FIREBASE_SENDER_EMAIL}</b> to <b>${email}</b>.`,
+                        "Not Registered Yet or Different Website Password",
+                        `Firebase could not sign in <b>${email}</b> because either:<br>1) This email hasn't been registered under <b>Customer Sign Up</b> yet, OR<br>2) The password differs from the one you created for this site (note: this is separate from your Gmail login password).<br><button type="button" onclick="quickCreateAndVerifyFromSignIn()" class="mt-2 inline-flex items-center gap-1.5 bg-[#65a30d] hover:bg-[#4d7c0f] text-white text-[11px] font-bold px-3 py-1.5 rounded-xl shadow-xs cursor-pointer"><i class="fa-solid fa-user-plus text-[10px]"></i> Register This Email &amp; Send Verification Now</button>`,
                         email
                     );
-                    showToast("Sign In Failed", "Incorrect email or password. Click 'Forgot?' to reset password.", true);
+                    showToast("Check Registration / Password", "Register under 'Customer Sign Up' first or click 'Forgot?' to reset.", true);
                 } else if (code === 'auth/weak-password') {
                     showToast("Weak Password", "Password should be at least 6 characters long.", true);
+                } else if (code === 'auth/operation-not-allowed') {
+                    showToast("Enable Email/Password in Firebase", "Please enable Email/Password provider in Firebase Console > Authentication > Sign-in method.", true);
                 } else {
-                    showToast("Authentication Error", err.message, true);
+                    showToast("Authentication Error", `${code}: ${err.message}`, true);
                 }
             }
         }
@@ -5886,6 +6265,7 @@
 
         async function saveAdminStockSettings() {
             updatePowerStockFromCheckboxes();
+            saveProductsToLocalBackup();
             if (db) {
                 try {
                     for (const p of products) {
@@ -5917,100 +6297,6 @@
                 }
             };
             reader.readAsDataURL(file);
-        }
-
-        async function saveAdminProduct() {
-            const idInput = document.getElementById('edit-prod-id').value;
-            const name = document.getElementById('admin-prod-name').value.trim();
-            const brand = document.getElementById('admin-prod-brand').value;
-            const price = document.getElementById('admin-prod-price').value.trim();
-            const category = document.getElementById('admin-prod-cat').value;
-            const base64Img = document.getElementById('admin-prod-img-base64').value;
-
-            if (!name || !price) {
-                showToast("Missing Fields", "Please enter product name and price.", true);
-                return;
-            }
-
-            const prodId = idInput || 'p_' + Date.now();
-            let finalImage = base64Img;
-            if (!finalImage && idInput) {
-                const existing = products.find(p => p.id === idInput);
-                if (existing) finalImage = existing.image;
-            }
-            if (!finalImage) {
-                finalImage = "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500";
-            }
-
-            const newProd = {
-                id: prodId,
-                name: name,
-                brand: brand,
-                price: price,
-                category: category,
-                image: finalImage,
-                badge: 'In Stock'
-            };
-
-            if (!window.productPowerStock[prodId]) {
-                window.productPowerStock[prodId] = {};
-                powersList.forEach(pw => window.productPowerStock[prodId][pw] = true);
-            }
-            if (!window.productPowerLocations[prodId]) {
-                window.productPowerLocations[prodId] = {};
-                powersList.forEach(pw => window.productPowerLocations[prodId][pw] = { warehouse: true, vendor: false });
-            }
-            newProd.powerStock = window.productPowerStock[prodId];
-            newProd.powerLocations = window.productPowerLocations[prodId];
-
-            if (db) {
-                try {
-                    await db.collection("lumilens_products").doc(prodId).set(newProd);
-                } catch(e) { console.warn("Product save error:", e); }
-            }
-
-            const idx = products.findIndex(p => p.id === prodId);
-            if (idx > -1) { products[idx] = newProd; }
-            else { products.push(newProd); }
-
-            resetAdminProductForm();
-            renderStoreProducts(products);
-            renderAdminProductsList();
-            renderAdminPowerStockCheckboxes();
-            showToast("Product Saved!", `${name} published to store catalog.`);
-        }
-
-        function editAdminProduct(prodId) {
-            const p = products.find(item => item.id === prodId);
-            if (!p) return;
-
-            document.getElementById('edit-prod-id').value = p.id;
-            document.getElementById('admin-prod-name').value = p.name;
-            document.getElementById('admin-prod-brand').value = p.brand || 'Molicon';
-            document.getElementById('admin-prod-price').value = p.price;
-            document.getElementById('admin-prod-cat').value = p.category;
-            document.getElementById('admin-prod-img-base64').value = p.image;
-            document.getElementById('admin-form-title').innerText = "Edit Product: " + p.name;
-
-            const previewTag = document.getElementById('admin-image-preview-tag');
-            const container = document.getElementById('admin-image-preview-container');
-            if (previewTag && container && p.image) {
-                previewTag.src = p.image;
-                container.classList.remove('hidden');
-                container.classList.add('flex');
-            }
-            switchAdminSubTab('products');
-        }
-
-        async function deleteAdminProduct(prodId) {
-            products = products.filter(p => p.id !== prodId);
-            if (db) {
-                try { await db.collection("lumilens_products").doc(prodId).delete(); } catch(e) { console.warn(e); }
-            }
-            renderStoreProducts(products);
-            renderAdminProductsList();
-            renderAdminPowerStockCheckboxes();
-            showToast("Product Deleted", "Item removed from catalog.");
         }
 
         function resetAdminProductForm() {
@@ -6113,6 +6399,138 @@
             localStorage.setItem('sweetopia_last_order_id', order.id);
             window.open(TOYYIBPAY_URL, '_blank');
             showToast("ToyyibPay FPX", "Proceeding to ToyyibPay. Confirmation will be verified upon amount drawn.");
+        };
+
+        async function saveAdminProduct() {
+            const idInput = document.getElementById('edit-prod-id').value;
+            const name = document.getElementById('admin-prod-name').value.trim();
+            const brand = document.getElementById('admin-prod-brand').value;
+            const price = document.getElementById('admin-prod-price').value.trim();
+            const category = document.getElementById('admin-prod-cat').value;
+            const base64Img = document.getElementById('admin-prod-img-base64').value;
+
+            if (!name || !price) {
+                showToast("Missing Fields", "Please enter product name and price.", true);
+                return;
+            }
+
+            const prodId = idInput || 'p_' + Date.now();
+            let finalImage = base64Img;
+            if (!finalImage && idInput) {
+                const existing = products.find(p => p.id === idInput);
+                if (existing) finalImage = existing.image;
+            }
+            if (!finalImage) {
+                finalImage = "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500";
+            }
+
+            const newProd = {
+                id: prodId,
+                name: name,
+                brand: brand,
+                price: price,
+                category: category,
+                image: finalImage,
+                badge: 'In Stock'
+            };
+
+            if (!window.productPowerStock[prodId]) {
+                window.productPowerStock[prodId] = {};
+                powersList.forEach(pw => window.productPowerStock[prodId][pw] = true);
+            }
+            if (!window.productPowerLocations[prodId]) {
+                window.productPowerLocations[prodId] = {};
+                powersList.forEach(pw => window.productPowerLocations[prodId][pw] = { warehouse: true, vendor: false });
+            }
+            newProd.powerStock = window.productPowerStock[prodId];
+            newProd.powerLocations = window.productPowerLocations[prodId];
+
+            const idx = products.findIndex(p => p.id === prodId);
+            if (idx > -1) { products[idx] = newProd; }
+            else { products.push(newProd); }
+
+            saveProductsToLocalBackup();
+
+            if (db) {
+                try {
+                    await db.collection("lumilens_products").doc(prodId).set(newProd, { merge: true });
+                } catch(e) { console.warn("Product save error:", e); }
+            }
+
+            resetAdminProductForm();
+            renderStoreProducts(products);
+            renderAdminProductsList();
+            renderAdminPowerStockCheckboxes();
+            renderAdminVoucherProductDropdowns();
+            showToast("Product Saved!", `${name} published to store catalog.`);
+        }
+
+        function editAdminProduct(prodId) {
+            const p = products.find(item => item.id === prodId);
+            if (!p) return;
+
+            document.getElementById('edit-prod-id').value = p.id;
+            document.getElementById('admin-prod-name').value = p.name;
+            document.getElementById('admin-prod-brand').value = p.brand || 'Molicon';
+            document.getElementById('admin-prod-price').value = p.price;
+            document.getElementById('admin-prod-cat').value = p.category;
+            document.getElementById('admin-prod-img-base64').value = p.image;
+            document.getElementById('admin-form-title').innerText = "Edit Product: " + p.name;
+
+            const previewTag = document.getElementById('admin-image-preview-tag');
+            const container = document.getElementById('admin-image-preview-container');
+            if (previewTag && container && p.image) {
+                previewTag.src = p.image;
+                container.classList.remove('hidden');
+                container.classList.add('flex');
+            }
+            switchAdminSubTab('products');
+        }
+
+        async function deleteAdminProduct(prodId) {
+            products = products.filter(p => p.id !== prodId);
+            delete window.productPowerStock[prodId];
+            delete window.productPowerLocations[prodId];
+            saveProductsToLocalBackup();
+            if (db) {
+                try { await db.collection("lumilens_products").doc(prodId).delete(); } catch(e) { console.warn(e); }
+            }
+            renderStoreProducts(products);
+            renderAdminProductsList();
+            renderAdminPowerStockCheckboxes();
+            renderAdminVoucherProductDropdowns();
+            showToast("Product Deleted", "Item removed from catalog.");
+        }
+
+        window.restoreDefaultLensesToCatalog = async function() {
+            let addedCount = 0;
+            DEFAULT_SEED_PRODUCTS.forEach(defProd => {
+                const exists = products.some(p => p.id === defProd.id || p.name.trim().toLowerCase() === defProd.name.trim().toLowerCase());
+                if (!exists) {
+                    products.push({ ...defProd });
+                    addedCount++;
+                }
+            });
+            ensureProductStockDefaults(products);
+            saveProductsToLocalBackup();
+
+            if (db) {
+                try {
+                    for (const p of products) {
+                        await db.collection("lumilens_products").doc(p.id).set({
+                            ...p,
+                            powerStock: window.productPowerStock[p.id] || {},
+                            powerLocations: window.productPowerLocations[p.id] || {}
+                        }, { merge: true });
+                    }
+                } catch(e) { console.warn("Restore lenses Firestore sync warning:", e); }
+            }
+
+            renderStoreProducts(products);
+            renderAdminProductsList();
+            renderAdminPowerStockCheckboxes();
+            renderAdminVoucherProductDropdowns();
+            showToast("Lenses Restored!", addedCount > 0 ? `Restored ${addedCount} missing lens(es) & synced all ${products.length} lenses!` : `All ${products.length} catalog lenses are synced & active!`);
         };
 
         window.toggleSelectAll = function() {
@@ -6470,14 +6888,14 @@
                 try {
                     await sendFirebasePasswordResetWithFallback(email);
                     await finishRetroLoading();
-                    showToast("Email Sent", `Password reset instructions sent from ${FIREBASE_SENDER_EMAIL} to ${email}.`);
+                    showToast("Email Sent", `Password reset instructions sent from ${FIREBASE_SENDER_NAME} (${FIREBASE_SENDER_EMAIL}) to ${email}.`);
                     closeForgotPassword();
                 } catch(err) {
                     cancelRetroLoading();
                     showToast("Error", err.message, true);
                 }
             } else {
-                showToast("Email Sent", `Password reset instructions sent from ${FIREBASE_SENDER_EMAIL} to ${email}.`);
+                showToast("Email Sent", `Password reset instructions sent from ${FIREBASE_SENDER_NAME} (${FIREBASE_SENDER_EMAIL}) to ${email}.`);
                 closeForgotPassword();
             }
         }
@@ -7556,24 +7974,40 @@
             if (!db) return;
             db.collection("lumilens_products").onSnapshot((snapshot) => {
                 if (snapshot && !snapshot.empty) {
-                    const loaded = [];
+                    const serverMap = new Map();
                     snapshot.forEach(docSnap => {
                         const data = { id: docSnap.id, ...docSnap.data() };
-                        loaded.push(data);
-                        if (data.powerStock) {
-                            window.productPowerStock[data.id] = data.powerStock;
-                        } else if (!window.productPowerStock[data.id]) {
-                            window.productPowerStock[data.id] = {};
-                            powersList.forEach(pw => window.productPowerStock[data.id][pw] = true);
-                        }
-                        if (data.powerLocations) {
-                            window.productPowerLocations[data.id] = data.powerLocations;
-                        } else if (!window.productPowerLocations[data.id]) {
-                            window.productPowerLocations[data.id] = {};
-                            powersList.forEach(pw => window.productPowerLocations[data.id][pw] = { warehouse: true, vendor: false });
+                        if (data && data.name) {
+                            serverMap.set(docSnap.id, data);
+                            if (data.powerStock) {
+                                window.productPowerStock[data.id] = data.powerStock;
+                            }
+                            if (data.powerLocations) {
+                                window.productPowerLocations[data.id] = data.powerLocations;
+                            }
                         }
                     });
-                    products = loaded;
+
+                    // Preserve any local/cached admin-managed lenses that haven't finished syncing to Firestore yet
+                    products.forEach(localProd => {
+                        if (localProd && localProd.id && !serverMap.has(localProd.id)) {
+                            const isDefaultOnly = DEFAULT_SEED_PRODUCTS.some(d => d.id === localProd.id);
+                            if (!isDefaultOnly || serverMap.size === 0) {
+                                serverMap.set(localProd.id, localProd);
+                                db.collection("lumilens_products").doc(localProd.id).set({
+                                    ...localProd,
+                                    powerStock: window.productPowerStock[localProd.id] || {},
+                                    powerLocations: window.productPowerLocations[localProd.id] || {}
+                                }, { merge: true }).catch(() => {});
+                            }
+                        }
+                    });
+
+                    if (serverMap.size > 0) {
+                        products = Array.from(serverMap.values());
+                        ensureProductStockDefaults(products);
+                        saveProductsToLocalBackup();
+                    }
                 }
                 renderStoreProducts(products);
                 renderFavouritesGrid();
@@ -8030,7 +8464,6 @@
             modal.classList.add('opacity-0', 'pointer-events-none');
         }
 
-        // Global window bindings
         window.switchPage = switchPage;
         window.switchTab = switchTab;
         window.setAuthModeTab = setAuthModeTab;
@@ -8145,6 +8578,8 @@
             });
 
             if (typeof lucide !== 'undefined') { lucide.createIcons(); }
+            loadProductsFromLocalBackup();
+            ensureProductStockDefaults(products);
             loadSavedAddresses();
             loadFavourites();
             loadAssignedVouchers();
@@ -8181,23 +8616,27 @@
 
             renderPresetsTable();
 
+            const handledActionCallback = await handleFirebaseEmailActionCallback();
+
             const savedEmail = localStorage.getItem('sweetopia_logged_in_email');
 
-            if (savedEmail) {
-                currentUser = { email: savedEmail, isGuest: false };
-                updateUIAfterLogin(currentUser);
-                const savedPage = sessionStorage.getItem('sweetopia_active_page') || 'dashboard';
-                const defaultTab = isAdminUser(savedEmail) ? 'admin-workspace' : 'catalog';
-                const savedTab = sessionStorage.getItem('sweetopia_active_tab') || defaultTab;
-                switchPage(savedPage);
-                switchTab(savedTab, false);
-                if (savedTab === 'admin-workspace' && isAdminUser(savedEmail)) {
-                    const savedSubTab = sessionStorage.getItem('sweetopia_admin_subtab') || 'stock';
-                    switchAdminSubTab(savedSubTab, false);
+            if (!handledActionCallback) {
+                if (savedEmail) {
+                    currentUser = { email: savedEmail, isGuest: false };
+                    updateUIAfterLogin(currentUser);
+                    const savedPage = sessionStorage.getItem('sweetopia_active_page') || 'dashboard';
+                    const defaultTab = isAdminUser(savedEmail) ? 'admin-workspace' : 'catalog';
+                    const savedTab = sessionStorage.getItem('sweetopia_active_tab') || defaultTab;
+                    switchPage(savedPage);
+                    switchTab(savedTab, false);
+                    if (savedTab === 'admin-workspace' && isAdminUser(savedEmail)) {
+                        const savedSubTab = sessionStorage.getItem('sweetopia_admin_subtab') || 'stock';
+                        switchAdminSubTab(savedSubTab, false);
+                    }
+                    updatePresence(savedEmail, true);
+                } else {
+                    switchPage('auth');
                 }
-                updatePresence(savedEmail, true);
-            } else {
-                switchPage('auth');
             }
 
             if (auth) {
@@ -8208,7 +8647,6 @@
                             user = auth.currentUser || user;
                         } catch (e) {}
 
-                        // Only enforce verification on session restore if this user just signed up and hasn't verified yet
                         if (!isAdminUser(user.email) && user.emailVerified === false && isEmailPendingPostSignupVerification(user.email)) {
                             saveRegisteredCustomerRecord(user.email, user.uid, false).catch(() => {});
                             try { await auth.signOut(); } catch (e) {}
@@ -8218,7 +8656,7 @@
                             setAuthModeTab('signin');
                             showAuthVerificationBanner(
                                 "Please Verify Your New Account First",
-                                `Please click the verification link sent from <b>${FIREBASE_SENDER_EMAIL}</b> to <b>${user.email}</b> after sign up before signing in.`,
+                                `Please follow the verification link sent from <b>${FIREBASE_SENDER_NAME}</b> (<b class="font-mono">${FIREBASE_SENDER_EMAIL}</b>) to <b>${user.email}</b> after sign up before signing in.`,
                                 user.email
                             );
                             return;
@@ -8253,11 +8691,30 @@
             if (db) {
                 try {
                     const snap = await db.collection("lumilens_products").get({ source: 'server' }).catch(() => null);
-                    if (snap && snap.empty) {
+                    if (snap && !snap.empty) {
+                        const serverProducts = [];
+                        snap.forEach(docSnap => {
+                            const data = { id: docSnap.id, ...docSnap.data() };
+                            if (data && data.name) {
+                                serverProducts.push(data);
+                                if (data.powerStock) window.productPowerStock[data.id] = data.powerStock;
+                                if (data.powerLocations) window.productPowerLocations[data.id] = data.powerLocations;
+                            }
+                        });
+                        if (serverProducts.length > 0) {
+                            products = serverProducts;
+                            ensureProductStockDefaults(products);
+                            saveProductsToLocalBackup();
+                        }
+                    } else if (snap && snap.empty) {
                         for (const p of products) {
-                            const initialPowerStock = {};
-                            powersList.forEach(pw => initialPowerStock[pw] = true);
-                            await db.collection("lumilens_products").doc(p.id).set({ ...p, powerStock: initialPowerStock });
+                            const initialPowerStock = window.productPowerStock[p.id] || {};
+                            powersList.forEach(pw => { if (initialPowerStock[pw] === undefined) initialPowerStock[pw] = true; });
+                            await db.collection("lumilens_products").doc(p.id).set({
+                                ...p,
+                                powerStock: initialPowerStock,
+                                powerLocations: window.productPowerLocations[p.id] || {}
+                            });
                         }
                     }
                 } catch(e) { }
@@ -8289,6 +8746,7 @@
             renderAdminProductsList();
             renderAdminPowerStockCheckboxes();
             renderAdminVoucherProductDropdowns();
+            initLiveVersionListener();
             initFirestoreListeners();
             initChatListeners();
             onAdminPowerRangeChange();
