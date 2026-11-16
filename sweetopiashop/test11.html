@@ -362,6 +362,36 @@
             background-color: #5a0c3f;
         }
 
+        /* Dedicated Pink CSS Loading Spinner */
+        .pink-loading-spinner {
+            width: 44px;
+            height: 44px;
+            border: 4px solid #fce7f3;
+            border-top-color: #ec4899;
+            border-right-color: #d946ef;
+            border-radius: 50%;
+            animation: pinkSpinnerRotate 0.75s linear infinite;
+            display: inline-block;
+            box-shadow: 0 4px 12px rgba(236, 72, 153, 0.22);
+        }
+
+        .pink-loading-spinner-sm {
+            width: 18px;
+            height: 18px;
+            border: 2.5px solid #fce7f3;
+            border-top-color: #ec4899;
+            border-right-color: #d946ef;
+            border-radius: 50%;
+            animation: pinkSpinnerRotate 0.7s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        @keyframes pinkSpinnerRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         @keyframes bellRing {
             0%, 100% { transform: rotate(0deg); }
             15% { transform: rotate(15deg); }
@@ -1302,95 +1332,28 @@
                                 <button onclick="filterCatalog('Mill Creek', this)" class="cat-btn px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 shrink-0 border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all">Mill Creek</button>
                             </div>
 
-                            <div class="relative w-full md:w-72">
-                                <div class="relative w-full">
-                                    <div class="absolute -top-7 right-12 flex space-x-1.5 pointer-events-none z-10">
-                                        <div class="w-3.5 h-8 bg-fuchsia-500 rounded-full transform -rotate-12 border-2 border-white shadow-sm"></div>
-                                        <div class="w-3.5 h-8 bg-fuchsia-400 rounded-full transform rotate-12 border-2 border-white shadow-sm"></div>
+                            <div class="flex items-center gap-2.5 w-full md:w-auto justify-end">
+                                <div id="catalog-sync-spinner-pill" class="hidden items-center gap-2 bg-pink-50 border border-pink-200 px-3 py-1.5 rounded-full text-[11px] font-bold text-pink-600 shrink-0">
+                                    <span class="pink-loading-spinner-sm" aria-hidden="true"></span>
+                                    <span>Syncing...</span>
+                                </div>
+                                <div class="relative w-full md:w-72">
+                                    <div class="relative w-full">
+                                        <div class="absolute -top-7 right-12 flex space-x-1.5 pointer-events-none z-10">
+                                            <div class="w-3.5 h-8 bg-fuchsia-500 rounded-full transform -rotate-12 border-2 border-white shadow-sm"></div>
+                                            <div class="w-3.5 h-8 bg-fuchsia-400 rounded-full transform rotate-12 border-2 border-white shadow-sm"></div>
+                                        </div>
+                                        <input type="text" id="store-search" oninput="filterStoreProducts()" placeholder="Search lenses..." class="w-full bg-white text-xs text-slate-900 placeholder-fuchsia-300 pl-4 pr-10 py-2.5 rounded-full border-2 border-fuchsia-500 focus:outline-none focus:ring-2 focus:ring-fuchsia-300 shadow-sm transition-all">
                                     </div>
-                                    <input type="text" id="store-search" oninput="filterStoreProducts()" placeholder="Search lenses..." class="w-full bg-white text-xs text-slate-900 placeholder-fuchsia-300 pl-4 pr-10 py-2.5 rounded-full border-2 border-fuchsia-500 focus:outline-none focus:ring-2 focus:ring-fuchsia-300 shadow-sm transition-all">
                                 </div>
                             </div>
                         </div>
 
-                        <div id="store-product-grid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6"></div>
-                    </div>
-
-                    <!-- TAB 2: CART & CHECKOUT FORM -->
-                    <div id="tab-section-cart" class="hidden max-w-3xl mx-auto space-y-6 tab-panel-animate">
-                        <div class="flex items-center justify-between pb-4 border-b border-slate-200">
-                            <h3 class="text-xl font-bold text-slate-900">Your Cart (<span id="cart-title-count">0</span>)</h3>
-                            <button onclick="clearCart()" class="text-xs text-slate-500 hover:text-red-600">Clear Cart</button>
-                        </div>
-                        <div id="cart-items-container" class="space-y-4">
-                            <p class="text-xs text-slate-500 text-center py-8">Your cart is currently empty.</p>
-                        </div>
-
-                        <div id="checkout-form-box" class="hidden bg-slate-50 p-6 rounded-3xl border border-slate-200 space-y-4 shadow-sm">
-                            <h4 class="text-sm font-bold text-slate-900 border-b border-slate-200 pb-2">Billing &amp; Delivery Details</h4>
-
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-700 mb-1">Customer Full Name</label>
-                                <input type="text" id="checkout-name" placeholder="Enter your full name" class="w-full bg-white border border-slate-300 text-xs text-slate-900 rounded-xl p-3 focus:outline-none focus:border-[#65a30d]">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-700 mb-1">Billing &amp; Shipping Address</label>
-                                <textarea id="checkout-address" rows="2" placeholder="Enter your complete delivery address" class="w-full bg-white border border-slate-300 text-xs text-slate-900 rounded-xl p-3 focus:outline-none focus:border-[#65a30d]"></textarea>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-700 mb-1">Phone Number</label>
-                                <input type="text" id="checkout-phone" placeholder="012-3456789" class="w-full bg-white border border-slate-300 text-xs text-slate-900 rounded-xl p-3 focus:outline-none focus:border-[#65a30d]">
-                            </div>
-
-                            <div class="discount-section pt-3 border-t border-slate-200 space-y-2">
-                                <h3 class="title-voucher text-xs font-bold text-slate-800">Vouchers or discount code</h3>
-
-                                <div id="cart-assigned-voucher-dropdown-container" class="hidden">
-                                    <label for="cart-assigned-voucher-select" class="block text-[10px] font-semibold text-slate-500 uppercase mb-1">Quick Select Received Voucher:</label>
-                                    <select id="cart-assigned-voucher-select" onchange="onCartAssignedVoucherChange()" class="w-full bg-white border border-slate-300 text-slate-800 text-xs px-3 py-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 font-mono font-bold shadow-xs mb-2">
-                                        <option value="">-- Choose your available code --</option>
-                                    </select>
-                                </div>
-
-                                <div class="input-group mb-2 form-label-group discount-code-input flex gap-2">
-                                    <input type="text" class="form-control flex-1 bg-white border border-slate-300 text-xs text-slate-900 rounded-xl p-2.5 focus:outline-none focus:border-[#65a30d] font-mono uppercase" id="voucher-code-input" name="checkout[voucher_code]" placeholder="Discount code (e.g. CODE5)">
-                                    <div class="input-group-append">
-                                        <button type="button" class="btn btn-outline-secondary apply-voucher bg-slate-800 hover:bg-slate-900 text-white font-bold px-4 py-2.5 rounded-xl text-xs transition" onclick="applyVoucherCode()">Apply</button>
-                                    </div>
-                                </div>
-                                <small class="voucher-error text-red-500 text-[11px] block font-medium" id="voucher-error-msg"></small>
-                            </div>
-
-                            <div class="space-y-2 pt-3 border-t border-slate-200">
-                                <div class="flex justify-between text-xs text-slate-600">
-                                    <span>Subtotal (Lens items)</span>
-                                    <span id="cart-subtotal">RM 0.00</span>
-                                </div>
-                                <div id="cart-discount-row" class="hidden flex items-center justify-between text-emerald-600 font-semibold text-xs bg-emerald-50/80 border border-emerald-200 px-3 py-2 rounded-xl">
-                                    <div class="flex items-center space-x-2">
-                                        <span id="cart-discount-label">Discount Applied</span>
-                                        <button type="button" onclick="removeAppliedVoucher()" id="remove-voucher-btn" class="inline-flex items-center space-x-1 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 px-2 py-0.5 rounded-lg text-[10px] font-bold transition shadow-2xs cursor-pointer" title="Remove applied voucher">
-                                            <i class="fa-solid fa-xmark text-[10px]"></i>
-                                            <span>Remove Voucher</span>
-                                        </button>
-                                    </div>
-                                    <span id="cart-discount-amount">-RM 0.00</span>
-                                </div>
-                                <div class="flex justify-between text-xs text-slate-600">
-                                    <span>Shipping Fee</span>
-                                    <span id="cart-shipping-fee" class="font-bold text-slate-800">RM 0.00</span>
-                                </div>
-                                <div class="border-t border-slate-200 pt-3 flex justify-between text-base font-bold text-slate-900">
-                                    <span>Total Amount (RM)</span>
-                                    <span id="cart-total" class="text-[#65a30d]">RM 0.00</span>
-                                </div>
-                            </div>
-
-                            <div class="pt-2">
-                                <button onclick="processOrderCheckout()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-2xl text-center shadow-lg shadow-blue-600/20 text-xs transition-all flex items-center justify-center space-x-2">
-                                    <i class="fa-solid fa-credit-card"></i>
-                                    <span>PAY VIA TOYYIBPAY FPX</span>
-                                </button>
+                        <div id="store-product-grid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
+                            <div class="col-span-full py-16 flex flex-col items-center justify-center text-center bg-pink-50/40 rounded-3xl border border-pink-100">
+                                <div class="pink-loading-spinner mb-3" role="status" aria-label="Loading lenses"></div>
+                                <p class="text-xs font-extrabold text-pink-600">Loading Sweetopia Lenses...</p>
+                                <p class="text-[11px] text-slate-400 mt-0.5">Fetching live catalog from cloud</p>
                             </div>
                         </div>
                     </div>
@@ -3301,19 +3264,41 @@
             return getNewlyRegisteredUnverifiedSet().has(email.trim().toLowerCase());
         }
 
-        const DEFAULT_SEED_PRODUCTS = [
-            { id: "p1", name: "HAZEL NATURAL", brand: "Molicon", price: "25.00", category: "3 Months Disposable", image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500", badge: "In Stock" },
-            { id: "p2", name: "CRYSTAL CLEAR", brand: "Uyaai", price: "25.00", category: "1 Month Disposable", image: "https://images.unsplash.com/photo-1583946099066-764f2537f136?auto=format&fit=crop&q=80&w=500", badge: "In Stock" },
-            { id: "p3", name: "EMERALD GREEN", brand: "Western Eyes", price: "25.00", category: "3 Months Disposable", image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&q=80&w=500", badge: "In Stock" },
-            { id: "p4", name: "MYSTIC GREY", brand: "Mill Creek", price: "25.00", category: "3 Months Disposable", image: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&q=80&w=500", badge: "In Stock" },
-            { id: "p5", name: "MONTHLY COMFORT", brand: "Molicon", price: "25.00", category: "1 Day Disposable", image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500", badge: "In Stock" }
-        ];
+        const LEGACY_PLACEHOLDER_IDS = new Set(["p1", "p2", "p3", "p4", "p5"]);
+        const LEGACY_PLACEHOLDER_NAMES = new Set([
+            "HAZEL NATURAL",
+            "CRYSTAL CLEAR",
+            "EMERALD GREEN",
+            "MYSTIC GREY",
+            "MONTHLY COMFORT"
+        ]);
 
-        let products = [...DEFAULT_SEED_PRODUCTS];
+        function isLegacyPlaceholderProduct(p) {
+            if (!p) return false;
+            const pid = String(p.id || '').trim();
+            const pname = String(p.name || '').trim().toUpperCase();
+            return LEGACY_PLACEHOLDER_IDS.has(pid) || LEGACY_PLACEHOLDER_NAMES.has(pname);
+        }
+
+        let products = [];
+        let initialProductsLoaded = false;
+
+        function setCatalogSyncSpinnerVisible(isSyncing) {
+            const pill = document.getElementById('catalog-sync-spinner-pill');
+            if (!pill) return;
+            if (isSyncing) {
+                pill.classList.remove('hidden');
+                pill.classList.add('inline-flex');
+            } else {
+                pill.classList.add('hidden');
+                pill.classList.remove('inline-flex');
+            }
+        }
 
         function saveProductsToLocalBackup() {
             try {
-                const serialized = products.map(p => ({
+                const cleaned = products.filter(p => !isLegacyPlaceholderProduct(p));
+                const serialized = cleaned.map(p => ({
                     ...p,
                     powerStock: window.productPowerStock[p.id] || p.powerStock || {},
                     powerLocations: window.productPowerLocations[p.id] || p.powerLocations || {}
@@ -3328,12 +3313,16 @@
                 if (!raw) return false;
                 const parsed = JSON.parse(raw);
                 if (Array.isArray(parsed) && parsed.length > 0) {
-                    products = parsed;
+                    const filtered = parsed.filter(p => !isLegacyPlaceholderProduct(p));
+                    products = filtered;
                     products.forEach(p => {
                         if (p.powerStock) window.productPowerStock[p.id] = p.powerStock;
                         if (p.powerLocations) window.productPowerLocations[p.id] = p.powerLocations;
                     });
-                    return true;
+                    if (filtered.length !== parsed.length) {
+                        saveProductsToLocalBackup();
+                    }
+                    return filtered.length > 0;
                 }
             } catch (e) { console.warn("Load products local backup warning:", e); }
             return false;
@@ -5580,6 +5569,17 @@
             const grid = document.getElementById('store-product-grid');
             if (!grid) return;
 
+            if (!initialProductsLoaded && list.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-16 flex flex-col items-center justify-center text-center bg-pink-50/40 rounded-3xl border border-pink-100">
+                        <div class="pink-loading-spinner mb-3" role="status" aria-label="Loading lenses"></div>
+                        <p class="text-xs font-extrabold text-pink-600">Loading Sweetopia Lenses...</p>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Fetching live catalog from cloud</p>
+                    </div>
+                `;
+                return;
+            }
+
             if (list.length === 0) {
                 grid.innerHTML = `<div class="col-span-full py-16 text-center text-slate-400 bg-slate-50 rounded-3xl border border-dashed border-slate-200">No contact lenses found matching your search.</div>`;
                 return;
@@ -6503,26 +6503,21 @@
         }
 
         window.restoreDefaultLensesToCatalog = async function() {
-            let addedCount = 0;
-            DEFAULT_SEED_PRODUCTS.forEach(defProd => {
-                const exists = products.some(p => p.id === defProd.id || p.name.trim().toLowerCase() === defProd.name.trim().toLowerCase());
-                if (!exists) {
-                    products.push({ ...defProd });
-                    addedCount++;
-                }
-            });
             ensureProductStockDefaults(products);
             saveProductsToLocalBackup();
 
             if (db) {
                 try {
+                    const batch = db.batch();
                     for (const p of products) {
-                        await db.collection("lumilens_products").doc(p.id).set({
+                        const docRef = db.collection("lumilens_products").doc(p.id);
+                        batch.set(docRef, {
                             ...p,
                             powerStock: window.productPowerStock[p.id] || {},
                             powerLocations: window.productPowerLocations[p.id] || {}
                         }, { merge: true });
                     }
+                    await batch.commit();
                 } catch(e) { console.warn("Restore lenses Firestore sync warning:", e); }
             }
 
@@ -6530,7 +6525,7 @@
             renderAdminProductsList();
             renderAdminPowerStockCheckboxes();
             renderAdminVoucherProductDropdowns();
-            showToast("Lenses Restored!", addedCount > 0 ? `Restored ${addedCount} missing lens(es) & synced all ${products.length} lenses!` : `All ${products.length} catalog lenses are synced & active!`);
+            showToast("Catalog Synced!", `All ${products.length} catalog lenses are synced & active!`);
         };
 
         window.toggleSelectAll = function() {
@@ -7972,12 +7967,17 @@
 
         function initFirestoreListeners() {
             if (!db) return;
-            db.collection("lumilens_products").onSnapshot((snapshot) => {
+            setCatalogSyncSpinnerVisible(true);
+            db.collection("lumilens_products").onSnapshot({ includeMetadataChanges: true }, (snapshot) => {
+                initialProductsLoaded = true;
+                if (!snapshot.metadata.fromCache) {
+                    setCatalogSyncSpinnerVisible(false);
+                }
                 if (snapshot && !snapshot.empty) {
                     const serverMap = new Map();
                     snapshot.forEach(docSnap => {
                         const data = { id: docSnap.id, ...docSnap.data() };
-                        if (data && data.name) {
+                        if (data && data.name && !isLegacyPlaceholderProduct(data)) {
                             serverMap.set(docSnap.id, data);
                             if (data.powerStock) {
                                 window.productPowerStock[data.id] = data.powerStock;
@@ -7985,29 +7985,29 @@
                             if (data.powerLocations) {
                                 window.productPowerLocations[data.id] = data.powerLocations;
                             }
+                        } else if (isLegacyPlaceholderProduct(data)) {
+                            db.collection("lumilens_products").doc(docSnap.id).delete().catch(() => {});
                         }
                     });
 
                     // Preserve any local/cached admin-managed lenses that haven't finished syncing to Firestore yet
                     products.forEach(localProd => {
-                        if (localProd && localProd.id && !serverMap.has(localProd.id)) {
-                            const isDefaultOnly = DEFAULT_SEED_PRODUCTS.some(d => d.id === localProd.id);
-                            if (!isDefaultOnly || serverMap.size === 0) {
-                                serverMap.set(localProd.id, localProd);
-                                db.collection("lumilens_products").doc(localProd.id).set({
-                                    ...localProd,
-                                    powerStock: window.productPowerStock[localProd.id] || {},
-                                    powerLocations: window.productPowerLocations[localProd.id] || {}
-                                }, { merge: true }).catch(() => {});
-                            }
+                        if (localProd && localProd.id && !isLegacyPlaceholderProduct(localProd) && !serverMap.has(localProd.id)) {
+                            serverMap.set(localProd.id, localProd);
+                            db.collection("lumilens_products").doc(localProd.id).set({
+                                ...localProd,
+                                powerStock: window.productPowerStock[localProd.id] || {},
+                                powerLocations: window.productPowerLocations[localProd.id] || {}
+                            }, { merge: true }).catch(() => {});
                         }
                     });
 
-                    if (serverMap.size > 0) {
-                        products = Array.from(serverMap.values());
-                        ensureProductStockDefaults(products);
-                        saveProductsToLocalBackup();
-                    }
+                    products = Array.from(serverMap.values());
+                    ensureProductStockDefaults(products);
+                    saveProductsToLocalBackup();
+                } else if (snapshot && snapshot.empty) {
+                    products = products.filter(p => !isLegacyPlaceholderProduct(p));
+                    saveProductsToLocalBackup();
                 }
                 renderStoreProducts(products);
                 renderFavouritesGrid();
@@ -8015,6 +8015,8 @@
                 renderAdminPowerStockCheckboxes();
                 renderAdminVoucherProductDropdowns();
             }, () => {
+                initialProductsLoaded = true;
+                setCatalogSyncSpinnerVisible(false);
                 renderStoreProducts(products);
                 renderFavouritesGrid();
                 renderAdminProductsList();
@@ -8578,8 +8580,16 @@
             });
 
             if (typeof lucide !== 'undefined') { lucide.createIcons(); }
-            loadProductsFromLocalBackup();
+            if (loadProductsFromLocalBackup()) {
+                initialProductsLoaded = true;
+            }
             ensureProductStockDefaults(products);
+            // Immediately render local cache & start Firestore real-time product stream first for fast PC/Desktop load
+            renderStoreProducts(products);
+            initFirestoreListeners();
+            initLiveVersionListener();
+            initChatListeners();
+
             loadSavedAddresses();
             loadFavourites();
             loadAssignedVouchers();
@@ -8689,44 +8699,19 @@
             }
 
             if (db) {
-                try {
-                    const snap = await db.collection("lumilens_products").get({ source: 'server' }).catch(() => null);
-                    if (snap && !snap.empty) {
-                        const serverProducts = [];
-                        snap.forEach(docSnap => {
-                            const data = { id: docSnap.id, ...docSnap.data() };
-                            if (data && data.name) {
-                                serverProducts.push(data);
-                                if (data.powerStock) window.productPowerStock[data.id] = data.powerStock;
-                                if (data.powerLocations) window.productPowerLocations[data.id] = data.powerLocations;
-                            }
-                        });
-                        if (serverProducts.length > 0) {
-                            products = serverProducts;
-                            ensureProductStockDefaults(products);
-                            saveProductsToLocalBackup();
+                // Run background user/voucher sync in parallel without blocking product grid rendering
+                Promise.all([
+                    db.collection("lumilens_assigned_vouchers").doc("all_vouchers").get().then(vSnap => {
+                        if (vSnap && vSnap.exists && vSnap.data() && vSnap.data().data) {
+                            assignedVouchersMap = vSnap.data().data;
                         }
-                    } else if (snap && snap.empty) {
-                        for (const p of products) {
-                            const initialPowerStock = window.productPowerStock[p.id] || {};
-                            powersList.forEach(pw => { if (initialPowerStock[pw] === undefined) initialPowerStock[pw] = true; });
-                            await db.collection("lumilens_products").doc(p.id).set({
-                                ...p,
-                                powerStock: initialPowerStock,
-                                powerLocations: window.productPowerLocations[p.id] || {}
-                            });
-                        }
-                    }
-                } catch(e) { }
-
-                try {
-                    const vSnap = await db.collection("lumilens_assigned_vouchers").doc("all_vouchers").get({ source: 'server' }).catch(() => null);
-                    if (vSnap && vSnap.exists && vSnap.data() && vSnap.data().data) {
-                        assignedVouchersMap = vSnap.data().data;
-                    }
-                } catch(e) { }
-
-                await syncAllUsersFromServer();
+                    }).catch(() => {}),
+                    syncAllUsersFromServer()
+                ]).then(() => {
+                    renderCustomerVouchersUI();
+                    renderChosenCustomerPromoBanner();
+                    renderAdminVoucherCustomerDropdowns();
+                }).catch(() => {});
 
                 try {
                     for (const seededEmail of SEEDED_REGISTERED_CUSTOMERS) {
@@ -8736,8 +8721,8 @@
                             role: 'customer',
                             emailVerified: true
                         };
-                        await db.collection("lumilens_users").doc(docKey).set(seedDoc, { merge: true }).catch(() => {});
-                        await db.collection("users").doc(docKey).set(seedDoc, { merge: true }).catch(() => {});
+                        db.collection("lumilens_users").doc(docKey).set(seedDoc, { merge: true }).catch(() => {});
+                        db.collection("users").doc(docKey).set(seedDoc, { merge: true }).catch(() => {});
                     }
                 } catch(e) { }
             }
@@ -8746,9 +8731,6 @@
             renderAdminProductsList();
             renderAdminPowerStockCheckboxes();
             renderAdminVoucherProductDropdowns();
-            initLiveVersionListener();
-            initFirestoreListeners();
-            initChatListeners();
             onAdminPowerRangeChange();
             initSlideshow();
             renderCustomerVouchersUI();
