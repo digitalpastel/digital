@@ -5,18 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light">
     <meta name="supported-color-schemes" content="light">
-    <!-- Cache Busting & No-Cache Directives (v=1.0.6) -->
-    <meta name="app-version" content="1.0.6">
+    <!-- Cache Busting & No-Cache Directives (v=1.0.8) -->
+    <meta name="app-version" content="1.0.8">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Sweetopia Shop - Premium Contact Lens Store &amp; FPX Checkout</title>
-    <!-- App Icons & Stylesheet with Cache Busting Version (?v=1.0.6) -->
-    <link rel="stylesheet" href="style.css?v=1.0.6">
-    <link rel="icon" type="image/png" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.6">
-    <link rel="apple-touch-icon" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.6">
-    <link rel="icon" type="image/png" sizes="512x512" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png?v=1.0.6">
-    <link rel="manifest" href="https://digitalpastel.github.io/digital/sweetopiashop/manifest.json?v=1.0.6">
+    <!-- App Icons & Stylesheet with Cache Busting Version (?v=1.0.8) -->
+    <link rel="stylesheet" href="style.css?v=1.0.8">
+    <link rel="icon" type="image/png" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.8">
+    <link rel="apple-touch-icon" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.8">
+    <link rel="icon" type="image/png" sizes="512x512" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png?v=1.0.8">
+    <link rel="manifest" href="https://digitalpastel.github.io/digital/sweetopiashop/manifest.json?v=1.0.8">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&amp;family=Fredoka:wght@600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
     <!-- Retro Pixel Font for 10-Bar Window matching reference image -->
@@ -31,7 +31,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script>
         // Cache Busting Controller: Increment APP_VERSION whenever updating GitHub
-        const APP_VERSION = '1.0.6';
+        const APP_VERSION = '1.0.8';
         (function enforceCacheBustingVersion() {
             try {
                 const storedVersion = localStorage.getItem('sweetopia_app_version');
@@ -779,7 +779,7 @@
 
 <body class="min-h-screen flex flex-col items-center justify-start p-3 sm:p-4 md:p-6 text-slate-800">
 
-    <!-- LIVE NEW VERSION UPDATE BANNER (Appears when Admin publishes a newer version via Firestore) -->
+    <!-- LIVE NEW VERSION UPDATE BANNER (Appears every time Admin publishes a new version via Firestore) -->
     <div id="live-version-update-banner" class="w-full max-w-[1280px] mb-3 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 text-white px-4 py-3 rounded-2xl hidden items-center justify-between border-2 border-emerald-300 shadow-lg transition-all">
         <div class="flex items-center space-x-3 overflow-hidden">
             <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center text-yellow-300 text-lg shrink-0 border border-white/30 animate-bounce">
@@ -788,7 +788,7 @@
             <div class="truncate">
                 <div class="flex items-center gap-2">
                     <span class="bg-yellow-300 text-slate-950 text-[10px] font-black uppercase px-2 py-0.5 rounded-full shadow-xs">New Update Available</span>
-                    <span id="live-update-version-badge" class="text-xs sm:text-sm font-extrabold tracking-tight truncate">Sweetopia Shop v1.0.5 is Live!</span>
+                    <span id="live-update-version-badge" class="text-xs sm:text-sm font-extrabold tracking-tight truncate">Sweetopia Shop v1.0.8 is Live!</span>
                 </div>
                 <p id="live-update-notes-text" class="text-[11px] text-emerald-50 font-medium truncate mt-0.5">A fresh update has been published. Refresh now to load the latest features &amp; catalog.</p>
             </div>
@@ -797,6 +797,9 @@
             <button type="button" onclick="applyLiveVersionUpdate()" class="bg-white hover:bg-yellow-100 text-emerald-800 active:scale-95 text-xs font-black px-4 py-2 rounded-xl shadow-md transition flex items-center gap-1.5 border border-emerald-200 cursor-pointer">
                 <i class="fa-solid fa-arrows-rotate text-xs text-emerald-600"></i>
                 <span>Update Now</span>
+            </button>
+            <button type="button" onclick="dismissLiveVersionBanner()" class="w-7 h-7 rounded-full bg-white/15 hover:bg-white/25 text-white flex items-center justify-center transition cursor-pointer" aria-label="Dismiss update banner">
+                <i class="fa-solid fa-xmark text-xs"></i>
             </button>
         </div>
     </div>
@@ -1308,7 +1311,7 @@
                                         <div class="w-3.5 h-8 bg-fuchsia-500 rounded-full transform -rotate-12 border-2 border-white shadow-sm"></div>
                                         <div class="w-3.5 h-8 bg-fuchsia-400 rounded-full transform rotate-12 border-2 border-white shadow-sm"></div>
                                     </div>
-                                    <input type="text" id="store-search" oninput="filterStoreProducts()" placeholder="Search lenses..." class="w-full bg-white text-xs text-slate-900 placeholder-fuchsia-300 pl-4 pr-10 py-2.5 rounded-full border-2 border-fuchsia-500 focus:outline-none focus:ring-2 focus:ring-fuchsia-300 shadow-sm transition-all">
+                                    <input type="text" id="store-search" oninput="filterStoreProducts()" placeholder="Search 34 lenses..." class="w-full bg-white text-xs text-slate-900 placeholder-fuchsia-300 pl-4 pr-10 py-2.5 rounded-full border-2 border-fuchsia-500 focus:outline-none focus:ring-2 focus:ring-fuchsia-300 shadow-sm transition-all">
                                 </div>
                             </div>
                         </div>
@@ -1568,7 +1571,7 @@
                                 </div>
                                 <div>
                                     <h3 class="text-sm font-bold text-slate-900">Admin Workspace Control Center</h3>
-                                    <p class="text-xs text-slate-600">Firestore Real-time sync for stock, live products, order shipments &amp; available voucher codes.</p>
+                                    <p class="text-xs text-slate-600">Firestore Real-time sync for stock, 34 live products, order shipments &amp; available voucher codes.</p>
                                 </div>
                             </div>
                             <button onclick="exportInvoicesToCSV()" class="bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold px-4 py-2.5 rounded-xl text-xs flex items-center space-x-2 shadow-md shrink-0">
@@ -1587,9 +1590,9 @@
                                     <div>
                                         <h2 class="text-base font-bold flex items-center space-x-2">
                                             <span>Live App Version &amp; Force Cache Refresh</span>
-                                            <span id="admin-live-version-pill" class="bg-white text-emerald-800 text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full shadow-xs">Active: v1.0.4</span>
+                                            <span id="admin-live-version-pill" class="bg-white text-emerald-800 text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full shadow-xs">Active: v1.0.8</span>
                                         </h2>
-                                        <p class="text-xs text-emerald-100">Publish a new version to Firestore to instantly notify &amp; refresh all open customer sessions</p>
+                                        <p class="text-xs text-emerald-100">Publish a new version to Firestore to instantly pop up the update banner for all users</p>
                                     </div>
                                 </div>
                                 <span id="admin-version-sync-status" class="text-[11px] font-semibold bg-white/15 px-3 py-1 rounded-lg border border-white/20">
@@ -1603,7 +1606,7 @@
                                         New Version Tag <span class="text-rose-500">*</span>
                                     </label>
                                     <div class="flex items-center gap-1.5">
-                                        <input type="text" id="admin-new-version-input" placeholder="e.g. 1.0.5" class="block w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm font-mono font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                                        <input type="text" id="admin-new-version-input" placeholder="e.g. 1.0.9" class="block w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm font-mono font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
                                         <button type="button" onclick="bumpNextPatchVersion()" class="px-2.5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold rounded-xl transition shrink-0 cursor-pointer" title="Auto-increment patch version">
                                             +0.0.1
                                         </button>
@@ -1614,7 +1617,7 @@
                                     <label for="admin-version-notes-input" class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                                         Release Notes / Banner Message
                                     </label>
-                                    <input type="text" id="admin-version-notes-input" placeholder="e.g. New lenses added &amp; checkout improvements!" class="block w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                                    <input type="text" id="admin-version-notes-input" placeholder="e.g. 34 lenses live &amp; real-time chat upgraded!" class="block w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
                                 </div>
 
                                 <div class="md:col-span-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
@@ -1967,7 +1970,7 @@
                         </section>
 
                         <div class="flex space-x-2 border-b border-slate-200 pb-3 overflow-x-auto hide-scrollbar">
-                            <button onclick="switchAdminSubTab('stock')" id="adm-sub-stock" class="px-4 py-2 rounded-xl text-xs font-bold bg-amber-500 text-slate-950 shadow-sm shrink-0">Editable Power Stock &amp; Brands</button>
+                            <button onclick="switchAdminSubTab('stock')" id="adm-sub-stock" class="px-4 py-2 rounded-xl text-xs font-bold bg-amber-500 text-slate-950 shadow-sm shrink-0">Editable Power Stock &amp; Brands (34 Products)</button>
                             <button onclick="switchAdminSubTab('products')" id="adm-sub-products" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200 shrink-0">Manage Products</button>
                             <button onclick="switchAdminSubTab('orders')" id="adm-sub-orders" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200 shrink-0">Orders &amp; Tracking Management</button>
                         </div>
@@ -2073,7 +2076,7 @@
                                     </button>
                                 </div>
                             </div>
-                            <div id="admin-products-list" class="space-y-2 max-h-56 overflow-y-auto"></div>
+                            <div id="admin-products-list" class="space-y-2 max-h-72 overflow-y-auto"></div>
                         </div>
 
                         <!-- ADMIN SUB-TAB 3: ORDERS & TRACKING -->
@@ -2173,7 +2176,7 @@
 
                         <div class="text-center flex justify-center">
                             <p class="text-[11px] text-[#581c87] font-extrabold tracking-wider">
-                                © Brand Works Empire 2026, all rights reserved <span id="footer-app-version-tag" class="opacity-75 font-mono text-[10px]">(v1.0.6)</span>
+                                © Brand Works Empire 2026, all rights reserved <span id="footer-app-version-tag" class="opacity-75 font-mono text-[10px]">(v1.0.8)</span>
                             </p>
                         </div>
 
@@ -2377,7 +2380,7 @@
                         </div>
                         <div>
                             <p id="detail-category" class="text-xs text-[#65a30d] font-bold mb-1">COLORED LENS</p>
-                            <h2 id="detail-title" class="text-xl font-extrabold text-slate-900">HAZEL NATURAL</h2>
+                            <h2 id="detail-title" class="text-xl font-extrabold text-slate-900">PRODUCT NAME</h2>
                             <span id="detail-price" class="text-lg font-extrabold text-[#65a30d] mt-1 block">RM 25.00</span>
                         </div>
                         <div>
@@ -2748,15 +2751,6 @@
                                             </tr>
                                         </thead>
                                         <tbody id="inv-modal-items-tbody">
-                                            <tr class="border-b border-slate-100">
-                                                <td class="py-2.5 text-slate-800">
-                                                    <b>HAZEL NATURAL</b><br>
-                                                    <span class="text-[10px] text-slate-500">Prescription: PWR -2.50</span>
-                                                </td>
-                                                <td class="py-2.5 text-center text-slate-700">2</td>
-                                                <td class="py-2.5 text-right text-slate-700">RM 25.00</td>
-                                                <td class="py-2.5 text-right font-bold text-slate-900">RM 50.00</td>
-                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -2903,6 +2897,10 @@
                     auth.useDeviceLanguage();
                 }
 
+                if (auth && firebase.auth && firebase.auth.Auth && firebase.auth.Auth.Persistence) {
+                    auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(() => {});
+                }
+
                 if (db && typeof db.settings === 'function') {
                     db.settings({
                         experimentalForceLongPolling: true,
@@ -2920,6 +2918,7 @@
            FIRESTORE LIVE VERSION LISTENER & ADMIN "PUBLISH NEW VERSION" CONTROLLER
            ========================================================================= */
         let latestPublishedServerVersion = APP_VERSION;
+        let lastAnnouncedPublishNonce = null;
         let versionUpdateReloadScheduled = false;
 
         function compareSemanticVersions(vA, vB) {
@@ -2949,6 +2948,29 @@
             input.value = computeNextPatchVersion(currentVal);
         };
 
+        window.dismissLiveVersionBanner = function() {
+            const banner = document.getElementById('live-version-update-banner');
+            if (banner) {
+                banner.classList.add('hidden');
+                banner.classList.remove('flex');
+            }
+        };
+
+        window.showLiveVersionBanner = function(versionTag, releaseNotes) {
+            const banner = document.getElementById('live-version-update-banner');
+            const badgeEl = document.getElementById('live-update-version-badge');
+            const notesEl = document.getElementById('live-update-notes-text');
+
+            if (badgeEl) badgeEl.innerText = `Sweetopia Shop v${versionTag} is Live!`;
+            if (notesEl) {
+                notesEl.innerText = releaseNotes || `New update v${versionTag} published by Admin. Click Update Now to load the latest version!`;
+            }
+            if (banner) {
+                banner.classList.remove('hidden');
+                banner.classList.add('flex');
+            }
+        };
+
         window.applyLiveVersionUpdate = async function(targetVersion = null) {
             const nextVer = (targetVersion || latestPublishedServerVersion || APP_VERSION).replace(/^v/i, '');
             try {
@@ -2966,6 +2988,7 @@
             try {
                 const url = new URL(window.location.href);
                 url.searchParams.set('v', nextVer);
+                url.searchParams.set('_t', String(Date.now()));
                 window.location.replace(url.toString());
             } catch (e) {
                 window.location.reload(true);
@@ -2984,7 +3007,7 @@
 
             const rawVersion = (versionInput?.value || '').trim().replace(/^v/i, '');
             if (!rawVersion || !/^\d+(\.\d+){1,3}$/.test(rawVersion)) {
-                showToast("Invalid Version Format", "Please enter a valid version number such as 1.0.5 or 1.1.0.", true);
+                showToast("Invalid Version Format", "Please enter a valid version number such as 1.0.9 or 1.1.0.", true);
                 versionInput?.focus();
                 return;
             }
@@ -2992,10 +3015,14 @@
             const releaseNotes = (notesInput?.value || '').trim() || `Sweetopia Shop v${rawVersion} is now live with fresh updates!`;
             const forceAutoReload = autoReloadChk ? autoReloadChk.checked : true;
             const publishedAt = new Date().toISOString();
+            const publishNonce = `${rawVersion}_${Date.now()}`;
 
             latestPublishedServerVersion = rawVersion;
+            lastAnnouncedPublishNonce = publishNonce;
+
             try {
                 localStorage.setItem('sweetopia_app_version', rawVersion);
+                localStorage.setItem('sweetopia_last_seen_publish_nonce', publishNonce);
             } catch (e) {}
 
             const pillEl = document.getElementById('admin-live-version-pill');
@@ -3008,6 +3035,9 @@
                 versionInput.value = computeNextPatchVersion(rawVersion);
             }
 
+            // Always pop up the live version banner immediately on publish
+            window.showLiveVersionBanner(rawVersion, releaseNotes);
+
             if (db) {
                 try {
                     await db.collection("lumilens_config").doc("app_version").set({
@@ -3016,7 +3046,7 @@
                         forceAutoReload: forceAutoReload,
                         publishedBy: currentUser.email,
                         publishedAt: publishedAt,
-                        nonce: Date.now()
+                        nonce: publishNonce
                     }, { merge: true });
                 } catch (err) {
                     console.warn("Firestore version publish warning:", err);
@@ -3036,12 +3066,21 @@
 
             if (!db) return;
 
+            let isFirstSnapshot = true;
+
             db.collection("lumilens_config").doc("app_version").onSnapshot((docSnap) => {
-                if (!docSnap || !docSnap.exists) return;
+                if (!docSnap || !docSnap.exists) {
+                    isFirstSnapshot = false;
+                    return;
+                }
                 const data = docSnap.data();
-                if (!data || !data.version) return;
+                if (!data || !data.version) {
+                    isFirstSnapshot = false;
+                    return;
+                }
 
                 const serverVer = String(data.version).trim().replace(/^v/i, '');
+                const publishNonce = String(data.nonce || `${serverVer}_${data.publishedAt || ''}`);
                 latestPublishedServerVersion = serverVer;
 
                 const pillEl = document.getElementById('admin-live-version-pill');
@@ -3054,27 +3093,24 @@
                     verInput.value = computeNextPatchVersion(serverVer);
                 }
 
-                const isNewerOnServer = compareSemanticVersions(serverVer, APP_VERSION) > 0;
-                const alreadyUpdatedToThis = localStorage.getItem('sweetopia_app_version') === serverVer &&
-                    new URLSearchParams(window.location.search).get('v') === serverVer;
+                const seenNonce = localStorage.getItem('sweetopia_last_seen_publish_nonce');
+                const isNewVersionNumber = compareSemanticVersions(serverVer, APP_VERSION) > 0;
+                const isNewPublishClick = !isFirstSnapshot && publishNonce !== lastAnnouncedPublishNonce;
+                const isUnseenPublishClick = publishNonce !== seenNonce;
 
-                if (isNewerOnServer && !alreadyUpdatedToThis) {
-                    const banner = document.getElementById('live-version-update-banner');
-                    const badgeEl = document.getElementById('live-update-version-badge');
-                    const notesEl = document.getElementById('live-update-notes-text');
+                if (isNewVersionNumber || isNewPublishClick || isUnseenPublishClick) {
+                    lastAnnouncedPublishNonce = publishNonce;
+                    try {
+                        localStorage.setItem('sweetopia_last_seen_publish_nonce', publishNonce);
+                    } catch (e) {}
 
-                    if (badgeEl) badgeEl.innerText = `Sweetopia Shop v${serverVer} is Live!`;
-                    if (notesEl) {
-                        notesEl.innerText = data.releaseNotes || `New update v${serverVer} published by Admin. Refreshing to latest version...`;
-                    }
-
-                    if (banner) {
-                        banner.classList.remove('hidden');
-                        banner.classList.add('flex');
-                    }
+                    window.showLiveVersionBanner(
+                        serverVer,
+                        data.releaseNotes || `New update v${serverVer} published by Admin. Refreshing to latest version...`
+                    );
 
                     const isCurrentAdmin = currentUser && isAdminUser(currentUser.email);
-                    if (data.forceAutoReload && !isCurrentAdmin && !versionUpdateReloadScheduled) {
+                    if (data.forceAutoReload && !isCurrentAdmin && !versionUpdateReloadScheduled && (isNewVersionNumber || isNewPublishClick)) {
                         versionUpdateReloadScheduled = true;
                         showToast("App Update Live!", `Updating Sweetopia Shop to v${serverVer}...`);
                         setTimeout(() => {
@@ -3082,6 +3118,8 @@
                         }, 2400);
                     }
                 }
+
+                isFirstSnapshot = false;
             }, () => {});
         }
 
@@ -3116,7 +3154,7 @@
 
                     if (verifiedEmail) {
                         clearEmailPostSignupVerification(verifiedEmail);
-                        saveRegisteredCustomerRecord(verifiedEmail, auth.currentUser?.uid || null, true).catch(() => {});
+                        await saveRegisteredCustomerRecord(verifiedEmail, auth.currentUser?.uid || null, true);
                         const emailInput = document.getElementById('auth-email');
                         if (emailInput) emailInput.value = verifiedEmail;
                     }
@@ -3127,7 +3165,7 @@
 
                     if (auth.currentUser && auth.currentUser.emailVerified) {
                         currentUser = auth.currentUser;
-                        localStorage.setItem('sweetopia_logged_in_email', currentUser.email.toLowerCase());
+                        persistSessionState(currentUser);
                         updateUIAfterLogin(currentUser);
                         switchPage('dashboard');
                         switchTab(isAdminUser(currentUser.email) ? 'admin-workspace' : 'catalog');
@@ -3165,6 +3203,45 @@
             if (currentUser.isGuest === true) return true;
             const em = (currentUser.email || '').toLowerCase();
             return em.startsWith('guest_') || em.endsWith('@sweetopiashop.my');
+        }
+
+        function persistSessionState(userObj) {
+            try {
+                if (!userObj || !userObj.email) {
+                    localStorage.removeItem('sweetopia_session_user');
+                    localStorage.removeItem('sweetopia_logged_in_email');
+                    return;
+                }
+                const payload = {
+                    email: userObj.email.trim().toLowerCase(),
+                    uid: userObj.uid || null,
+                    isGuest: !!userObj.isGuest,
+                    guestId: userObj.guestId || null,
+                    emailVerified: !!userObj.emailVerified,
+                    savedAt: Date.now()
+                };
+                localStorage.setItem('sweetopia_session_user', JSON.stringify(payload));
+                if (!payload.isGuest) {
+                    localStorage.setItem('sweetopia_logged_in_email', payload.email);
+                } else {
+                    localStorage.removeItem('sweetopia_logged_in_email');
+                }
+            } catch (e) {}
+        }
+
+        function loadPersistedSessionState() {
+            try {
+                const raw = localStorage.getItem('sweetopia_session_user');
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    if (parsed && parsed.email) return parsed;
+                }
+                const legacyEmail = localStorage.getItem('sweetopia_logged_in_email');
+                if (legacyEmail) {
+                    return { email: legacyEmail.trim().toLowerCase(), isGuest: false };
+                }
+            } catch (e) {}
+            return null;
         }
 
         window.redirectGuestToSignUp = function(reasonMsg = "Please create a customer account before adding items to cart or checking out.") {
@@ -3301,15 +3378,95 @@
             return getNewlyRegisteredUnverifiedSet().has(email.trim().toLowerCase());
         }
 
-        const DEFAULT_SEED_PRODUCTS = [
-            { id: "p1", name: "HAZEL NATURAL", brand: "Molicon", price: "25.00", category: "3 Months Disposable", image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500", badge: "In Stock" },
-            { id: "p2", name: "CRYSTAL CLEAR", brand: "Uyaai", price: "25.00", category: "1 Month Disposable", image: "https://images.unsplash.com/photo-1583946099066-764f2537f136?auto=format&fit=crop&q=80&w=500", badge: "In Stock" },
-            { id: "p3", name: "EMERALD GREEN", brand: "Western Eyes", price: "25.00", category: "3 Months Disposable", image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&q=80&w=500", badge: "In Stock" },
-            { id: "p4", name: "MYSTIC GREY", brand: "Mill Creek", price: "25.00", category: "3 Months Disposable", image: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&q=80&w=500", badge: "In Stock" },
-            { id: "p5", name: "MONTHLY COMFORT", brand: "Molicon", price: "25.00", category: "1 Day Disposable", image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500", badge: "In Stock" }
+        /* =========================================================================
+           34 REAL CONTACT LENS PRODUCTS (Legacy 5 items permanently excluded)
+           ========================================================================= */
+        const EXCLUDED_LEGACY_NAMES = new Set([
+            "hazel natural",
+            "crystal clear",
+            "emerald green",
+            "mystic grey",
+            "monthly comfort"
+        ]);
+        const EXCLUDED_LEGACY_IDS = new Set(["p1", "p2", "p3", "p4", "p5"]);
+
+        const DEFAULT_34_REAL_PRODUCTS = [
+            { id: "lens_01", name: "MOLICON CHOCO BROWN", brand: "Molicon", price: "25.00", category: "3 Months Disposable", image: "https://digitalpastel.github.io/digital/sweetopiashop/moliconbp10.webp", badge: "In Stock" },
+            { id: "lens_02", name: "MOLICON HONEY BEIGE", brand: "Molicon", price: "25.00", category: "3 Months Disposable", image: "https://digitalpastel.github.io/digital/sweetopiashop/newmoliconcover.webp", badge: "In Stock" },
+            { id: "lens_03", name: "MOLICON ASH GREY", brand: "Molicon", price: "25.00", category: "3 Months Disposable", image: "https://digitalpastel.github.io/digital/sweetopiashop/moliconcover.webp", badge: "In Stock" },
+            { id: "lens_04", name: "MOLICON MOCHA LATTE", brand: "Molicon", price: "25.00", category: "3 Months Disposable", image: "https://digitalpastel.github.io/digital/sweetopiashop/casingmolicon.webp", badge: "In Stock" },
+            { id: "lens_05", name: "MOLICON CARAMEL GLOW", brand: "Molicon", price: "25.00", category: "1 Month Disposable", image: "https://digitalpastel.github.io/digital/sweetopiashop/moliconbp10.webp", badge: "In Stock" },
+            { id: "lens_06", name: "MOLICON MISTY BLUE", brand: "Molicon", price: "25.00", category: "1 Month Disposable", image: "https://digitalpastel.github.io/digital/sweetopiashop/newmoliconcover.webp", badge: "In Stock" },
+            { id: "lens_07", name: "MOLICON OLIVE CHARM", brand: "Molicon", price: "25.00", category: "3 Months Disposable", image: "https://digitalpastel.github.io/digital/sweetopiashop/moliconcover.webp", badge: "In Stock" },
+            { id: "lens_08", name: "MOLICON VELVET HAZEL", brand: "Molicon", price: "25.00", category: "1 Day Disposable", image: "https://digitalpastel.github.io/digital/sweetopiashop/casingmolicon.webp", badge: "In Stock" },
+            { id: "lens_09", name: "MOLICON SILK PEARL", brand: "Molicon", price: "25.00", category: "1 Month Disposable", image: "https://digitalpastel.github.io/digital/sweetopiashop/moliconbp10.webp", badge: "In Stock" },
+            { id: "lens_10", name: "MOLICON COCOA RING", brand: "Molicon", price: "25.00", category: "3 Months Disposable", image: "https://digitalpastel.github.io/digital/sweetopiashop/newmoliconcover.webp", badge: "In Stock" },
+
+            { id: "lens_11", name: "UYAAI SAKURA PINK", brand: "Uyaai", price: "25.00", category: "1 Month Disposable", image: "https://digitalpastel.github.io/digital/sweetopiashop/uyaaicover.webp", badge: "In Stock" },
+            { id: "lens_12", name: "UYAAI CREAMY BROWN", brand: "Uyaai", price: "25.00", category: "1 Month Disposable", image: "https://digitalpastel.github.io/digital/sweetopiashop/uyaaicover.webp", badge: "In Stock" },
+            { id: "lens_13", name: "UYAAI CLOUD GREY", brand: "Uyaai", price: "25.00", category: "1 Month Disposable", image: "https://digitalpastel.github.io/digital/sweetopiashop/uyaaicover.webp", badge: "In Stock" },
+            { id: "lens_14", name: "UYAAI HONEY MILK", brand: "Uyaai", price: "25.00", category: "3 Months Disposable", image: "https://digitalpastel.github.io/digital/sweetopiashop/uyaaicover.webp", badge: "In Stock" },
+            { id: "lens_15", name: "UYAAI OCEAN AQUA", brand: "Uyaai", price: "25.00", category: "1 Day Disposable", image: "https://digitalpastel.github.io/digital/sweetopiashop/uyaaicover.webp", badge: "In Stock" },
+            { id: "lens_16", name: "UYAAI MATCHA OLIVE", brand: "Uyaai", price: "25.00", category: "1 Month Disposable", image: "https://digitalpastel.github.io/digital/sweetopiashop/uyaaicover.webp", badge: "In Stock" },
+            { id: "lens_17", name: "UYAAI DOLLY BLACK", brand: "Uyaai", price: "25.00", category: "3 Months Disposable", image: "https://digitalpastel.github.io/digital/sweetopiashop/uyaaicover.webp", badge: "In Stock" },
+            { id: "lens_18", name: "UYAAI CHESTNUT GLOW", brand: "Uyaai", price: "25.00", category: "1 Month Disposable", image: "https://digitalpastel.github.io/digital/sweetopiashop/uyaaicover.webp", badge: "In Stock" },
+            { id: "lens_19", name: "UYAAI STARLIGHT VIOLET", brand: "Uyaai", price: "25.00", category: "1 Day Disposable", image: "https://digitalpastel.github.io/digital/sweetopiashop/uyaaicover.webp", badge: "In Stock" },
+
+            { id: "lens_20", name: "WESTERN EYES PURE BROWN", brand: "Western Eyes", price: "25.00", category: "3 Months Disposable", image: "https://digitalpastel.github.io/digital/sweetopiashop/moliconcover.webp", badge: "In Stock" },
+            { id: "lens_21", name: "WESTERN EYES SILVER MIST", brand: "Western Eyes", price: "25.00", category: "3 Months Disposable", image: "https://digitalpastel.github.io/digital/sweetopiashop/newmoliconcover.webp", badge: "In Stock" },
+            { id: "lens_22", name: "WESTERN EYES AMBER GOLD", brand: "Western Eyes", price: "25.00", category: "1 Month Disposable", image: "https://digitalpastel.github.io/digital/sweetopiashop/moliconbp10.webp", badge: "In Stock" },
+            { id: "lens_23", name: "WESTERN EYES SAPPHIRE SKY", brand: "Western Eyes", price: "25.00", category: "3 Months Disposable", image: "https://digitalpastel.github.io/digital/sweetopiashop/casingmolicon.webp", badge: "In Stock" },
+            { id: "lens_24", name: "WESTERN EYES FOREST JADE", brand: "Western Eyes", price: "25.00", category: "1 Month Disposable", image: "https://digitalpastel.github.io/digital/sweetopiashop/moliconcover.webp", badge: "In Stock" },
+            { id: "lens_25", name: "WESTERN EYES ESPRESSO", brand: "Western Eyes", price: "25.00", category: "1 Day Disposable", image: "https://digitalpastel.github.io/digital/sweetopiashop/newmoliconcover.webp", badge: "In Stock" },
+            { id: "lens_26", name: "WESTERN EYES ICE PEARL", brand: "Western Eyes", price: "25.00", category: "3 Months Disposable", image: "https://digitalpastel.github.io/digital/sweetopiashop/moliconbp10.webp", badge: "In Stock" },
+            { id: "lens_27", name: "WESTERN EYES WARM TOFFEE", brand: "Western Eyes", price: "25.00", category: "1 Month Disposable", image: "https://digitalpastel.github.io/digital/sweetopiashop/casingmolicon.webp", badge: "In Stock" },
+
+            { id: "lens_28", name: "MILL CREEK NATURAL CHOCO", brand: "Mill Creek", price: "25.00", category: "3 Months Disposable", image: "https://digitalpastel.github.io/digital/sweetopiashop/casingmolicon.webp", badge: "In Stock" },
+            { id: "lens_29", name: "MILL CREEK SMOKE GREY", brand: "Mill Creek", price: "25.00", category: "3 Months Disposable", image: "https://digitalpastel.github.io/digital/sweetopiashop/moliconbp10.webp", badge: "In Stock" },
+            { id: "lens_30", name: "MILL CREEK GOLDEN HONEY", brand: "Mill Creek", price: "25.00", category: "1 Month Disposable", image: "https://digitalpastel.github.io/digital/sweetopiashop/newmoliconcover.webp", badge: "In Stock" },
+            { id: "lens_31", name: "MILL CREEK CRYSTAL AQUA", brand: "Mill Creek", price: "25.00", category: "1 Day Disposable", image: "https://digitalpastel.github.io/digital/sweetopiashop/moliconcover.webp", badge: "In Stock" },
+            { id: "lens_32", name: "MILL CREEK ROSE QUARTZ", brand: "Mill Creek", price: "25.00", category: "1 Month Disposable", image: "https://digitalpastel.github.io/digital/sweetopiashop/uyaaicover.webp", badge: "In Stock" },
+            { id: "lens_33", name: "MILL CREEK SOFT OLIVE", brand: "Mill Creek", price: "25.00", category: "3 Months Disposable", image: "https://digitalpastel.github.io/digital/sweetopiashop/casingmolicon.webp", badge: "In Stock" },
+            { id: "lens_34", name: "MILL CREEK VELVET BLACK", brand: "Mill Creek", price: "25.00", category: "1 Day Disposable", image: "https://digitalpastel.github.io/digital/sweetopiashop/moliconbp10.webp", badge: "In Stock" }
         ];
 
-        let products = [...DEFAULT_SEED_PRODUCTS];
+        function isExcludedLegacyProduct(prod) {
+            if (!prod) return true;
+            const cleanId = String(prod.id || '').trim().toLowerCase();
+            const cleanName = String(prod.name || '').trim().toLowerCase();
+            return EXCLUDED_LEGACY_IDS.has(cleanId) || EXCLUDED_LEGACY_NAMES.has(cleanName);
+        }
+
+        function sanitizeAndEnsure34Products(candidateList) {
+            const validList = [];
+            const seenNames = new Set();
+            const seenIds = new Set();
+
+            (candidateList || []).forEach(item => {
+                if (!item || !item.name || isExcludedLegacyProduct(item)) return;
+                const cleanName = item.name.trim().toLowerCase();
+                const cleanId = String(item.id || '').trim();
+                if (seenNames.has(cleanName) || (cleanId && seenIds.has(cleanId))) return;
+                seenNames.add(cleanName);
+                if (cleanId) seenIds.add(cleanId);
+                validList.push(item);
+            });
+
+            // Guarantee exactly 34 real products remain active
+            for (const defProd of DEFAULT_34_REAL_PRODUCTS) {
+                if (validList.length >= 34) break;
+                const cleanName = defProd.name.trim().toLowerCase();
+                if (!seenNames.has(cleanName) && !seenIds.has(defProd.id)) {
+                    seenNames.add(cleanName);
+                    seenIds.add(defProd.id);
+                    validList.push({ ...defProd });
+                }
+            }
+
+            return validList.slice(0, 34);
+        }
+
+        let products = sanitizeAndEnsure34Products(DEFAULT_34_REAL_PRODUCTS);
 
         function saveProductsToLocalBackup() {
             try {
@@ -3318,17 +3475,19 @@
                     powerStock: window.productPowerStock[p.id] || p.powerStock || {},
                     powerLocations: window.productPowerLocations[p.id] || p.powerLocations || {}
                 }));
-                localStorage.setItem('sweetopia_managed_products', JSON.stringify(serialized));
+                localStorage.setItem('sweetopia_managed_products_v108', JSON.stringify(serialized));
             } catch (e) { console.warn("Local products backup warning:", e); }
         }
 
         function loadProductsFromLocalBackup() {
             try {
-                const raw = localStorage.getItem('sweetopia_managed_products');
+                // Remove old v1.0.6 cache if present so legacy 5 products never resurrect
+                localStorage.removeItem('sweetopia_managed_products');
+                const raw = localStorage.getItem('sweetopia_managed_products_v108');
                 if (!raw) return false;
                 const parsed = JSON.parse(raw);
                 if (Array.isArray(parsed) && parsed.length > 0) {
-                    products = parsed;
+                    products = sanitizeAndEnsure34Products(parsed);
                     products.forEach(p => {
                         if (p.powerStock) window.productPowerStock[p.id] = p.powerStock;
                         if (p.powerLocations) window.productPowerLocations[p.id] = p.powerLocations;
@@ -3474,7 +3633,14 @@
         let pendingNavigationAfterVoucherWarning = null;
         let favouritesList = [];
         const ADMIN_EMAILS = ["yeegummy@gmail.com", "nur@brandworkz.co", "nurzuraysha@gmail.com"];
-        const SEEDED_REGISTERED_CUSTOMERS = ["brandworkzco@gmail.com", "designscape273@gmail.com"];
+        const SEEDED_REGISTERED_CUSTOMERS = [
+            "brandworkzco@gmail.com",
+            "designscape273@gmail.com",
+            "alyssa@kawaii.my",
+            "sarah@sweetlens.com",
+            "mimi_99@gmail.com",
+            "customer@sweetopiashop.my"
+        ];
         const TOYYIBPAY_URL = "https://toyyibpay.com/brandworks";
 
         let activeChatSessionUser = null;
@@ -3560,7 +3726,7 @@
                             try {
                                 const createRes = await auth.createUserWithEmailAndPassword(email, password);
                                 user = createRes.user;
-                                saveRegisteredCustomerRecord(email, user?.uid, false).catch(() => {});
+                                await saveRegisteredCustomerRecord(email, user?.uid, false);
                             } catch (createErr) {
                                 throw signInErr;
                             }
@@ -3579,8 +3745,8 @@
                     clearEmailPostSignupVerification(email);
                     hideAuthVerificationBanner();
                     currentUser = user;
-                    localStorage.setItem('sweetopia_logged_in_email', email);
-                    saveRegisteredCustomerRecord(email, user.uid, true).catch(() => {});
+                    persistSessionState(currentUser);
+                    await saveRegisteredCustomerRecord(email, user.uid, true);
                     loadCustomerCartFromFirestore(user.uid).catch(() => {});
                     updateUIAfterLogin(currentUser);
                     updateAdminChatUserDropdown();
@@ -3600,7 +3766,7 @@
                 } catch (e) {}
 
                 currentUser = null;
-                localStorage.removeItem('sweetopia_logged_in_email');
+                persistSessionState(null);
                 await finishRetroLoading();
 
                 setAuthModeTab('signin');
@@ -5039,6 +5205,7 @@
                 localStorage.setItem('sweetopia_guest_id', guestId);
             }
             currentUser = { email: `${guestId}@sweetopiashop.my`, isGuest: true, guestId: guestId };
+            persistSessionState(currentUser);
             cart = [];
             updateCartBadge();
             updateUIAfterLogin(currentUser);
@@ -5305,7 +5472,7 @@
                     lastPendingVerificationEmail = email;
                     lastPendingVerificationPassword = password;
                     markEmailRequiresPostSignupVerification(email);
-                    saveRegisteredCustomerRecord(email, null, false).catch(() => {});
+                    await saveRegisteredCustomerRecord(email, null, false);
                     await finishRetroLoading();
                     if (pwdInput) pwdInput.value = '';
                     setAuthModeTab('signin');
@@ -5321,8 +5488,8 @@
                 clearEmailPostSignupVerification(email);
                 hideAuthVerificationBanner();
                 currentUser = { email: email, isGuest: false, emailVerified: true };
-                saveRegisteredCustomerRecord(email, null, true).catch(() => {});
-                localStorage.setItem('sweetopia_logged_in_email', email);
+                await saveRegisteredCustomerRecord(email, null, true);
+                persistSessionState(currentUser);
                 updateUIAfterLogin(currentUser);
                 await finishRetroLoading();
                 switchPage('dashboard');
@@ -5344,12 +5511,13 @@
                     if (!isAdminUser(email) && user && user.emailVerified === false && isEmailPendingPostSignupVerification(email)) {
                         lastPendingVerificationEmail = email;
                         lastPendingVerificationPassword = password;
+                        await saveRegisteredCustomerRecord(email, user?.uid, false);
                         try {
                             await auth.signOut();
                         } catch (signOutErr) {}
 
                         currentUser = null;
-                        localStorage.removeItem('sweetopia_logged_in_email');
+                        persistSessionState(null);
                         cancelRetroLoading();
 
                         showAuthVerificationBanner(
@@ -5364,9 +5532,9 @@
                     clearEmailPostSignupVerification(email);
                     hideAuthVerificationBanner();
                     currentUser = user;
-                    localStorage.setItem('sweetopia_logged_in_email', email);
+                    persistSessionState(currentUser);
 
-                    saveRegisteredCustomerRecord(email, user?.uid, true).catch(() => {});
+                    await saveRegisteredCustomerRecord(email, user?.uid, true);
                     loadCustomerCartFromFirestore(user?.uid).catch(() => {});
 
                     updateUIAfterLogin(currentUser);
@@ -5384,7 +5552,8 @@
                     lastPendingVerificationPassword = password;
                     markEmailRequiresPostSignupVerification(email);
 
-                    saveRegisteredCustomerRecord(email, newUser?.uid, false).catch(() => {});
+                    // Immediately persist user record and initialize chat session doc before signing out
+                    await saveRegisteredCustomerRecord(email, newUser?.uid, false);
 
                     let emailSentOk = true;
                     let sendErrDetail = "";
@@ -5401,7 +5570,7 @@
                     } catch (soErr) {}
 
                     currentUser = null;
-                    localStorage.removeItem('sweetopia_logged_in_email');
+                    persistSessionState(null);
                     sessionStorage.removeItem('sweetopia_active_page');
                     sessionStorage.removeItem('sweetopia_active_tab');
 
@@ -5429,7 +5598,7 @@
                 if (code === 'auth/email-already-in-use') {
                     lastPendingVerificationEmail = email;
                     lastPendingVerificationPassword = password;
-                    saveRegisteredCustomerRecord(email, null, true).catch(() => {});
+                    await saveRegisteredCustomerRecord(email, null, true);
                     setAuthModeTab('signin');
                     showAuthVerificationBanner(
                         "Account Already Registered",
@@ -5466,7 +5635,7 @@
             currentUser = null;
             cart = [];
             appliedVoucher = null;
-            localStorage.removeItem('sweetopia_logged_in_email');
+            persistSessionState(null);
             sessionStorage.removeItem('sweetopia_active_page');
             sessionStorage.removeItem('sweetopia_active_tab');
             updateCartBadge();
@@ -6414,14 +6583,19 @@
                 return;
             }
 
-            const prodId = idInput || 'p_' + Date.now();
+            if (EXCLUDED_LEGACY_NAMES.has(name.toLowerCase())) {
+                showToast("Product Excluded", "This legacy item name is disabled in the 34-product catalog.", true);
+                return;
+            }
+
+            const prodId = idInput || 'lens_' + Date.now();
             let finalImage = base64Img;
             if (!finalImage && idInput) {
                 const existing = products.find(p => p.id === idInput);
                 if (existing) finalImage = existing.image;
             }
             if (!finalImage) {
-                finalImage = "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500";
+                finalImage = "https://digitalpastel.github.io/digital/sweetopiashop/moliconbp10.webp";
             }
 
             const newProd = {
@@ -6503,19 +6677,15 @@
         }
 
         window.restoreDefaultLensesToCatalog = async function() {
-            let addedCount = 0;
-            DEFAULT_SEED_PRODUCTS.forEach(defProd => {
-                const exists = products.some(p => p.id === defProd.id || p.name.trim().toLowerCase() === defProd.name.trim().toLowerCase());
-                if (!exists) {
-                    products.push({ ...defProd });
-                    addedCount++;
-                }
-            });
+            products = sanitizeAndEnsure34Products(DEFAULT_34_REAL_PRODUCTS);
             ensureProductStockDefaults(products);
             saveProductsToLocalBackup();
 
             if (db) {
                 try {
+                    for (const legacyId of EXCLUDED_LEGACY_IDS) {
+                        await db.collection("lumilens_products").doc(legacyId).delete().catch(() => {});
+                    }
                     for (const p of products) {
                         await db.collection("lumilens_products").doc(p.id).set({
                             ...p,
@@ -6530,7 +6700,7 @@
             renderAdminProductsList();
             renderAdminPowerStockCheckboxes();
             renderAdminVoucherProductDropdowns();
-            showToast("Lenses Restored!", addedCount > 0 ? `Restored ${addedCount} missing lens(es) & synced all ${products.length} lenses!` : `All ${products.length} catalog lenses are synced & active!`);
+            showToast("34 Lenses Synced!", `All ${products.length} real catalog lenses are synced & active!`);
         };
 
         window.toggleSelectAll = function() {
@@ -7228,7 +7398,7 @@
                 const select = document.getElementById('admin-active-chat-user');
                 targetSessionUser = ((activeChatSessionUser || select?.value) || '').trim().toLowerCase();
                 if (!targetSessionUser) {
-                    showToast("No User Selected", "Select a customer from the dropdown to reply.", true);
+                    showToast("No User Selected", "Select a customer or guest from the dropdown to reply.", true);
                     return;
                 }
             }
@@ -7254,12 +7424,14 @@
             userSessionsMap[targetSessionUser] = existingMsgs;
 
             renderActiveChatMessages();
+            updateAdminChatUserDropdown();
 
             if (db) {
                 try {
                     const docKey = targetSessionUser.replace(/[^a-zA-Z0-9]/g, '_');
                     await db.collection("lumilens_chats").doc(docKey).set({
                         userEmail: targetSessionUser,
+                        isGuestSession: targetSessionUser.startsWith('guest_') || targetSessionUser.endsWith('@sweetopiashop.my'),
                         userAvatar: isAdmin ? getUserAvatarForEmail(targetSessionUser) : senderAvatar,
                         messages: existingMsgs,
                         lastUpdated: new Date().toISOString()
@@ -7324,9 +7496,9 @@
                 limitText: '★ Limit: 100 uses max ★',
                 displayText: 'Display: Display at product selections',
                 assignedTargetType: 'Assigned Products:',
-                assignedItems: ['HAZEL NATURAL (#p1)', 'CRYSTAL CLEAR (#p2)'],
-                assignedProductIds: ['p1', 'p2'],
-                expiryText: 'Sep 15, 2026, 06:00 PM 🎀',
+                assignedItems: ['MOLICON CHOCO BROWN (#lens_01)', 'UYAAI SAKURA PINK (#lens_11)'],
+                assignedProductIds: ['lens_01', 'lens_11'],
+                expiryText: 'Dec 31, 2026, 06:00 PM 🎀',
                 active: true,
                 badgeTheme: 'purple'
             }
@@ -7935,6 +8107,7 @@
                 adminSupportOnlineFlag = !!isOnline;
             }
             updateSupportIndicator();
+            updateAdminChatUserDropdown();
 
             try {
                 const userKey = cleanEmail.replace(/[^a-zA-Z0-9]/g, '_');
@@ -7957,13 +8130,23 @@
                             clientTs: Date.now()
                         }, { merge: true }).catch(() => {})
                     );
-                } else if (!isGuestUser()) {
+                } else {
+                    // Ensure chat document exists for both registered customers and active guests
                     tasks.push(
-                        db.collection("lumilens_public_directory").doc("registered_customers").set({
-                            emails: firebase.firestore.FieldValue.arrayUnion(cleanEmail),
-                            updatedAt: nowIso
+                        db.collection("lumilens_chats").doc(userKey).set({
+                            userEmail: cleanEmail,
+                            isGuestSession: cleanEmail.startsWith('guest_') || cleanEmail.endsWith('@sweetopiashop.my'),
+                            lastUpdated: nowIso
                         }, { merge: true }).catch(() => {})
                     );
+                    if (!isGuestUser()) {
+                        tasks.push(
+                            db.collection("lumilens_public_directory").doc("registered_customers").set({
+                                emails: firebase.firestore.FieldValue.arrayUnion(cleanEmail),
+                                updatedAt: nowIso
+                            }, { merge: true }).catch(() => {})
+                        );
+                    }
                 }
 
                 await Promise.all(tasks);
@@ -7977,7 +8160,7 @@
                     const serverMap = new Map();
                     snapshot.forEach(docSnap => {
                         const data = { id: docSnap.id, ...docSnap.data() };
-                        if (data && data.name) {
+                        if (data && data.name && !isExcludedLegacyProduct(data)) {
                             serverMap.set(docSnap.id, data);
                             if (data.powerStock) {
                                 window.productPowerStock[data.id] = data.powerStock;
@@ -7988,26 +8171,13 @@
                         }
                     });
 
-                    // Preserve any local/cached admin-managed lenses that haven't finished syncing to Firestore yet
-                    products.forEach(localProd => {
-                        if (localProd && localProd.id && !serverMap.has(localProd.id)) {
-                            const isDefaultOnly = DEFAULT_SEED_PRODUCTS.some(d => d.id === localProd.id);
-                            if (!isDefaultOnly || serverMap.size === 0) {
-                                serverMap.set(localProd.id, localProd);
-                                db.collection("lumilens_products").doc(localProd.id).set({
-                                    ...localProd,
-                                    powerStock: window.productPowerStock[localProd.id] || {},
-                                    powerLocations: window.productPowerLocations[localProd.id] || {}
-                                }, { merge: true }).catch(() => {});
-                            }
-                        }
-                    });
-
-                    if (serverMap.size > 0) {
-                        products = Array.from(serverMap.values());
-                        ensureProductStockDefaults(products);
-                        saveProductsToLocalBackup();
-                    }
+                    const combinedList = [
+                        ...Array.from(serverMap.values()),
+                        ...products.filter(p => !serverMap.has(p.id))
+                    ];
+                    products = sanitizeAndEnsure34Products(combinedList);
+                    ensureProductStockDefaults(products);
+                    saveProductsToLocalBackup();
                 }
                 renderStoreProducts(products);
                 renderFavouritesGrid();
@@ -8169,7 +8339,8 @@
                         const data = docSnap.data();
                         if (!data) return;
                         const lastSeenTime = new Date(data.lastSeen || 0).getTime();
-                        const isRecent = !lastSeenTime || isNaN(lastSeenTime) || (now - lastSeenTime < 90000);
+                        // Generous 5-minute window so active admins/customers don't flicker offline
+                        const isRecent = !lastSeenTime || isNaN(lastSeenTime) || (now - lastSeenTime < 300000);
                         const isReallyOnline = Boolean(data.isOnline) && isRecent;
 
                         if (docSnap.id === 'admin_support_status') {
@@ -8181,13 +8352,24 @@
                             if (isAdminUser(cleanEm) && isReallyOnline) {
                                 sharedAdminOnline = true;
                             }
-                            if (!isAdminUser(cleanEm) && !cleanEm.startsWith('guest_') && !cleanEm.endsWith('@sweetopiashop.my')) {
-                                if (!registeredCustomersList.includes(cleanEm)) {
-                                    registeredCustomersList.push(cleanEm);
+                            if (!isAdminUser(cleanEm)) {
+                                if (!cleanEm.startsWith('guest_') && !cleanEm.endsWith('@sweetopiashop.my')) {
+                                    if (!registeredCustomersList.includes(cleanEm)) {
+                                        registeredCustomersList.push(cleanEm);
+                                    }
+                                }
+                                if (!userSessionsMap[cleanEm]) {
+                                    userSessionsMap[cleanEm] = [];
                                 }
                             }
                         }
                     });
+
+                    // If current session itself is an admin, guarantee admin support status is marked online
+                    if (currentUser && isAdminUser(currentUser.email)) {
+                        sharedAdminOnline = true;
+                        updatedPresence[currentUser.email.trim().toLowerCase()] = true;
+                    }
 
                     presenceMap = updatedPresence;
                     adminSupportOnlineFlag = sharedAdminOnline;
@@ -8227,19 +8409,15 @@
             const txt = document.getElementById('widgetStatusText');
             if (!dot || !txt) return;
 
-            const isCustomer = !currentUser || !isAdminUser(currentUser.email);
+            const isCurrentAdmin = currentUser && isAdminUser(currentUser.email);
             let hasActiveOnline = false;
 
-            if (isCustomer) {
+            if (isCurrentAdmin) {
+                hasActiveOnline = true;
+            } else {
                 hasActiveOnline = adminSupportOnlineFlag || ADMIN_EMAILS.some(adminEmail => {
                     const cleanAdmin = adminEmail.trim().toLowerCase();
                     return !!presenceMap[cleanAdmin];
-                });
-            } else {
-                hasActiveOnline = Object.keys(presenceMap).some(email => {
-                    const cleanEm = email.trim().toLowerCase();
-                    const notMe = !currentUser || cleanEm !== (currentUser.email || '').trim().toLowerCase();
-                    return notMe && !isAdminUser(cleanEm) && !!presenceMap[cleanEm];
                 });
             }
 
@@ -8261,9 +8439,11 @@
                 if (!rawEmail || typeof rawEmail !== 'string') return;
                 const clean = rawEmail.trim().toLowerCase();
                 if (!clean || isAdminUser(clean)) return;
-                if (clean.startsWith('guest_') || clean.endsWith('@sweetopiashop.my')) return;
+                const isGuest = clean.startsWith('guest_') || clean.endsWith('@sweetopiashop.my');
+                // Include all registered customers AND any guest who has an active session/chat
+                if (isGuest && !userSessionsMap[clean] && !presenceMap[clean]) return;
                 if (!knownUsersMap.has(clean)) {
-                    knownUsersMap.set(clean, clean);
+                    knownUsersMap.set(clean, { email: clean, isGuest });
                 }
             };
 
@@ -8273,27 +8453,33 @@
             Object.keys(presenceMap || {}).forEach(addKnownUser);
             Object.keys(assignedVouchersMap || {}).forEach(addKnownUser);
             (allOrders || []).forEach(o => { if (o && o.customer) addKnownUser(o.customer); });
-            if (currentUser && currentUser.email && !isGuestUser()) addKnownUser(currentUser.email);
+            if (currentUser && currentUser.email && !isAdminUser(currentUser.email)) addKnownUser(currentUser.email);
 
-            const userList = Array.from(knownUsersMap.values()).sort((a, b) => a.localeCompare(b));
+            const userList = Array.from(knownUsersMap.values()).sort((a, b) => {
+                if (a.isGuest !== b.isGuest) return a.isGuest ? 1 : -1;
+                return a.email.localeCompare(b.email);
+            });
 
             if (userList.length === 0) {
                 select.innerHTML = '<option value="">No Registered Accounts</option>';
                 return;
             }
             const currentVal = (select.value || activeChatSessionUser || '').trim().toLowerCase();
-            select.innerHTML = userList.map(u => {
-                const cleanKey = u.toLowerCase();
-                const isOnline = !!(presenceMap[u] || presenceMap[cleanKey]);
+            select.innerHTML = userList.map(uObj => {
+                const u = uObj.email;
+                const isOnline = !!presenceMap[u];
                 const statusSymbol = isOnline ? '🟢' : '🔘';
                 const statusText = isOnline ? 'Online' : 'Offline';
-                const label = `${statusSymbol} ${u} (Customer - ${statusText})`;
-                const isSelected = cleanKey === currentVal;
+                const roleTag = uObj.isGuest ? 'Guest' : 'Customer';
+                const msgCount = (userSessionsMap[u] || []).length;
+                const countSuffix = msgCount > 0 ? ` [${msgCount}]` : '';
+                const label = `${statusSymbol} ${u} (${roleTag} - ${statusText})${countSuffix}`;
+                const isSelected = u === currentVal;
                 return `<option value="${u}" ${isSelected ? 'selected' : ''}>${label}</option>`;
             }).join('');
 
             if (!activeChatSessionUser || !knownUsersMap.has(activeChatSessionUser.toLowerCase())) {
-                activeChatSessionUser = select.value || userList[0];
+                activeChatSessionUser = select.value || userList[0].email;
             }
             updateChatHeaderAvatars();
             renderActiveChatMessages();
@@ -8315,6 +8501,9 @@
             const isClosed = win.classList.contains('hidden') || win.classList.contains('opacity-0');
             if (isClosed) {
                 renderStickerSlotsGrid();
+                if (currentUser && currentUser.email) {
+                    updatePresence(currentUser.email, true);
+                }
                 syncAllUsersFromServer();
                 updateAdminChatUserDropdown();
                 updateChatHeaderAvatars();
@@ -8579,7 +8768,10 @@
 
             if (typeof lucide !== 'undefined') { lucide.createIcons(); }
             loadProductsFromLocalBackup();
+            products = sanitizeAndEnsure34Products(products);
             ensureProductStockDefaults(products);
+            saveProductsToLocalBackup();
+
             loadSavedAddresses();
             loadFavourites();
             loadAssignedVouchers();
@@ -8618,22 +8810,28 @@
 
             const handledActionCallback = await handleFirebaseEmailActionCallback();
 
-            const savedEmail = localStorage.getItem('sweetopia_logged_in_email');
+            const restoredSession = loadPersistedSessionState();
 
             if (!handledActionCallback) {
-                if (savedEmail) {
-                    currentUser = { email: savedEmail, isGuest: false };
+                if (restoredSession && restoredSession.email) {
+                    currentUser = {
+                        email: restoredSession.email,
+                        uid: restoredSession.uid || null,
+                        isGuest: !!restoredSession.isGuest,
+                        guestId: restoredSession.guestId || null,
+                        emailVerified: !!restoredSession.emailVerified
+                    };
                     updateUIAfterLogin(currentUser);
                     const savedPage = sessionStorage.getItem('sweetopia_active_page') || 'dashboard';
-                    const defaultTab = isAdminUser(savedEmail) ? 'admin-workspace' : 'catalog';
-                    const savedTab = sessionStorage.getItem('sweetopia_active_tab') || defaultTab;
+                    const defaultTab = isAdminUser(currentUser.email) ? 'admin-workspace' : 'catalog';
+                    const savedTab = restoredSession.isGuest ? 'catalog' : (sessionStorage.getItem('sweetopia_active_tab') || defaultTab);
                     switchPage(savedPage);
                     switchTab(savedTab, false);
-                    if (savedTab === 'admin-workspace' && isAdminUser(savedEmail)) {
+                    if (savedTab === 'admin-workspace' && isAdminUser(currentUser.email)) {
                         const savedSubTab = sessionStorage.getItem('sweetopia_admin_subtab') || 'stock';
                         switchAdminSubTab(savedSubTab, false);
                     }
-                    updatePresence(savedEmail, true);
+                    updatePresence(currentUser.email, true);
                 } else {
                     switchPage('auth');
                 }
@@ -8648,10 +8846,10 @@
                         } catch (e) {}
 
                         if (!isAdminUser(user.email) && user.emailVerified === false && isEmailPendingPostSignupVerification(user.email)) {
-                            saveRegisteredCustomerRecord(user.email, user.uid, false).catch(() => {});
+                            await saveRegisteredCustomerRecord(user.email, user.uid, false);
                             try { await auth.signOut(); } catch (e) {}
                             currentUser = null;
-                            localStorage.removeItem('sweetopia_logged_in_email');
+                            persistSessionState(null);
                             switchPage('auth');
                             setAuthModeTab('signin');
                             showAuthVerificationBanner(
@@ -8664,20 +8862,19 @@
 
                         clearEmailPostSignupVerification(user.email);
                         currentUser = user;
-                        localStorage.setItem('sweetopia_logged_in_email', user.email);
-                        saveRegisteredCustomerRecord(user.email, user.uid, true).catch(() => {});
+                        persistSessionState(user);
+                        await saveRegisteredCustomerRecord(user.email, user.uid, true);
                         loadCustomerCartFromFirestore(user.uid).catch(() => {});
                         updateUIAfterLogin(user);
                         updatePresence(user.email, true);
                     } else {
-                        if (!localStorage.getItem('sweetopia_logged_in_email')) {
-                            if (!isGuestUser()) {
-                                currentUser = null;
-                                cart = [];
-                                updateCartBadge();
-                                window.renderCustomerNotifications();
-                                switchPage('auth');
-                            }
+                        const persisted = loadPersistedSessionState();
+                        if (!persisted && !isGuestUser()) {
+                            currentUser = null;
+                            cart = [];
+                            updateCartBadge();
+                            window.renderCustomerNotifications();
+                            switchPage('auth');
                         }
                     }
                     renderAdminVoucherCustomerDropdowns();
@@ -8695,27 +8892,15 @@
                         const serverProducts = [];
                         snap.forEach(docSnap => {
                             const data = { id: docSnap.id, ...docSnap.data() };
-                            if (data && data.name) {
+                            if (data && data.name && !isExcludedLegacyProduct(data)) {
                                 serverProducts.push(data);
                                 if (data.powerStock) window.productPowerStock[data.id] = data.powerStock;
                                 if (data.powerLocations) window.productPowerLocations[data.id] = data.powerLocations;
                             }
                         });
-                        if (serverProducts.length > 0) {
-                            products = serverProducts;
-                            ensureProductStockDefaults(products);
-                            saveProductsToLocalBackup();
-                        }
-                    } else if (snap && snap.empty) {
-                        for (const p of products) {
-                            const initialPowerStock = window.productPowerStock[p.id] || {};
-                            powersList.forEach(pw => { if (initialPowerStock[pw] === undefined) initialPowerStock[pw] = true; });
-                            await db.collection("lumilens_products").doc(p.id).set({
-                                ...p,
-                                powerStock: initialPowerStock,
-                                powerLocations: window.productPowerLocations[p.id] || {}
-                            });
-                        }
+                        products = sanitizeAndEnsure34Products([...serverProducts, ...products]);
+                        ensureProductStockDefaults(products);
+                        saveProductsToLocalBackup();
                     }
                 } catch(e) { }
 
@@ -8765,7 +8950,7 @@
                 if (currentUser && currentUser.email) {
                     updatePresence(currentUser.email, true);
                 }
-            }, 20000);
+            }, 15000);
 
             document.addEventListener('visibilitychange', () => {
                 if (document.visibilityState === 'visible' && currentUser && currentUser.email) {
