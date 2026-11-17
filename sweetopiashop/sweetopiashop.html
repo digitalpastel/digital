@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light">
     <meta name="supported-color-schemes" content="light">
-    <!-- Cache Busting & No-Cache Directives (v=1.0.4) -->
-    <meta name="app-version" content="1.0.4">
+    <!-- Cache Busting & No-Cache Directives (v=1.0.6) -->
+    <meta name="app-version" content="1.0.6">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Sweetopia Shop - Premium Contact Lens Store &amp; FPX Checkout</title>
-    <!-- App Icons & Stylesheet with Cache Busting Version (?v=1.0.4) -->
-    <link rel="stylesheet" href="style.css?v=1.0.4">
-    <link rel="icon" type="image/png" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.4">
-    <link rel="apple-touch-icon" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.4">
-    <link rel="icon" type="image/png" sizes="512x512" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png?v=1.0.4">
-    <link rel="manifest" href="https://digitalpastel.github.io/digital/sweetopiashop/manifest.json?v=1.0.4">
+    <!-- App Icons & Stylesheet with Cache Busting Version (?v=1.0.6) -->
+    <link rel="stylesheet" href="style.css?v=1.0.6">
+    <link rel="icon" type="image/png" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.6">
+    <link rel="apple-touch-icon" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.6">
+    <link rel="icon" type="image/png" sizes="512x512" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png?v=1.0.6">
+    <link rel="manifest" href="https://digitalpastel.github.io/digital/sweetopiashop/manifest.json?v=1.0.6">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&amp;family=Fredoka:wght@600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
     <!-- Retro Pixel Font for 10-Bar Window matching reference image -->
@@ -31,7 +31,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script>
         // Cache Busting Controller: Increment APP_VERSION whenever updating GitHub
-        const APP_VERSION = '1.0.4';
+        const APP_VERSION = '1.0.6';
         (function enforceCacheBustingVersion() {
             try {
                 const storedVersion = localStorage.getItem('sweetopia_app_version');
@@ -88,8 +88,13 @@
         :root, html, body {
             color-scheme: light !important;
             supported-color-schemes: light !important;
-            scroll-behavior: smooth !important;
             -webkit-overflow-scrolling: touch;
+        }
+
+        @media (pointer: fine) {
+            html {
+                scroll-behavior: smooth;
+            }
         }
 
         body {
@@ -103,7 +108,6 @@
         .overflow-auto,
         .cute-h-scrollbar,
         .hide-scrollbar {
-            scroll-behavior: smooth !important;
             -webkit-overflow-scrolling: touch !important;
             overscroll-behavior: contain;
         }
@@ -112,14 +116,11 @@
             background-color: rgba(15, 23, 42, 0.72) !important;
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
-            will-change: opacity;
-            transform: translateZ(0);
         }
 
         .sticker-slot-card {
             min-height: 64px;
             aspect-ratio: 1 / 1;
-            contain: content;
         }
 
         .hide-scrollbar::-webkit-scrollbar { display: none; }
@@ -430,7 +431,6 @@
             position: absolute;
             border-radius: 50%;
             pointer-events: none;
-            filter: blur(75px);
             z-index: 1;
         }
         .glow-top-right {
@@ -438,22 +438,21 @@
             height: 320px;
             top: -60px;
             right: -40px;
-            background: rgba(255, 118, 92, 0.55);
+            background: radial-gradient(circle, rgba(255, 118, 92, 0.45) 0%, transparent 70%);
         }
         .glow-center {
             width: 340px;
             height: 340px;
             top: 26%;
             left: 22%;
-            background: rgba(255, 224, 240, 0.35);
+            background: radial-gradient(circle, rgba(255, 224, 240, 0.3) 0%, transparent 70%);
         }
         .glow-bottom-left {
             width: 280px;
             height: 280px;
             bottom: -80px;
             left: -60px;
-            background: rgba(255, 112, 88, 0.7);
-            filter: blur(45px);
+            background: radial-gradient(circle, rgba(255, 112, 88, 0.55) 0%, transparent 70%);
         }
 
         .curve-top-left {
@@ -463,7 +462,6 @@
             width: 170px;
             height: auto;
             z-index: 2;
-            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.25));
             pointer-events: none;
         }
         .curve-bottom-right {
@@ -473,215 +471,9 @@
             width: min(65vw, 520px);
             height: auto;
             z-index: 2;
-            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.25));
             pointer-events: none;
         }
-
-        .feedback-container {
-            position: relative;
-            z-index: 5;
-            width: 100%;
-            max-width: 1120px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .feedback-header {
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-        .title-main {
-            font-family: 'Fredoka', sans-serif;
-            font-size: clamp(2.2rem, 5vw, 3.6rem);
-            font-weight: 700;
-            color: #ffffff;
-            margin: 0;
-            letter-spacing: -0.01em;
-            text-shadow: 0 4px 20px rgba(0, 12, 120, 0.3);
-        }
-        .title-script {
-            display: block;
-            font-family: 'Caveat', cursive;
-            font-size: clamp(2.3rem, 5.5vw, 3.8rem);
-            font-weight: 700;
-            color: #ffffff;
-            margin-top: -0.65rem;
-            transform: rotate(-4deg);
-            text-shadow: 0 4px 15px rgba(0, 12, 120, 0.25);
-        }
-
-        .feedback-carousel-wrapper {
-            position: relative;
-            width: 100%;
-            display: flex;
-            align-items: center;
-        }
-        .feedback-carousel-track {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 2.5rem;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            scroll-behavior: smooth;
-            padding: 3.5rem 2.5rem 4.25rem;
-            width: 100%;
-            -webkit-overflow-scrolling: touch;
-        }
-        .feedback-carousel-track::-webkit-scrollbar {
-            height: 10px;
-        }
-        .feedback-carousel-track::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 9999px;
-            margin: 0 2rem;
-        }
-        .feedback-carousel-track::-webkit-scrollbar-thumb {
-            background: #ffd600;
-            border-radius: 9999px;
-            border: 2px solid #0522e8;
-        }
-
-        .card-stage {
-            position: relative;
-            flex: 0 0 min(100%, 640px);
-            scroll-snap-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto;
-        }
-
-        .concentric-ring {
-            position: absolute;
-            width: clamp(300px, 50vw, 440px);
-            height: clamp(300px, 50vw, 440px);
-            border-radius: 50%;
-            background: linear-gradient(145deg, rgba(255, 255, 255, 0.85) 0%, rgba(160, 195, 255, 0.45) 45%, rgba(10, 45, 230, 0.9) 100%);
-            padding: 16px;
-            box-shadow: 0 25px 50px rgba(0, 10, 110, 0.55), inset 0 4px 12px rgba(255, 255, 255, 0.9);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1;
-            pointer-events: none;
-        }
-        .ring-inner {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: radial-gradient(circle at 35% 30%, #4d79ff 0%, #1039f5 60%, #051eb8 100%);
-            border: 9px solid rgba(220, 232, 255, 0.75);
-            box-shadow: inset 0 10px 25px rgba(0, 10, 90, 0.5);
-        }
-
-        .speech-bubble {
-            position: relative;
-            z-index: 3;
-            width: 100%;
-            max-width: 610px;
-            background: #f5f2e6;
-            border-radius: 28px;
-            padding: 2.25rem 2.5rem;
-            box-shadow: 0 28px 55px rgba(2, 12, 105, 0.45), inset 0 2px 4px rgba(255, 255, 255, 0.9);
-        }
-        .bubble-tail {
-            position: absolute;
-            bottom: -34px;
-            left: 0;
-            width: 90px;
-            height: 52px;
-            background: #f5f2e6;
-            clip-path: polygon(0 0, 100% 0, 16% 100%, 0 100%);
-            border-bottom-left-radius: 18px;
-            box-shadow: -8px 18px 25px rgba(2, 12, 105, 0.25);
-        }
-        .card-body {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-        }
-
-        .avatar-wrapper {
-            flex-shrink: 0;
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            background: #ffd23f;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 4px solid #ffffff;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15), inset 0 -6px 14px rgba(215, 145, 0, 0.25);
-        }
-        .avatar-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center top;
-        }
-
-        .testimonial-content {
-            flex: 1;
-            min-width: 0;
-        }
-        .stars {
-            display: flex;
-            gap: 4px;
-            margin-bottom: 0.45rem;
-            font-size: 1.4rem;
-            color: #ffca18;
-            text-shadow: 0 2px 3px rgba(160, 105, 0, 0.35);
-        }
-        .client-name {
-            font-family: 'Fredoka', sans-serif;
-            font-size: 1.55rem;
-            font-weight: 700;
-            color: #1f1f1f;
-            margin: 0 0 0.5rem;
-            word-break: break-word;
-        }
-        .client-quote {
-            font-size: 1.02rem;
-            line-height: 1.55;
-            color: #2c2c2c;
-            margin: 0;
-            font-weight: 500;
-            word-break: break-word;
-        }
-
-        .heart-badge {
-            position: absolute;
-            border-radius: 50%;
-            background: linear-gradient(145deg, #ff4b3e 0%, #d90b00 100%);
-            padding: 6px;
-            box-shadow: 0 14px 25px rgba(180, 10, 0, 0.4), inset 0 3px 6px rgba(255, 180, 175, 0.85);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 6;
-            pointer-events: none;
-        }
-        .heart-ring {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 2.5px solid rgba(255, 225, 225, 0.85);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: radial-gradient(circle at 30% 30%, #ff584d, #d80c00);
-        }
-        .heart-icon {
-            width: 56%;
-            height: 56%;
-            fill: #f7f4eb;
-            filter: drop-shadow(0 3px 4px rgba(110, 0, 0, 0.35));
-        }
-
+        /* ... existing code ... -->
         .badge-top-right {
             width: 92px;
             height: 92px;
@@ -695,7 +487,6 @@
             top: -30px;
             left: 44px;
             transform: rotate(-16deg);
-            filter: blur(1.8px);
             opacity: 0.92;
         }
         .badge-bottom {
@@ -704,7 +495,6 @@
             bottom: -50px;
             left: 155px;
             transform: rotate(-18deg);
-            filter: blur(2.8px);
             opacity: 0.94;
         }
 
@@ -788,7 +578,7 @@
             <div class="truncate">
                 <div class="flex items-center gap-2">
                     <span class="bg-yellow-300 text-slate-950 text-[10px] font-black uppercase px-2 py-0.5 rounded-full shadow-xs">New Update Available</span>
-                    <span id="live-update-version-badge" class="text-xs sm:text-sm font-extrabold tracking-tight truncate">Sweetopia Shop v1.0.5 is Live!</span>
+                    <span id="live-update-version-badge" class="text-xs sm:text-sm font-extrabold tracking-tight truncate">Sweetopia Shop v1.0.7 is Live!</span>
                 </div>
                 <p id="live-update-notes-text" class="text-[11px] text-emerald-50 font-medium truncate mt-0.5">A fresh update has been published. Refresh now to load the latest features &amp; catalog.</p>
             </div>
@@ -1129,7 +919,7 @@
                         <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-4">
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 mb-1.5">Email address</label>
-                                <input type="email" id="auth-email" required="" placeholder="name@example.com" class="w-full bg-slate-50 border border-slate-200 text-xs text-slate-900 placeholder:text-slate-400 rounded-xl px-4 py-3 focus:outline-none focus:border-[#65a30d] focus:bg-white shadow-sm transition">
+                                <input type="email" id="auth-email" name="email" autocomplete="email" autocorrect="off" autocapitalize="none" spellcheck="false" required="" placeholder="name@example.com" class="w-full bg-slate-50 border border-slate-200 text-base sm:text-xs text-slate-900 placeholder:text-slate-400 rounded-xl px-4 py-3 focus:outline-none focus:border-[#65a30d] focus:bg-white shadow-sm transition">
                             </div>
                             <div>
                                 <div class="flex justify-between items-center mb-1.5">
@@ -1137,7 +927,7 @@
                                     <button type="button" onclick="openForgotPassword()" class="text-[11px] text-[#65a30d] font-bold hover:underline">Forgot?</button>
                                 </div>
                                 <div class="relative">
-                                    <input type="password" id="auth-password" required="" placeholder="••••••••" class="w-full bg-slate-50 border border-slate-200 text-xs text-slate-900 placeholder:text-slate-400 rounded-xl px-4 py-3 pr-10 focus:outline-none focus:border-[#65a30d] focus:bg-white shadow-sm transition">
+                                    <input type="password" id="auth-password" name="password" autocomplete="current-password" required="" placeholder="••••••••" class="w-full bg-slate-50 border border-slate-200 text-base sm:text-xs text-slate-900 placeholder:text-slate-400 rounded-xl px-4 py-3 pr-10 focus:outline-none focus:border-[#65a30d] focus:bg-white shadow-sm transition">
                                     <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-800 focus:outline-none">
                                         <i id="password-toggle-icon" class="fa-solid fa-eye text-xs"></i>
                                     </button>
@@ -1587,7 +1377,7 @@
                                     <div>
                                         <h2 class="text-base font-bold flex items-center space-x-2">
                                             <span>Live App Version &amp; Force Cache Refresh</span>
-                                            <span id="admin-live-version-pill" class="bg-white text-emerald-800 text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full shadow-xs">Active: v1.0.4</span>
+                                            <span id="admin-live-version-pill" class="bg-white text-emerald-800 text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full shadow-xs">Active: v1.0.6</span>
                                         </h2>
                                         <p class="text-xs text-emerald-100">Publish a new version to Firestore to instantly notify &amp; refresh all open customer sessions</p>
                                     </div>
@@ -1603,7 +1393,7 @@
                                         New Version Tag <span class="text-rose-500">*</span>
                                     </label>
                                     <div class="flex items-center gap-1.5">
-                                        <input type="text" id="admin-new-version-input" placeholder="e.g. 1.0.5" class="block w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm font-mono font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                                        <input type="text" id="admin-new-version-input" placeholder="e.g. 1.0.7" class="block w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm font-mono font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
                                         <button type="button" onclick="bumpNextPatchVersion()" class="px-2.5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold rounded-xl transition shrink-0 cursor-pointer" title="Auto-increment patch version">
                                             +0.0.1
                                         </button>
@@ -2173,7 +1963,7 @@
 
                         <div class="text-center flex justify-center">
                             <p class="text-[11px] text-[#581c87] font-extrabold tracking-wider">
-                                © Brand Works Empire 2026, all rights reserved <span id="footer-app-version-tag" class="opacity-75 font-mono text-[10px]">(v1.0.4)</span>
+                                © Brand Works Empire 2026, all rights reserved <span id="footer-app-version-tag" class="opacity-75 font-mono text-[10px]">(v1.0.6)</span>
                             </p>
                         </div>
 
@@ -2250,11 +2040,14 @@
                             </div>
                         </div>
 
-                        <div id="admin-chat-session-bar" class="bg-[#f7fee7] px-3 py-2 border-b border-[#ecfccb] flex items-center justify-between text-[11px]">
-                            <span id="chat-session-bar-label" class="font-bold text-[#4d7c0f]">User Session:</span>
-                            <div class="flex items-center space-x-2">
-                                <select id="admin-active-chat-user" onchange="switchAdminChatSession()" class="bg-white border border-[#84cc16] rounded-lg px-2 py-1 text-slate-800 font-semibold focus:outline-none text-xs max-w-[170px]"><option value="">Loading Registered Users...</option></select>
-                                <button id="chat-session-action-btn" onclick="adminDeleteSelectedChatSession()" class="bg-red-50 hover:bg-red-100 text-red-600 px-2 py-1 rounded-lg font-bold border border-red-200 transition text-[10px]" title="Delete entire conversation">Clear</button>
+                        <div id="admin-chat-session-bar" class="bg-[#f7fee7] px-3 py-2 border-b border-[#ecfccb] flex items-center justify-between text-[11px] gap-1.5">
+                            <span id="chat-session-bar-label" class="font-bold text-[#4d7c0f] shrink-0">User Session:</span>
+                            <div class="flex items-center space-x-1.5 min-w-0 flex-1 justify-end">
+                                <select id="admin-active-chat-user" onchange="switchAdminChatSession()" class="bg-white border border-[#84cc16] rounded-lg px-2 py-1 text-slate-800 font-semibold focus:outline-none text-xs max-w-[165px] truncate"><option value="">Loading Registered Users...</option></select>
+                                <button id="chat-refresh-users-btn" type="button" onclick="refreshAdminChatUsersList()" class="bg-lime-100 hover:bg-lime-200 text-[#4d7c0f] px-1.5 py-1 rounded-lg font-bold border border-[#84cc16] transition text-[10px] shrink-0 cursor-pointer" title="Refresh registered customers list">
+                                    <i class="fa-solid fa-arrows-rotate"></i>
+                                </button>
+                                <button id="chat-session-action-btn" onclick="adminDeleteSelectedChatSession()" class="bg-red-50 hover:bg-red-100 text-red-600 px-2 py-1 rounded-lg font-bold border border-red-200 transition text-[10px] shrink-0 cursor-pointer" title="Delete entire conversation">Clear</button>
                             </div>
                         </div>
 
@@ -2892,6 +2685,9 @@
             }
         }
 
+        const IS_IOS_DEVICE = /iPad|iPhone|iPod/.test(navigator.userAgent || '') ||
+            (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
         let app = null, db = null, auth = null;
         try {
             if (typeof firebase !== 'undefined') {
@@ -2905,12 +2701,14 @@
 
                 if (db && typeof db.settings === 'function') {
                     db.settings({
-                        experimentalForceLongPolling: true,
+                        experimentalForceLongPolling: !IS_IOS_DEVICE,
+                        experimentalAutoDetectLongPolling: IS_IOS_DEVICE,
                         merge: true
                     });
                 }
 
-                if (db && typeof db.enablePersistence === 'function') {
+                // Disable multi-tab IndexedDB persistence on iOS Safari to prevent WebKit memory/process crashes
+                if (db && typeof db.enablePersistence === 'function' && !IS_IOS_DEVICE) {
                     db.enablePersistence({ synchronizeTabs: true }).catch(() => {});
                 }
             }
@@ -2984,7 +2782,7 @@
 
             const rawVersion = (versionInput?.value || '').trim().replace(/^v/i, '');
             if (!rawVersion || !/^\d+(\.\d+){1,3}$/.test(rawVersion)) {
-                showToast("Invalid Version Format", "Please enter a valid version number such as 1.0.5 or 1.1.0.", true);
+                showToast("Invalid Version Format", "Please enter a valid version number such as 1.0.6 or 1.1.0.", true);
                 versionInput?.focus();
                 return;
             }
@@ -3301,19 +3099,32 @@
             return getNewlyRegisteredUnverifiedSet().has(email.trim().toLowerCase());
         }
 
-        const DEFAULT_SEED_PRODUCTS = [
-            { id: "p1", name: "HAZEL NATURAL", brand: "Molicon", price: "25.00", category: "3 Months Disposable", image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500", badge: "In Stock" },
-            { id: "p2", name: "CRYSTAL CLEAR", brand: "Uyaai", price: "25.00", category: "1 Month Disposable", image: "https://images.unsplash.com/photo-1583946099066-764f2537f136?auto=format&fit=crop&q=80&w=500", badge: "In Stock" },
-            { id: "p3", name: "EMERALD GREEN", brand: "Western Eyes", price: "25.00", category: "3 Months Disposable", image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&q=80&w=500", badge: "In Stock" },
-            { id: "p4", name: "MYSTIC GREY", brand: "Mill Creek", price: "25.00", category: "3 Months Disposable", image: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&q=80&w=500", badge: "In Stock" },
-            { id: "p5", name: "MONTHLY COMFORT", brand: "Molicon", price: "25.00", category: "1 Day Disposable", image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500", badge: "In Stock" }
-        ];
+        const REMOVED_SEED_IDS = new Set(["p1", "p2", "p3", "p4", "p5"]);
+        const REMOVED_SEED_NAMES = new Set([
+            "hazel natural",
+            "crystal clear",
+            "emerald green",
+            "emerald green ",
+            "mystic gray",
+            "mystic grey",
+            "monthly comfort"
+        ]);
 
-        let products = [...DEFAULT_SEED_PRODUCTS];
+        function isRemovedPlaceholderLens(prod) {
+            if (!prod) return false;
+            const pid = String(prod.id || '').trim().toLowerCase();
+            const pname = String(prod.name || '').trim().toLowerCase();
+            return REMOVED_SEED_IDS.has(pid) || REMOVED_SEED_NAMES.has(pname);
+        }
+
+        const DEFAULT_SEED_PRODUCTS = [];
+
+        let products = [];
 
         function saveProductsToLocalBackup() {
             try {
-                const serialized = products.map(p => ({
+                const cleanProducts = products.filter(p => !isRemovedPlaceholderLens(p));
+                const serialized = cleanProducts.map(p => ({
                     ...p,
                     powerStock: window.productPowerStock[p.id] || p.powerStock || {},
                     powerLocations: window.productPowerLocations[p.id] || p.powerLocations || {}
@@ -3328,12 +3139,15 @@
                 if (!raw) return false;
                 const parsed = JSON.parse(raw);
                 if (Array.isArray(parsed) && parsed.length > 0) {
-                    products = parsed;
+                    products = parsed.filter(p => !isRemovedPlaceholderLens(p));
                     products.forEach(p => {
                         if (p.powerStock) window.productPowerStock[p.id] = p.powerStock;
                         if (p.powerLocations) window.productPowerLocations[p.id] = p.powerLocations;
                     });
-                    return true;
+                    if (products.length !== parsed.length) {
+                        saveProductsToLocalBackup();
+                    }
+                    return products.length > 0;
                 }
             } catch (e) { console.warn("Load products local backup warning:", e); }
             return false;
@@ -5263,17 +5077,20 @@
             const btnSignup = document.getElementById('tab-auth-signup');
             const title = document.getElementById('auth-form-title');
             const submitBtn = document.getElementById('auth-submit-btn');
+            const pwdInput = document.getElementById('auth-password');
 
             if (mode === 'signin') {
                 btnSignin.className = "py-2.5 text-xs font-bold rounded-lg bg-[#65a30d] text-white transition-all shadow";
                 btnSignup.className = "py-2.5 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all";
                 title.innerText = "Welcome back";
                 submitBtn.innerText = "Sign In To Dashboard";
+                if (pwdInput) pwdInput.setAttribute('autocomplete', 'current-password');
             } else {
                 btnSignup.className = "py-2.5 text-xs font-bold rounded-lg bg-[#65a30d] text-white transition-all shadow";
                 btnSignin.className = "py-2.5 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all";
                 title.innerText = "Create an account";
                 submitBtn.innerText = "Register New Account";
+                if (pwdInput) pwdInput.setAttribute('autocomplete', 'new-password');
             }
         }
 
@@ -5554,6 +5371,7 @@
 
             const chatUserSelect = document.getElementById('admin-active-chat-user');
             const chatSessionLabel = document.getElementById('chat-session-bar-label');
+            const chatRefreshBtn = document.getElementById('chat-refresh-users-btn');
             const chatActionBtn = document.getElementById('chat-session-action-btn');
             if (isAdmin) {
                 if (chatUserSelect) chatUserSelect.style.removeProperty('display');
@@ -5565,6 +5383,7 @@
                 if (chatActionBtn) chatActionBtn.innerText = "Clear";
             }
 
+            startRealtimeListenersOnce();
             updateChatHeaderAvatars();
             enforceMobileNavForRole();
             renderStoreProducts(products);
@@ -7324,8 +7143,8 @@
                 limitText: '★ Limit: 100 uses max ★',
                 displayText: 'Display: Display at product selections',
                 assignedTargetType: 'Assigned Products:',
-                assignedItems: ['HAZEL NATURAL (#p1)', 'CRYSTAL CLEAR (#p2)'],
-                assignedProductIds: ['p1', 'p2'],
+                assignedItems: [],
+                assignedProductIds: [],
                 expiryText: 'Sep 15, 2026, 06:00 PM 🎀',
                 active: true,
                 badgeTheme: 'purple'
@@ -7757,6 +7576,43 @@
             } catch (e) {}
         }
 
+        function getAllKnownCustomerEmails() {
+            const knownSet = new Set();
+
+            const tryAdd = (rawEmail) => {
+                if (!rawEmail || typeof rawEmail !== 'string') return;
+                const clean = rawEmail.trim().toLowerCase();
+                if (!clean || !clean.includes('@')) return;
+                if (isAdminUser(clean)) return;
+                if (clean.startsWith('guest_') || clean.endsWith('@sweetopiashop.my')) return;
+                knownSet.add(clean);
+            };
+
+            SEEDED_REGISTERED_CUSTOMERS.forEach(tryAdd);
+            (registeredCustomersList || []).forEach(tryAdd);
+            Object.keys(userSessionsMap || {}).forEach(tryAdd);
+            Object.keys(presenceMap || {}).forEach(tryAdd);
+            Object.keys(assignedVouchersMap || {}).forEach(tryAdd);
+            Object.keys(userAvatarsMap || {}).forEach(tryAdd);
+            Object.keys(verifiedEmailsMap || {}).forEach(tryAdd);
+            getNewlyRegisteredUnverifiedSet().forEach(tryAdd);
+
+            (allOrders || []).forEach(o => { if (o && o.customer) tryAdd(o.customer); });
+
+            (activePresetsList || []).forEach(preset => {
+                (preset.assignedItems || []).forEach(item => {
+                    const match = String(item).match(/([a-zA-Z0-9._+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/);
+                    if (match && match[1]) tryAdd(match[1]);
+                });
+            });
+
+            if (currentUser && currentUser.email && !isGuestUser()) {
+                tryAdd(currentUser.email);
+            }
+
+            return Array.from(knownSet).sort((a, b) => a.localeCompare(b));
+        }
+
         async function saveRegisteredCustomerRecord(email, uid = null, isVerified = false) {
             if (!email) return;
             const cleanEmail = email.trim().toLowerCase();
@@ -7812,23 +7668,21 @@
         async function syncAllUsersFromServer() {
             if (!db) return;
             try {
-                const [lumiSnap, usersFallbackSnap, chatsSnap, presenceSnap, dirSnap] = await Promise.all([
+                const [lumiSnap, usersFallbackSnap, chatsSnap, presenceSnap, ordersSnap, dirSnap] = await Promise.all([
                     db.collection("lumilens_users").get({ source: 'server' }).catch(() => db.collection("lumilens_users").get().catch(() => null)),
                     db.collection("users").get({ source: 'server' }).catch(() => db.collection("users").get().catch(() => null)),
                     db.collection("lumilens_chats").get({ source: 'server' }).catch(() => db.collection("lumilens_chats").get().catch(() => null)),
                     db.collection("lumilens_presence").get({ source: 'server' }).catch(() => db.collection("lumilens_presence").get().catch(() => null)),
+                    db.collection("lumilens_orders").get({ source: 'server' }).catch(() => db.collection("lumilens_orders").get().catch(() => null)),
                     db.collection("lumilens_public_directory").doc("registered_customers").get({ source: 'server' }).catch(() => db.collection("lumilens_public_directory").doc("registered_customers").get().catch(() => null))
                 ]);
 
-                const merged = new Set([
-                    ...SEEDED_REGISTERED_CUSTOMERS.map(e => e.toLowerCase()),
-                    ...(registeredCustomersList || [])
-                ]);
+                const merged = new Set(getAllKnownCustomerEmails());
 
                 const addCandidateEmail = (rawEmail, avatar = null, emailVerified = null) => {
                     if (!rawEmail || typeof rawEmail !== 'string') return;
                     const cleanEm = rawEmail.trim().toLowerCase();
-                    if (!cleanEm || isAdminUser(cleanEm) || cleanEm.startsWith('guest_') || cleanEm.endsWith('@sweetopiashop.my')) return;
+                    if (!cleanEm || !cleanEm.includes('@') || isAdminUser(cleanEm) || cleanEm.startsWith('guest_') || cleanEm.endsWith('@sweetopiashop.my')) return;
                     merged.add(cleanEm);
                     if (avatar) userAvatarsMap[cleanEm] = avatar;
                     if (typeof emailVerified === 'boolean') verifiedEmailsMap[cleanEm] = emailVerified;
@@ -7840,7 +7694,7 @@
                     snap.forEach(docSnap => {
                         const data = docSnap.data();
                         if (!data) return;
-                        addCandidateEmail(data.email || data.userEmail, data.avatar || data.userAvatar, data.emailVerified);
+                        addCandidateEmail(data.email || data.userEmail || data.customer, data.avatar || data.userAvatar, data.emailVerified);
                     });
                 };
 
@@ -7848,15 +7702,33 @@
                 processSnapshot(usersFallbackSnap);
                 processSnapshot(chatsSnap);
                 processSnapshot(presenceSnap);
+                processSnapshot(ordersSnap);
 
                 if (dirSnap && dirSnap.exists && Array.isArray(dirSnap.data()?.emails)) {
                     dirSnap.data().emails.forEach(em => addCandidateEmail(em));
                 }
 
-                registeredCustomersList = Array.from(merged);
+                registeredCustomersList = Array.from(merged).sort((a, b) => a.localeCompare(b));
                 try {
                     localStorage.setItem('sweetopia_registered_customers', JSON.stringify(registeredCustomersList));
                 } catch (e) {}
+
+                if (currentUser && isAdminUser(currentUser.email) && registeredCustomersList.length > 0) {
+                    const nowIso = new Date().toISOString();
+                    db.collection("lumilens_public_directory").doc("registered_customers").set({
+                        emails: firebase.firestore.FieldValue.arrayUnion(...registeredCustomersList),
+                        updatedAt: nowIso
+                    }, { merge: true }).catch(() => {});
+
+                    registeredCustomersList.forEach(em => {
+                        const docKey = em.replace(/[^a-zA-Z0-9]/g, '_');
+                        db.collection("lumilens_users").doc(docKey).set({
+                            email: em,
+                            role: 'customer',
+                            updatedAt: nowIso
+                        }, { merge: true }).catch(() => {});
+                    });
+                }
 
                 renderAdminVoucherCustomerDropdowns();
                 updateAdminChatUserDropdown();
@@ -7866,29 +7738,15 @@
             }
         }
 
+        window.refreshAdminChatUsersList = async function() {
+            await syncAllUsersFromServer();
+            updateAdminChatUserDropdown();
+            const count = getAllKnownCustomerEmails().length;
+            showToast("User Sessions Synced", `Loaded ${count} registered customer session(s).`);
+        };
+
         function renderAdminVoucherCustomerDropdowns() {
-            const knownUsersSet = new Set();
-
-            const tryAddUser = (rawEmail) => {
-                if (!rawEmail || typeof rawEmail !== 'string') return;
-                const clean = rawEmail.trim().toLowerCase();
-                if (!clean || isAdminUser(clean)) return;
-                if (clean.startsWith('guest_') || clean.endsWith('@sweetopiashop.my')) return;
-                knownUsersSet.add(clean);
-            };
-
-            SEEDED_REGISTERED_CUSTOMERS.forEach(tryAddUser);
-            (registeredCustomersList || []).forEach(tryAddUser);
-            Object.keys(presenceMap || {}).forEach(tryAddUser);
-            Object.keys(userSessionsMap || {}).forEach(tryAddUser);
-            (allOrders || []).forEach(o => { if (o && o.customer) tryAddUser(o.customer); });
-            Object.keys(assignedVouchersMap || {}).forEach(tryAddUser);
-
-            if (currentUser && currentUser.email && !isGuestUser()) {
-                tryAddUser(currentUser.email);
-            }
-
-            const userList = Array.from(knownUsersSet).sort((a, b) => a.localeCompare(b));
+            const userList = getAllKnownCustomerEmails();
 
             ['code1', 'code2', 'code3', 'code4', 'code5'].forEach(codeId => {
                 const select = document.getElementById(`customer-${codeId}`);
@@ -7977,6 +7835,10 @@
                     const serverMap = new Map();
                     snapshot.forEach(docSnap => {
                         const data = { id: docSnap.id, ...docSnap.data() };
+                        if (isRemovedPlaceholderLens(data)) {
+                            db.collection("lumilens_products").doc(docSnap.id).delete().catch(() => {});
+                            return;
+                        }
                         if (data && data.name) {
                             serverMap.set(docSnap.id, data);
                             if (data.powerStock) {
@@ -7990,16 +7852,13 @@
 
                     // Preserve any local/cached admin-managed lenses that haven't finished syncing to Firestore yet
                     products.forEach(localProd => {
-                        if (localProd && localProd.id && !serverMap.has(localProd.id)) {
-                            const isDefaultOnly = DEFAULT_SEED_PRODUCTS.some(d => d.id === localProd.id);
-                            if (!isDefaultOnly || serverMap.size === 0) {
-                                serverMap.set(localProd.id, localProd);
-                                db.collection("lumilens_products").doc(localProd.id).set({
-                                    ...localProd,
-                                    powerStock: window.productPowerStock[localProd.id] || {},
-                                    powerLocations: window.productPowerLocations[localProd.id] || {}
-                                }, { merge: true }).catch(() => {});
-                            }
+                        if (localProd && localProd.id && !isRemovedPlaceholderLens(localProd) && !serverMap.has(localProd.id)) {
+                            serverMap.set(localProd.id, localProd);
+                            db.collection("lumilens_products").doc(localProd.id).set({
+                                ...localProd,
+                                powerStock: window.productPowerStock[localProd.id] || {},
+                                powerLocations: window.productPowerLocations[localProd.id] || {}
+                            }, { merge: true }).catch(() => {});
                         }
                     });
 
@@ -8048,6 +7907,7 @@
                     renderCustomerVouchersUI();
                     renderChosenCustomerPromoBanner();
                     renderAdminVoucherCustomerDropdowns();
+                    updateAdminChatUserDropdown();
                 }
             }, () => {
                 renderCustomerVouchersUI();
@@ -8254,28 +8114,14 @@
 
         function updateAdminChatUserDropdown() {
             const select = document.getElementById('admin-active-chat-user');
+            const labelEl = document.getElementById('chat-session-bar-label');
             if (!select) return;
 
-            const knownUsersMap = new Map();
-            const addKnownUser = (rawEmail) => {
-                if (!rawEmail || typeof rawEmail !== 'string') return;
-                const clean = rawEmail.trim().toLowerCase();
-                if (!clean || isAdminUser(clean)) return;
-                if (clean.startsWith('guest_') || clean.endsWith('@sweetopiashop.my')) return;
-                if (!knownUsersMap.has(clean)) {
-                    knownUsersMap.set(clean, clean);
-                }
-            };
+            const userList = getAllKnownCustomerEmails();
 
-            SEEDED_REGISTERED_CUSTOMERS.forEach(addKnownUser);
-            (registeredCustomersList || []).forEach(addKnownUser);
-            Object.keys(userSessionsMap || {}).forEach(addKnownUser);
-            Object.keys(presenceMap || {}).forEach(addKnownUser);
-            Object.keys(assignedVouchersMap || {}).forEach(addKnownUser);
-            (allOrders || []).forEach(o => { if (o && o.customer) addKnownUser(o.customer); });
-            if (currentUser && currentUser.email && !isGuestUser()) addKnownUser(currentUser.email);
-
-            const userList = Array.from(knownUsersMap.values()).sort((a, b) => a.localeCompare(b));
+            if (labelEl && currentUser && isAdminUser(currentUser.email)) {
+                labelEl.innerText = `User Session (${userList.length}):`;
+            }
 
             if (userList.length === 0) {
                 select.innerHTML = '<option value="">No Registered Accounts</option>';
@@ -8287,12 +8133,14 @@
                 const isOnline = !!(presenceMap[u] || presenceMap[cleanKey]);
                 const statusSymbol = isOnline ? '🟢' : '🔘';
                 const statusText = isOnline ? 'Online' : 'Offline';
-                const label = `${statusSymbol} ${u} (Customer - ${statusText})`;
+                const msgCount = (userSessionsMap[cleanKey] || []).length;
+                const msgTag = msgCount > 0 ? ` [${msgCount}]` : '';
+                const label = `${statusSymbol} ${u} (${statusText})${msgTag}`;
                 const isSelected = cleanKey === currentVal;
                 return `<option value="${u}" ${isSelected ? 'selected' : ''}>${label}</option>`;
             }).join('');
 
-            if (!activeChatSessionUser || !knownUsersMap.has(activeChatSessionUser.toLowerCase())) {
+            if (!activeChatSessionUser || !userList.includes(activeChatSessionUser.toLowerCase())) {
                 activeChatSessionUser = select.value || userList[0];
             }
             updateChatHeaderAvatars();
@@ -8546,9 +8394,20 @@
             }
         });
 
+        let realtimeListenersStarted = false;
+        function startRealtimeListenersOnce() {
+            if (realtimeListenersStarted || !db) return;
+            realtimeListenersStarted = true;
+            initFirestoreListeners();
+            initChatListeners();
+            syncAllUsersFromServer().catch(() => {});
+        }
+
         document.addEventListener('DOMContentLoaded', async () => {
-            preloadStickerImages();
-            renderStickerSlotsGrid(true);
+            if (!IS_IOS_DEVICE) {
+                preloadStickerImages();
+                renderStickerSlotsGrid(true);
+            }
 
             const catStrip = document.getElementById('category-scroll-strip');
             if (catStrip) {
@@ -8688,13 +8547,17 @@
                 });
             }
 
-            if (db) {
+            if (db && (currentUser || !IS_IOS_DEVICE)) {
                 try {
-                    const snap = await db.collection("lumilens_products").get({ source: 'server' }).catch(() => null);
+                    const snap = await db.collection("lumilens_products").get({ source: 'server' }).catch(() => db.collection("lumilens_products").get().catch(() => null));
                     if (snap && !snap.empty) {
                         const serverProducts = [];
                         snap.forEach(docSnap => {
                             const data = { id: docSnap.id, ...docSnap.data() };
+                            if (isRemovedPlaceholderLens(data)) {
+                                db.collection("lumilens_products").doc(docSnap.id).delete().catch(() => {});
+                                return;
+                            }
                             if (data && data.name) {
                                 serverProducts.push(data);
                                 if (data.powerStock) window.productPowerStock[data.id] = data.powerStock;
@@ -8705,16 +8568,6 @@
                             products = serverProducts;
                             ensureProductStockDefaults(products);
                             saveProductsToLocalBackup();
-                        }
-                    } else if (snap && snap.empty) {
-                        for (const p of products) {
-                            const initialPowerStock = window.productPowerStock[p.id] || {};
-                            powersList.forEach(pw => { if (initialPowerStock[pw] === undefined) initialPowerStock[pw] = true; });
-                            await db.collection("lumilens_products").doc(p.id).set({
-                                ...p,
-                                powerStock: initialPowerStock,
-                                powerLocations: window.productPowerLocations[p.id] || {}
-                            });
                         }
                     }
                 } catch(e) { }
@@ -8747,8 +8600,9 @@
             renderAdminPowerStockCheckboxes();
             renderAdminVoucherProductDropdowns();
             initLiveVersionListener();
-            initFirestoreListeners();
-            initChatListeners();
+            if (currentUser || !IS_IOS_DEVICE) {
+                startRealtimeListenersOnce();
+            }
             onAdminPowerRangeChange();
             initSlideshow();
             renderCustomerVouchersUI();
