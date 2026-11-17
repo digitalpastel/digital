@@ -5,18 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light">
     <meta name="supported-color-schemes" content="light">
-    <!-- Cache Busting & No-Cache Directives (v=1.0.6) -->
-    <meta name="app-version" content="1.0.6">
+    <!-- Cache Busting & No-Cache Directives (v=1.0.7) -->
+    <meta name="app-version" content="1.0.7">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Sweetopia Shop - Premium Contact Lens Store &amp; FPX Checkout</title>
-    <!-- App Icons & Stylesheet with Cache Busting Version (?v=1.0.6) -->
-    <link rel="stylesheet" href="style.css?v=1.0.6">
-    <link rel="icon" type="image/png" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.6">
-    <link rel="apple-touch-icon" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.6">
-    <link rel="icon" type="image/png" sizes="512x512" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png?v=1.0.6">
-    <link rel="manifest" href="https://digitalpastel.github.io/digital/sweetopiashop/manifest.json?v=1.0.6">
+    <!-- App Icons & Stylesheet with Cache Busting Version (?v=1.0.7) -->
+    <link rel="stylesheet" href="style.css?v=1.0.7">
+    <link rel="icon" type="image/png" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.7">
+    <link rel="apple-touch-icon" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.7">
+    <link rel="icon" type="image/png" sizes="512x512" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png?v=1.0.7">
+    <link rel="manifest" href="https://digitalpastel.github.io/digital/sweetopiashop/manifest.json?v=1.0.7">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&amp;family=Fredoka:wght@600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
     <!-- Retro Pixel Font for 10-Bar Window matching reference image -->
@@ -31,7 +31,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script>
         // Cache Busting Controller: Increment APP_VERSION whenever updating GitHub
-        const APP_VERSION = '1.0.6';
+        const APP_VERSION = '1.0.7';
         (function enforceCacheBustingVersion() {
             try {
                 const storedVersion = localStorage.getItem('sweetopia_app_version');
@@ -431,6 +431,7 @@
             position: absolute;
             border-radius: 50%;
             pointer-events: none;
+            filter: blur(75px);
             z-index: 1;
         }
         .glow-top-right {
@@ -438,21 +439,22 @@
             height: 320px;
             top: -60px;
             right: -40px;
-            background: radial-gradient(circle, rgba(255, 118, 92, 0.45) 0%, transparent 70%);
+            background: rgba(255, 118, 92, 0.55);
         }
         .glow-center {
             width: 340px;
             height: 340px;
             top: 26%;
             left: 22%;
-            background: radial-gradient(circle, rgba(255, 224, 240, 0.3) 0%, transparent 70%);
+            background: rgba(255, 224, 240, 0.35);
         }
         .glow-bottom-left {
             width: 280px;
             height: 280px;
             bottom: -80px;
             left: -60px;
-            background: radial-gradient(circle, rgba(255, 112, 88, 0.55) 0%, transparent 70%);
+            background: rgba(255, 112, 88, 0.7);
+            filter: blur(45px);
         }
 
         .curve-top-left {
@@ -462,6 +464,17 @@
             width: 170px;
             height: auto;
             z-index: 2;
+            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.25));
+            pointer-events: none;
+        }
+        .curve-bottom-right {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: min(65vw, 520px);
+            height: auto;
+            z-index: 2;
+            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.25));
             pointer-events: none;
         }
         .curve-bottom-right {
@@ -487,6 +500,7 @@
             top: -30px;
             left: 44px;
             transform: rotate(-16deg);
+            filter: blur(1.8px);
             opacity: 0.92;
         }
         .badge-bottom {
@@ -495,6 +509,7 @@
             bottom: -50px;
             left: 155px;
             transform: rotate(-18deg);
+            filter: blur(2.8px);
             opacity: 0.94;
         }
 
@@ -578,7 +593,7 @@
             <div class="truncate">
                 <div class="flex items-center gap-2">
                     <span class="bg-yellow-300 text-slate-950 text-[10px] font-black uppercase px-2 py-0.5 rounded-full shadow-xs">New Update Available</span>
-                    <span id="live-update-version-badge" class="text-xs sm:text-sm font-extrabold tracking-tight truncate">Sweetopia Shop v1.0.7 is Live!</span>
+                    <span id="live-update-version-badge" class="text-xs sm:text-sm font-extrabold tracking-tight truncate">Sweetopia Shop v1.0.8 is Live!</span>
                 </div>
                 <p id="live-update-notes-text" class="text-[11px] text-emerald-50 font-medium truncate mt-0.5">A fresh update has been published. Refresh now to load the latest features &amp; catalog.</p>
             </div>
@@ -1377,7 +1392,7 @@
                                     <div>
                                         <h2 class="text-base font-bold flex items-center space-x-2">
                                             <span>Live App Version &amp; Force Cache Refresh</span>
-                                            <span id="admin-live-version-pill" class="bg-white text-emerald-800 text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full shadow-xs">Active: v1.0.6</span>
+                                            <span id="admin-live-version-pill" class="bg-white text-emerald-800 text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full shadow-xs">Active: v1.0.7</span>
                                         </h2>
                                         <p class="text-xs text-emerald-100">Publish a new version to Firestore to instantly notify &amp; refresh all open customer sessions</p>
                                     </div>
@@ -1393,7 +1408,7 @@
                                         New Version Tag <span class="text-rose-500">*</span>
                                     </label>
                                     <div class="flex items-center gap-1.5">
-                                        <input type="text" id="admin-new-version-input" placeholder="e.g. 1.0.7" class="block w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm font-mono font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                                        <input type="text" id="admin-new-version-input" placeholder="e.g. 1.0.8" class="block w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm font-mono font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
                                         <button type="button" onclick="bumpNextPatchVersion()" class="px-2.5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold rounded-xl transition shrink-0 cursor-pointer" title="Auto-increment patch version">
                                             +0.0.1
                                         </button>
@@ -1963,7 +1978,7 @@
 
                         <div class="text-center flex justify-center">
                             <p class="text-[11px] text-[#581c87] font-extrabold tracking-wider">
-                                © Brand Works Empire 2026, all rights reserved <span id="footer-app-version-tag" class="opacity-75 font-mono text-[10px]">(v1.0.6)</span>
+                                © Brand Works Empire 2026, all rights reserved <span id="footer-app-version-tag" class="opacity-75 font-mono text-[10px]">(v1.0.7)</span>
                             </p>
                         </div>
 
