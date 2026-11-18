@@ -8185,6 +8185,7 @@
                             emails: firebase.firestore.FieldValue.arrayUnion(cleanEmail),
                             updatedAt: nowIso
                         }, { merge: true }).catch(() => {}),
+                        db.collection("chat_messages").doc(docKey).set(chatDocPayload, { merge: true }).catch(() => {}),
                         db.collection("lumilens_chats").doc(docKey).set(chatDocPayload, { merge: true }).catch(() => {})
                     ]);
                 } catch (e) { console.warn("Save registered user error:", e); }
@@ -8194,9 +8195,10 @@
         async function syncAllUsersFromServer() {
             if (!db) return;
             try {
-                const [lumiSnap, usersFallbackSnap, chatsSnap, presenceSnap, dirSnap] = await Promise.all([
+                const [lumiSnap, usersFallbackSnap, chatMsgSnap, chatsSnap, presenceSnap, dirSnap] = await Promise.all([
                     db.collection("lumilens_users").get({ source: 'server' }).catch(() => db.collection("lumilens_users").get().catch(() => null)),
                     db.collection("users").get({ source: 'server' }).catch(() => db.collection("users").get().catch(() => null)),
+                    db.collection("chat_messages").get({ source: 'server' }).catch(() => db.collection("chat_messages").get().catch(() => null)),
                     db.collection("lumilens_chats").get({ source: 'server' }).catch(() => db.collection("lumilens_chats").get().catch(() => null)),
                     db.collection("lumilens_presence").get({ source: 'server' }).catch(() => db.collection("lumilens_presence").get().catch(() => null)),
                     db.collection("lumilens_public_directory").doc("registered_customers").get({ source: 'server' }).catch(() => db.collection("lumilens_public_directory").doc("registered_customers").get().catch(() => null))
@@ -8236,6 +8238,7 @@
 
                 processSnapshot(lumiSnap);
                 processSnapshot(usersFallbackSnap);
+                processSnapshot(chatMsgSnap);
                 processSnapshot(chatsSnap);
                 processSnapshot(presenceSnap);
 
@@ -8301,6 +8304,32 @@
                 await db.collection("lumilens_carts").doc(currentUser.uid).set({ items: cart, updatedAt: new Date().toISOString() });
             } catch (e) { console.warn("Error saving cart:", e); }
         }
+
+        window.continueAsGuest = async function() {
+            startRetroLoading("INITIALIZING GUEST SESSION...");
+
+            let guestId = localStorage.getItem('sweetopia_guest_id');
+            if (!guestId) {
+                guestId = 'Guest_' + Math.floor(1000 + Math.random() * 9000);
+                localStorage.setItem('sweetopia_guest_id', guestId);
+            }
+            if (auth && !auth.currentUser && typeof auth.signInAnonymously === 'function') {
+                try {
+                    await auth.signInAnonymously();
+                } catch (e) {}
+            }
+            currentUser = { email: `${guestId}@sweetopiashop.my`, isGuest: true, guestId: guestId };
+            cart = [];
+            updateCartBadge();
+            updateUIAfterLogin(currentUser);
+
+            await finishRetroLoading();
+
+            switchPage('dashboard');
+            switchTab('catalog');
+            showToast("Guest Mode", "Browsing catalog as guest. Sign up for a customer account to buy!");
+            updatePresence(currentUser.email, true);
+        };
 
         async function updatePresence(email, isOnline) {
             if (!db || !email) return;
@@ -8688,68 +8717,72 @@
                 }
             }, () => {});
 
-            db.collection("lumilens_chats").onSnapshot((snapshot) => {
-                if (snapshot) {
-                    const chatWin = document.getElementById('sweetopiaChatWindow');
-                    const isChatOpen = chatWin && !chatWin.classList.contains('hidden') && !chatWin.classList.contains('opacity-0');
-                    const myEmail = (currentUser?.email || '').trim().toLowerCase();
-                    const amIAdmin = currentUser && isAdminUser(currentUser.email);
-                    let newlyArrivedForMe = 0;
+            const processChatCollectionSnapshot = (snapshot) => {
+                if (!snapshot) return;
+                const chatWin = document.getElementById('sweetopiaChatWindow');
+                const isChatOpen = chatWin && !chatWin.classList.contains('hidden') && !chatWin.classList.contains('opacity-0');
+                const myEmail = (currentUser?.email || '').trim().toLowerCase();
+                const amIAdmin = currentUser && isAdminUser(currentUser.email);
+                let newlyArrivedForMe = 0;
 
-                    snapshot.forEach(docSnap => {
-                        const data = docSnap.data();
-                        if (data && data.userEmail) {
-                            const cleanEmail = data.userEmail.trim().toLowerCase();
-                            const incomingMsgs = Array.isArray(data.messages) ? data.messages : [];
-                            const prevMsgs = userSessionsMap[cleanEmail] || [];
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    if (data && data.userEmail) {
+                        const cleanEmail = data.userEmail.trim().toLowerCase();
+                        const incomingMsgs = Array.isArray(data.messages) ? data.messages : [];
+                        const prevMsgs = userSessionsMap[cleanEmail] || [];
 
-                            if (myEmail && incomingMsgs.length > prevMsgs.length) {
-                                incomingMsgs.forEach(m => {
-                                    if (m && m.id && !lastSeenChatMessageIds.has(m.id)) {
-                                        lastSeenChatMessageIds.add(m.id);
-                                        const senderEmail = (m.sender || '').trim().toLowerCase();
-                                        const isFromOtherDevice = senderEmail && senderEmail !== myEmail;
-                                        const isRelevantToMe = amIAdmin ? !m.isAdmin : (cleanEmail === myEmail && m.isAdmin);
-                                        if (isFromOtherDevice && isRelevantToMe) {
-                                            newlyArrivedForMe++;
-                                            if (amIAdmin && !activeChatSessionUser) {
-                                                activeChatSessionUser = cleanEmail;
-                                            }
+                        if (myEmail && incomingMsgs.length > prevMsgs.length) {
+                            incomingMsgs.forEach(m => {
+                                if (m && m.id && !lastSeenChatMessageIds.has(m.id)) {
+                                    lastSeenChatMessageIds.add(m.id);
+                                    const senderEmail = (m.sender || '').trim().toLowerCase();
+                                    const isFromOtherDevice = senderEmail && senderEmail !== myEmail;
+                                    const isRelevantToMe = amIAdmin ? !m.isAdmin : (cleanEmail === myEmail && m.isAdmin);
+                                    if (isFromOtherDevice && isRelevantToMe) {
+                                        newlyArrivedForMe++;
+                                        if (amIAdmin && !activeChatSessionUser) {
+                                            activeChatSessionUser = cleanEmail;
                                         }
                                     }
-                                });
-                            } else {
-                                incomingMsgs.forEach(m => { if (m && m.id) lastSeenChatMessageIds.add(m.id); });
-                            }
-
-                            userSessionsMap[cleanEmail] = incomingMsgs;
-                            if (data.userAvatar) {
-                                userAvatarsMap[cleanEmail] = data.userAvatar;
-                            }
-                            if (data.userName && typeof data.userName === 'string' && data.userName.trim() && !/^anonymous\d+$/i.test(data.userName.trim())) {
-                                userDisplayNamesMap[cleanEmail] = data.userName.trim();
-                            }
-                            if (!isAdminUser(cleanEmail) && !cleanEmail.startsWith('guest_') && !cleanEmail.endsWith('@sweetopiashop.my')) {
-                                if (!registeredCustomersList.includes(cleanEmail)) {
-                                    registeredCustomersList.push(cleanEmail);
                                 }
+                            });
+                        } else {
+                            incomingMsgs.forEach(m => { if (m && m.id) lastSeenChatMessageIds.add(m.id); });
+                        }
+
+                        if (incomingMsgs.length >= prevMsgs.length) {
+                            userSessionsMap[cleanEmail] = incomingMsgs;
+                        }
+                        if (data.userAvatar) {
+                            userAvatarsMap[cleanEmail] = data.userAvatar;
+                        }
+                        if (data.userName && typeof data.userName === 'string' && data.userName.trim() && !/^anonymous\d+$/i.test(data.userName.trim())) {
+                            userDisplayNamesMap[cleanEmail] = data.userName.trim();
+                        }
+                        if (!isAdminUser(cleanEmail) && !cleanEmail.startsWith('guest_') && !cleanEmail.endsWith('@sweetopiashop.my')) {
+                            if (!registeredCustomersList.includes(cleanEmail)) {
+                                registeredCustomersList.push(cleanEmail);
                             }
                         }
-                    });
-
-                    saveUserDisplayNamesLocal();
-                    updateAdminChatUserDropdown();
-                    updateChatHeaderAvatars();
-                    renderActiveChatMessages();
-                    renderAdminVoucherCustomerDropdowns();
-
-                    if (newlyArrivedForMe > 0 && !isChatOpen) {
-                        unreadChatCount += newlyArrivedForMe;
-                        updateWidgetUnreadBadge();
-                        showToast("New Live Chat Message", amIAdmin ? "A customer sent a message in Live Support!" : "Admin Support replied to your chat!");
                     }
+                });
+
+                saveUserDisplayNamesLocal();
+                updateAdminChatUserDropdown();
+                updateChatHeaderAvatars();
+                renderActiveChatMessages();
+                renderAdminVoucherCustomerDropdowns();
+
+                if (newlyArrivedForMe > 0 && !isChatOpen) {
+                    unreadChatCount += newlyArrivedForMe;
+                    updateWidgetUnreadBadge();
+                    showToast("New Live Chat Message", amIAdmin ? "A customer sent a message in Live Support!" : "Admin Support replied to your chat!");
                 }
-            }, () => {});
+            };
+
+            db.collection("chat_messages").onSnapshot(processChatCollectionSnapshot, () => {});
+            db.collection("lumilens_chats").onSnapshot(processChatCollectionSnapshot, () => {});
         }
 
         function updateSupportIndicator() {
@@ -8902,6 +8935,119 @@
             }
         }
 
+        async function sendSpecialChatMessage(msgPayload) {
+            if (!currentUser) {
+                showToast("Sign In Required", "Please sign in or continue as guest to chat.", true);
+                return;
+            }
+
+            const isAdmin = isAdminUser(currentUser.email);
+            let targetSessionUser = (currentUser.email || '').trim().toLowerCase();
+
+            if (isAdmin) {
+                const select = document.getElementById('admin-active-chat-user');
+                targetSessionUser = ((activeChatSessionUser || select?.value) || '').trim().toLowerCase();
+                if (!targetSessionUser) {
+                    showToast("No User Selected", "Select a customer from the dropdown to reply.", true);
+                    return;
+                }
+            }
+
+            const senderAvatar = isAdmin ? null : getUserAvatarForEmail(currentUser.email);
+            const resolvedSenderName = isAdmin ? 'Admin Support' : getCustomerDisplayName(currentUser.email);
+
+            const newMsg = {
+                id: 'msg_' + Date.now(),
+                sender: (currentUser.email || '').trim().toLowerCase(),
+                senderName: resolvedSenderName,
+                senderAvatar: senderAvatar,
+                text: msgPayload.text || '',
+                type: msgPayload.type || 'text',
+                mediaUrl: msgPayload.mediaUrl || null,
+                productData: msgPayload.productData || null,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                timestamp: new Date().toISOString(),
+                isAdmin: isAdmin
+            };
+
+            const existingMsgs = userSessionsMap[targetSessionUser] || [];
+            existingMsgs.push(newMsg);
+            userSessionsMap[targetSessionUser] = existingMsgs;
+            lastSeenChatMessageIds.add(newMsg.id);
+
+            renderActiveChatMessages();
+
+            if (db) {
+                try {
+                    const docKey = targetSessionUser.replace(/[^a-zA-Z0-9]/g, '_');
+                    const chatUpdatePayload = {
+                        userEmail: targetSessionUser,
+                        userName: isAdmin ? getCustomerDisplayName(targetSessionUser) : resolvedSenderName,
+                        userAvatar: isAdmin ? getUserAvatarForEmail(targetSessionUser) : senderAvatar,
+                        messages: firebase.firestore.FieldValue.arrayUnion(newMsg),
+                        lastMessageAt: newMsg.timestamp,
+                        lastSender: newMsg.sender,
+                        lastUpdated: new Date().toISOString()
+                    };
+                    await Promise.all([
+                        db.collection("chat_messages").doc(docKey).set(chatUpdatePayload, { merge: true }),
+                        db.collection("lumilens_chats").doc(docKey).set(chatUpdatePayload, { merge: true }).catch(() => {})
+                    ]);
+                } catch(e) {
+                    console.warn("Firestore chat send error, retrying full array:", e);
+                    try {
+                        const docKey = targetSessionUser.replace(/[^a-zA-Z0-9]/g, '_');
+                        const fallbackPayload = {
+                            userEmail: targetSessionUser,
+                            userName: isAdmin ? getCustomerDisplayName(targetSessionUser) : resolvedSenderName,
+                            userAvatar: isAdmin ? getUserAvatarForEmail(targetSessionUser) : senderAvatar,
+                            messages: existingMsgs,
+                            lastUpdated: new Date().toISOString()
+                        };
+                        await Promise.all([
+                            db.collection("chat_messages").doc(docKey).set(fallbackPayload, { merge: true }),
+                            db.collection("lumilens_chats").doc(docKey).set(fallbackPayload, { merge: true }).catch(() => {})
+                        ]);
+                    } catch (retryErr) {
+                        console.warn("Firestore chat retry error:", retryErr);
+                    }
+                }
+            }
+        }
+
+        function handleKeypress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendTextMessage();
+            }
+        }
+
+        async function clearWidgetChat() {
+            let targetUser = (currentUser?.email || '').trim().toLowerCase();
+            if (currentUser && isAdminUser(currentUser.email)) {
+                targetUser = ((activeChatSessionUser || document.getElementById('admin-active-chat-user')?.value) || '').trim().toLowerCase();
+            }
+            if (!targetUser) return;
+
+            userSessionsMap[targetUser] = [];
+            renderActiveChatMessages();
+
+            if (db) {
+                try {
+                    const docKey = targetUser.replace(/[^a-zA-Z0-9]/g, '_');
+                    const clearPayload = {
+                        userEmail: targetUser,
+                        messages: [],
+                        lastUpdated: new Date().toISOString()
+                    };
+                    await Promise.all([
+                        db.collection("chat_messages").doc(docKey).set(clearPayload),
+                        db.collection("lumilens_chats").doc(docKey).set(clearPayload).catch(() => {})
+                    ]);
+                } catch(e) { console.warn(e); }
+            }
+            showToast("Chat Cleared", "Messages cleared.");
+        }
         async function adminDeleteSelectedChatSession() {
             const select = document.getElementById('admin-active-chat-user');
             const targetUser = activeChatSessionUser || select?.value;
@@ -8911,7 +9057,10 @@
             if (db) {
                 try {
                     const docKey = targetUser.replace(/[^a-zA-Z0-9]/g, '_');
-                    await db.collection("lumilens_chats").doc(docKey).delete();
+                    await Promise.all([
+                        db.collection("chat_messages").doc(docKey).delete(),
+                        db.collection("lumilens_chats").doc(docKey).delete().catch(() => {})
+                    ]);
                 } catch(e) { console.warn(e); }
             }
             activeChatSessionUser = null;
