@@ -1582,13 +1582,19 @@
                                 </div>
                                 <div>
                                     <h3 class="text-sm font-bold text-slate-900">Admin Workspace Control Center</h3>
-                                    <p class="text-xs text-slate-600">Firestore Real-time sync for stock, live products, order shipments &amp; available voucher codes.</p>
+                                    <p class="text-xs text-slate-600">Firestore Real-time sync for stock, live products (<span id="admin-live-product-count" class="font-bold text-[#65a30d]">0</span> active), order shipments &amp; available voucher codes.</p>
                                 </div>
                             </div>
-                            <button onclick="exportInvoicesToCSV()" class="bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold px-4 py-2.5 rounded-xl text-xs flex items-center space-x-2 shadow-md shrink-0">
-                                <i class="fa-solid fa-file-csv"></i>
-                                <span>Export Invoices CSV</span>
-                            </button>
+                            <div class="flex flex-wrap items-center gap-2 shrink-0">
+                                <button type="button" onclick="forceSyncFirestoreProducts()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold px-3.5 py-2.5 rounded-xl text-xs flex items-center space-x-1.5 shadow-sm cursor-pointer">
+                                    <i class="fa-solid fa-rotate"></i>
+                                    <span>Sync Firestore Products</span>
+                                </button>
+                                <button onclick="exportInvoicesToCSV()" class="bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold px-4 py-2.5 rounded-xl text-xs flex items-center space-x-2 shadow-md">
+                                    <i class="fa-solid fa-file-csv"></i>
+                                    <span>Export Invoices CSV</span>
+                                </button>
+                            </div>
                         </div>
 
                         <!-- LIVE APP VERSION & CACHE-BUSTING CONTROL PANEL -->
@@ -3324,6 +3330,31 @@
         ];
 
         let products = [...DEFAULT_SEED_PRODUCTS];
+        let hasLoadedServerProducts = false;
+
+        function normalizeFirestoreProductDoc(docId, rawData) {
+            if (!rawData || typeof rawData !== 'object') return null;
+            const resolvedName = (rawData.name || rawData.title || rawData.productName || '').toString().trim();
+            if (!resolvedName) return null;
+
+            const rawPrice = rawData.price ?? rawData.amount ?? rawData.retailPrice ?? '25.00';
+            const numPrice = parseFloat(String(rawPrice).replace(/[^0-9.]/g, ''));
+            const formattedPrice = !isNaN(numPrice) ? numPrice.toFixed(2) : '25.00';
+
+            const resolvedImg = rawData.image || rawData.imageUrl || rawData.img || rawData.photo ||
+                "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500";
+
+            return {
+                ...rawData,
+                id: docId,
+                name: resolvedName,
+                brand: (rawData.brand || rawData.manufacturer || 'Molicon').toString().trim(),
+                price: formattedPrice,
+                category: (rawData.category || rawData.type || '3 Months Disposable').toString().trim(),
+                image: resolvedImg,
+                badge: rawData.badge || 'In Stock'
+            };
+        }
 
         function saveProductsToLocalBackup() {
             try {
@@ -3342,12 +3373,17 @@
                 if (!raw) return false;
                 const parsed = JSON.parse(raw);
                 if (Array.isArray(parsed) && parsed.length > 0) {
-                    products = parsed;
-                    products.forEach(p => {
-                        if (p.powerStock) window.productPowerStock[p.id] = p.powerStock;
-                        if (p.powerLocations) window.productPowerLocations[p.id] = p.powerLocations;
-                    });
-                    return true;
+                    const normalized = parsed
+                        .map(p => normalizeFirestoreProductDoc(p.id, p))
+                        .filter(Boolean);
+                    if (normalized.length > 0) {
+                        products = normalized;
+                        products.forEach(p => {
+                            if (p.powerStock) window.productPowerStock[p.id] = p.powerStock;
+                            if (p.powerLocations) window.productPowerLocations[p.id] = p.powerLocations;
+                        });
+                        return true;
+                    }
                 }
             } catch (e) { console.warn("Load products local backup warning:", e); }
             return false;
@@ -3372,7 +3408,62 @@
                     });
                 }
             });
+            const countBadge = document.getElementById('admin-live-product-count');
+            if (countBadge) countBadge.innerText = String((prodList || products).length);
         }
+
+        window.forceSyncFirestoreProducts = async function(silent = false) {
+            if (!db) return false;
+            try {
+                const [lumiSnap, genericSnap] = await Promise.all([
+                    db.collection("lumilens_products").get({ source: 'server' }).catch(() => db.collection("lumilens_products").get().catch(() => null)),
+                    db.collection("products").get({ source: 'server' }).catch(() => db.collection("products").get().catch(() => null))
+                ]);
+
+                const mergedMap = new Map();
+
+                if (genericSnap && !genericSnap.empty) {
+                    genericSnap.forEach(docSnap => {
+                        const prod = normalizeFirestoreProductDoc(docSnap.id, docSnap.data());
+                        if (prod) {
+                            mergedMap.set(docSnap.id, prod);
+                            if (prod.powerStock) window.productPowerStock[prod.id] = prod.powerStock;
+                            if (prod.powerLocations) window.productPowerLocations[prod.id] = prod.powerLocations;
+                        }
+                    });
+                }
+
+                if (lumiSnap && !lumiSnap.empty) {
+                    lumiSnap.forEach(docSnap => {
+                        const prod = normalizeFirestoreProductDoc(docSnap.id, docSnap.data());
+                        if (prod) {
+                            mergedMap.set(docSnap.id, prod);
+                            if (prod.powerStock) window.productPowerStock[prod.id] = prod.powerStock;
+                            if (prod.powerLocations) window.productPowerLocations[prod.id] = prod.powerLocations;
+                        }
+                    });
+                }
+
+                if (mergedMap.size > 0) {
+                    hasLoadedServerProducts = true;
+                    products = Array.from(mergedMap.values());
+                    ensureProductStockDefaults(products);
+                    saveProductsToLocalBackup();
+                    renderStoreProducts(products);
+                    renderFavouritesGrid();
+                    renderAdminProductsList();
+                    renderAdminPowerStockCheckboxes();
+                    renderAdminVoucherProductDropdowns();
+                    if (!silent) {
+                        showToast("Products Synced!", `Loaded ${products.length} real products from Firebase Firestore.`);
+                    }
+                    return true;
+                }
+            } catch (e) {
+                console.warn("Force sync Firestore products warning:", e);
+            }
+            return false;
+        };
 
         const defaultStickerAssets = [
             "https://digitalpastel.github.io/digital/sweetopiashop/sweetcall.webp",
@@ -3496,12 +3587,38 @@
         let userSessionsMap = {};
         let userAvatarsMap = {};
         let userDisplayNamesMap = {};
+        let lastSeenChatMessageIds = new Set();
+        let unreadChatCount = 0;
         let registeredCustomersList = [...SEEDED_REGISTERED_CUSTOMERS];
         let verifiedEmailsMap = {};
         let adminSupportOnlineFlag = false;
         let lastPendingVerificationEmail = '';
         let lastPendingVerificationPassword = '';
         const DEFAULT_USER_AVATAR = "https://digitalpastel.github.io/digital/sweetopiashop/Bratz1.webp";
+
+        function getOrderedRegisteredCustomers() {
+            const orderedSet = new Set();
+            const addIfCustomer = (rawEmail) => {
+                if (!rawEmail || typeof rawEmail !== 'string') return;
+                const clean = rawEmail.trim().toLowerCase();
+                if (!clean || isAdminUser(clean)) return;
+                if (clean.startsWith('guest_') || clean.endsWith('@sweetopiashop.my')) return;
+                orderedSet.add(clean);
+            };
+
+            SEEDED_REGISTERED_CUSTOMERS.forEach(addIfCustomer);
+            (registeredCustomersList || []).forEach(addIfCustomer);
+            Object.keys(userSessionsMap || {}).forEach(addIfCustomer);
+            Object.keys(presenceMap || {}).forEach(addIfCustomer);
+            Object.keys(assignedVouchersMap || {}).forEach(addIfCustomer);
+            (allOrders || []).forEach(o => { if (o && o.customer) addIfCustomer(o.customer); });
+
+            if (currentUser && currentUser.email && !isGuestUser()) {
+                addIfCustomer(currentUser.email);
+            }
+
+            return Array.from(orderedSet);
+        }
 
         function loadUserDisplayNamesLocal() {
             try {
@@ -3524,6 +3641,9 @@
         function getCustomerDisplayName(email) {
             if (!email) return 'Guest';
             const clean = String(email).trim().toLowerCase();
+            if (isAdminUser(clean)) {
+                return 'Admin';
+            }
             if (clean.startsWith('guest_') || clean.endsWith('@sweetopiashop.my')) {
                 const rawGuest = clean.split('@')[0];
                 return rawGuest.charAt(0).toUpperCase() + rawGuest.slice(1);
@@ -3537,7 +3657,12 @@
             if (userDisplayNamesMap[clean] && userDisplayNamesMap[clean].trim()) {
                 return userDisplayNamesMap[clean].trim();
             }
-            return clean.split('@')[0];
+            const orderedCustomers = getOrderedRegisteredCustomers();
+            const idx = orderedCustomers.indexOf(clean);
+            if (idx !== -1) {
+                return `Anonymous${idx + 1}`;
+            }
+            return `Anonymous${orderedCustomers.length + 1}`;
         }
 
         window.startEditingDashboardUserName = function() {
@@ -7402,20 +7527,38 @@
             const existingMsgs = userSessionsMap[targetSessionUser] || [];
             existingMsgs.push(newMsg);
             userSessionsMap[targetSessionUser] = existingMsgs;
+            lastSeenChatMessageIds.add(newMsg.id);
 
             renderActiveChatMessages();
 
             if (db) {
                 try {
                     const docKey = targetSessionUser.replace(/[^a-zA-Z0-9]/g, '_');
-                    await db.collection("lumilens_chats").doc(docKey).set({
+                    const chatDocRef = db.collection("lumilens_chats").doc(docKey);
+                    await chatDocRef.set({
                         userEmail: targetSessionUser,
                         userName: isAdmin ? getCustomerDisplayName(targetSessionUser) : resolvedSenderName,
                         userAvatar: isAdmin ? getUserAvatarForEmail(targetSessionUser) : senderAvatar,
-                        messages: existingMsgs,
+                        messages: firebase.firestore.FieldValue.arrayUnion(newMsg),
+                        lastMessageAt: newMsg.timestamp,
+                        lastSender: newMsg.sender,
                         lastUpdated: new Date().toISOString()
                     }, { merge: true });
-                } catch(e) { console.warn("Firestore chat send error:", e); }
+                } catch(e) {
+                    console.warn("Firestore chat send error, retrying full array:", e);
+                    try {
+                        const docKey = targetSessionUser.replace(/[^a-zA-Z0-9]/g, '_');
+                        await db.collection("lumilens_chats").doc(docKey).set({
+                            userEmail: targetSessionUser,
+                            userName: isAdmin ? getCustomerDisplayName(targetSessionUser) : resolvedSenderName,
+                            userAvatar: isAdmin ? getUserAvatarForEmail(targetSessionUser) : senderAvatar,
+                            messages: existingMsgs,
+                            lastUpdated: new Date().toISOString()
+                        }, { merge: true });
+                    } catch (retryErr) {
+                        console.warn("Firestore chat retry error:", retryErr);
+                    }
+                }
             }
         }
 
@@ -7940,16 +8083,27 @@
                 try {
                     const docKey = cleanEmail.replace(/[^a-zA-Z0-9]/g, '_');
                     const nowIso = new Date().toISOString();
-                    const currentCustomName = getCustomerDisplayName(cleanEmail);
+                    const isKnownCustomer = registeredCustomersList.includes(cleanEmail);
+                    const existingCustomName = (userDisplayNamesMap[cleanEmail] || '').trim();
                     const userProfilePayload = {
                         email: cleanEmail,
-                        displayName: currentCustomName,
                         uid: uid || null,
                         role: 'customer',
                         emailVerified: !!isVerified,
                         registeredAt: nowIso,
                         updatedAt: nowIso
                     };
+                    if (existingCustomName) {
+                        userProfilePayload.displayName = existingCustomName;
+                    }
+
+                    const chatDocPayload = {
+                        userEmail: cleanEmail,
+                        lastUpdated: nowIso
+                    };
+                    if (existingCustomName) {
+                        chatDocPayload.userName = existingCustomName;
+                    }
 
                     await Promise.all([
                         db.collection("lumilens_users").doc(docKey).set(userProfilePayload, { merge: true }).catch(() => {}),
@@ -7958,11 +8112,7 @@
                             emails: firebase.firestore.FieldValue.arrayUnion(cleanEmail),
                             updatedAt: nowIso
                         }, { merge: true }).catch(() => {}),
-                        db.collection("lumilens_chats").doc(docKey).set({
-                            userEmail: cleanEmail,
-                            userName: currentCustomName,
-                            lastUpdated: nowIso
-                        }, { merge: true }).catch(() => {})
+                        db.collection("lumilens_chats").doc(docKey).set(chatDocPayload, { merge: true }).catch(() => {})
                     ]);
                 } catch (e) { console.warn("Save registered user error:", e); }
             }
@@ -7990,7 +8140,7 @@
                     if (!cleanEm || isAdminUser(cleanEm) || cleanEm.startsWith('guest_') || cleanEm.endsWith('@sweetopiashop.my')) return;
                     merged.add(cleanEm);
                     if (avatar) userAvatarsMap[cleanEm] = avatar;
-                    if (customDisplayName && typeof customDisplayName === 'string' && customDisplayName.trim()) {
+                    if (customDisplayName && typeof customDisplayName === 'string' && customDisplayName.trim() && !/^anonymous\d+$/i.test(customDisplayName.trim())) {
                         userDisplayNamesMap[cleanEm] = customDisplayName.trim();
                     }
                     if (typeof emailVerified === 'boolean') verifiedEmailsMap[cleanEm] = emailVerified;
@@ -8042,28 +8192,7 @@
         }
 
         function renderAdminVoucherCustomerDropdowns() {
-            const knownUsersSet = new Set();
-
-            const tryAddUser = (rawEmail) => {
-                if (!rawEmail || typeof rawEmail !== 'string') return;
-                const clean = rawEmail.trim().toLowerCase();
-                if (!clean || isAdminUser(clean)) return;
-                if (clean.startsWith('guest_') || clean.endsWith('@sweetopiashop.my')) return;
-                knownUsersSet.add(clean);
-            };
-
-            SEEDED_REGISTERED_CUSTOMERS.forEach(tryAddUser);
-            (registeredCustomersList || []).forEach(tryAddUser);
-            Object.keys(presenceMap || {}).forEach(tryAddUser);
-            Object.keys(userSessionsMap || {}).forEach(tryAddUser);
-            (allOrders || []).forEach(o => { if (o && o.customer) tryAddUser(o.customer); });
-            Object.keys(assignedVouchersMap || {}).forEach(tryAddUser);
-
-            if (currentUser && currentUser.email && !isGuestUser()) {
-                tryAddUser(currentUser.email);
-            }
-
-            const userList = Array.from(knownUsersSet).sort((a, b) => a.localeCompare(b));
+            const userList = getOrderedRegisteredCustomers();
 
             ['code1', 'code2', 'code3', 'code4', 'code5'].forEach(codeId => {
                 const select = document.getElementById(`customer-${codeId}`);
@@ -8073,10 +8202,8 @@
                 let optionsHtml = '<option value="">-- Registered Customer --</option>';
 
                 userList.forEach(u => {
-                    const customName = getCustomerDisplayName(u);
-                    const defaultPrefix = u.split('@')[0];
-                    const optionLabel = customName !== defaultPrefix ? `${customName} (${u})` : u;
-                    optionsHtml += `<option value="${u}" ${u === currentVal ? 'selected' : ''}>${optionLabel}</option>`;
+                    const displayName = getCustomerDisplayName(u);
+                    optionsHtml += `<option value="${u}" ${u === currentVal ? 'selected' : ''}>${displayName}</option>`;
                 });
 
                 select.innerHTML = optionsHtml;
@@ -8107,7 +8234,7 @@
             const cleanEmail = email.trim().toLowerCase();
             const nowIso = new Date().toISOString();
             const isAdmin = isAdminUser(cleanEmail);
-            const currentCustomName = isAdmin ? 'Admin Support' : getCustomerDisplayName(cleanEmail);
+            const currentCustomName = isAdmin ? 'Admin' : getCustomerDisplayName(cleanEmail);
 
             presenceMap[cleanEmail] = !!isOnline;
             if (isAdmin) {
@@ -8118,15 +8245,18 @@
 
             try {
                 const userKey = cleanEmail.replace(/[^a-zA-Z0-9]/g, '_');
+                const presencePayload = {
+                    email: cleanEmail,
+                    isOnline: !!isOnline,
+                    isAdmin: isAdmin,
+                    lastSeen: nowIso,
+                    clientTs: Date.now()
+                };
+                if (isAdmin || userDisplayNamesMap[cleanEmail]) {
+                    presencePayload.displayName = currentCustomName;
+                }
                 const tasks = [
-                    db.collection("lumilens_presence").doc(userKey).set({
-                        email: cleanEmail,
-                        displayName: currentCustomName,
-                        isOnline: !!isOnline,
-                        isAdmin: isAdmin,
-                        lastSeen: nowIso,
-                        clientTs: Date.now()
-                    }, { merge: true }).catch(() => {})
+                    db.collection("lumilens_presence").doc(userKey).set(presencePayload, { merge: true }).catch(() => {})
                 ];
 
                 if (isAdmin) {
@@ -8153,54 +8283,58 @@
 
         function initFirestoreListeners() {
             if (!db) return;
-            db.collection("lumilens_products").onSnapshot((snapshot) => {
-                if (snapshot && !snapshot.empty) {
-                    const serverMap = new Map();
-                    snapshot.forEach(docSnap => {
-                        const data = { id: docSnap.id, ...docSnap.data() };
-                        if (data && data.name) {
-                            serverMap.set(docSnap.id, data);
-                            if (data.powerStock) {
-                                window.productPowerStock[data.id] = data.powerStock;
-                            }
-                            if (data.powerLocations) {
-                                window.productPowerLocations[data.id] = data.powerLocations;
-                            }
-                        }
-                    });
 
-                    // Preserve any local/cached admin-managed lenses that haven't finished syncing to Firestore yet
-                    products.forEach(localProd => {
-                        if (localProd && localProd.id && !serverMap.has(localProd.id)) {
-                            const isDefaultOnly = DEFAULT_SEED_PRODUCTS.some(d => d.id === localProd.id);
-                            if (!isDefaultOnly || serverMap.size === 0) {
-                                serverMap.set(localProd.id, localProd);
-                                db.collection("lumilens_products").doc(localProd.id).set({
-                                    ...localProd,
-                                    powerStock: window.productPowerStock[localProd.id] || {},
-                                    powerLocations: window.productPowerLocations[localProd.id] || {}
-                                }, { merge: true }).catch(() => {});
-                            }
-                        }
-                    });
+            const applyProductSnapshot = (snapshot, sourceCollectionName) => {
+                if (!snapshot || snapshot.empty) return;
+                const serverMap = new Map();
 
-                    if (serverMap.size > 0) {
-                        products = Array.from(serverMap.values());
-                        ensureProductStockDefaults(products);
-                        saveProductsToLocalBackup();
-                    }
+                if (hasLoadedServerProducts && sourceCollectionName === "products") {
+                    products.forEach(existing => {
+                        if (existing && existing.id) serverMap.set(existing.id, existing);
+                    });
                 }
+
+                snapshot.forEach(docSnap => {
+                    const prod = normalizeFirestoreProductDoc(docSnap.id, docSnap.data());
+                    if (prod) {
+                        serverMap.set(docSnap.id, prod);
+                        if (prod.powerStock) {
+                            window.productPowerStock[prod.id] = prod.powerStock;
+                        }
+                        if (prod.powerLocations) {
+                            window.productPowerLocations[prod.id] = prod.powerLocations;
+                        }
+                    }
+                });
+
+                if (serverMap.size > 0) {
+                    hasLoadedServerProducts = true;
+                    products = Array.from(serverMap.values());
+                    ensureProductStockDefaults(products);
+                    saveProductsToLocalBackup();
+                }
+
                 renderStoreProducts(products);
                 renderFavouritesGrid();
                 renderAdminProductsList();
                 renderAdminPowerStockCheckboxes();
                 renderAdminVoucherProductDropdowns();
+            };
+
+            db.collection("lumilens_products").onSnapshot((snapshot) => {
+                applyProductSnapshot(snapshot, "lumilens_products");
             }, () => {
                 renderStoreProducts(products);
                 renderFavouritesGrid();
                 renderAdminProductsList();
                 renderAdminPowerStockCheckboxes();
             });
+
+            db.collection("products").onSnapshot((snapshot) => {
+                if (snapshot && !snapshot.empty) {
+                    applyProductSnapshot(snapshot, "products");
+                }
+            }, () => {});
 
             db.collection("lumilens_orders").onSnapshot((snapshot) => {
                 if (snapshot) {
@@ -8251,7 +8385,7 @@
                                 userAvatarsMap[cleanEm] = data.avatar;
                             }
                             const incomingName = data.displayName || data.userName || data.name;
-                            if (incomingName && typeof incomingName === 'string' && incomingName.trim()) {
+                            if (incomingName && typeof incomingName === 'string' && incomingName.trim() && !/^anonymous\d+$/i.test(incomingName.trim())) {
                                 userDisplayNamesMap[cleanEm] = incomingName.trim();
                             }
                             if (typeof data.emailVerified === 'boolean') {
@@ -8372,7 +8506,7 @@
                         if (data.email && typeof data.email === 'string') {
                             const cleanEm = data.email.trim().toLowerCase();
                             updatedPresence[cleanEm] = isReallyOnline;
-                            if (data.displayName && typeof data.displayName === 'string' && data.displayName.trim()) {
+                            if (data.displayName && typeof data.displayName === 'string' && data.displayName.trim() && !/^anonymous\d+$/i.test(data.displayName.trim())) {
                                 userDisplayNamesMap[cleanEm] = data.displayName.trim();
                             }
                             if (isAdminUser(cleanEm) && isReallyOnline) {
@@ -8397,15 +8531,43 @@
 
             db.collection("lumilens_chats").onSnapshot((snapshot) => {
                 if (snapshot) {
+                    const chatWin = document.getElementById('sweetopiaChatWindow');
+                    const isChatOpen = chatWin && !chatWin.classList.contains('hidden') && !chatWin.classList.contains('opacity-0');
+                    const myEmail = (currentUser?.email || '').trim().toLowerCase();
+                    const amIAdmin = currentUser && isAdminUser(currentUser.email);
+                    let newlyArrivedForMe = 0;
+
                     snapshot.forEach(docSnap => {
                         const data = docSnap.data();
                         if (data && data.userEmail) {
                             const cleanEmail = data.userEmail.trim().toLowerCase();
-                            userSessionsMap[cleanEmail] = data.messages || [];
+                            const incomingMsgs = Array.isArray(data.messages) ? data.messages : [];
+                            const prevMsgs = userSessionsMap[cleanEmail] || [];
+
+                            if (myEmail && incomingMsgs.length > prevMsgs.length) {
+                                incomingMsgs.forEach(m => {
+                                    if (m && m.id && !lastSeenChatMessageIds.has(m.id)) {
+                                        lastSeenChatMessageIds.add(m.id);
+                                        const senderEmail = (m.sender || '').trim().toLowerCase();
+                                        const isFromOtherDevice = senderEmail && senderEmail !== myEmail;
+                                        const isRelevantToMe = amIAdmin ? !m.isAdmin : (cleanEmail === myEmail && m.isAdmin);
+                                        if (isFromOtherDevice && isRelevantToMe) {
+                                            newlyArrivedForMe++;
+                                            if (amIAdmin && !activeChatSessionUser) {
+                                                activeChatSessionUser = cleanEmail;
+                                            }
+                                        }
+                                    }
+                                });
+                            } else {
+                                incomingMsgs.forEach(m => { if (m && m.id) lastSeenChatMessageIds.add(m.id); });
+                            }
+
+                            userSessionsMap[cleanEmail] = incomingMsgs;
                             if (data.userAvatar) {
                                 userAvatarsMap[cleanEmail] = data.userAvatar;
                             }
-                            if (data.userName && typeof data.userName === 'string' && data.userName.trim()) {
+                            if (data.userName && typeof data.userName === 'string' && data.userName.trim() && !/^anonymous\d+$/i.test(data.userName.trim())) {
                                 userDisplayNamesMap[cleanEmail] = data.userName.trim();
                             }
                             if (!isAdminUser(cleanEmail) && !cleanEmail.startsWith('guest_') && !cleanEmail.endsWith('@sweetopiashop.my')) {
@@ -8415,11 +8577,18 @@
                             }
                         }
                     });
+
                     saveUserDisplayNamesLocal();
                     updateAdminChatUserDropdown();
                     updateChatHeaderAvatars();
                     renderActiveChatMessages();
                     renderAdminVoucherCustomerDropdowns();
+
+                    if (newlyArrivedForMe > 0 && !isChatOpen) {
+                        unreadChatCount += newlyArrivedForMe;
+                        updateWidgetUnreadBadge();
+                        showToast("New Live Chat Message", amIAdmin ? "A customer sent a message in Live Support!" : "Admin Support replied to your chat!");
+                    }
                 }
             }, () => {});
         }
@@ -8439,33 +8608,35 @@
                 });
             } else {
                 const targetUser = (activeChatSessionUser || document.getElementById('admin-active-chat-user')?.value || '').trim().toLowerCase();
-                const targetOnline = targetUser ? !!presenceMap[targetUser] : false;
-                const anyUserOnline = Object.keys(presenceMap).some(email => {
-                    const cleanEm = email.trim().toLowerCase();
-                    const notMe = !currentUser || cleanEm !== (currentUser.email || '').trim().toLowerCase();
-                    return notMe && !isAdminUser(cleanEm) && !!presenceMap[cleanEm];
-                });
-                hasActiveOnline = targetOnline || anyUserOnline;
-
-                if (targetUser) {
-                    const targetDisplayName = getCustomerDisplayName(targetUser);
-                    if (targetOnline) {
-                        dot.className = "w-2 h-2 rounded-full bg-emerald-400 inline-block mr-1 transition-colors animate-pulse";
-                        txt.innerText = `${targetDisplayName} • Online`;
-                    } else {
-                        dot.className = "w-2 h-2 rounded-full bg-slate-400 inline-block mr-1 transition-colors";
-                        txt.innerText = `${targetDisplayName} • Offline`;
-                    }
-                    return;
+                if (targetUser && presenceMap[targetUser]) {
+                    hasActiveOnline = true;
+                } else {
+                    hasActiveOnline = Object.keys(presenceMap).some(email => {
+                        const cleanEm = email.trim().toLowerCase();
+                        const notMe = !currentUser || cleanEm !== (currentUser.email || '').trim().toLowerCase();
+                        return notMe && !isAdminUser(cleanEm) && !!presenceMap[cleanEm];
+                    });
                 }
             }
 
             if (hasActiveOnline) {
-                dot.className = "w-2 h-2 rounded-full bg-emerald-400 inline-block mr-1 transition-colors animate-pulse";
-                txt.innerText = isCustomer ? "Admin Online & Active" : "User Online & Active";
+                dot.className = "w-2 h-2 rounded-full bg-emerald-400 inline-block mr-1 transition-colors";
+                txt.innerText = isCustomer ? "Admin Online & Active" : "Customer Online & Active";
             } else {
                 dot.className = "w-2 h-2 rounded-full bg-slate-400 inline-block mr-1 transition-colors";
-                txt.innerText = isCustomer ? "Admin Offline / Away" : "Users Offline / Away";
+                txt.innerText = isCustomer ? "Admin Offline / Away" : "Offline / Away";
+            }
+        }
+        window.updateSupportIndicator = updateSupportIndicator;
+
+        function updateWidgetUnreadBadge() {
+            const badge = document.getElementById('widget-unread-badge');
+            if (!badge) return;
+            if (unreadChatCount > 0) {
+                badge.innerText = unreadChatCount > 9 ? '9+' : String(unreadChatCount);
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
             }
         }
 
@@ -8473,29 +8644,39 @@
             const select = document.getElementById('admin-active-chat-user');
             if (!select) return;
 
+            const registeredUsers = getOrderedRegisteredCustomers();
             const knownUsersMap = new Map();
-            const addKnownUser = (rawEmail) => {
+            registeredUsers.forEach(u => knownUsersMap.set(u, u));
+
+            // Also include any active guest sessions or guest chat threads so admin sees online guests
+            const addActiveGuest = (rawEmail) => {
                 if (!rawEmail || typeof rawEmail !== 'string') return;
                 const clean = rawEmail.trim().toLowerCase();
                 if (!clean || isAdminUser(clean)) return;
-                if (clean.startsWith('guest_') || clean.endsWith('@sweetopiashop.my')) return;
-                if (!knownUsersMap.has(clean)) {
-                    knownUsersMap.set(clean, clean);
+                if (clean.startsWith('guest_') || clean.endsWith('@sweetopiashop.my')) {
+                    const hasMessages = Array.isArray(userSessionsMap[clean]) && userSessionsMap[clean].length > 0;
+                    const isOnline = !!presenceMap[clean];
+                    if (isOnline || hasMessages) {
+                        knownUsersMap.set(clean, clean);
+                    }
                 }
             };
 
-            SEEDED_REGISTERED_CUSTOMERS.forEach(addKnownUser);
-            (registeredCustomersList || []).forEach(addKnownUser);
-            Object.keys(userSessionsMap || {}).forEach(addKnownUser);
-            Object.keys(presenceMap || {}).forEach(addKnownUser);
-            Object.keys(assignedVouchersMap || {}).forEach(addKnownUser);
-            (allOrders || []).forEach(o => { if (o && o.customer) addKnownUser(o.customer); });
-            if (currentUser && currentUser.email && !isGuestUser()) addKnownUser(currentUser.email);
+            Object.keys(presenceMap || {}).forEach(addActiveGuest);
+            Object.keys(userSessionsMap || {}).forEach(addActiveGuest);
+            if (currentUser && isGuestUser() && currentUser.email) {
+                addActiveGuest(currentUser.email);
+            }
 
             const userList = Array.from(knownUsersMap.values()).sort((a, b) => {
                 const aOnline = !!(presenceMap[a] || presenceMap[a.toLowerCase()]);
                 const bOnline = !!(presenceMap[b] || presenceMap[b.toLowerCase()]);
                 if (aOnline !== bOnline) return aOnline ? -1 : 1;
+                const aRegIdx = registeredUsers.indexOf(a);
+                const bRegIdx = registeredUsers.indexOf(b);
+                if (aRegIdx !== -1 && bRegIdx !== -1) return aRegIdx - bRegIdx;
+                if (aRegIdx !== -1) return -1;
+                if (bRegIdx !== -1) return 1;
                 return getCustomerDisplayName(a).localeCompare(getCustomerDisplayName(b));
             });
 
@@ -8538,6 +8719,8 @@
             if (!win) return;
             const isClosed = win.classList.contains('hidden') || win.classList.contains('opacity-0');
             if (isClosed) {
+                unreadChatCount = 0;
+                updateWidgetUnreadBadge();
                 renderStickerSlotsGrid();
                 syncAllUsersFromServer();
                 updateAdminChatUserDropdown();
@@ -8919,31 +9102,21 @@
 
             if (db) {
                 try {
-                    const snap = await db.collection("lumilens_products").get({ source: 'server' }).catch(() => null);
-                    if (snap && !snap.empty) {
-                        const serverProducts = [];
-                        snap.forEach(docSnap => {
-                            const data = { id: docSnap.id, ...docSnap.data() };
-                            if (data && data.name) {
-                                serverProducts.push(data);
-                                if (data.powerStock) window.productPowerStock[data.id] = data.powerStock;
-                                if (data.powerLocations) window.productPowerLocations[data.id] = data.powerLocations;
+                    const loadedFromServer = await window.forceSyncFirestoreProducts(true);
+                    if (!loadedFromServer) {
+                        const checkLumi = await db.collection("lumilens_products").limit(1).get({ source: 'server' }).catch(() => null);
+                        const checkGeneric = await db.collection("products").limit(1).get({ source: 'server' }).catch(() => null);
+                        const bothCollectionsEmpty = (!checkLumi || checkLumi.empty) && (!checkGeneric || checkGeneric.empty);
+                        if (bothCollectionsEmpty) {
+                            for (const p of products) {
+                                const initialPowerStock = window.productPowerStock[p.id] || {};
+                                powersList.forEach(pw => { if (initialPowerStock[pw] === undefined) initialPowerStock[pw] = true; });
+                                await db.collection("lumilens_products").doc(p.id).set({
+                                    ...p,
+                                    powerStock: initialPowerStock,
+                                    powerLocations: window.productPowerLocations[p.id] || {}
+                                });
                             }
-                        });
-                        if (serverProducts.length > 0) {
-                            products = serverProducts;
-                            ensureProductStockDefaults(products);
-                            saveProductsToLocalBackup();
-                        }
-                    } else if (snap && snap.empty) {
-                        for (const p of products) {
-                            const initialPowerStock = window.productPowerStock[p.id] || {};
-                            powersList.forEach(pw => { if (initialPowerStock[pw] === undefined) initialPowerStock[pw] = true; });
-                            await db.collection("lumilens_products").doc(p.id).set({
-                                ...p,
-                                powerStock: initialPowerStock,
-                                powerLocations: window.productPowerLocations[p.id] || {}
-                            });
                         }
                     }
                 } catch(e) { }
