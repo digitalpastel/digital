@@ -3579,14 +3579,83 @@
         let pendingNavigationAfterVoucherWarning = null;
         let favouritesList = [];
         const ADMIN_EMAILS = ["yeegummy@gmail.com", "nur@brandworkz.co", "nurzuraysha@gmail.com"];
-        const SEEDED_REGISTERED_CUSTOMERS = ["brandworkzco@gmail.com", "designscape273@gmail.com"];
+        const SEEDED_REGISTERED_CUSTOMERS = ["brandworkzco@gmail.com", "designscape273@gmail.com", "alyssa@kawaii.my", "sarah@sweetlens.com"];
         const TOYYIBPAY_URL = "https://toyyibpay.com/brandworks";
+
+        const DEFAULT_SEEDED_ORDERS = [
+            {
+                id: "261012ALY01",
+                customer: "alyssa@kawaii.my",
+                customerName: "Alyssa",
+                customerAddress: "No 18, Jalan Kiara 4, Mont Kiara, 50480 Kuala Lumpur, Malaysia",
+                customerPhone: "012-8849201",
+                items: [
+                    { id: "p1", name: "HAZEL NATURAL", price: "25.00", pwr: "-2.00", qty: 2 }
+                ],
+                subtotal: "50.00",
+                discount: "1.00",
+                discountCode: "CODE1",
+                shippingFee: "5.00",
+                total: "54.00",
+                status: "Shipped",
+                paymentStatus: "Paid via FPX",
+                paid: true,
+                amountDrawn: true,
+                trackingNumber: "JNT884120934MY",
+                date: "12/10/2026, 10:15:00 AM",
+                timestamp: "2026-10-12T10:15:00.000Z"
+            },
+            {
+                id: "261018SAR02",
+                customer: "sarah@sweetlens.com",
+                customerName: "Sarah",
+                customerAddress: "Unit 9-3, Residensi Damai, 47800 Petaling Jaya, Selangor, Malaysia",
+                customerPhone: "017-6394812",
+                items: [
+                    { id: "p2", name: "CRYSTAL CLEAR", price: "25.00", pwr: "-3.50", qty: 1 },
+                    { id: "p3", name: "EMERALD GREEN", price: "25.00", pwr: "-3.50", qty: 1 }
+                ],
+                subtotal: "50.00",
+                discount: "0.00",
+                discountCode: null,
+                shippingFee: "5.00",
+                total: "55.00",
+                status: "Processing (Paid)",
+                paymentStatus: "Paid via FPX",
+                paid: true,
+                amountDrawn: true,
+                trackingNumber: "Pending",
+                date: "18/10/2026, 02:30:00 PM",
+                timestamp: "2026-10-18T14:30:00.000Z"
+            }
+        ];
+
+        function ensureSeededCustomerOrders() {
+            const existingIds = new Set(allOrders.map(o => o.id));
+            let added = false;
+            DEFAULT_SEEDED_ORDERS.forEach(seedOrder => {
+                if (!existingIds.has(seedOrder.id)) {
+                    allOrders.push({ ...seedOrder });
+                    added = true;
+                    if (db) {
+                        db.collection("lumilens_orders").doc(seedOrder.id).set(seedOrder, { merge: true }).catch(() => {});
+                    }
+                }
+            });
+            if (added) {
+                allOrders.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+            }
+        }
 
         let activeChatSessionUser = null;
         let presenceMap = {};
+        let presenceLastSeenMap = {};
         let userSessionsMap = {};
         let userAvatarsMap = {};
-        let userDisplayNamesMap = {};
+        let userDisplayNamesMap = {
+            "alyssa@kawaii.my": "Alyssa",
+            "sarah@sweetlens.com": "Sarah"
+        };
         let lastSeenChatMessageIds = new Set();
         let unreadChatCount = 0;
         let registeredCustomersList = [...SEEDED_REGISTERED_CUSTOMERS];
@@ -3626,7 +3695,11 @@
                 if (stored) {
                     const parsed = JSON.parse(stored);
                     if (parsed && typeof parsed === 'object') {
-                        userDisplayNamesMap = parsed;
+                        userDisplayNamesMap = {
+                            "alyssa@kawaii.my": "Alyssa",
+                            "sarah@sweetlens.com": "Sarah",
+                            ...parsed
+                        };
                     }
                 }
             } catch (e) {}
@@ -8233,10 +8306,17 @@
             if (!db || !email) return;
             const cleanEmail = email.trim().toLowerCase();
             const nowIso = new Date().toISOString();
+            const nowMs = Date.now();
             const isAdmin = isAdminUser(cleanEmail);
             const currentCustomName = isAdmin ? 'Admin' : getCustomerDisplayName(cleanEmail);
 
             presenceMap[cleanEmail] = !!isOnline;
+            if (isOnline) {
+                presenceLastSeenMap[cleanEmail] = nowMs;
+            } else {
+                delete presenceLastSeenMap[cleanEmail];
+            }
+
             if (isAdmin) {
                 adminSupportOnlineFlag = !!isOnline;
             }
@@ -8245,12 +8325,17 @@
 
             try {
                 const userKey = cleanEmail.replace(/[^a-zA-Z0-9]/g, '_');
+                const serverTs = (firebase.firestore && firebase.firestore.FieldValue && firebase.firestore.FieldValue.serverTimestamp)
+                    ? firebase.firestore.FieldValue.serverTimestamp()
+                    : nowIso;
+
                 const presencePayload = {
                     email: cleanEmail,
                     isOnline: !!isOnline,
                     isAdmin: isAdmin,
                     lastSeen: nowIso,
-                    clientTs: Date.now()
+                    updatedAt: serverTs,
+                    clientTs: nowMs
                 };
                 if (isAdmin || userDisplayNamesMap[cleanEmail]) {
                     presencePayload.displayName = currentCustomName;
@@ -8265,7 +8350,8 @@
                             email: cleanEmail,
                             isOnline: !!isOnline,
                             lastSeen: nowIso,
-                            clientTs: Date.now()
+                            updatedAt: serverTs,
+                            clientTs: nowMs
                         }, { merge: true }).catch(() => {})
                     );
                 } else if (!isGuestUser()) {
@@ -8279,6 +8365,69 @@
 
                 await Promise.all(tasks);
             } catch(e) { }
+        }
+
+        function isPresenceDocOnline(data) {
+            if (!data || data.isOnline !== true) return false;
+            const now = Date.now();
+            let docTimeMs = 0;
+
+            if (data.updatedAt && typeof data.updatedAt.toMillis === 'function') {
+                docTimeMs = data.updatedAt.toMillis();
+            } else if (data.lastSeen) {
+                const parsed = new Date(data.lastSeen).getTime();
+                if (!isNaN(parsed)) docTimeMs = parsed;
+            } else if (typeof data.clientTs === 'number') {
+                docTimeMs = data.clientTs;
+            }
+
+            // Allow up to 5 minutes tolerance across devices with slight system clock skew
+            if (!docTimeMs || isNaN(docTimeMs)) return true;
+            return Math.abs(now - docTimeMs) < 300000;
+        }
+
+        async function syncLivePresenceFromServer() {
+            if (!db) return;
+            try {
+                const snap = await db.collection("lumilens_presence").get({ source: 'server' }).catch(() => db.collection("lumilens_presence").get().catch(() => null));
+                if (!snap) return;
+
+                let sharedAdminOnline = false;
+                const updatedPresence = {};
+
+                if (currentUser && currentUser.email) {
+                    const myClean = currentUser.email.trim().toLowerCase();
+                    updatedPresence[myClean] = true;
+                    if (isAdminUser(myClean)) sharedAdminOnline = true;
+                }
+
+                snap.forEach(docSnap => {
+                    const data = docSnap.data();
+                    if (!data) return;
+                    const onlineNow = isPresenceDocOnline(data);
+
+                    if (docSnap.id === 'admin_support_status' && onlineNow) {
+                        sharedAdminOnline = true;
+                    }
+                    if (data.email && typeof data.email === 'string') {
+                        const cleanEm = data.email.trim().toLowerCase();
+                        if (onlineNow) {
+                            updatedPresence[cleanEm] = true;
+                            if (isAdminUser(cleanEm)) sharedAdminOnline = true;
+                        } else if (!updatedPresence[cleanEm]) {
+                            updatedPresence[cleanEm] = false;
+                        }
+                        if (data.displayName && typeof data.displayName === 'string' && data.displayName.trim() && !/^anonymous\d+$/i.test(data.displayName.trim())) {
+                            userDisplayNamesMap[cleanEm] = data.displayName.trim();
+                        }
+                    }
+                });
+
+                presenceMap = updatedPresence;
+                adminSupportOnlineFlag = sharedAdminOnline;
+                updateAdminChatUserDropdown();
+                updateSupportIndicator();
+            } catch (e) {}
         }
 
         function initFirestoreListeners() {
@@ -8342,7 +8491,9 @@
                     snapshot.forEach(docSnap => {
                         loadedOrders.push({ id: docSnap.id, ...docSnap.data() });
                     });
-                    allOrders = loadedOrders.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+                    allOrders = loadedOrders;
+                    ensureSeededCustomerOrders();
+                    allOrders.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
                     renderAdminOrdersList();
                     renderCustomerOrders();
                     renderCustomerInvoicesTabList();
@@ -8351,6 +8502,7 @@
                     renderAdminVoucherCustomerDropdowns();
                 }
             }, () => {
+                ensureSeededCustomerOrders();
                 renderAdminOrdersList();
                 renderCustomerOrders();
                 renderCustomerInvoicesTabList();
@@ -8489,23 +8641,30 @@
             if (!db) return;
             db.collection("lumilens_presence").onSnapshot((snapshot) => {
                 if (snapshot) {
-                    const now = Date.now();
                     let sharedAdminOnline = false;
                     const updatedPresence = {};
+
+                    if (currentUser && currentUser.email) {
+                        const myClean = currentUser.email.trim().toLowerCase();
+                        updatedPresence[myClean] = true;
+                        if (isAdminUser(myClean)) sharedAdminOnline = true;
+                    }
 
                     snapshot.forEach(docSnap => {
                         const data = docSnap.data();
                         if (!data) return;
-                        const lastSeenTime = new Date(data.lastSeen || 0).getTime();
-                        const isRecent = !lastSeenTime || isNaN(lastSeenTime) || (now - lastSeenTime < 90000);
-                        const isReallyOnline = Boolean(data.isOnline) && isRecent;
+                        const isReallyOnline = isPresenceDocOnline(data);
 
                         if (docSnap.id === 'admin_support_status') {
                             if (isReallyOnline) sharedAdminOnline = true;
                         }
                         if (data.email && typeof data.email === 'string') {
                             const cleanEm = data.email.trim().toLowerCase();
-                            updatedPresence[cleanEm] = isReallyOnline;
+                            if (isReallyOnline) {
+                                updatedPresence[cleanEm] = true;
+                            } else if (!updatedPresence[cleanEm]) {
+                                updatedPresence[cleanEm] = false;
+                            }
                             if (data.displayName && typeof data.displayName === 'string' && data.displayName.trim() && !/^anonymous\d+$/i.test(data.displayName.trim())) {
                                 userDisplayNamesMap[cleanEm] = data.displayName.trim();
                             }
@@ -8620,7 +8779,7 @@
             }
 
             if (hasActiveOnline) {
-                dot.className = "w-2 h-2 rounded-full bg-emerald-400 inline-block mr-1 transition-colors";
+                dot.className = "w-2 h-2 rounded-full bg-emerald-400 inline-block mr-1 animate-pulse transition-colors";
                 txt.innerText = isCustomer ? "Admin Online & Active" : "Customer Online & Active";
             } else {
                 dot.className = "w-2 h-2 rounded-full bg-slate-400 inline-block mr-1 transition-colors";
@@ -8722,6 +8881,10 @@
                 unreadChatCount = 0;
                 updateWidgetUnreadBadge();
                 renderStickerSlotsGrid();
+                if (currentUser && currentUser.email) {
+                    updatePresence(currentUser.email, true);
+                }
+                syncLivePresenceFromServer();
                 syncAllUsersFromServer();
                 updateAdminChatUserDropdown();
                 updateChatHeaderAvatars();
@@ -9148,9 +9311,12 @@
             renderAdminProductsList();
             renderAdminPowerStockCheckboxes();
             renderAdminVoucherProductDropdowns();
+            ensureSeededCustomerOrders();
+            renderAdminOrdersList();
             initLiveVersionListener();
             initFirestoreListeners();
             initChatListeners();
+            syncLivePresenceFromServer();
             onAdminPowerRangeChange();
             initSlideshow();
             renderCustomerVouchersUI();
@@ -9167,11 +9333,19 @@
                 if (currentUser && currentUser.email) {
                     updatePresence(currentUser.email, true);
                 }
-            }, 20000);
+                syncLivePresenceFromServer();
+            }, 10000);
+
+            window.addEventListener('beforeunload', () => {
+                if (currentUser && currentUser.email) {
+                    updatePresence(currentUser.email, false);
+                }
+            });
 
             document.addEventListener('visibilitychange', () => {
                 if (document.visibilityState === 'visible' && currentUser && currentUser.email) {
                     updatePresence(currentUser.email, true);
+                    syncLivePresenceFromServer();
                     syncAllUsersFromServer();
                 }
             });
