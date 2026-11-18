@@ -25,6 +25,8 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- html2canvas for A4 PNG invoice download -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- jsPDF for A4 PDF invoice download -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <!-- Firebase Compat SDKs (Reliable synchronous execution without module scoping or ReferenceErrors) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
@@ -233,7 +235,8 @@
 
         .invoice-a4-page {
             width: 100%;
-            max-width: 800px;
+            min-width: 340px;
+            max-width: 430px;
             min-height: auto;
             padding: 16px;
             margin: 0 auto;
@@ -247,9 +250,41 @@
         @media (min-width: 768px) {
             .invoice-a4-page {
                 width: 210mm;
+                max-width: 210mm;
                 min-height: 297mm;
                 padding: 18mm;
                 border-radius: 0;
+            }
+        }
+
+        @page {
+            size: A4 portrait;
+            margin: 12mm;
+        }
+
+        @media print {
+            body { background: transparent; margin: 0; padding: 0; }
+            .no-print { display: none !important; }
+            .invoice-a4-page {
+                box-shadow: none;
+                margin: 0 auto;
+                width: 210mm !important;
+                max-width: 100% !important;
+                min-height: 297mm !important;
+                padding: 15mm !important;
+                border-radius: 0 !important;
+            }
+            body.thermal-pos-80mm .invoice-a4-page {
+                width: 80mm !important;
+                min-height: auto !important;
+                padding: 4mm !important;
+                font-size: 10px !important;
+            }
+            body.thermal-pos-58mm .invoice-a4-page {
+                width: 58mm !important;
+                min-height: auto !important;
+                padding: 3mm !important;
+                font-size: 9px !important;
             }
         }
 
@@ -2507,6 +2542,21 @@
                                 <span id="adm-detail-total" class="text-[#65a30d]">RM 0.00</span>
                             </div>
                         </div>
+
+                        <div class="flex flex-wrap items-center gap-2 pt-1">
+                            <button type="button" id="adm-detail-btn-view-inv" class="flex-1 bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition flex items-center justify-center gap-1.5 cursor-pointer">
+                                <i class="fa-solid fa-eye"></i>
+                                <span>View Invoice</span>
+                            </button>
+                            <button type="button" id="adm-detail-btn-dl-pdf" class="flex-1 bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition flex items-center justify-center gap-1.5 cursor-pointer">
+                                <i class="fa-solid fa-file-pdf"></i>
+                                <span>Download PDF</span>
+                            </button>
+                            <button type="button" id="adm-detail-btn-dl-png" class="flex-1 bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold py-2.5 px-3 rounded-xl text-xs transition flex items-center justify-center gap-1.5 cursor-pointer">
+                                <i class="fa-solid fa-file-image"></i>
+                                <span>Download PNG</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2696,20 +2746,34 @@
                 </div>
             </div>
 
-            <!-- A4 INVOICE PNG DOWNLOAD & VIEW MODAL -->
+            <!-- A4 INVOICE PDF / PNG DOWNLOAD & VIEW MODAL -->
             <div id="invoice-modal" class="fixed inset-0 z-[999] modal-backdrop-clean flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-200 p-2 sm:p-4 overflow-y-auto">
                 <div class="relative w-full max-w-4xl bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[96vh] my-auto">
-                    <div class="px-3.5 sm:px-6 py-3 sm:py-4 bg-slate-100 border-b border-slate-200 flex items-center justify-between shrink-0 no-print">
+                    <div class="px-3.5 sm:px-6 py-3 sm:py-4 bg-slate-100 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2 shrink-0 no-print">
                         <div class="flex items-center space-x-2">
                             <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-lime-100 text-[#4d7c0f] flex items-center justify-center text-xs">
                                 <i class="fa-solid fa-file-invoice-dollar"></i>
                             </div>
                             <h3 class="text-xs sm:text-sm font-bold text-slate-900 truncate">Official Tax Invoice</h3>
                         </div>
-                        <div class="flex items-center space-x-2">
+                        <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                            <select id="invoice-print-format-select" class="bg-white border border-slate-300 text-slate-700 text-[11px] font-bold px-2.5 py-2 rounded-xl focus:outline-none">
+                                <option value="a4">Print: A4 / Letter (Default)</option>
+                                <option value="pos80">Thermal POS (80mm)</option>
+                                <option value="pos58">Thermal POS (58mm)</option>
+                            </select>
+                            <button type="button" onclick="printFormattedInvoice()" class="bg-slate-800 hover:bg-slate-900 active:scale-95 text-white font-bold px-3 py-2 rounded-xl text-[11px] sm:text-xs flex items-center space-x-1 shadow transition cursor-pointer" title="Print via wireless printer or thermal POS">
+                                <i class="fa-solid fa-print"></i>
+                                <span class="hidden sm:inline">Print</span>
+                            </button>
+                            <button id="btn-modal-dl-pdf" type="button" onclick="downloadInvoiceAsPDF()" class="bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-bold px-3 sm:px-4 py-2 rounded-xl text-[11px] sm:text-xs flex items-center space-x-1.5 shadow transition cursor-pointer">
+                                <i class="fa-solid fa-file-pdf"></i>
+                                <span class="hidden sm:inline">Download A4 PDF</span>
+                                <span class="sm:hidden">PDF</span>
+                            </button>
                             <button id="btn-modal-dl-png" type="button" onclick="downloadInvoiceAsPNG()" class="bg-[#65a30d] hover:bg-[#4d7c0f] active:scale-95 text-white font-bold px-3 sm:px-4 py-2 rounded-xl text-[11px] sm:text-xs flex items-center space-x-1.5 shadow transition cursor-pointer">
                                 <i class="fa-solid fa-download"></i>
-                                <span class="hidden sm:inline">Download A4 PNG</span>
+                                <span class="hidden sm:inline">Download PNG</span>
                                 <span class="sm:hidden">PNG</span>
                             </button>
                             <button type="button" onclick="closeInvoiceModal()" class="w-8 h-8 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 flex items-center justify-center transition cursor-pointer" aria-label="Close invoice modal">
@@ -2758,7 +2822,7 @@
                                 </div>
 
                                 <div class="w-full overflow-x-auto mb-6">
-                                    <table class="w-full text-xs border-collapse min-w-[340px]">
+                                    <table class="w-full text-xs border-collapse min-w-[320px]">
                                         <thead>
                                             <tr class="bg-slate-100 text-slate-700">
                                                 <th class="p-2.5 text-left border-b border-slate-200 rounded-l-lg font-bold">Item Description</th>
@@ -6411,25 +6475,29 @@
                             <span class="text-slate-600 font-medium">Tracking Number:</span>
                             <span class="font-mono font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">${o.trackingNumber || 'Pending'}</span>
                         </div>
-                        <div class="flex items-center space-x-2">
+                        <div class="flex flex-wrap items-center gap-1.5">
                             ${!o.paid ? `
                                 <button type="button" onclick="payPendingOrderNow('${o.id}')" class="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold px-3.5 py-1.5 rounded-xl text-xs transition flex items-center space-x-1.5 shadow-sm">
                                     <i class="fa-solid fa-credit-card"></i>
                                     <span>Pay Now</span>
                                 </button>
                             ` : ''}
-                            ${(o.trackingNumber && o.trackingNumber !== 'Pending' && o.trackingNumber.trim() !== '') ? `
-                                <button type="button" onclick="openInvoiceModal('${o.id}')" class="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-3 py-1.5 rounded-xl text-xs border border-slate-300 transition flex items-center space-x-1">
+                            ${(o.paid || (o.trackingNumber && o.trackingNumber !== 'Pending' && o.trackingNumber.trim() !== '')) ? `
+                                <button type="button" onclick="openInvoiceModal('${o.id}')" class="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-3 py-1.5 rounded-xl text-xs border border-slate-300 transition flex items-center space-x-1 cursor-pointer">
                                     <i class="fa-solid fa-eye text-slate-600"></i>
                                     <span>Invoice</span>
                                 </button>
-                                <button type="button" onclick="directDownloadInvoice('${o.id}')" class="bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold px-3 py-1.5 rounded-xl text-xs transition flex items-center space-x-1 shadow-sm">
+                                <button type="button" onclick="directDownloadInvoicePDF('${o.id}')" class="bg-rose-600 hover:bg-rose-700 text-white font-bold px-3 py-1.5 rounded-xl text-xs transition flex items-center space-x-1 shadow-sm cursor-pointer">
+                                    <i class="fa-solid fa-file-pdf"></i>
+                                    <span>PDF</span>
+                                </button>
+                                <button type="button" onclick="directDownloadInvoice('${o.id}')" class="bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold px-3 py-1.5 rounded-xl text-xs transition flex items-center space-x-1 shadow-sm cursor-pointer">
                                     <i class="fa-solid fa-file-arrow-down"></i>
                                     <span>PNG</span>
                                 </button>
                             ` : `
                                 <span class="text-[10px] text-amber-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200 font-semibold flex items-center gap-1">
-                                    <i class="fa-solid fa-clock"></i> Invoice locked (Pending tracking)
+                                    <i class="fa-solid fa-clock"></i> Invoice locked (Pending payment)
                                 </span>
                             `}
                         </div>
@@ -6448,8 +6516,8 @@
 
             const verifiedPaidOrders = allOrders.filter(o => {
                 const belongsToMe = o.customer && o.customer.toLowerCase() === currentUser.email.toLowerCase();
-                const hasValidTracking = o.trackingNumber && o.trackingNumber !== 'Pending' && o.trackingNumber.trim() !== '';
-                return belongsToMe && hasValidTracking;
+                const isPaidOrTracked = !!o.paid || o.amountDrawn === true || (o.trackingNumber && o.trackingNumber !== 'Pending' && o.trackingNumber.trim() !== '');
+                return belongsToMe && isPaidOrTracked;
             });
 
             if (verifiedPaidOrders.length === 0) {
@@ -6457,7 +6525,7 @@
                     <div class="text-center py-8 text-slate-400 bg-slate-50/70 rounded-2xl border border-dashed border-slate-200 p-4">
                         <i class="fa-solid fa-file-invoice-dollar text-3xl text-slate-300 mb-2 block"></i>
                         <p class="text-xs font-semibold text-slate-600">No confirmed invoices available yet</p>
-                        <p class="text-[11px] text-slate-400 mt-1">Invoices and download buttons are unlocked once payment is confirmed and a tracking number is assigned by the admin.</p>
+                        <p class="text-[11px] text-slate-400 mt-1">Invoices and download buttons are unlocked once payment is confirmed via ToyyibPay FPX.</p>
                     </div>
                 `;
                 return;
@@ -6473,17 +6541,21 @@
                             </span>
                         </div>
                         <p class="text-[11px] text-slate-700 mt-1">Order Date: <b>${o.date}</b> • Amount Paid: <b class="text-[#65a30d]">RM ${o.total}</b></p>
-                        <p class="text-[10px] text-slate-500">Tracking: <b class="font-mono text-amber-700">${o.trackingNumber}</b> • Items: ${(o.items || []).map(i => `${i.name} (PWR ${i.pwr}) x${i.qty}`).join(', ')}</p>
+                        <p class="text-[10px] text-slate-500">Tracking: <b class="font-mono text-amber-700">${o.trackingNumber || 'Pending'}</b> • Items: ${(o.items || []).map(i => `${i.name} (PWR ${i.pwr}) x${i.qty}`).join(', ')}</p>
                     </div>
 
-                    <div class="flex items-center space-x-2 w-full sm:w-auto">
-                        <button type="button" onclick="openInvoiceModal('${o.id}')" class="flex-1 sm:flex-initial bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-bold px-3 py-2.5 rounded-xl text-xs border border-slate-300 transition flex items-center justify-center space-x-1.5 shadow-sm">
+                    <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                        <button type="button" onclick="openInvoiceModal('${o.id}')" class="flex-1 sm:flex-initial bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-bold px-3 py-2.5 rounded-xl text-xs border border-slate-300 transition flex items-center justify-center space-x-1.5 shadow-sm cursor-pointer">
                             <i class="fa-solid fa-eye text-slate-600"></i>
                             <span>View Invoice</span>
                         </button>
-                        <button type="button" onclick="directDownloadInvoice('${o.id}')" class="flex-1 sm:flex-initial bg-[#65a30d] hover:bg-[#4d7c0f] active:bg-[#3f6212] text-white font-bold px-3 py-2.5 rounded-xl text-xs transition flex items-center justify-center space-x-1.5 shadow-sm">
+                        <button type="button" onclick="directDownloadInvoicePDF('${o.id}')" class="flex-1 sm:flex-initial bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white font-bold px-3 py-2.5 rounded-xl text-xs transition flex items-center justify-center space-x-1.5 shadow-sm cursor-pointer">
+                            <i class="fa-solid fa-file-pdf"></i>
+                            <span>Download PDF</span>
+                        </button>
+                        <button type="button" onclick="directDownloadInvoice('${o.id}')" class="flex-1 sm:flex-initial bg-[#65a30d] hover:bg-[#4d7c0f] active:bg-[#3f6212] text-white font-bold px-3 py-2.5 rounded-xl text-xs transition flex items-center justify-center space-x-1.5 shadow-sm cursor-pointer">
                             <i class="fa-solid fa-file-arrow-down"></i>
-                            <span>Download A4 PNG</span>
+                            <span>Download PNG</span>
                         </button>
                     </div>
                 </div>
@@ -6707,12 +6779,20 @@
                                 ${o.paid ? '● Payment Confirmed (Amount Drawn via FPX)' : '○ Unpaid / Pending ToyyibPay FPX'}
                             </p>
                         </div>
-                        <div class="flex items-center space-x-2">
+                        <div class="flex flex-wrap items-center gap-1.5">
                             ${!o.paid ? `
                                 <button onclick="adminMarkOrderAsPaid('${o.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded-xl text-xs transition shadow-sm">
                                     <i class="fa-solid fa-check mr-1"></i> Verify Paid
                                 </button>
                             ` : ''}
+                            <button type="button" onclick="directDownloadInvoicePDF('${o.id}')" class="bg-rose-600 hover:bg-rose-700 text-white font-bold px-2.5 py-2 rounded-xl text-xs transition shadow-sm flex items-center gap-1 cursor-pointer" title="Download Invoice as PDF">
+                                <i class="fa-solid fa-file-pdf"></i>
+                                <span>PDF</span>
+                            </button>
+                            <button type="button" onclick="directDownloadInvoice('${o.id}')" class="bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold px-2.5 py-2 rounded-xl text-xs transition shadow-sm flex items-center gap-1 cursor-pointer" title="Download Invoice as PNG">
+                                <i class="fa-solid fa-file-image"></i>
+                                <span>PNG</span>
+                            </button>
                             <button onclick="openAdminOrderDetail('${o.id}')" class="bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold px-3 py-2 rounded-xl text-xs transition">
                                 View Details &amp; Tracking
                             </button>
@@ -7140,6 +7220,109 @@
             }, 300);
         };
 
+        window.directDownloadInvoicePDF = function(orderId) {
+            const order = allOrders.find(o => o.id === orderId) || (allOrders.length > 0 ? allOrders[0] : null);
+            if (!order) return;
+            populateInvoiceDOM(order);
+
+            const modal = document.getElementById('invoice-modal');
+            if (modal) {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modal.classList.add('opacity-100');
+            }
+
+            setTimeout(() => {
+                downloadInvoiceAsPDF();
+            }, 300);
+        };
+
+        window.printFormattedInvoice = function() {
+            const formatSelect = document.getElementById('invoice-print-format-select');
+            const mode = formatSelect ? formatSelect.value : 'a4';
+            document.body.classList.remove('thermal-pos-80mm', 'thermal-pos-58mm');
+            if (mode === 'pos80') {
+                document.body.classList.add('thermal-pos-80mm');
+            } else if (mode === 'pos58') {
+                document.body.classList.add('thermal-pos-58mm');
+            }
+            window.print();
+            setTimeout(() => {
+                document.body.classList.remove('thermal-pos-80mm', 'thermal-pos-58mm');
+            }, 1000);
+        };
+
+        async function downloadInvoiceAsPDF() {
+            const printableArea = document.getElementById('invoice-printable-area');
+            if (!printableArea) {
+                showToast("Error", "Invoice area not found.", true);
+                return;
+            }
+
+            const jsPdfLib = window.jspdf;
+            if (!jsPdfLib || !jsPdfLib.jsPDF) {
+                showToast("PDF Engine Loading", "Please wait a second and try downloading PDF again.", true);
+                return;
+            }
+
+            showToast("Generating A4 PDF", "Rendering A4 PDF document for browser & mobile...");
+
+            const origStyle = printableArea.getAttribute('style') || '';
+            try {
+                printableArea.style.width = '794px';
+                printableArea.style.maxWidth = '794px';
+                printableArea.style.minHeight = '1123px';
+                printableArea.style.padding = '48px';
+                printableArea.style.borderRadius = '0px';
+
+                const canvas = await html2canvas(printableArea, {
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: '#ffffff',
+                    windowWidth: 1024,
+                    scrollX: 0,
+                    scrollY: 0,
+                    logging: false
+                });
+
+                printableArea.setAttribute('style', origStyle);
+
+                const imgData = canvas.toDataURL('image/png');
+                const { jsPDF } = jsPdfLib;
+                const pdf = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4'
+                });
+
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+                const imgProps = pdf.getImageProperties(imgData);
+                const scaledHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+                let heightLeft = scaledHeight;
+                let position = 0;
+
+                pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, scaledHeight);
+                heightLeft -= pdfHeight;
+
+                while (heightLeft > 0) {
+                    position = heightLeft - scaledHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, scaledHeight);
+                    heightLeft -= pdfHeight;
+                }
+
+                const filename = `SweetopiaShop_Invoice_${currentActiveInvoiceId || Date.now()}.pdf`;
+                pdf.save(filename);
+                showToast("PDF Downloaded!", "A4 Invoice PDF downloaded successfully!");
+            } catch (err) {
+                printableArea.setAttribute('style', origStyle);
+                console.error("PDF generation error:", err);
+                showToast("PDF Error", "Could not render PDF. Please retry.", true);
+            }
+        }
+
         async function downloadInvoiceAsPNG() {
             const printableArea = document.getElementById('invoice-printable-area');
             if (!printableArea) {
@@ -7147,9 +7330,22 @@
                 return;
             }
 
-            showToast("Generating A4 PNG", "Rendering high quality invoice image...");
+            const isMobileViewport = window.innerWidth < 768;
+            const targetWidth = isMobileViewport ? Math.min(430, Math.max(360, window.innerWidth - 24)) : 794;
+            showToast("Generating PNG", isMobileViewport ? `Rendering mobile invoice (${targetWidth}px)...` : "Rendering A4 high quality invoice PNG...");
 
+            const origStyle = printableArea.getAttribute('style') || '';
             try {
+                if (isMobileViewport) {
+                    printableArea.style.width = `${targetWidth}px`;
+                    printableArea.style.maxWidth = `${targetWidth}px`;
+                } else {
+                    printableArea.style.width = '794px';
+                    printableArea.style.maxWidth = '794px';
+                    printableArea.style.minHeight = '1123px';
+                    printableArea.style.padding = '48px';
+                }
+
                 const canvas = await html2canvas(printableArea, {
                     scale: 2,
                     useCORS: true,
@@ -7159,6 +7355,8 @@
                     scrollY: 0,
                     logging: false
                 });
+
+                printableArea.setAttribute('style', origStyle);
 
                 const filename = `SweetopiaShop_Invoice_${currentActiveInvoiceId || Date.now()}.png`;
 
@@ -8305,32 +8503,6 @@
             } catch (e) { console.warn("Error saving cart:", e); }
         }
 
-        window.continueAsGuest = async function() {
-            startRetroLoading("INITIALIZING GUEST SESSION...");
-
-            let guestId = localStorage.getItem('sweetopia_guest_id');
-            if (!guestId) {
-                guestId = 'Guest_' + Math.floor(1000 + Math.random() * 9000);
-                localStorage.setItem('sweetopia_guest_id', guestId);
-            }
-            if (auth && !auth.currentUser && typeof auth.signInAnonymously === 'function') {
-                try {
-                    await auth.signInAnonymously();
-                } catch (e) {}
-            }
-            currentUser = { email: `${guestId}@sweetopiashop.my`, isGuest: true, guestId: guestId };
-            cart = [];
-            updateCartBadge();
-            updateUIAfterLogin(currentUser);
-
-            await finishRetroLoading();
-
-            switchPage('dashboard');
-            switchTab('catalog');
-            showToast("Guest Mode", "Browsing catalog as guest. Sign up for a customer account to buy!");
-            updatePresence(currentUser.email, true);
-        };
-
         async function updatePresence(email, isOnline) {
             if (!db || !email) return;
             const cleanEmail = email.trim().toLowerCase();
@@ -8410,7 +8582,6 @@
                 docTimeMs = data.clientTs;
             }
 
-            // Allow up to 5 minutes tolerance across devices with slight system clock skew
             if (!docTimeMs || isNaN(docTimeMs)) return true;
             return Math.abs(now - docTimeMs) < 300000;
         }
@@ -8456,6 +8627,91 @@
                 adminSupportOnlineFlag = sharedAdminOnline;
                 updateAdminChatUserDropdown();
                 updateSupportIndicator();
+            } catch (e) {}
+        }
+
+        function processIncomingChatSnapshot(snapshot) {
+            if (!snapshot) return;
+            const chatWin = document.getElementById('sweetopiaChatWindow');
+            const isChatOpen = chatWin && !chatWin.classList.contains('hidden') && !chatWin.classList.contains('opacity-0');
+            const myEmail = (currentUser?.email || '').trim().toLowerCase();
+            const amIAdmin = currentUser && isAdminUser(currentUser.email);
+            let newlyArrivedForMe = 0;
+
+            snapshot.forEach(docSnap => {
+                const data = docSnap.data();
+                if (!data) return;
+                const rawEmail = data.userEmail || data.email || '';
+                if (!rawEmail) return;
+                const cleanEmail = String(rawEmail).trim().toLowerCase();
+                const incomingMsgs = Array.isArray(data.messages) ? data.messages : [];
+                const existingMsgs = userSessionsMap[cleanEmail] || [];
+
+                const mergedById = new Map();
+                existingMsgs.forEach(m => { if (m && m.id) mergedById.set(m.id, m); });
+                incomingMsgs.forEach(m => {
+                    if (m && m.id) {
+                        if (!mergedById.has(m.id) && myEmail && !lastSeenChatMessageIds.has(m.id)) {
+                            lastSeenChatMessageIds.add(m.id);
+                            const senderEmail = (m.sender || '').trim().toLowerCase();
+                            const isFromOtherDevice = senderEmail && senderEmail !== myEmail;
+                            const isRelevantToMe = amIAdmin ? !m.isAdmin : (cleanEmail === myEmail && m.isAdmin);
+                            if (isFromOtherDevice && isRelevantToMe) {
+                                newlyArrivedForMe++;
+                                if (amIAdmin && !activeChatSessionUser) {
+                                    activeChatSessionUser = cleanEmail;
+                                }
+                            }
+                        } else {
+                            lastSeenChatMessageIds.add(m.id);
+                        }
+                        mergedById.set(m.id, m);
+                    }
+                });
+
+                const mergedList = Array.from(mergedById.values()).sort((a, b) => {
+                    const ta = new Date(a.timestamp || 0).getTime();
+                    const tb = new Date(b.timestamp || 0).getTime();
+                    return ta - tb;
+                });
+
+                userSessionsMap[cleanEmail] = mergedList;
+
+                if (data.userAvatar) {
+                    userAvatarsMap[cleanEmail] = data.userAvatar;
+                }
+                if (data.userName && typeof data.userName === 'string' && data.userName.trim() && !/^anonymous\d+$/i.test(data.userName.trim())) {
+                    userDisplayNamesMap[cleanEmail] = data.userName.trim();
+                }
+                if (!isAdminUser(cleanEmail) && !cleanEmail.startsWith('guest_') && !cleanEmail.endsWith('@sweetopiashop.my')) {
+                    if (!registeredCustomersList.includes(cleanEmail)) {
+                        registeredCustomersList.push(cleanEmail);
+                    }
+                }
+            });
+
+            saveUserDisplayNamesLocal();
+            updateAdminChatUserDropdown();
+            updateChatHeaderAvatars();
+            renderActiveChatMessages();
+            renderAdminVoucherCustomerDropdowns();
+
+            if (newlyArrivedForMe > 0 && !isChatOpen) {
+                unreadChatCount += newlyArrivedForMe;
+                updateWidgetUnreadBadge();
+                showToast("New Live Chat Message", amIAdmin ? "A customer sent a message in Live Support!" : "Admin Support replied to your chat!");
+            }
+        }
+
+        async function syncLiveChatMessagesFromServer() {
+            if (!db) return;
+            try {
+                const [chatMsgSnap, lumiSnap] = await Promise.all([
+                    db.collection("chat_messages").get({ source: 'server' }).catch(() => db.collection("chat_messages").get().catch(() => null)),
+                    db.collection("lumilens_chats").get({ source: 'server' }).catch(() => db.collection("lumilens_chats").get().catch(() => null))
+                ]);
+                if (lumiSnap) processIncomingChatSnapshot(lumiSnap);
+                if (chatMsgSnap) processIncomingChatSnapshot(chatMsgSnap);
             } catch (e) {}
         }
 
@@ -8717,72 +8973,13 @@
                 }
             }, () => {});
 
-            const processChatCollectionSnapshot = (snapshot) => {
-                if (!snapshot) return;
-                const chatWin = document.getElementById('sweetopiaChatWindow');
-                const isChatOpen = chatWin && !chatWin.classList.contains('hidden') && !chatWin.classList.contains('opacity-0');
-                const myEmail = (currentUser?.email || '').trim().toLowerCase();
-                const amIAdmin = currentUser && isAdminUser(currentUser.email);
-                let newlyArrivedForMe = 0;
+            db.collection("chat_messages").onSnapshot((snapshot) => {
+                processIncomingChatSnapshot(snapshot);
+            }, () => {});
 
-                snapshot.forEach(docSnap => {
-                    const data = docSnap.data();
-                    if (data && data.userEmail) {
-                        const cleanEmail = data.userEmail.trim().toLowerCase();
-                        const incomingMsgs = Array.isArray(data.messages) ? data.messages : [];
-                        const prevMsgs = userSessionsMap[cleanEmail] || [];
-
-                        if (myEmail && incomingMsgs.length > prevMsgs.length) {
-                            incomingMsgs.forEach(m => {
-                                if (m && m.id && !lastSeenChatMessageIds.has(m.id)) {
-                                    lastSeenChatMessageIds.add(m.id);
-                                    const senderEmail = (m.sender || '').trim().toLowerCase();
-                                    const isFromOtherDevice = senderEmail && senderEmail !== myEmail;
-                                    const isRelevantToMe = amIAdmin ? !m.isAdmin : (cleanEmail === myEmail && m.isAdmin);
-                                    if (isFromOtherDevice && isRelevantToMe) {
-                                        newlyArrivedForMe++;
-                                        if (amIAdmin && !activeChatSessionUser) {
-                                            activeChatSessionUser = cleanEmail;
-                                        }
-                                    }
-                                }
-                            });
-                        } else {
-                            incomingMsgs.forEach(m => { if (m && m.id) lastSeenChatMessageIds.add(m.id); });
-                        }
-
-                        if (incomingMsgs.length >= prevMsgs.length) {
-                            userSessionsMap[cleanEmail] = incomingMsgs;
-                        }
-                        if (data.userAvatar) {
-                            userAvatarsMap[cleanEmail] = data.userAvatar;
-                        }
-                        if (data.userName && typeof data.userName === 'string' && data.userName.trim() && !/^anonymous\d+$/i.test(data.userName.trim())) {
-                            userDisplayNamesMap[cleanEmail] = data.userName.trim();
-                        }
-                        if (!isAdminUser(cleanEmail) && !cleanEmail.startsWith('guest_') && !cleanEmail.endsWith('@sweetopiashop.my')) {
-                            if (!registeredCustomersList.includes(cleanEmail)) {
-                                registeredCustomersList.push(cleanEmail);
-                            }
-                        }
-                    }
-                });
-
-                saveUserDisplayNamesLocal();
-                updateAdminChatUserDropdown();
-                updateChatHeaderAvatars();
-                renderActiveChatMessages();
-                renderAdminVoucherCustomerDropdowns();
-
-                if (newlyArrivedForMe > 0 && !isChatOpen) {
-                    unreadChatCount += newlyArrivedForMe;
-                    updateWidgetUnreadBadge();
-                    showToast("New Live Chat Message", amIAdmin ? "A customer sent a message in Live Support!" : "Admin Support replied to your chat!");
-                }
-            };
-
-            db.collection("chat_messages").onSnapshot(processChatCollectionSnapshot, () => {});
-            db.collection("lumilens_chats").onSnapshot(processChatCollectionSnapshot, () => {});
+            db.collection("lumilens_chats").onSnapshot((snapshot) => {
+                processIncomingChatSnapshot(snapshot);
+            }, () => {});
         }
 
         function updateSupportIndicator() {
@@ -8917,6 +9114,7 @@
                 if (currentUser && currentUser.email) {
                     updatePresence(currentUser.email, true);
                 }
+                syncLiveChatMessagesFromServer();
                 syncLivePresenceFromServer();
                 syncAllUsersFromServer();
                 updateAdminChatUserDropdown();
@@ -8957,7 +9155,7 @@
             const resolvedSenderName = isAdmin ? 'Admin Support' : getCustomerDisplayName(currentUser.email);
 
             const newMsg = {
-                id: 'msg_' + Date.now(),
+                id: 'msg_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
                 sender: (currentUser.email || '').trim().toLowerCase(),
                 senderName: resolvedSenderName,
                 senderAvatar: senderAvatar,
@@ -8978,39 +9176,42 @@
             renderActiveChatMessages();
 
             if (db) {
-                try {
-                    const docKey = targetSessionUser.replace(/[^a-zA-Z0-9]/g, '_');
-                    const chatUpdatePayload = {
-                        userEmail: targetSessionUser,
-                        userName: isAdmin ? getCustomerDisplayName(targetSessionUser) : resolvedSenderName,
-                        userAvatar: isAdmin ? getUserAvatarForEmail(targetSessionUser) : senderAvatar,
-                        messages: firebase.firestore.FieldValue.arrayUnion(newMsg),
-                        lastMessageAt: newMsg.timestamp,
-                        lastSender: newMsg.sender,
-                        lastUpdated: new Date().toISOString()
-                    };
-                    await Promise.all([
-                        db.collection("chat_messages").doc(docKey).set(chatUpdatePayload, { merge: true }),
-                        db.collection("lumilens_chats").doc(docKey).set(chatUpdatePayload, { merge: true }).catch(() => {})
-                    ]);
-                } catch(e) {
-                    console.warn("Firestore chat send error, retrying full array:", e);
+                const docKey = targetSessionUser.replace(/[^a-zA-Z0-9]/g, '_');
+                const targetDisplayName = isAdmin ? getCustomerDisplayName(targetSessionUser) : resolvedSenderName;
+                const targetAvatar = isAdmin ? getUserAvatarForEmail(targetSessionUser) : senderAvatar;
+
+                const writeToCollection = async (colName) => {
+                    const docRef = db.collection(colName).doc(docKey);
                     try {
-                        const docKey = targetSessionUser.replace(/[^a-zA-Z0-9]/g, '_');
-                        const fallbackPayload = {
+                        await docRef.set({
                             userEmail: targetSessionUser,
-                            userName: isAdmin ? getCustomerDisplayName(targetSessionUser) : resolvedSenderName,
-                            userAvatar: isAdmin ? getUserAvatarForEmail(targetSessionUser) : senderAvatar,
-                            messages: existingMsgs,
+                            userName: targetDisplayName,
+                            userAvatar: targetAvatar,
+                            messages: firebase.firestore.FieldValue.arrayUnion(newMsg),
+                            lastMessageAt: newMsg.timestamp,
+                            lastSender: newMsg.sender,
                             lastUpdated: new Date().toISOString()
-                        };
-                        await Promise.all([
-                            db.collection("chat_messages").doc(docKey).set(fallbackPayload, { merge: true }),
-                            db.collection("lumilens_chats").doc(docKey).set(fallbackPayload, { merge: true }).catch(() => {})
-                        ]);
-                    } catch (retryErr) {
-                        console.warn("Firestore chat retry error:", retryErr);
+                        }, { merge: true });
+                    } catch (e) {
+                        await docRef.set({
+                            userEmail: targetSessionUser,
+                            userName: targetDisplayName,
+                            userAvatar: targetAvatar,
+                            messages: existingMsgs,
+                            lastMessageAt: newMsg.timestamp,
+                            lastSender: newMsg.sender,
+                            lastUpdated: new Date().toISOString()
+                        }, { merge: true });
                     }
+                };
+
+                try {
+                    await Promise.all([
+                        writeToCollection("chat_messages"),
+                        writeToCollection("lumilens_chats").catch(() => {})
+                    ]);
+                } catch (err) {
+                    console.warn("Live chat Firestore sync warning:", err);
                 }
             }
         }
@@ -9094,7 +9295,7 @@
 
             container.innerHTML = msgs.map(m => {
                 const isMe = (m.sender || '').trim().toLowerCase() === (currentUser?.email || '').trim().toLowerCase();
-                const isAdminMsg = m.isAdmin;
+                const isAdminMsg = !!m.isAdmin || isAdminUser(m.sender);
                 const isSticker = m.type === 'sticker';
 
                 let mediaHtml = '';
@@ -9119,7 +9320,7 @@
 
                 const bubbleClass = isSticker
                     ? `max-w-[80%] rounded-2xl px-3.5 py-2 text-xs bg-[transparent] ${isMe ? 'rounded-tr-none text-slate-600 text-right' : 'rounded-tl-none text-slate-600 text-left'}`
-                    : `max-w-[80%] rounded-2xl px-3.5 py-2 text-xs shadow-sm ${isMe ? 'bg-[#65a30d] text-white rounded-tr-none' : (isAdminMsg ? 'bg-amber-100 text-amber-950 border border-amber-200 rounded-tl-none' : 'bg-white text-slate-800 border border-slate-200 rounded-tl-none')}`;
+                    : `max-w-[80%] rounded-2xl px-3.5 py-2 text-xs shadow-sm ${isMe ? 'bg-[#65a30d] text-white rounded-tr-none' : (isAdminMsg ? 'bg-blue-600 text-white border border-blue-700 rounded-tl-none' : 'bg-white text-slate-800 border border-slate-200 rounded-tl-none')}`;
 
                 let avatarBadgeHtml = '';
                 if (isAdmin) {
@@ -9128,7 +9329,7 @@
                     }
                 } else {
                     if (isAdminMsg) {
-                        avatarBadgeHtml = `<div class="w-6 h-6 rounded-full bg-amber-500 text-white flex items-center justify-center border border-amber-600 shrink-0 shadow-xs" title="Admin Support"><i class="fa-solid fa-headset text-[10px]"></i></div>`;
+                        avatarBadgeHtml = `<div class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center border border-blue-700 shrink-0 shadow-xs" title="Admin Support"><i class="fa-solid fa-headset text-[10px]"></i></div>`;
                     }
                 }
 
@@ -9164,6 +9365,15 @@
             document.getElementById('adm-detail-phone').innerText = order.customerPhone || 'N/A';
             document.getElementById('adm-detail-address').innerText = order.customerAddress || 'N/A';
             document.getElementById('adm-detail-total').innerText = 'RM ' + (order.total || '0.00');
+
+            const viewInvBtn = document.getElementById('adm-detail-btn-view-inv');
+            if (viewInvBtn) viewInvBtn.onclick = () => { closeAdminOrderDetailModal(); openInvoiceModal(order.id); };
+
+            const dlPdfBtn = document.getElementById('adm-detail-btn-dl-pdf');
+            if (dlPdfBtn) dlPdfBtn.onclick = () => { closeAdminOrderDetailModal(); directDownloadInvoicePDF(order.id); };
+
+            const dlPngBtn = document.getElementById('adm-detail-btn-dl-png');
+            if (dlPngBtn) dlPngBtn.onclick = () => { closeAdminOrderDetailModal(); directDownloadInvoice(order.id); };
 
             const itemsContainer = document.getElementById('adm-detail-items-list');
             itemsContainer.innerHTML = (order.items || []).map(i => `
@@ -9213,8 +9423,11 @@
         window.payPendingOrderNow = payPendingOrderNow;
         window.openInvoiceModal = openInvoiceModal;
         window.closeInvoiceModal = closeInvoiceModal;
+        window.downloadInvoiceAsPDF = downloadInvoiceAsPDF;
         window.downloadInvoiceAsPNG = downloadInvoiceAsPNG;
         window.directDownloadInvoice = directDownloadInvoice;
+        window.directDownloadInvoicePDF = directDownloadInvoicePDF;
+        window.printFormattedInvoice = printFormattedInvoice;
         window.openForgotPassword = openForgotPassword;
         window.closeForgotPassword = closeForgotPassword;
         window.submitForgotPassword = submitForgotPassword;
@@ -9483,7 +9696,8 @@
                     updatePresence(currentUser.email, true);
                 }
                 syncLivePresenceFromServer();
-            }, 10000);
+                syncLiveChatMessagesFromServer();
+            }, 6000);
 
             window.addEventListener('beforeunload', () => {
                 if (currentUser && currentUser.email) {
@@ -9495,6 +9709,7 @@
                 if (document.visibilityState === 'visible' && currentUser && currentUser.email) {
                     updatePresence(currentUser.email, true);
                     syncLivePresenceFromServer();
+                    syncLiveChatMessagesFromServer();
                     syncAllUsersFromServer();
                 }
             });
