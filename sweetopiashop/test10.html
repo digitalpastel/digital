@@ -2936,6 +2936,9 @@
             appId: "1:524168545709:web:7e52448f1cd3964f858d24"
         };
 
+        // Dedicated Firestore collection ID for multi-device Live Support Chat (users, guests, and admins)
+        const CHAT_MESSAGES_COLLECTION = "lumilens_chat_messages";
+
         const FIREBASE_SENDER_NAME = "sweetopialens";
         const FIREBASE_SENDER_EMAIL = "noreply@sweeetopialens.firebaseapp.com";
         const FIREBASE_REPLY_TO_EMAIL = "yeegummy@gmail.com";
@@ -3866,7 +3869,7 @@
                     Promise.all([
                         db.collection("lumilens_users").doc(docKey).set(namePayload, { merge: true }).catch(() => {}),
                         db.collection("users").doc(docKey).set(namePayload, { merge: true }).catch(() => {}),
-                        db.collection("lumilens_chats").doc(docKey).set({
+                        db.collection(CHAT_MESSAGES_COLLECTION).doc(docKey).set({
                             userEmail: cleanEmail,
                             userName: newName,
                             lastUpdated: nowIso
@@ -7760,107 +7763,11 @@
             if (input) input.value = '';
         }
 
-        async function sendSpecialChatMessage(msgPayload) {
-            if (!currentUser) {
-                showToast("Sign In Required", "Please sign in or continue as guest to chat.", true);
-                return;
-            }
-
-            const isAdmin = isAdminUser(currentUser.email);
-            let targetSessionUser = (currentUser.email || '').trim().toLowerCase();
-
-            if (isAdmin) {
-                const select = document.getElementById('admin-active-chat-user');
-                targetSessionUser = ((activeChatSessionUser || select?.value) || '').trim().toLowerCase();
-                if (!targetSessionUser) {
-                    showToast("No User Selected", "Select a customer from the dropdown to reply.", true);
-                    return;
-                }
-            }
-
-            const senderAvatar = isAdmin ? null : getUserAvatarForEmail(currentUser.email);
-            const resolvedSenderName = isAdmin ? 'Admin Support' : getCustomerDisplayName(currentUser.email);
-
-            const newMsg = {
-                id: 'msg_' + Date.now(),
-                sender: (currentUser.email || '').trim().toLowerCase(),
-                senderName: resolvedSenderName,
-                senderAvatar: senderAvatar,
-                text: msgPayload.text || '',
-                type: msgPayload.type || 'text',
-                mediaUrl: msgPayload.mediaUrl || null,
-                productData: msgPayload.productData || null,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                timestamp: new Date().toISOString(),
-                isAdmin: isAdmin
-            };
-
-            const existingMsgs = userSessionsMap[targetSessionUser] || [];
-            existingMsgs.push(newMsg);
-            userSessionsMap[targetSessionUser] = existingMsgs;
-            lastSeenChatMessageIds.add(newMsg.id);
-
-            renderActiveChatMessages();
-
-            if (db) {
-                try {
-                    const docKey = targetSessionUser.replace(/[^a-zA-Z0-9]/g, '_');
-                    const chatDocRef = db.collection("lumilens_chats").doc(docKey);
-                    await chatDocRef.set({
-                        userEmail: targetSessionUser,
-                        userName: isAdmin ? getCustomerDisplayName(targetSessionUser) : resolvedSenderName,
-                        userAvatar: isAdmin ? getUserAvatarForEmail(targetSessionUser) : senderAvatar,
-                        messages: firebase.firestore.FieldValue.arrayUnion(newMsg),
-                        lastMessageAt: newMsg.timestamp,
-                        lastSender: newMsg.sender,
-                        lastUpdated: new Date().toISOString()
-                    }, { merge: true });
-                } catch(e) {
-                    console.warn("Firestore chat send error, retrying full array:", e);
-                    try {
-                        const docKey = targetSessionUser.replace(/[^a-zA-Z0-9]/g, '_');
-                        await db.collection("lumilens_chats").doc(docKey).set({
-                            userEmail: targetSessionUser,
-                            userName: isAdmin ? getCustomerDisplayName(targetSessionUser) : resolvedSenderName,
-                            userAvatar: isAdmin ? getUserAvatarForEmail(targetSessionUser) : senderAvatar,
-                            messages: existingMsgs,
-                            lastUpdated: new Date().toISOString()
-                        }, { merge: true });
-                    } catch (retryErr) {
-                        console.warn("Firestore chat retry error:", retryErr);
-                    }
-                }
-            }
-        }
-
         function handleKeypress(event) {
             if (event.key === 'Enter' && !event.shiftKey) {
                 event.preventDefault();
                 sendTextMessage();
             }
-        }
-
-        async function clearWidgetChat() {
-            let targetUser = (currentUser?.email || '').trim().toLowerCase();
-            if (currentUser && isAdminUser(currentUser.email)) {
-                targetUser = ((activeChatSessionUser || document.getElementById('admin-active-chat-user')?.value) || '').trim().toLowerCase();
-            }
-            if (!targetUser) return;
-
-            userSessionsMap[targetUser] = [];
-            renderActiveChatMessages();
-
-            if (db) {
-                try {
-                    const docKey = targetUser.replace(/[^a-zA-Z0-9]/g, '_');
-                    await db.collection("lumilens_chats").doc(docKey).set({
-                        userEmail: targetUser,
-                        messages: [],
-                        lastUpdated: new Date().toISOString()
-                    });
-                } catch(e) { console.warn(e); }
-            }
-            showToast("Chat Cleared", "Messages cleared.");
         }
 
         let activePresetsList = [
@@ -8354,7 +8261,6 @@
                 try {
                     const docKey = cleanEmail.replace(/[^a-zA-Z0-9]/g, '_');
                     const nowIso = new Date().toISOString();
-                    const isKnownCustomer = registeredCustomersList.includes(cleanEmail);
                     const existingCustomName = (userDisplayNamesMap[cleanEmail] || '').trim();
                     const userProfilePayload = {
                         email: cleanEmail,
@@ -8383,8 +8289,7 @@
                             emails: firebase.firestore.FieldValue.arrayUnion(cleanEmail),
                             updatedAt: nowIso
                         }, { merge: true }).catch(() => {}),
-                        db.collection("chat_messages").doc(docKey).set(chatDocPayload, { merge: true }).catch(() => {}),
-                        db.collection("lumilens_chats").doc(docKey).set(chatDocPayload, { merge: true }).catch(() => {})
+                        db.collection(CHAT_MESSAGES_COLLECTION).doc(docKey).set(chatDocPayload, { merge: true }).catch(() => {})
                     ]);
                 } catch (e) { console.warn("Save registered user error:", e); }
             }
@@ -8393,11 +8298,10 @@
         async function syncAllUsersFromServer() {
             if (!db) return;
             try {
-                const [lumiSnap, usersFallbackSnap, chatMsgSnap, chatsSnap, presenceSnap, dirSnap] = await Promise.all([
+                const [lumiSnap, usersFallbackSnap, chatMsgSnap, presenceSnap, dirSnap] = await Promise.all([
                     db.collection("lumilens_users").get({ source: 'server' }).catch(() => db.collection("lumilens_users").get().catch(() => null)),
                     db.collection("users").get({ source: 'server' }).catch(() => db.collection("users").get().catch(() => null)),
-                    db.collection("chat_messages").get({ source: 'server' }).catch(() => db.collection("chat_messages").get().catch(() => null)),
-                    db.collection("lumilens_chats").get({ source: 'server' }).catch(() => db.collection("lumilens_chats").get().catch(() => null)),
+                    db.collection(CHAT_MESSAGES_COLLECTION).get({ source: 'server' }).catch(() => db.collection(CHAT_MESSAGES_COLLECTION).get().catch(() => null)),
                     db.collection("lumilens_presence").get({ source: 'server' }).catch(() => db.collection("lumilens_presence").get().catch(() => null)),
                     db.collection("lumilens_public_directory").doc("registered_customers").get({ source: 'server' }).catch(() => db.collection("lumilens_public_directory").doc("registered_customers").get().catch(() => null))
                 ]);
@@ -8437,7 +8341,6 @@
                 processSnapshot(lumiSnap);
                 processSnapshot(usersFallbackSnap);
                 processSnapshot(chatMsgSnap);
-                processSnapshot(chatsSnap);
                 processSnapshot(presenceSnap);
 
                 if (dirSnap && dirSnap.exists && Array.isArray(dirSnap.data()?.emails)) {
@@ -8706,12 +8609,10 @@
         async function syncLiveChatMessagesFromServer() {
             if (!db) return;
             try {
-                const [chatMsgSnap, lumiSnap] = await Promise.all([
-                    db.collection("chat_messages").get({ source: 'server' }).catch(() => db.collection("chat_messages").get().catch(() => null)),
-                    db.collection("lumilens_chats").get({ source: 'server' }).catch(() => db.collection("lumilens_chats").get().catch(() => null))
-                ]);
-                if (lumiSnap) processIncomingChatSnapshot(lumiSnap);
-                if (chatMsgSnap) processIncomingChatSnapshot(chatMsgSnap);
+                const snap = await db.collection(CHAT_MESSAGES_COLLECTION)
+                    .get({ source: 'server' })
+                    .catch(() => db.collection(CHAT_MESSAGES_COLLECTION).get().catch(() => null));
+                if (snap) processIncomingChatSnapshot(snap);
             } catch (e) {}
         }
 
@@ -8973,11 +8874,7 @@
                 }
             }, () => {});
 
-            db.collection("chat_messages").onSnapshot((snapshot) => {
-                processIncomingChatSnapshot(snapshot);
-            }, () => {});
-
-            db.collection("lumilens_chats").onSnapshot((snapshot) => {
+            db.collection(CHAT_MESSAGES_COLLECTION).onSnapshot((snapshot) => {
                 processIncomingChatSnapshot(snapshot);
             }, () => {});
         }
@@ -9037,7 +8934,7 @@
             const knownUsersMap = new Map();
             registeredUsers.forEach(u => knownUsersMap.set(u, u));
 
-            // Also include any active guest sessions or guest chat threads so admin sees online guests
+            // Include active guest sessions or guest chat threads across all devices
             const addActiveGuest = (rawEmail) => {
                 if (!rawEmail || typeof rawEmail !== 'string') return;
                 const clean = rawEmail.trim().toLowerCase();
@@ -9135,8 +9032,13 @@
 
         async function sendSpecialChatMessage(msgPayload) {
             if (!currentUser) {
-                showToast("Sign In Required", "Please sign in or continue as guest to chat.", true);
-                return;
+                let guestId = localStorage.getItem('sweetopia_guest_id');
+                if (!guestId) {
+                    guestId = 'Guest_' + Math.floor(1000 + Math.random() * 9000);
+                    localStorage.setItem('sweetopia_guest_id', guestId);
+                }
+                currentUser = { email: `${guestId}@sweetopiashop.my`, isGuest: true, guestId: guestId };
+                updatePresence(currentUser.email, true);
             }
 
             const isAdmin = isAdminUser(currentUser.email);
@@ -9179,47 +9081,35 @@
                 const docKey = targetSessionUser.replace(/[^a-zA-Z0-9]/g, '_');
                 const targetDisplayName = isAdmin ? getCustomerDisplayName(targetSessionUser) : resolvedSenderName;
                 const targetAvatar = isAdmin ? getUserAvatarForEmail(targetSessionUser) : senderAvatar;
+                const docRef = db.collection(CHAT_MESSAGES_COLLECTION).doc(docKey);
 
-                const writeToCollection = async (colName) => {
-                    const docRef = db.collection(colName).doc(docKey);
+                try {
+                    await docRef.set({
+                        userEmail: targetSessionUser,
+                        userName: targetDisplayName,
+                        userAvatar: targetAvatar,
+                        isGuestSession: targetSessionUser.startsWith('guest_') || targetSessionUser.endsWith('@sweetopiashop.my'),
+                        messages: firebase.firestore.FieldValue.arrayUnion(newMsg),
+                        lastMessageAt: newMsg.timestamp,
+                        lastSender: newMsg.sender,
+                        lastUpdated: new Date().toISOString()
+                    }, { merge: true });
+                } catch (err) {
                     try {
                         await docRef.set({
                             userEmail: targetSessionUser,
                             userName: targetDisplayName,
                             userAvatar: targetAvatar,
-                            messages: firebase.firestore.FieldValue.arrayUnion(newMsg),
-                            lastMessageAt: newMsg.timestamp,
-                            lastSender: newMsg.sender,
-                            lastUpdated: new Date().toISOString()
-                        }, { merge: true });
-                    } catch (e) {
-                        await docRef.set({
-                            userEmail: targetSessionUser,
-                            userName: targetDisplayName,
-                            userAvatar: targetAvatar,
+                            isGuestSession: targetSessionUser.startsWith('guest_') || targetSessionUser.endsWith('@sweetopiashop.my'),
                             messages: existingMsgs,
                             lastMessageAt: newMsg.timestamp,
                             lastSender: newMsg.sender,
                             lastUpdated: new Date().toISOString()
                         }, { merge: true });
+                    } catch (retryErr) {
+                        console.warn("Live chat Firestore sync warning:", retryErr);
                     }
-                };
-
-                try {
-                    await Promise.all([
-                        writeToCollection("chat_messages"),
-                        writeToCollection("lumilens_chats").catch(() => {})
-                    ]);
-                } catch (err) {
-                    console.warn("Live chat Firestore sync warning:", err);
                 }
-            }
-        }
-
-        function handleKeypress(event) {
-            if (event.key === 'Enter' && !event.shiftKey) {
-                event.preventDefault();
-                sendTextMessage();
             }
         }
 
@@ -9236,19 +9126,16 @@
             if (db) {
                 try {
                     const docKey = targetUser.replace(/[^a-zA-Z0-9]/g, '_');
-                    const clearPayload = {
+                    await db.collection(CHAT_MESSAGES_COLLECTION).doc(docKey).set({
                         userEmail: targetUser,
                         messages: [],
                         lastUpdated: new Date().toISOString()
-                    };
-                    await Promise.all([
-                        db.collection("chat_messages").doc(docKey).set(clearPayload),
-                        db.collection("lumilens_chats").doc(docKey).set(clearPayload).catch(() => {})
-                    ]);
+                    }, { merge: true });
                 } catch(e) { console.warn(e); }
             }
             showToast("Chat Cleared", "Messages cleared.");
         }
+
         async function adminDeleteSelectedChatSession() {
             const select = document.getElementById('admin-active-chat-user');
             const targetUser = activeChatSessionUser || select?.value;
@@ -9258,10 +9145,7 @@
             if (db) {
                 try {
                     const docKey = targetUser.replace(/[^a-zA-Z0-9]/g, '_');
-                    await Promise.all([
-                        db.collection("chat_messages").doc(docKey).delete(),
-                        db.collection("lumilens_chats").doc(docKey).delete().catch(() => {})
-                    ]);
+                    await db.collection(CHAT_MESSAGES_COLLECTION).doc(docKey).delete();
                 } catch(e) { console.warn(e); }
             }
             activeChatSessionUser = null;
@@ -9679,6 +9563,7 @@
             initFirestoreListeners();
             initChatListeners();
             syncLivePresenceFromServer();
+            syncLiveChatMessagesFromServer();
             onAdminPowerRangeChange();
             initSlideshow();
             renderCustomerVouchersUI();
