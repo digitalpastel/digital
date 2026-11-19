@@ -5,18 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light">
     <meta name="supported-color-schemes" content="light">
-    <!-- Cache Busting & No-Cache Directives (v=1.0.4) -->
-    <meta name="app-version" content="1.0.4">
+    <!-- Cache Busting & No-Cache Directives (v=1.0.9) -->
+    <meta name="app-version" content="1.0.9">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Sweetopia Shop - Premium Contact Lens Store &amp; FPX Checkout</title>
-    <!-- App Icons & Stylesheet with Cache Busting Version (?v=1.0.4) -->
-    <link rel="stylesheet" href="style.css?v=1.0.4">
-    <link rel="icon" type="image/png" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.4">
-    <link rel="apple-touch-icon" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.4">
-    <link rel="icon" type="image/png" sizes="512x512" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png?v=1.0.4">
-    <link rel="manifest" href="https://digitalpastel.github.io/digital/sweetopiashop/manifest.json?v=1.0.4">
+    <!-- App Icons & Stylesheet with Cache Busting Version (?v=1.0.9) -->
+    <link rel="stylesheet" href="style.css?v=1.0.9">
+    <link rel="icon" type="image/png" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.9">
+    <link rel="apple-touch-icon" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.9">
+    <link rel="icon" type="image/png" sizes="512x512" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png?v=1.0.9">
+    <link rel="manifest" href="https://digitalpastel.github.io/digital/sweetopiashop/manifest.json?v=1.0.9">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&amp;family=Fredoka:wght@600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
     <!-- Retro Pixel Font for 10-Bar Window matching reference image -->
@@ -25,13 +25,15 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- html2canvas for A4 PNG invoice download -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- jsPDF for A4 PDF invoice download -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <!-- Firebase Compat SDKs (Reliable synchronous execution without module scoping or ReferenceErrors) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script>
         // Cache Busting Controller: Increment APP_VERSION whenever updating GitHub
-        const APP_VERSION = '1.0.4';
+        const APP_VERSION = '1.0.9';
         (function enforceCacheBustingVersion() {
             try {
                 const storedVersion = localStorage.getItem('sweetopia_app_version');
@@ -233,7 +235,8 @@
 
         .invoice-a4-page {
             width: 100%;
-            max-width: 800px;
+            min-width: 340px;
+            max-width: 430px;
             min-height: auto;
             padding: 16px;
             margin: 0 auto;
@@ -247,9 +250,41 @@
         @media (min-width: 768px) {
             .invoice-a4-page {
                 width: 210mm;
+                max-width: 210mm;
                 min-height: 297mm;
                 padding: 18mm;
                 border-radius: 0;
+            }
+        }
+
+        @page {
+            size: A4 portrait;
+            margin: 12mm;
+        }
+
+        @media print {
+            body { background: transparent; margin: 0; padding: 0; }
+            .no-print { display: none !important; }
+            .invoice-a4-page {
+                box-shadow: none;
+                margin: 0 auto;
+                width: 210mm !important;
+                max-width: 100% !important;
+                min-height: 297mm !important;
+                padding: 15mm !important;
+                border-radius: 0 !important;
+            }
+            body.thermal-pos-80mm .invoice-a4-page {
+                width: 80mm !important;
+                min-height: auto !important;
+                padding: 4mm !important;
+                font-size: 10px !important;
+            }
+            body.thermal-pos-58mm .invoice-a4-page {
+                width: 58mm !important;
+                min-height: auto !important;
+                padding: 3mm !important;
+                font-size: 9px !important;
             }
         }
 
@@ -788,7 +823,7 @@
             <div class="truncate">
                 <div class="flex items-center gap-2">
                     <span class="bg-yellow-300 text-slate-950 text-[10px] font-black uppercase px-2 py-0.5 rounded-full shadow-xs">New Update Available</span>
-                    <span id="live-update-version-badge" class="text-xs sm:text-sm font-extrabold tracking-tight truncate">Sweetopia Shop v1.0.5 is Live!</span>
+                    <span id="live-update-version-badge" class="text-xs sm:text-sm font-extrabold tracking-tight truncate">Sweetopia Shop v1.0.10 is Live!</span>
                 </div>
                 <p id="live-update-notes-text" class="text-[11px] text-emerald-50 font-medium truncate mt-0.5">A fresh update has been published. Refresh now to load the latest features &amp; catalog.</p>
             </div>
@@ -1431,9 +1466,23 @@
                                     </button>
                                 </div>
 
-                                <div>
-                                    <h3 id="mobile-user-name" class="text-sm font-bold text-white tracking-wide">brandworkzco</h3>
-                                    <p id="mobile-user-email" class="text-xs text-slate-400 font-normal">brandworkzco@gmail.com</p>
+                                <div class="flex-1 min-w-0">
+                                    <div id="user-name-display-row" class="flex items-center space-x-2">
+                                        <h3 id="mobile-user-name" class="text-sm font-bold text-white tracking-wide truncate">brandworkzco</h3>
+                                        <button type="button" onclick="startEditingDashboardUserName()" class="w-6 h-6 rounded-lg bg-slate-800 hover:bg-slate-700 text-[#84cc16] hover:text-white flex items-center justify-center border border-slate-700 transition shrink-0 cursor-pointer" title="Edit Display Name">
+                                            <i class="fa-solid fa-pen-to-square text-[10px]"></i>
+                                        </button>
+                                    </div>
+                                    <div id="user-name-edit-row" class="hidden items-center space-x-1.5 mt-0.5">
+                                        <input type="text" id="dashboard-user-name-input" maxlength="32" placeholder="Enter display name" onkeydown="if(event.key==='Enter'){event.preventDefault();saveDashboardUserName();}else if(event.key==='Escape'){cancelEditingDashboardUserName();}" class="w-full max-w-[200px] bg-slate-800 border border-[#84cc16] text-white text-xs font-bold rounded-lg px-2.5 py-1 focus:outline-none focus:ring-2 focus:ring-[#84cc16]">
+                                        <button type="button" onclick="saveDashboardUserName()" class="px-2.5 py-1 rounded-lg bg-[#65a30d] hover:bg-[#84cc16] text-slate-950 text-[10px] font-extrabold transition shrink-0 cursor-pointer" title="Save Name">
+                                            Save
+                                        </button>
+                                        <button type="button" onclick="cancelEditingDashboardUserName()" class="w-6 h-6 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center text-[10px] transition shrink-0 cursor-pointer" title="Cancel">
+                                            <i class="fa-solid fa-xmark"></i>
+                                        </button>
+                                    </div>
+                                    <p id="mobile-user-email" class="text-xs text-slate-400 font-normal truncate mt-0.5">brandworkzco@gmail.com</p>
                                 </div>
                             </div>
 
@@ -1568,13 +1617,19 @@
                                 </div>
                                 <div>
                                     <h3 class="text-sm font-bold text-slate-900">Admin Workspace Control Center</h3>
-                                    <p class="text-xs text-slate-600">Firestore Real-time sync for stock, live products, order shipments &amp; available voucher codes.</p>
+                                    <p class="text-xs text-slate-600">Firestore Real-time sync for stock, live products (<span id="admin-live-product-count" class="font-bold text-[#65a30d]">0</span> active), order shipments &amp; available voucher codes.</p>
                                 </div>
                             </div>
-                            <button onclick="exportInvoicesToCSV()" class="bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold px-4 py-2.5 rounded-xl text-xs flex items-center space-x-2 shadow-md shrink-0">
-                                <i class="fa-solid fa-file-csv"></i>
-                                <span>Export Invoices CSV</span>
-                            </button>
+                            <div class="flex flex-wrap items-center gap-2 shrink-0">
+                                <button type="button" onclick="forceSyncFirestoreProducts()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold px-3.5 py-2.5 rounded-xl text-xs flex items-center space-x-1.5 shadow-sm cursor-pointer">
+                                    <i class="fa-solid fa-rotate"></i>
+                                    <span>Sync Firestore Products</span>
+                                </button>
+                                <button onclick="exportInvoicesToCSV()" class="bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold px-4 py-2.5 rounded-xl text-xs flex items-center space-x-2 shadow-md">
+                                    <i class="fa-solid fa-file-csv"></i>
+                                    <span>Export Invoices CSV</span>
+                                </button>
+                            </div>
                         </div>
 
                         <!-- LIVE APP VERSION & CACHE-BUSTING CONTROL PANEL -->
@@ -1587,7 +1642,7 @@
                                     <div>
                                         <h2 class="text-base font-bold flex items-center space-x-2">
                                             <span>Live App Version &amp; Force Cache Refresh</span>
-                                            <span id="admin-live-version-pill" class="bg-white text-emerald-800 text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full shadow-xs">Active: v1.0.4</span>
+                                            <span id="admin-live-version-pill" class="bg-white text-emerald-800 text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full shadow-xs">Active: v1.0.9</span>
                                         </h2>
                                         <p class="text-xs text-emerald-100">Publish a new version to Firestore to instantly notify &amp; refresh all open customer sessions</p>
                                     </div>
@@ -1603,7 +1658,7 @@
                                         New Version Tag <span class="text-rose-500">*</span>
                                     </label>
                                     <div class="flex items-center gap-1.5">
-                                        <input type="text" id="admin-new-version-input" placeholder="e.g. 1.0.5" class="block w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm font-mono font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                                        <input type="text" id="admin-new-version-input" placeholder="e.g. 1.0.10" class="block w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm font-mono font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
                                         <button type="button" onclick="bumpNextPatchVersion()" class="px-2.5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold rounded-xl transition shrink-0 cursor-pointer" title="Auto-increment patch version">
                                             +0.0.1
                                         </button>
@@ -2173,7 +2228,7 @@
 
                         <div class="text-center flex justify-center">
                             <p class="text-[11px] text-[#581c87] font-extrabold tracking-wider">
-                                © Brand Works Empire 2026, all rights reserved <span id="footer-app-version-tag" class="opacity-75 font-mono text-[10px]">(v1.0.4)</span>
+                                © Brand Works Empire 2026, all rights reserved <span id="footer-app-version-tag" class="opacity-75 font-mono text-[10px]">(v1.0.9)</span>
                             </p>
                         </div>
 
@@ -2487,6 +2542,21 @@
                                 <span id="adm-detail-total" class="text-[#65a30d]">RM 0.00</span>
                             </div>
                         </div>
+
+                        <div class="flex flex-wrap items-center gap-2 pt-1">
+                            <button type="button" id="adm-detail-btn-view-inv" class="flex-1 bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition flex items-center justify-center gap-1.5 cursor-pointer">
+                                <i class="fa-solid fa-eye"></i>
+                                <span>View Invoice</span>
+                            </button>
+                            <button type="button" id="adm-detail-btn-dl-pdf" class="flex-1 bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition flex items-center justify-center gap-1.5 cursor-pointer">
+                                <i class="fa-solid fa-file-pdf"></i>
+                                <span>Download PDF</span>
+                            </button>
+                            <button type="button" id="adm-detail-btn-dl-png" class="flex-1 bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold py-2.5 px-3 rounded-xl text-xs transition flex items-center justify-center gap-1.5 cursor-pointer">
+                                <i class="fa-solid fa-file-image"></i>
+                                <span>Download PNG</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2676,20 +2746,34 @@
                 </div>
             </div>
 
-            <!-- A4 INVOICE PNG DOWNLOAD & VIEW MODAL -->
+            <!-- A4 INVOICE PDF / PNG DOWNLOAD & VIEW MODAL -->
             <div id="invoice-modal" class="fixed inset-0 z-[999] modal-backdrop-clean flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-200 p-2 sm:p-4 overflow-y-auto">
                 <div class="relative w-full max-w-4xl bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[96vh] my-auto">
-                    <div class="px-3.5 sm:px-6 py-3 sm:py-4 bg-slate-100 border-b border-slate-200 flex items-center justify-between shrink-0 no-print">
+                    <div class="px-3.5 sm:px-6 py-3 sm:py-4 bg-slate-100 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2 shrink-0 no-print">
                         <div class="flex items-center space-x-2">
                             <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-lime-100 text-[#4d7c0f] flex items-center justify-center text-xs">
                                 <i class="fa-solid fa-file-invoice-dollar"></i>
                             </div>
                             <h3 class="text-xs sm:text-sm font-bold text-slate-900 truncate">Official Tax Invoice</h3>
                         </div>
-                        <div class="flex items-center space-x-2">
+                        <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                            <select id="invoice-print-format-select" class="bg-white border border-slate-300 text-slate-700 text-[11px] font-bold px-2.5 py-2 rounded-xl focus:outline-none">
+                                <option value="a4">Print: A4 / Letter (Default)</option>
+                                <option value="pos80">Thermal POS (80mm)</option>
+                                <option value="pos58">Thermal POS (58mm)</option>
+                            </select>
+                            <button type="button" onclick="printFormattedInvoice()" class="bg-slate-800 hover:bg-slate-900 active:scale-95 text-white font-bold px-3 py-2 rounded-xl text-[11px] sm:text-xs flex items-center space-x-1 shadow transition cursor-pointer" title="Print via wireless printer or thermal POS">
+                                <i class="fa-solid fa-print"></i>
+                                <span class="hidden sm:inline">Print</span>
+                            </button>
+                            <button id="btn-modal-dl-pdf" type="button" onclick="downloadInvoiceAsPDF()" class="bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-bold px-3 sm:px-4 py-2 rounded-xl text-[11px] sm:text-xs flex items-center space-x-1.5 shadow transition cursor-pointer">
+                                <i class="fa-solid fa-file-pdf"></i>
+                                <span class="hidden sm:inline">Download A4 PDF</span>
+                                <span class="sm:hidden">PDF</span>
+                            </button>
                             <button id="btn-modal-dl-png" type="button" onclick="downloadInvoiceAsPNG()" class="bg-[#65a30d] hover:bg-[#4d7c0f] active:scale-95 text-white font-bold px-3 sm:px-4 py-2 rounded-xl text-[11px] sm:text-xs flex items-center space-x-1.5 shadow transition cursor-pointer">
                                 <i class="fa-solid fa-download"></i>
-                                <span class="hidden sm:inline">Download A4 PNG</span>
+                                <span class="hidden sm:inline">Download PNG</span>
                                 <span class="sm:hidden">PNG</span>
                             </button>
                             <button type="button" onclick="closeInvoiceModal()" class="w-8 h-8 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 flex items-center justify-center transition cursor-pointer" aria-label="Close invoice modal">
@@ -2738,7 +2822,7 @@
                                 </div>
 
                                 <div class="w-full overflow-x-auto mb-6">
-                                    <table class="w-full text-xs border-collapse min-w-[340px]">
+                                    <table class="w-full text-xs border-collapse min-w-[320px]">
                                         <thead>
                                             <tr class="bg-slate-100 text-slate-700">
                                                 <th class="p-2.5 text-left border-b border-slate-200 rounded-l-lg font-bold">Item Description</th>
@@ -2851,6 +2935,9 @@
             messagingSenderId: "524168545709",
             appId: "1:524168545709:web:7e52448f1cd3964f858d24"
         };
+
+        // Dedicated Firestore collection ID for multi-device Live Support Chat (users, guests, and admins)
+        const CHAT_MESSAGES_COLLECTION = "lumilens_chat_messages";
 
         const FIREBASE_SENDER_NAME = "sweetopialens";
         const FIREBASE_SENDER_EMAIL = "noreply@sweeetopialens.firebaseapp.com";
@@ -3310,6 +3397,31 @@
         ];
 
         let products = [...DEFAULT_SEED_PRODUCTS];
+        let hasLoadedServerProducts = false;
+
+        function normalizeFirestoreProductDoc(docId, rawData) {
+            if (!rawData || typeof rawData !== 'object') return null;
+            const resolvedName = (rawData.name || rawData.title || rawData.productName || '').toString().trim();
+            if (!resolvedName) return null;
+
+            const rawPrice = rawData.price ?? rawData.amount ?? rawData.retailPrice ?? '25.00';
+            const numPrice = parseFloat(String(rawPrice).replace(/[^0-9.]/g, ''));
+            const formattedPrice = !isNaN(numPrice) ? numPrice.toFixed(2) : '25.00';
+
+            const resolvedImg = rawData.image || rawData.imageUrl || rawData.img || rawData.photo ||
+                "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500";
+
+            return {
+                ...rawData,
+                id: docId,
+                name: resolvedName,
+                brand: (rawData.brand || rawData.manufacturer || 'Molicon').toString().trim(),
+                price: formattedPrice,
+                category: (rawData.category || rawData.type || '3 Months Disposable').toString().trim(),
+                image: resolvedImg,
+                badge: rawData.badge || 'In Stock'
+            };
+        }
 
         function saveProductsToLocalBackup() {
             try {
@@ -3328,12 +3440,17 @@
                 if (!raw) return false;
                 const parsed = JSON.parse(raw);
                 if (Array.isArray(parsed) && parsed.length > 0) {
-                    products = parsed;
-                    products.forEach(p => {
-                        if (p.powerStock) window.productPowerStock[p.id] = p.powerStock;
-                        if (p.powerLocations) window.productPowerLocations[p.id] = p.powerLocations;
-                    });
-                    return true;
+                    const normalized = parsed
+                        .map(p => normalizeFirestoreProductDoc(p.id, p))
+                        .filter(Boolean);
+                    if (normalized.length > 0) {
+                        products = normalized;
+                        products.forEach(p => {
+                            if (p.powerStock) window.productPowerStock[p.id] = p.powerStock;
+                            if (p.powerLocations) window.productPowerLocations[p.id] = p.powerLocations;
+                        });
+                        return true;
+                    }
                 }
             } catch (e) { console.warn("Load products local backup warning:", e); }
             return false;
@@ -3358,7 +3475,62 @@
                     });
                 }
             });
+            const countBadge = document.getElementById('admin-live-product-count');
+            if (countBadge) countBadge.innerText = String((prodList || products).length);
         }
+
+        window.forceSyncFirestoreProducts = async function(silent = false) {
+            if (!db) return false;
+            try {
+                const [lumiSnap, genericSnap] = await Promise.all([
+                    db.collection("lumilens_products").get({ source: 'server' }).catch(() => db.collection("lumilens_products").get().catch(() => null)),
+                    db.collection("products").get({ source: 'server' }).catch(() => db.collection("products").get().catch(() => null))
+                ]);
+
+                const mergedMap = new Map();
+
+                if (genericSnap && !genericSnap.empty) {
+                    genericSnap.forEach(docSnap => {
+                        const prod = normalizeFirestoreProductDoc(docSnap.id, docSnap.data());
+                        if (prod) {
+                            mergedMap.set(docSnap.id, prod);
+                            if (prod.powerStock) window.productPowerStock[prod.id] = prod.powerStock;
+                            if (prod.powerLocations) window.productPowerLocations[prod.id] = prod.powerLocations;
+                        }
+                    });
+                }
+
+                if (lumiSnap && !lumiSnap.empty) {
+                    lumiSnap.forEach(docSnap => {
+                        const prod = normalizeFirestoreProductDoc(docSnap.id, docSnap.data());
+                        if (prod) {
+                            mergedMap.set(docSnap.id, prod);
+                            if (prod.powerStock) window.productPowerStock[prod.id] = prod.powerStock;
+                            if (prod.powerLocations) window.productPowerLocations[prod.id] = prod.powerLocations;
+                        }
+                    });
+                }
+
+                if (mergedMap.size > 0) {
+                    hasLoadedServerProducts = true;
+                    products = Array.from(mergedMap.values());
+                    ensureProductStockDefaults(products);
+                    saveProductsToLocalBackup();
+                    renderStoreProducts(products);
+                    renderFavouritesGrid();
+                    renderAdminProductsList();
+                    renderAdminPowerStockCheckboxes();
+                    renderAdminVoucherProductDropdowns();
+                    if (!silent) {
+                        showToast("Products Synced!", `Loaded ${products.length} real products from Firebase Firestore.`);
+                    }
+                    return true;
+                }
+            } catch (e) {
+                console.warn("Force sync Firestore products warning:", e);
+            }
+            return false;
+        };
 
         const defaultStickerAssets = [
             "https://digitalpastel.github.io/digital/sweetopiashop/sweetcall.webp",
@@ -3474,19 +3646,250 @@
         let pendingNavigationAfterVoucherWarning = null;
         let favouritesList = [];
         const ADMIN_EMAILS = ["yeegummy@gmail.com", "nur@brandworkz.co", "nurzuraysha@gmail.com"];
-        const SEEDED_REGISTERED_CUSTOMERS = ["brandworkzco@gmail.com", "designscape273@gmail.com"];
+        const SEEDED_REGISTERED_CUSTOMERS = ["brandworkzco@gmail.com", "designscape273@gmail.com", "alyssa@kawaii.my", "sarah@sweetlens.com"];
         const TOYYIBPAY_URL = "https://toyyibpay.com/brandworks";
+
+        const DEFAULT_SEEDED_ORDERS = [
+            {
+                id: "261012ALY01",
+                customer: "alyssa@kawaii.my",
+                customerName: "Alyssa",
+                customerAddress: "No 18, Jalan Kiara 4, Mont Kiara, 50480 Kuala Lumpur, Malaysia",
+                customerPhone: "012-8849201",
+                items: [
+                    { id: "p1", name: "HAZEL NATURAL", price: "25.00", pwr: "-2.00", qty: 2 }
+                ],
+                subtotal: "50.00",
+                discount: "1.00",
+                discountCode: "CODE1",
+                shippingFee: "5.00",
+                total: "54.00",
+                status: "Shipped",
+                paymentStatus: "Paid via FPX",
+                paid: true,
+                amountDrawn: true,
+                trackingNumber: "JNT884120934MY",
+                date: "12/10/2026, 10:15:00 AM",
+                timestamp: "2026-10-12T10:15:00.000Z"
+            },
+            {
+                id: "261018SAR02",
+                customer: "sarah@sweetlens.com",
+                customerName: "Sarah",
+                customerAddress: "Unit 9-3, Residensi Damai, 47800 Petaling Jaya, Selangor, Malaysia",
+                customerPhone: "017-6394812",
+                items: [
+                    { id: "p2", name: "CRYSTAL CLEAR", price: "25.00", pwr: "-3.50", qty: 1 },
+                    { id: "p3", name: "EMERALD GREEN", price: "25.00", pwr: "-3.50", qty: 1 }
+                ],
+                subtotal: "50.00",
+                discount: "0.00",
+                discountCode: null,
+                shippingFee: "5.00",
+                total: "55.00",
+                status: "Processing (Paid)",
+                paymentStatus: "Paid via FPX",
+                paid: true,
+                amountDrawn: true,
+                trackingNumber: "Pending",
+                date: "18/10/2026, 02:30:00 PM",
+                timestamp: "2026-10-18T14:30:00.000Z"
+            }
+        ];
+
+        function ensureSeededCustomerOrders() {
+            const existingIds = new Set(allOrders.map(o => o.id));
+            let added = false;
+            DEFAULT_SEEDED_ORDERS.forEach(seedOrder => {
+                if (!existingIds.has(seedOrder.id)) {
+                    allOrders.push({ ...seedOrder });
+                    added = true;
+                    if (db) {
+                        db.collection("lumilens_orders").doc(seedOrder.id).set(seedOrder, { merge: true }).catch(() => {});
+                    }
+                }
+            });
+            if (added) {
+                allOrders.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+            }
+        }
 
         let activeChatSessionUser = null;
         let presenceMap = {};
+        let presenceLastSeenMap = {};
         let userSessionsMap = {};
         let userAvatarsMap = {};
+        let userDisplayNamesMap = {
+            "alyssa@kawaii.my": "Alyssa",
+            "sarah@sweetlens.com": "Sarah"
+        };
+        let lastSeenChatMessageIds = new Set();
+        let unreadChatCount = 0;
         let registeredCustomersList = [...SEEDED_REGISTERED_CUSTOMERS];
         let verifiedEmailsMap = {};
         let adminSupportOnlineFlag = false;
         let lastPendingVerificationEmail = '';
         let lastPendingVerificationPassword = '';
         const DEFAULT_USER_AVATAR = "https://digitalpastel.github.io/digital/sweetopiashop/Bratz1.webp";
+
+        function getOrderedRegisteredCustomers() {
+            const orderedSet = new Set();
+            const addIfCustomer = (rawEmail) => {
+                if (!rawEmail || typeof rawEmail !== 'string') return;
+                const clean = rawEmail.trim().toLowerCase();
+                if (!clean || isAdminUser(clean)) return;
+                if (clean.startsWith('guest_') || clean.endsWith('@sweetopiashop.my')) return;
+                orderedSet.add(clean);
+            };
+
+            SEEDED_REGISTERED_CUSTOMERS.forEach(addIfCustomer);
+            (registeredCustomersList || []).forEach(addIfCustomer);
+            Object.keys(userSessionsMap || {}).forEach(addIfCustomer);
+            Object.keys(presenceMap || {}).forEach(addIfCustomer);
+            Object.keys(assignedVouchersMap || {}).forEach(addIfCustomer);
+            (allOrders || []).forEach(o => { if (o && o.customer) addIfCustomer(o.customer); });
+
+            if (currentUser && currentUser.email && !isGuestUser()) {
+                addIfCustomer(currentUser.email);
+            }
+
+            return Array.from(orderedSet);
+        }
+
+        function loadUserDisplayNamesLocal() {
+            try {
+                const stored = localStorage.getItem('sweetopia_user_display_names');
+                if (stored) {
+                    const parsed = JSON.parse(stored);
+                    if (parsed && typeof parsed === 'object') {
+                        userDisplayNamesMap = {
+                            "alyssa@kawaii.my": "Alyssa",
+                            "sarah@sweetlens.com": "Sarah",
+                            ...parsed
+                        };
+                    }
+                }
+            } catch (e) {}
+        }
+
+        function saveUserDisplayNamesLocal() {
+            try {
+                localStorage.setItem('sweetopia_user_display_names', JSON.stringify(userDisplayNamesMap));
+            } catch (e) {}
+        }
+
+        function getCustomerDisplayName(email) {
+            if (!email) return 'Guest';
+            const clean = String(email).trim().toLowerCase();
+            if (isAdminUser(clean)) {
+                return 'Admin';
+            }
+            if (clean.startsWith('guest_') || clean.endsWith('@sweetopiashop.my')) {
+                const rawGuest = clean.split('@')[0];
+                return rawGuest.charAt(0).toUpperCase() + rawGuest.slice(1);
+            }
+            if (currentUser && currentUser.email && currentUser.email.trim().toLowerCase() === clean) {
+                const localPerUser = localStorage.getItem(`sweetopia_custom_name_${clean}`);
+                if (localPerUser && localPerUser.trim()) {
+                    return localPerUser.trim();
+                }
+            }
+            if (userDisplayNamesMap[clean] && userDisplayNamesMap[clean].trim()) {
+                return userDisplayNamesMap[clean].trim();
+            }
+            const orderedCustomers = getOrderedRegisteredCustomers();
+            const idx = orderedCustomers.indexOf(clean);
+            if (idx !== -1) {
+                return `Anonymous${idx + 1}`;
+            }
+            return `Anonymous${orderedCustomers.length + 1}`;
+        }
+
+        window.startEditingDashboardUserName = function() {
+            if (isGuestUser()) {
+                window.redirectGuestToSignUp("Sign up for a customer account to customize your display name.");
+                return;
+            }
+            const displayRow = document.getElementById('user-name-display-row');
+            const editRow = document.getElementById('user-name-edit-row');
+            const input = document.getElementById('dashboard-user-name-input');
+            const currentNameEl = document.getElementById('mobile-user-name');
+            if (!displayRow || !editRow || !input) return;
+
+            input.value = (currentNameEl?.innerText || getCustomerDisplayName(currentUser?.email)).trim();
+            displayRow.classList.add('hidden');
+            editRow.classList.remove('hidden');
+            editRow.classList.add('flex');
+            input.focus();
+            input.select();
+        };
+
+        window.cancelEditingDashboardUserName = function() {
+            const displayRow = document.getElementById('user-name-display-row');
+            const editRow = document.getElementById('user-name-edit-row');
+            if (!displayRow || !editRow) return;
+            editRow.classList.add('hidden');
+            editRow.classList.remove('flex');
+            displayRow.classList.remove('hidden');
+        };
+
+        window.saveDashboardUserName = async function() {
+            const input = document.getElementById('dashboard-user-name-input');
+            const newName = (input?.value || '').trim();
+            if (!newName) {
+                showToast("Name Required", "Please enter a valid display name.", true);
+                input?.focus();
+                return;
+            }
+
+            if (currentUser && currentUser.email && !isGuestUser()) {
+                const cleanEmail = currentUser.email.trim().toLowerCase();
+                userDisplayNamesMap[cleanEmail] = newName;
+                try {
+                    localStorage.setItem(`sweetopia_custom_name_${cleanEmail}`, newName);
+                } catch (e) {}
+                saveUserDisplayNamesLocal();
+
+                const mobileUserName = document.getElementById('mobile-user-name');
+                if (mobileUserName) mobileUserName.innerText = newName;
+
+                if (auth && auth.currentUser && typeof auth.currentUser.updateProfile === 'function') {
+                    auth.currentUser.updateProfile({ displayName: newName }).catch(() => {});
+                }
+
+                if (db) {
+                    const docKey = cleanEmail.replace(/[^a-zA-Z0-9]/g, '_');
+                    const nowIso = new Date().toISOString();
+                    const namePayload = {
+                        email: cleanEmail,
+                        displayName: newName,
+                        name: newName,
+                        updatedAt: nowIso
+                    };
+                    Promise.all([
+                        db.collection("lumilens_users").doc(docKey).set(namePayload, { merge: true }).catch(() => {}),
+                        db.collection("users").doc(docKey).set(namePayload, { merge: true }).catch(() => {}),
+                        db.collection(CHAT_MESSAGES_COLLECTION).doc(docKey).set({
+                            userEmail: cleanEmail,
+                            userName: newName,
+                            lastUpdated: nowIso
+                        }, { merge: true }).catch(() => {}),
+                        db.collection("lumilens_presence").doc(docKey).set({
+                            email: cleanEmail,
+                            displayName: newName,
+                            lastSeen: nowIso
+                        }, { merge: true }).catch(() => {})
+                    ]).catch(() => {});
+                }
+            }
+
+            window.cancelEditingDashboardUserName();
+            updateAdminChatUserDropdown();
+            renderAdminVoucherCustomerDropdowns();
+            renderPresetsTable();
+            renderActiveChatMessages();
+            showToast("Name Updated!", `Your display name is now "${newName}".`);
+        };
 
         function showAuthVerificationBanner(title, message, targetEmail = '') {
             const banner = document.getElementById('auth-verification-banner');
@@ -3673,8 +4076,9 @@
                 const targetUser = activeChatSessionUser || document.getElementById('admin-active-chat-user')?.value;
                 if (targetUser) {
                     const userAvatar = getUserAvatarForEmail(targetUser);
+                    const safeDisplayName = getCustomerDisplayName(targetUser);
                     headerMainBox.innerHTML = renderAvatarSmallInnerHtml(userAvatar);
-                    headerMainBox.title = `Chatting with ${targetUser}`;
+                    headerMainBox.title = `Chatting with ${safeDisplayName}`;
                 } else {
                     headerMainBox.innerHTML = renderAvatarSmallInnerHtml(DEFAULT_USER_AVATAR);
                     headerMainBox.title = "Customer Avatar";
@@ -4045,7 +4449,7 @@
                 ).join('');
 
                 const avatarUrl = fb.avatar || getUserAvatarForEmail(fb.email) || DEFAULT_USER_AVATAR;
-                const displayName = escapeHtmlText(fb.name || (fb.email ? fb.email.split('@')[0] : 'Happy Customer'));
+                const displayName = escapeHtmlText(fb.name || (fb.email ? getCustomerDisplayName(fb.email) : 'Happy Customer'));
                 const quoteText = escapeHtmlText(fb.comment || 'Wonderful experience shopping at Sweetopia Shop!');
 
                 const adminDeleteBtnHtml = isAdmin ? `
@@ -4148,7 +4552,7 @@
             const msgInput = document.getElementById('feedback-message-input');
 
             const userEmail = currentUser?.email || '';
-            const defaultName = userEmail && !isGuestUser() ? userEmail.split('@')[0] : 'Happy Customer';
+            const defaultName = userEmail && !isGuestUser() ? getCustomerDisplayName(userEmail) : 'Happy Customer';
             const userAvatar = getUserAvatarForEmail(userEmail);
 
             if (avatarPreview) {
@@ -4188,7 +4592,7 @@
             const nameInput = document.getElementById('feedback-author-name');
             const msgInput = document.getElementById('feedback-message-input');
 
-            const authorName = (nameInput?.value || '').trim() || (currentUser?.email ? currentUser.email.split('@')[0] : 'Happy Customer');
+            const authorName = (nameInput?.value || '').trim() || (currentUser?.email ? getCustomerDisplayName(currentUser.email) : 'Happy Customer');
             const comment = (msgInput?.value || '').trim();
             if (!comment) {
                 showToast("Feedback Required", "Please write a short feedback message first.", true);
@@ -5481,6 +5885,14 @@
             const isAdmin = isAdminUser(email);
             const isGuest = isGuestUser();
 
+            if (!isGuest && user.displayName && user.displayName.trim()) {
+                const cleanEm = email.trim().toLowerCase();
+                if (!userDisplayNamesMap[cleanEm]) {
+                    userDisplayNamesMap[cleanEm] = user.displayName.trim();
+                    saveUserDisplayNamesLocal();
+                }
+            }
+
             const userEmailDisplay = document.getElementById('user-email-display');
             if (userEmailDisplay) {
                 userEmailDisplay.innerText = isGuest ? "Browsing as Guest" : email;
@@ -5504,7 +5916,9 @@
             if (mobileUserEmail) mobileUserEmail.innerText = email;
 
             const mobileUserName = document.getElementById('mobile-user-name');
-            if (mobileUserName) mobileUserName.innerText = email.split('@')[0];
+            if (mobileUserName) mobileUserName.innerText = getCustomerDisplayName(email);
+
+            window.cancelEditingDashboardUserName();
 
             applySavedMobileAvatar();
 
@@ -5561,7 +5975,7 @@
                 if (chatActionBtn) chatActionBtn.innerText = "Clear";
             } else {
                 if (chatUserSelect) chatUserSelect.style.setProperty('display', 'none', 'important');
-                if (chatSessionLabel) chatSessionLabel.innerText = "";
+                if (chatSessionLabel) chatSessionLabel.innerText = `Chatting as ${getCustomerDisplayName(email)}`;
                 if (chatActionBtn) chatActionBtn.innerText = "Clear";
             }
 
@@ -6064,25 +6478,29 @@
                             <span class="text-slate-600 font-medium">Tracking Number:</span>
                             <span class="font-mono font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">${o.trackingNumber || 'Pending'}</span>
                         </div>
-                        <div class="flex items-center space-x-2">
+                        <div class="flex flex-wrap items-center gap-1.5">
                             ${!o.paid ? `
                                 <button type="button" onclick="payPendingOrderNow('${o.id}')" class="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold px-3.5 py-1.5 rounded-xl text-xs transition flex items-center space-x-1.5 shadow-sm">
                                     <i class="fa-solid fa-credit-card"></i>
                                     <span>Pay Now</span>
                                 </button>
                             ` : ''}
-                            ${(o.trackingNumber && o.trackingNumber !== 'Pending' && o.trackingNumber.trim() !== '') ? `
-                                <button type="button" onclick="openInvoiceModal('${o.id}')" class="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-3 py-1.5 rounded-xl text-xs border border-slate-300 transition flex items-center space-x-1">
+                            ${(o.paid || (o.trackingNumber && o.trackingNumber !== 'Pending' && o.trackingNumber.trim() !== '')) ? `
+                                <button type="button" onclick="openInvoiceModal('${o.id}')" class="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-3 py-1.5 rounded-xl text-xs border border-slate-300 transition flex items-center space-x-1 cursor-pointer">
                                     <i class="fa-solid fa-eye text-slate-600"></i>
                                     <span>Invoice</span>
                                 </button>
-                                <button type="button" onclick="directDownloadInvoice('${o.id}')" class="bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold px-3 py-1.5 rounded-xl text-xs transition flex items-center space-x-1 shadow-sm">
+                                <button type="button" onclick="directDownloadInvoicePDF('${o.id}')" class="bg-rose-600 hover:bg-rose-700 text-white font-bold px-3 py-1.5 rounded-xl text-xs transition flex items-center space-x-1 shadow-sm cursor-pointer">
+                                    <i class="fa-solid fa-file-pdf"></i>
+                                    <span>PDF</span>
+                                </button>
+                                <button type="button" onclick="directDownloadInvoice('${o.id}')" class="bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold px-3 py-1.5 rounded-xl text-xs transition flex items-center space-x-1 shadow-sm cursor-pointer">
                                     <i class="fa-solid fa-file-arrow-down"></i>
                                     <span>PNG</span>
                                 </button>
                             ` : `
                                 <span class="text-[10px] text-amber-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200 font-semibold flex items-center gap-1">
-                                    <i class="fa-solid fa-clock"></i> Invoice locked (Pending tracking)
+                                    <i class="fa-solid fa-clock"></i> Invoice locked (Pending payment)
                                 </span>
                             `}
                         </div>
@@ -6101,8 +6519,8 @@
 
             const verifiedPaidOrders = allOrders.filter(o => {
                 const belongsToMe = o.customer && o.customer.toLowerCase() === currentUser.email.toLowerCase();
-                const hasValidTracking = o.trackingNumber && o.trackingNumber !== 'Pending' && o.trackingNumber.trim() !== '';
-                return belongsToMe && hasValidTracking;
+                const isPaidOrTracked = !!o.paid || o.amountDrawn === true || (o.trackingNumber && o.trackingNumber !== 'Pending' && o.trackingNumber.trim() !== '');
+                return belongsToMe && isPaidOrTracked;
             });
 
             if (verifiedPaidOrders.length === 0) {
@@ -6110,7 +6528,7 @@
                     <div class="text-center py-8 text-slate-400 bg-slate-50/70 rounded-2xl border border-dashed border-slate-200 p-4">
                         <i class="fa-solid fa-file-invoice-dollar text-3xl text-slate-300 mb-2 block"></i>
                         <p class="text-xs font-semibold text-slate-600">No confirmed invoices available yet</p>
-                        <p class="text-[11px] text-slate-400 mt-1">Invoices and download buttons are unlocked once payment is confirmed and a tracking number is assigned by the admin.</p>
+                        <p class="text-[11px] text-slate-400 mt-1">Invoices and download buttons are unlocked once payment is confirmed via ToyyibPay FPX.</p>
                     </div>
                 `;
                 return;
@@ -6126,17 +6544,21 @@
                             </span>
                         </div>
                         <p class="text-[11px] text-slate-700 mt-1">Order Date: <b>${o.date}</b> • Amount Paid: <b class="text-[#65a30d]">RM ${o.total}</b></p>
-                        <p class="text-[10px] text-slate-500">Tracking: <b class="font-mono text-amber-700">${o.trackingNumber}</b> • Items: ${(o.items || []).map(i => `${i.name} (PWR ${i.pwr}) x${i.qty}`).join(', ')}</p>
+                        <p class="text-[10px] text-slate-500">Tracking: <b class="font-mono text-amber-700">${o.trackingNumber || 'Pending'}</b> • Items: ${(o.items || []).map(i => `${i.name} (PWR ${i.pwr}) x${i.qty}`).join(', ')}</p>
                     </div>
 
-                    <div class="flex items-center space-x-2 w-full sm:w-auto">
-                        <button type="button" onclick="openInvoiceModal('${o.id}')" class="flex-1 sm:flex-initial bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-bold px-3 py-2.5 rounded-xl text-xs border border-slate-300 transition flex items-center justify-center space-x-1.5 shadow-sm">
+                    <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                        <button type="button" onclick="openInvoiceModal('${o.id}')" class="flex-1 sm:flex-initial bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 font-bold px-3 py-2.5 rounded-xl text-xs border border-slate-300 transition flex items-center justify-center space-x-1.5 shadow-sm cursor-pointer">
                             <i class="fa-solid fa-eye text-slate-600"></i>
                             <span>View Invoice</span>
                         </button>
-                        <button type="button" onclick="directDownloadInvoice('${o.id}')" class="flex-1 sm:flex-initial bg-[#65a30d] hover:bg-[#4d7c0f] active:bg-[#3f6212] text-white font-bold px-3 py-2.5 rounded-xl text-xs transition flex items-center justify-center space-x-1.5 shadow-sm">
+                        <button type="button" onclick="directDownloadInvoicePDF('${o.id}')" class="flex-1 sm:flex-initial bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white font-bold px-3 py-2.5 rounded-xl text-xs transition flex items-center justify-center space-x-1.5 shadow-sm cursor-pointer">
+                            <i class="fa-solid fa-file-pdf"></i>
+                            <span>Download PDF</span>
+                        </button>
+                        <button type="button" onclick="directDownloadInvoice('${o.id}')" class="flex-1 sm:flex-initial bg-[#65a30d] hover:bg-[#4d7c0f] active:bg-[#3f6212] text-white font-bold px-3 py-2.5 rounded-xl text-xs transition flex items-center justify-center space-x-1.5 shadow-sm cursor-pointer">
                             <i class="fa-solid fa-file-arrow-down"></i>
-                            <span>Download A4 PNG</span>
+                            <span>Download PNG</span>
                         </button>
                     </div>
                 </div>
@@ -6360,12 +6782,20 @@
                                 ${o.paid ? '● Payment Confirmed (Amount Drawn via FPX)' : '○ Unpaid / Pending ToyyibPay FPX'}
                             </p>
                         </div>
-                        <div class="flex items-center space-x-2">
+                        <div class="flex flex-wrap items-center gap-1.5">
                             ${!o.paid ? `
                                 <button onclick="adminMarkOrderAsPaid('${o.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded-xl text-xs transition shadow-sm">
                                     <i class="fa-solid fa-check mr-1"></i> Verify Paid
                                 </button>
                             ` : ''}
+                            <button type="button" onclick="directDownloadInvoicePDF('${o.id}')" class="bg-rose-600 hover:bg-rose-700 text-white font-bold px-2.5 py-2 rounded-xl text-xs transition shadow-sm flex items-center gap-1 cursor-pointer" title="Download Invoice as PDF">
+                                <i class="fa-solid fa-file-pdf"></i>
+                                <span>PDF</span>
+                            </button>
+                            <button type="button" onclick="directDownloadInvoice('${o.id}')" class="bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold px-2.5 py-2 rounded-xl text-xs transition shadow-sm flex items-center gap-1 cursor-pointer" title="Download Invoice as PNG">
+                                <i class="fa-solid fa-file-image"></i>
+                                <span>PNG</span>
+                            </button>
                             <button onclick="openAdminOrderDetail('${o.id}')" class="bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold px-3 py-2 rounded-xl text-xs transition">
                                 View Details &amp; Tracking
                             </button>
@@ -6793,6 +7223,109 @@
             }, 300);
         };
 
+        window.directDownloadInvoicePDF = function(orderId) {
+            const order = allOrders.find(o => o.id === orderId) || (allOrders.length > 0 ? allOrders[0] : null);
+            if (!order) return;
+            populateInvoiceDOM(order);
+
+            const modal = document.getElementById('invoice-modal');
+            if (modal) {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modal.classList.add('opacity-100');
+            }
+
+            setTimeout(() => {
+                downloadInvoiceAsPDF();
+            }, 300);
+        };
+
+        window.printFormattedInvoice = function() {
+            const formatSelect = document.getElementById('invoice-print-format-select');
+            const mode = formatSelect ? formatSelect.value : 'a4';
+            document.body.classList.remove('thermal-pos-80mm', 'thermal-pos-58mm');
+            if (mode === 'pos80') {
+                document.body.classList.add('thermal-pos-80mm');
+            } else if (mode === 'pos58') {
+                document.body.classList.add('thermal-pos-58mm');
+            }
+            window.print();
+            setTimeout(() => {
+                document.body.classList.remove('thermal-pos-80mm', 'thermal-pos-58mm');
+            }, 1000);
+        };
+
+        async function downloadInvoiceAsPDF() {
+            const printableArea = document.getElementById('invoice-printable-area');
+            if (!printableArea) {
+                showToast("Error", "Invoice area not found.", true);
+                return;
+            }
+
+            const jsPdfLib = window.jspdf;
+            if (!jsPdfLib || !jsPdfLib.jsPDF) {
+                showToast("PDF Engine Loading", "Please wait a second and try downloading PDF again.", true);
+                return;
+            }
+
+            showToast("Generating A4 PDF", "Rendering A4 PDF document for browser & mobile...");
+
+            const origStyle = printableArea.getAttribute('style') || '';
+            try {
+                printableArea.style.width = '794px';
+                printableArea.style.maxWidth = '794px';
+                printableArea.style.minHeight = '1123px';
+                printableArea.style.padding = '48px';
+                printableArea.style.borderRadius = '0px';
+
+                const canvas = await html2canvas(printableArea, {
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: '#ffffff',
+                    windowWidth: 1024,
+                    scrollX: 0,
+                    scrollY: 0,
+                    logging: false
+                });
+
+                printableArea.setAttribute('style', origStyle);
+
+                const imgData = canvas.toDataURL('image/png');
+                const { jsPDF } = jsPdfLib;
+                const pdf = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4'
+                });
+
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+                const imgProps = pdf.getImageProperties(imgData);
+                const scaledHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+                let heightLeft = scaledHeight;
+                let position = 0;
+
+                pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, scaledHeight);
+                heightLeft -= pdfHeight;
+
+                while (heightLeft > 0) {
+                    position = heightLeft - scaledHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, scaledHeight);
+                    heightLeft -= pdfHeight;
+                }
+
+                const filename = `SweetopiaShop_Invoice_${currentActiveInvoiceId || Date.now()}.pdf`;
+                pdf.save(filename);
+                showToast("PDF Downloaded!", "A4 Invoice PDF downloaded successfully!");
+            } catch (err) {
+                printableArea.setAttribute('style', origStyle);
+                console.error("PDF generation error:", err);
+                showToast("PDF Error", "Could not render PDF. Please retry.", true);
+            }
+        }
+
         async function downloadInvoiceAsPNG() {
             const printableArea = document.getElementById('invoice-printable-area');
             if (!printableArea) {
@@ -6800,9 +7333,22 @@
                 return;
             }
 
-            showToast("Generating A4 PNG", "Rendering high quality invoice image...");
+            const isMobileViewport = window.innerWidth < 768;
+            const targetWidth = isMobileViewport ? Math.min(430, Math.max(360, window.innerWidth - 24)) : 794;
+            showToast("Generating PNG", isMobileViewport ? `Rendering mobile invoice (${targetWidth}px)...` : "Rendering A4 high quality invoice PNG...");
 
+            const origStyle = printableArea.getAttribute('style') || '';
             try {
+                if (isMobileViewport) {
+                    printableArea.style.width = `${targetWidth}px`;
+                    printableArea.style.maxWidth = `${targetWidth}px`;
+                } else {
+                    printableArea.style.width = '794px';
+                    printableArea.style.maxWidth = '794px';
+                    printableArea.style.minHeight = '1123px';
+                    printableArea.style.padding = '48px';
+                }
+
                 const canvas = await html2canvas(printableArea, {
                     scale: 2,
                     useCORS: true,
@@ -6812,6 +7358,8 @@
                     scrollY: 0,
                     logging: false
                 });
+
+                printableArea.setAttribute('style', origStyle);
 
                 const filename = `SweetopiaShop_Invoice_${currentActiveInvoiceId || Date.now()}.png`;
 
@@ -7215,87 +7763,11 @@
             if (input) input.value = '';
         }
 
-        async function sendSpecialChatMessage(msgPayload) {
-            if (!currentUser) {
-                showToast("Sign In Required", "Please sign in or continue as guest to chat.", true);
-                return;
-            }
-
-            const isAdmin = isAdminUser(currentUser.email);
-            let targetSessionUser = (currentUser.email || '').trim().toLowerCase();
-
-            if (isAdmin) {
-                const select = document.getElementById('admin-active-chat-user');
-                targetSessionUser = ((activeChatSessionUser || select?.value) || '').trim().toLowerCase();
-                if (!targetSessionUser) {
-                    showToast("No User Selected", "Select a customer from the dropdown to reply.", true);
-                    return;
-                }
-            }
-
-            const senderAvatar = isAdmin ? null : getUserAvatarForEmail(currentUser.email);
-
-            const newMsg = {
-                id: 'msg_' + Date.now(),
-                sender: (currentUser.email || '').trim().toLowerCase(),
-                senderName: isAdmin ? 'Admin Support' : (currentUser.guestId || currentUser.email.split('@')[0]),
-                senderAvatar: senderAvatar,
-                text: msgPayload.text || '',
-                type: msgPayload.type || 'text',
-                mediaUrl: msgPayload.mediaUrl || null,
-                productData: msgPayload.productData || null,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                timestamp: new Date().toISOString(),
-                isAdmin: isAdmin
-            };
-
-            const existingMsgs = userSessionsMap[targetSessionUser] || [];
-            existingMsgs.push(newMsg);
-            userSessionsMap[targetSessionUser] = existingMsgs;
-
-            renderActiveChatMessages();
-
-            if (db) {
-                try {
-                    const docKey = targetSessionUser.replace(/[^a-zA-Z0-9]/g, '_');
-                    await db.collection("lumilens_chats").doc(docKey).set({
-                        userEmail: targetSessionUser,
-                        userAvatar: isAdmin ? getUserAvatarForEmail(targetSessionUser) : senderAvatar,
-                        messages: existingMsgs,
-                        lastUpdated: new Date().toISOString()
-                    }, { merge: true });
-                } catch(e) { console.warn("Firestore chat send error:", e); }
-            }
-        }
-
         function handleKeypress(event) {
             if (event.key === 'Enter' && !event.shiftKey) {
                 event.preventDefault();
                 sendTextMessage();
             }
-        }
-
-        async function clearWidgetChat() {
-            let targetUser = (currentUser?.email || '').trim().toLowerCase();
-            if (currentUser && isAdminUser(currentUser.email)) {
-                targetUser = ((activeChatSessionUser || document.getElementById('admin-active-chat-user')?.value) || '').trim().toLowerCase();
-            }
-            if (!targetUser) return;
-
-            userSessionsMap[targetUser] = [];
-            renderActiveChatMessages();
-
-            if (db) {
-                try {
-                    const docKey = targetUser.replace(/[^a-zA-Z0-9]/g, '_');
-                    await db.collection("lumilens_chats").doc(docKey).set({
-                        userEmail: targetUser,
-                        messages: [],
-                        lastUpdated: new Date().toISOString()
-                    });
-                } catch(e) { console.warn(e); }
-            }
-            showToast("Chat Cleared", "Messages cleared.");
         }
 
         let activePresetsList = [
@@ -7633,6 +8105,11 @@
 
             await syncAssignedVouchersStorage();
 
+            const chosenDisplayName = getCustomerDisplayName(chosenCustomer);
+            const chosenDisplayLabel = chosenDisplayName !== chosenCustomer.split('@')[0]
+                ? `${chosenDisplayName} (${chosenCustomer})`
+                : chosenCustomer;
+
             const formattedExpiry = new Date(expiry + 'T23:59:00').toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' 🎀';
             activePresetsList.unshift({
                 id: 'preset_' + Date.now(),
@@ -7643,7 +8120,7 @@
                 limitText: '★ Limit: 1 use per customer ★',
                 displayText: `Display: ${displaySetting === 'all_pages' ? 'Display on all pages' : 'Do not display'}`,
                 assignedTargetType: 'Assigned Customers:',
-                assignedItems: [chosenCustomer],
+                assignedItems: [chosenDisplayLabel],
                 expiryText: formattedExpiry,
                 active: true,
                 badgeTheme: 'pink'
@@ -7651,7 +8128,7 @@
 
             renderPresetsTable();
             renderCustomerVouchersUI();
-            showToast("Voucher Published!", `${finalCode} assigned to ${chosenCustomer} & added to active table.`);
+            showToast("Voucher Published!", `${finalCode} assigned to ${chosenDisplayName} & added to active table.`);
             resetSection1Form();
         };
 
@@ -7784,6 +8261,7 @@
                 try {
                     const docKey = cleanEmail.replace(/[^a-zA-Z0-9]/g, '_');
                     const nowIso = new Date().toISOString();
+                    const existingCustomName = (userDisplayNamesMap[cleanEmail] || '').trim();
                     const userProfilePayload = {
                         email: cleanEmail,
                         uid: uid || null,
@@ -7792,6 +8270,17 @@
                         registeredAt: nowIso,
                         updatedAt: nowIso
                     };
+                    if (existingCustomName) {
+                        userProfilePayload.displayName = existingCustomName;
+                    }
+
+                    const chatDocPayload = {
+                        userEmail: cleanEmail,
+                        lastUpdated: nowIso
+                    };
+                    if (existingCustomName) {
+                        chatDocPayload.userName = existingCustomName;
+                    }
 
                     await Promise.all([
                         db.collection("lumilens_users").doc(docKey).set(userProfilePayload, { merge: true }).catch(() => {}),
@@ -7800,10 +8289,7 @@
                             emails: firebase.firestore.FieldValue.arrayUnion(cleanEmail),
                             updatedAt: nowIso
                         }, { merge: true }).catch(() => {}),
-                        db.collection("lumilens_chats").doc(docKey).set({
-                            userEmail: cleanEmail,
-                            lastUpdated: nowIso
-                        }, { merge: true }).catch(() => {})
+                        db.collection(CHAT_MESSAGES_COLLECTION).doc(docKey).set(chatDocPayload, { merge: true }).catch(() => {})
                     ]);
                 } catch (e) { console.warn("Save registered user error:", e); }
             }
@@ -7812,10 +8298,10 @@
         async function syncAllUsersFromServer() {
             if (!db) return;
             try {
-                const [lumiSnap, usersFallbackSnap, chatsSnap, presenceSnap, dirSnap] = await Promise.all([
+                const [lumiSnap, usersFallbackSnap, chatMsgSnap, presenceSnap, dirSnap] = await Promise.all([
                     db.collection("lumilens_users").get({ source: 'server' }).catch(() => db.collection("lumilens_users").get().catch(() => null)),
                     db.collection("users").get({ source: 'server' }).catch(() => db.collection("users").get().catch(() => null)),
-                    db.collection("lumilens_chats").get({ source: 'server' }).catch(() => db.collection("lumilens_chats").get().catch(() => null)),
+                    db.collection(CHAT_MESSAGES_COLLECTION).get({ source: 'server' }).catch(() => db.collection(CHAT_MESSAGES_COLLECTION).get().catch(() => null)),
                     db.collection("lumilens_presence").get({ source: 'server' }).catch(() => db.collection("lumilens_presence").get().catch(() => null)),
                     db.collection("lumilens_public_directory").doc("registered_customers").get({ source: 'server' }).catch(() => db.collection("lumilens_public_directory").doc("registered_customers").get().catch(() => null))
                 ]);
@@ -7825,12 +8311,15 @@
                     ...(registeredCustomersList || [])
                 ]);
 
-                const addCandidateEmail = (rawEmail, avatar = null, emailVerified = null) => {
+                const addCandidateEmail = (rawEmail, avatar = null, emailVerified = null, customDisplayName = null) => {
                     if (!rawEmail || typeof rawEmail !== 'string') return;
                     const cleanEm = rawEmail.trim().toLowerCase();
                     if (!cleanEm || isAdminUser(cleanEm) || cleanEm.startsWith('guest_') || cleanEm.endsWith('@sweetopiashop.my')) return;
                     merged.add(cleanEm);
                     if (avatar) userAvatarsMap[cleanEm] = avatar;
+                    if (customDisplayName && typeof customDisplayName === 'string' && customDisplayName.trim() && !/^anonymous\d+$/i.test(customDisplayName.trim())) {
+                        userDisplayNamesMap[cleanEm] = customDisplayName.trim();
+                    }
                     if (typeof emailVerified === 'boolean') verifiedEmailsMap[cleanEm] = emailVerified;
                     if (!userSessionsMap[cleanEm]) userSessionsMap[cleanEm] = [];
                 };
@@ -7840,23 +8329,36 @@
                     snap.forEach(docSnap => {
                         const data = docSnap.data();
                         if (!data) return;
-                        addCandidateEmail(data.email || data.userEmail, data.avatar || data.userAvatar, data.emailVerified);
+                        addCandidateEmail(
+                            data.email || data.userEmail,
+                            data.avatar || data.userAvatar,
+                            data.emailVerified,
+                            data.displayName || data.userName || data.name
+                        );
                     });
                 };
 
                 processSnapshot(lumiSnap);
                 processSnapshot(usersFallbackSnap);
-                processSnapshot(chatsSnap);
+                processSnapshot(chatMsgSnap);
                 processSnapshot(presenceSnap);
 
                 if (dirSnap && dirSnap.exists && Array.isArray(dirSnap.data()?.emails)) {
                     dirSnap.data().emails.forEach(em => addCandidateEmail(em));
                 }
 
+                saveUserDisplayNamesLocal();
                 registeredCustomersList = Array.from(merged);
                 try {
                     localStorage.setItem('sweetopia_registered_customers', JSON.stringify(registeredCustomersList));
                 } catch (e) {}
+
+                if (currentUser && currentUser.email && !isGuestUser()) {
+                    const mobileUserName = document.getElementById('mobile-user-name');
+                    if (mobileUserName && document.getElementById('user-name-edit-row')?.classList.contains('hidden')) {
+                        mobileUserName.innerText = getCustomerDisplayName(currentUser.email);
+                    }
+                }
 
                 renderAdminVoucherCustomerDropdowns();
                 updateAdminChatUserDropdown();
@@ -7867,28 +8369,7 @@
         }
 
         function renderAdminVoucherCustomerDropdowns() {
-            const knownUsersSet = new Set();
-
-            const tryAddUser = (rawEmail) => {
-                if (!rawEmail || typeof rawEmail !== 'string') return;
-                const clean = rawEmail.trim().toLowerCase();
-                if (!clean || isAdminUser(clean)) return;
-                if (clean.startsWith('guest_') || clean.endsWith('@sweetopiashop.my')) return;
-                knownUsersSet.add(clean);
-            };
-
-            SEEDED_REGISTERED_CUSTOMERS.forEach(tryAddUser);
-            (registeredCustomersList || []).forEach(tryAddUser);
-            Object.keys(presenceMap || {}).forEach(tryAddUser);
-            Object.keys(userSessionsMap || {}).forEach(tryAddUser);
-            (allOrders || []).forEach(o => { if (o && o.customer) tryAddUser(o.customer); });
-            Object.keys(assignedVouchersMap || {}).forEach(tryAddUser);
-
-            if (currentUser && currentUser.email && !isGuestUser()) {
-                tryAddUser(currentUser.email);
-            }
-
-            const userList = Array.from(knownUsersSet).sort((a, b) => a.localeCompare(b));
+            const userList = getOrderedRegisteredCustomers();
 
             ['code1', 'code2', 'code3', 'code4', 'code5'].forEach(codeId => {
                 const select = document.getElementById(`customer-${codeId}`);
@@ -7898,7 +8379,8 @@
                 let optionsHtml = '<option value="">-- Registered Customer --</option>';
 
                 userList.forEach(u => {
-                    optionsHtml += `<option value="${u}" ${u === currentVal ? 'selected' : ''}>${u}</option>`;
+                    const displayName = getCustomerDisplayName(u);
+                    optionsHtml += `<option value="${u}" ${u === currentVal ? 'selected' : ''}>${displayName}</option>`;
                 });
 
                 select.innerHTML = optionsHtml;
@@ -7928,24 +8410,42 @@
             if (!db || !email) return;
             const cleanEmail = email.trim().toLowerCase();
             const nowIso = new Date().toISOString();
+            const nowMs = Date.now();
             const isAdmin = isAdminUser(cleanEmail);
+            const currentCustomName = isAdmin ? 'Admin' : getCustomerDisplayName(cleanEmail);
 
             presenceMap[cleanEmail] = !!isOnline;
+            if (isOnline) {
+                presenceLastSeenMap[cleanEmail] = nowMs;
+            } else {
+                delete presenceLastSeenMap[cleanEmail];
+            }
+
             if (isAdmin) {
                 adminSupportOnlineFlag = !!isOnline;
             }
             updateSupportIndicator();
+            updateAdminChatUserDropdown();
 
             try {
                 const userKey = cleanEmail.replace(/[^a-zA-Z0-9]/g, '_');
+                const serverTs = (firebase.firestore && firebase.firestore.FieldValue && firebase.firestore.FieldValue.serverTimestamp)
+                    ? firebase.firestore.FieldValue.serverTimestamp()
+                    : nowIso;
+
+                const presencePayload = {
+                    email: cleanEmail,
+                    isOnline: !!isOnline,
+                    isAdmin: isAdmin,
+                    lastSeen: nowIso,
+                    updatedAt: serverTs,
+                    clientTs: nowMs
+                };
+                if (isAdmin || userDisplayNamesMap[cleanEmail]) {
+                    presencePayload.displayName = currentCustomName;
+                }
                 const tasks = [
-                    db.collection("lumilens_presence").doc(userKey).set({
-                        email: cleanEmail,
-                        isOnline: !!isOnline,
-                        isAdmin: isAdmin,
-                        lastSeen: nowIso,
-                        clientTs: Date.now()
-                    }, { merge: true }).catch(() => {})
+                    db.collection("lumilens_presence").doc(userKey).set(presencePayload, { merge: true }).catch(() => {})
                 ];
 
                 if (isAdmin) {
@@ -7954,7 +8454,8 @@
                             email: cleanEmail,
                             isOnline: !!isOnline,
                             lastSeen: nowIso,
-                            clientTs: Date.now()
+                            updatedAt: serverTs,
+                            clientTs: nowMs
                         }, { merge: true }).catch(() => {})
                     );
                 } else if (!isGuestUser()) {
@@ -7970,50 +8471,193 @@
             } catch(e) { }
         }
 
-        function initFirestoreListeners() {
+        function isPresenceDocOnline(data) {
+            if (!data || data.isOnline !== true) return false;
+            const now = Date.now();
+            let docTimeMs = 0;
+
+            if (data.updatedAt && typeof data.updatedAt.toMillis === 'function') {
+                docTimeMs = data.updatedAt.toMillis();
+            } else if (data.lastSeen) {
+                const parsed = new Date(data.lastSeen).getTime();
+                if (!isNaN(parsed)) docTimeMs = parsed;
+            } else if (typeof data.clientTs === 'number') {
+                docTimeMs = data.clientTs;
+            }
+
+            if (!docTimeMs || isNaN(docTimeMs)) return true;
+            return Math.abs(now - docTimeMs) < 300000;
+        }
+
+        async function syncLivePresenceFromServer() {
             if (!db) return;
-            db.collection("lumilens_products").onSnapshot((snapshot) => {
-                if (snapshot && !snapshot.empty) {
-                    const serverMap = new Map();
-                    snapshot.forEach(docSnap => {
-                        const data = { id: docSnap.id, ...docSnap.data() };
-                        if (data && data.name) {
-                            serverMap.set(docSnap.id, data);
-                            if (data.powerStock) {
-                                window.productPowerStock[data.id] = data.powerStock;
-                            }
-                            if (data.powerLocations) {
-                                window.productPowerLocations[data.id] = data.powerLocations;
-                            }
-                        }
-                    });
+            try {
+                const snap = await db.collection("lumilens_presence").get({ source: 'server' }).catch(() => db.collection("lumilens_presence").get().catch(() => null));
+                if (!snap) return;
 
-                    // Preserve any local/cached admin-managed lenses that haven't finished syncing to Firestore yet
-                    products.forEach(localProd => {
-                        if (localProd && localProd.id && !serverMap.has(localProd.id)) {
-                            const isDefaultOnly = DEFAULT_SEED_PRODUCTS.some(d => d.id === localProd.id);
-                            if (!isDefaultOnly || serverMap.size === 0) {
-                                serverMap.set(localProd.id, localProd);
-                                db.collection("lumilens_products").doc(localProd.id).set({
-                                    ...localProd,
-                                    powerStock: window.productPowerStock[localProd.id] || {},
-                                    powerLocations: window.productPowerLocations[localProd.id] || {}
-                                }, { merge: true }).catch(() => {});
-                            }
-                        }
-                    });
+                let sharedAdminOnline = false;
+                const updatedPresence = {};
 
-                    if (serverMap.size > 0) {
-                        products = Array.from(serverMap.values());
-                        ensureProductStockDefaults(products);
-                        saveProductsToLocalBackup();
+                if (currentUser && currentUser.email) {
+                    const myClean = currentUser.email.trim().toLowerCase();
+                    updatedPresence[myClean] = true;
+                    if (isAdminUser(myClean)) sharedAdminOnline = true;
+                }
+
+                snap.forEach(docSnap => {
+                    const data = docSnap.data();
+                    if (!data) return;
+                    const onlineNow = isPresenceDocOnline(data);
+
+                    if (docSnap.id === 'admin_support_status' && onlineNow) {
+                        sharedAdminOnline = true;
+                    }
+                    if (data.email && typeof data.email === 'string') {
+                        const cleanEm = data.email.trim().toLowerCase();
+                        if (onlineNow) {
+                            updatedPresence[cleanEm] = true;
+                            if (isAdminUser(cleanEm)) sharedAdminOnline = true;
+                        } else if (!updatedPresence[cleanEm]) {
+                            updatedPresence[cleanEm] = false;
+                        }
+                        if (data.displayName && typeof data.displayName === 'string' && data.displayName.trim() && !/^anonymous\d+$/i.test(data.displayName.trim())) {
+                            userDisplayNamesMap[cleanEm] = data.displayName.trim();
+                        }
+                    }
+                });
+
+                presenceMap = updatedPresence;
+                adminSupportOnlineFlag = sharedAdminOnline;
+                updateAdminChatUserDropdown();
+                updateSupportIndicator();
+            } catch (e) {}
+        }
+
+        function processIncomingChatSnapshot(snapshot) {
+            if (!snapshot) return;
+            const chatWin = document.getElementById('sweetopiaChatWindow');
+            const isChatOpen = chatWin && !chatWin.classList.contains('hidden') && !chatWin.classList.contains('opacity-0');
+            const myEmail = (currentUser?.email || '').trim().toLowerCase();
+            const amIAdmin = currentUser && isAdminUser(currentUser.email);
+            let newlyArrivedForMe = 0;
+
+            snapshot.forEach(docSnap => {
+                const data = docSnap.data();
+                if (!data) return;
+                const rawEmail = data.userEmail || data.email || '';
+                if (!rawEmail) return;
+                const cleanEmail = String(rawEmail).trim().toLowerCase();
+                const incomingMsgs = Array.isArray(data.messages) ? data.messages : [];
+                const existingMsgs = userSessionsMap[cleanEmail] || [];
+
+                const mergedById = new Map();
+                existingMsgs.forEach(m => { if (m && m.id) mergedById.set(m.id, m); });
+                incomingMsgs.forEach(m => {
+                    if (m && m.id) {
+                        if (!mergedById.has(m.id) && myEmail && !lastSeenChatMessageIds.has(m.id)) {
+                            lastSeenChatMessageIds.add(m.id);
+                            const senderEmail = (m.sender || '').trim().toLowerCase();
+                            const isFromOtherDevice = senderEmail && senderEmail !== myEmail;
+                            const isRelevantToMe = amIAdmin ? !m.isAdmin : (cleanEmail === myEmail && m.isAdmin);
+                            if (isFromOtherDevice && isRelevantToMe) {
+                                newlyArrivedForMe++;
+                                if (amIAdmin && !activeChatSessionUser) {
+                                    activeChatSessionUser = cleanEmail;
+                                }
+                            }
+                        } else {
+                            lastSeenChatMessageIds.add(m.id);
+                        }
+                        mergedById.set(m.id, m);
+                    }
+                });
+
+                const mergedList = Array.from(mergedById.values()).sort((a, b) => {
+                    const ta = new Date(a.timestamp || 0).getTime();
+                    const tb = new Date(b.timestamp || 0).getTime();
+                    return ta - tb;
+                });
+
+                userSessionsMap[cleanEmail] = mergedList;
+
+                if (data.userAvatar) {
+                    userAvatarsMap[cleanEmail] = data.userAvatar;
+                }
+                if (data.userName && typeof data.userName === 'string' && data.userName.trim() && !/^anonymous\d+$/i.test(data.userName.trim())) {
+                    userDisplayNamesMap[cleanEmail] = data.userName.trim();
+                }
+                if (!isAdminUser(cleanEmail) && !cleanEmail.startsWith('guest_') && !cleanEmail.endsWith('@sweetopiashop.my')) {
+                    if (!registeredCustomersList.includes(cleanEmail)) {
+                        registeredCustomersList.push(cleanEmail);
                     }
                 }
+            });
+
+            saveUserDisplayNamesLocal();
+            updateAdminChatUserDropdown();
+            updateChatHeaderAvatars();
+            renderActiveChatMessages();
+            renderAdminVoucherCustomerDropdowns();
+
+            if (newlyArrivedForMe > 0 && !isChatOpen) {
+                unreadChatCount += newlyArrivedForMe;
+                updateWidgetUnreadBadge();
+                showToast("New Live Chat Message", amIAdmin ? "A customer sent a message in Live Support!" : "Admin Support replied to your chat!");
+            }
+        }
+
+        async function syncLiveChatMessagesFromServer() {
+            if (!db) return;
+            try {
+                const snap = await db.collection(CHAT_MESSAGES_COLLECTION)
+                    .get({ source: 'server' })
+                    .catch(() => db.collection(CHAT_MESSAGES_COLLECTION).get().catch(() => null));
+                if (snap) processIncomingChatSnapshot(snap);
+            } catch (e) {}
+        }
+
+        function initFirestoreListeners() {
+            if (!db) return;
+
+            const applyProductSnapshot = (snapshot, sourceCollectionName) => {
+                if (!snapshot || snapshot.empty) return;
+                const serverMap = new Map();
+
+                if (hasLoadedServerProducts && sourceCollectionName === "products") {
+                    products.forEach(existing => {
+                        if (existing && existing.id) serverMap.set(existing.id, existing);
+                    });
+                }
+
+                snapshot.forEach(docSnap => {
+                    const prod = normalizeFirestoreProductDoc(docSnap.id, docSnap.data());
+                    if (prod) {
+                        serverMap.set(docSnap.id, prod);
+                        if (prod.powerStock) {
+                            window.productPowerStock[prod.id] = prod.powerStock;
+                        }
+                        if (prod.powerLocations) {
+                            window.productPowerLocations[prod.id] = prod.powerLocations;
+                        }
+                    }
+                });
+
+                if (serverMap.size > 0) {
+                    hasLoadedServerProducts = true;
+                    products = Array.from(serverMap.values());
+                    ensureProductStockDefaults(products);
+                    saveProductsToLocalBackup();
+                }
+
                 renderStoreProducts(products);
                 renderFavouritesGrid();
                 renderAdminProductsList();
                 renderAdminPowerStockCheckboxes();
                 renderAdminVoucherProductDropdowns();
+            };
+
+            db.collection("lumilens_products").onSnapshot((snapshot) => {
+                applyProductSnapshot(snapshot, "lumilens_products");
             }, () => {
                 renderStoreProducts(products);
                 renderFavouritesGrid();
@@ -8021,13 +8665,21 @@
                 renderAdminPowerStockCheckboxes();
             });
 
+            db.collection("products").onSnapshot((snapshot) => {
+                if (snapshot && !snapshot.empty) {
+                    applyProductSnapshot(snapshot, "products");
+                }
+            }, () => {});
+
             db.collection("lumilens_orders").onSnapshot((snapshot) => {
                 if (snapshot) {
                     const loadedOrders = [];
                     snapshot.forEach(docSnap => {
                         loadedOrders.push({ id: docSnap.id, ...docSnap.data() });
                     });
-                    allOrders = loadedOrders.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+                    allOrders = loadedOrders;
+                    ensureSeededCustomerOrders();
+                    allOrders.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
                     renderAdminOrdersList();
                     renderCustomerOrders();
                     renderCustomerInvoicesTabList();
@@ -8036,6 +8688,7 @@
                     renderAdminVoucherCustomerDropdowns();
                 }
             }, () => {
+                ensureSeededCustomerOrders();
                 renderAdminOrdersList();
                 renderCustomerOrders();
                 renderCustomerInvoicesTabList();
@@ -8069,6 +8722,10 @@
                             if (data.avatar) {
                                 userAvatarsMap[cleanEm] = data.avatar;
                             }
+                            const incomingName = data.displayName || data.userName || data.name;
+                            if (incomingName && typeof incomingName === 'string' && incomingName.trim() && !/^anonymous\d+$/i.test(incomingName.trim())) {
+                                userDisplayNamesMap[cleanEm] = incomingName.trim();
+                            }
                             if (typeof data.emailVerified === 'boolean') {
                                 verifiedEmailsMap[cleanEm] = data.emailVerified;
                             }
@@ -8078,10 +8735,19 @@
                         }
                     }
                 });
+                saveUserDisplayNamesLocal();
                 registeredCustomersList = Array.from(merged);
                 try {
                     localStorage.setItem('sweetopia_registered_customers', JSON.stringify(registeredCustomersList));
                 } catch (e) {}
+
+                if (currentUser && currentUser.email && !isGuestUser()) {
+                    const mobileUserName = document.getElementById('mobile-user-name');
+                    if (mobileUserName && document.getElementById('user-name-edit-row')?.classList.contains('hidden')) {
+                        mobileUserName.innerText = getCustomerDisplayName(currentUser.email);
+                    }
+                }
+
                 renderAdminVoucherCustomerDropdowns();
                 updateAdminChatUserDropdown();
                 updateChatHeaderAvatars();
@@ -8161,23 +8827,33 @@
             if (!db) return;
             db.collection("lumilens_presence").onSnapshot((snapshot) => {
                 if (snapshot) {
-                    const now = Date.now();
                     let sharedAdminOnline = false;
                     const updatedPresence = {};
+
+                    if (currentUser && currentUser.email) {
+                        const myClean = currentUser.email.trim().toLowerCase();
+                        updatedPresence[myClean] = true;
+                        if (isAdminUser(myClean)) sharedAdminOnline = true;
+                    }
 
                     snapshot.forEach(docSnap => {
                         const data = docSnap.data();
                         if (!data) return;
-                        const lastSeenTime = new Date(data.lastSeen || 0).getTime();
-                        const isRecent = !lastSeenTime || isNaN(lastSeenTime) || (now - lastSeenTime < 90000);
-                        const isReallyOnline = Boolean(data.isOnline) && isRecent;
+                        const isReallyOnline = isPresenceDocOnline(data);
 
                         if (docSnap.id === 'admin_support_status') {
                             if (isReallyOnline) sharedAdminOnline = true;
                         }
                         if (data.email && typeof data.email === 'string') {
                             const cleanEm = data.email.trim().toLowerCase();
-                            updatedPresence[cleanEm] = isReallyOnline;
+                            if (isReallyOnline) {
+                                updatedPresence[cleanEm] = true;
+                            } else if (!updatedPresence[cleanEm]) {
+                                updatedPresence[cleanEm] = false;
+                            }
+                            if (data.displayName && typeof data.displayName === 'string' && data.displayName.trim() && !/^anonymous\d+$/i.test(data.displayName.trim())) {
+                                userDisplayNamesMap[cleanEm] = data.displayName.trim();
+                            }
                             if (isAdminUser(cleanEm) && isReallyOnline) {
                                 sharedAdminOnline = true;
                             }
@@ -8189,6 +8865,7 @@
                         }
                     });
 
+                    saveUserDisplayNamesLocal();
                     presenceMap = updatedPresence;
                     adminSupportOnlineFlag = sharedAdminOnline;
                     updateAdminChatUserDropdown();
@@ -8197,28 +8874,8 @@
                 }
             }, () => {});
 
-            db.collection("lumilens_chats").onSnapshot((snapshot) => {
-                if (snapshot) {
-                    snapshot.forEach(docSnap => {
-                        const data = docSnap.data();
-                        if (data && data.userEmail) {
-                            const cleanEmail = data.userEmail.trim().toLowerCase();
-                            userSessionsMap[cleanEmail] = data.messages || [];
-                            if (data.userAvatar) {
-                                userAvatarsMap[cleanEmail] = data.userAvatar;
-                            }
-                            if (!isAdminUser(cleanEmail) && !cleanEmail.startsWith('guest_') && !cleanEmail.endsWith('@sweetopiashop.my')) {
-                                if (!registeredCustomersList.includes(cleanEmail)) {
-                                    registeredCustomersList.push(cleanEmail);
-                                }
-                            }
-                        }
-                    });
-                    updateAdminChatUserDropdown();
-                    updateChatHeaderAvatars();
-                    renderActiveChatMessages();
-                    renderAdminVoucherCustomerDropdowns();
-                }
+            db.collection(CHAT_MESSAGES_COLLECTION).onSnapshot((snapshot) => {
+                processIncomingChatSnapshot(snapshot);
             }, () => {});
         }
 
@@ -8236,19 +8893,36 @@
                     return !!presenceMap[cleanAdmin];
                 });
             } else {
-                hasActiveOnline = Object.keys(presenceMap).some(email => {
-                    const cleanEm = email.trim().toLowerCase();
-                    const notMe = !currentUser || cleanEm !== (currentUser.email || '').trim().toLowerCase();
-                    return notMe && !isAdminUser(cleanEm) && !!presenceMap[cleanEm];
-                });
+                const targetUser = (activeChatSessionUser || document.getElementById('admin-active-chat-user')?.value || '').trim().toLowerCase();
+                if (targetUser && presenceMap[targetUser]) {
+                    hasActiveOnline = true;
+                } else {
+                    hasActiveOnline = Object.keys(presenceMap).some(email => {
+                        const cleanEm = email.trim().toLowerCase();
+                        const notMe = !currentUser || cleanEm !== (currentUser.email || '').trim().toLowerCase();
+                        return notMe && !isAdminUser(cleanEm) && !!presenceMap[cleanEm];
+                    });
+                }
             }
 
             if (hasActiveOnline) {
-                dot.className = "w-2 h-2 rounded-full bg-emerald-400 inline-block mr-1 transition-colors";
-                txt.innerText = "Online & Active";
+                dot.className = "w-2 h-2 rounded-full bg-emerald-400 inline-block mr-1 animate-pulse transition-colors";
+                txt.innerText = isCustomer ? "Admin Online & Active" : "Customer Online & Active";
             } else {
                 dot.className = "w-2 h-2 rounded-full bg-slate-400 inline-block mr-1 transition-colors";
-                txt.innerText = "Offline / Away";
+                txt.innerText = isCustomer ? "Admin Offline / Away" : "Offline / Away";
+            }
+        }
+        window.updateSupportIndicator = updateSupportIndicator;
+
+        function updateWidgetUnreadBadge() {
+            const badge = document.getElementById('widget-unread-badge');
+            if (!badge) return;
+            if (unreadChatCount > 0) {
+                badge.innerText = unreadChatCount > 9 ? '9+' : String(unreadChatCount);
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
             }
         }
 
@@ -8256,26 +8930,41 @@
             const select = document.getElementById('admin-active-chat-user');
             if (!select) return;
 
+            const registeredUsers = getOrderedRegisteredCustomers();
             const knownUsersMap = new Map();
-            const addKnownUser = (rawEmail) => {
+            registeredUsers.forEach(u => knownUsersMap.set(u, u));
+
+            // Include active guest sessions or guest chat threads across all devices
+            const addActiveGuest = (rawEmail) => {
                 if (!rawEmail || typeof rawEmail !== 'string') return;
                 const clean = rawEmail.trim().toLowerCase();
                 if (!clean || isAdminUser(clean)) return;
-                if (clean.startsWith('guest_') || clean.endsWith('@sweetopiashop.my')) return;
-                if (!knownUsersMap.has(clean)) {
-                    knownUsersMap.set(clean, clean);
+                if (clean.startsWith('guest_') || clean.endsWith('@sweetopiashop.my')) {
+                    const hasMessages = Array.isArray(userSessionsMap[clean]) && userSessionsMap[clean].length > 0;
+                    const isOnline = !!presenceMap[clean];
+                    if (isOnline || hasMessages) {
+                        knownUsersMap.set(clean, clean);
+                    }
                 }
             };
 
-            SEEDED_REGISTERED_CUSTOMERS.forEach(addKnownUser);
-            (registeredCustomersList || []).forEach(addKnownUser);
-            Object.keys(userSessionsMap || {}).forEach(addKnownUser);
-            Object.keys(presenceMap || {}).forEach(addKnownUser);
-            Object.keys(assignedVouchersMap || {}).forEach(addKnownUser);
-            (allOrders || []).forEach(o => { if (o && o.customer) addKnownUser(o.customer); });
-            if (currentUser && currentUser.email && !isGuestUser()) addKnownUser(currentUser.email);
+            Object.keys(presenceMap || {}).forEach(addActiveGuest);
+            Object.keys(userSessionsMap || {}).forEach(addActiveGuest);
+            if (currentUser && isGuestUser() && currentUser.email) {
+                addActiveGuest(currentUser.email);
+            }
 
-            const userList = Array.from(knownUsersMap.values()).sort((a, b) => a.localeCompare(b));
+            const userList = Array.from(knownUsersMap.values()).sort((a, b) => {
+                const aOnline = !!(presenceMap[a] || presenceMap[a.toLowerCase()]);
+                const bOnline = !!(presenceMap[b] || presenceMap[b.toLowerCase()]);
+                if (aOnline !== bOnline) return aOnline ? -1 : 1;
+                const aRegIdx = registeredUsers.indexOf(a);
+                const bRegIdx = registeredUsers.indexOf(b);
+                if (aRegIdx !== -1 && bRegIdx !== -1) return aRegIdx - bRegIdx;
+                if (aRegIdx !== -1) return -1;
+                if (bRegIdx !== -1) return 1;
+                return getCustomerDisplayName(a).localeCompare(getCustomerDisplayName(b));
+            });
 
             if (userList.length === 0) {
                 select.innerHTML = '<option value="">No Registered Accounts</option>';
@@ -8287,7 +8976,8 @@
                 const isOnline = !!(presenceMap[u] || presenceMap[cleanKey]);
                 const statusSymbol = isOnline ? '🟢' : '🔘';
                 const statusText = isOnline ? 'Online' : 'Offline';
-                const label = `${statusSymbol} ${u} (Customer - ${statusText})`;
+                const displayName = getCustomerDisplayName(u);
+                const label = `${statusSymbol} ${displayName} (${statusText})`;
                 const isSelected = cleanKey === currentVal;
                 return `<option value="${u}" ${isSelected ? 'selected' : ''}>${label}</option>`;
             }).join('');
@@ -8305,6 +8995,7 @@
             if (select) {
                 activeChatSessionUser = select.value;
                 updateChatHeaderAvatars();
+                updateSupportIndicator();
                 renderActiveChatMessages();
             }
         }
@@ -8314,7 +9005,14 @@
             if (!win) return;
             const isClosed = win.classList.contains('hidden') || win.classList.contains('opacity-0');
             if (isClosed) {
+                unreadChatCount = 0;
+                updateWidgetUnreadBadge();
                 renderStickerSlotsGrid();
+                if (currentUser && currentUser.email) {
+                    updatePresence(currentUser.email, true);
+                }
+                syncLiveChatMessagesFromServer();
+                syncLivePresenceFromServer();
                 syncAllUsersFromServer();
                 updateAdminChatUserDropdown();
                 updateChatHeaderAvatars();
@@ -8332,6 +9030,112 @@
             }
         }
 
+        async function sendSpecialChatMessage(msgPayload) {
+            if (!currentUser) {
+                let guestId = localStorage.getItem('sweetopia_guest_id');
+                if (!guestId) {
+                    guestId = 'Guest_' + Math.floor(1000 + Math.random() * 9000);
+                    localStorage.setItem('sweetopia_guest_id', guestId);
+                }
+                currentUser = { email: `${guestId}@sweetopiashop.my`, isGuest: true, guestId: guestId };
+                updatePresence(currentUser.email, true);
+            }
+
+            const isAdmin = isAdminUser(currentUser.email);
+            let targetSessionUser = (currentUser.email || '').trim().toLowerCase();
+
+            if (isAdmin) {
+                const select = document.getElementById('admin-active-chat-user');
+                targetSessionUser = ((activeChatSessionUser || select?.value) || '').trim().toLowerCase();
+                if (!targetSessionUser) {
+                    showToast("No User Selected", "Select a customer from the dropdown to reply.", true);
+                    return;
+                }
+            }
+
+            const senderAvatar = isAdmin ? null : getUserAvatarForEmail(currentUser.email);
+            const resolvedSenderName = isAdmin ? 'Admin Support' : getCustomerDisplayName(currentUser.email);
+
+            const newMsg = {
+                id: 'msg_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+                sender: (currentUser.email || '').trim().toLowerCase(),
+                senderName: resolvedSenderName,
+                senderAvatar: senderAvatar,
+                text: msgPayload.text || '',
+                type: msgPayload.type || 'text',
+                mediaUrl: msgPayload.mediaUrl || null,
+                productData: msgPayload.productData || null,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                timestamp: new Date().toISOString(),
+                isAdmin: isAdmin
+            };
+
+            const existingMsgs = userSessionsMap[targetSessionUser] || [];
+            existingMsgs.push(newMsg);
+            userSessionsMap[targetSessionUser] = existingMsgs;
+            lastSeenChatMessageIds.add(newMsg.id);
+
+            renderActiveChatMessages();
+
+            if (db) {
+                const docKey = targetSessionUser.replace(/[^a-zA-Z0-9]/g, '_');
+                const targetDisplayName = isAdmin ? getCustomerDisplayName(targetSessionUser) : resolvedSenderName;
+                const targetAvatar = isAdmin ? getUserAvatarForEmail(targetSessionUser) : senderAvatar;
+                const docRef = db.collection(CHAT_MESSAGES_COLLECTION).doc(docKey);
+
+                try {
+                    await docRef.set({
+                        userEmail: targetSessionUser,
+                        userName: targetDisplayName,
+                        userAvatar: targetAvatar,
+                        isGuestSession: targetSessionUser.startsWith('guest_') || targetSessionUser.endsWith('@sweetopiashop.my'),
+                        messages: firebase.firestore.FieldValue.arrayUnion(newMsg),
+                        lastMessageAt: newMsg.timestamp,
+                        lastSender: newMsg.sender,
+                        lastUpdated: new Date().toISOString()
+                    }, { merge: true });
+                } catch (err) {
+                    try {
+                        await docRef.set({
+                            userEmail: targetSessionUser,
+                            userName: targetDisplayName,
+                            userAvatar: targetAvatar,
+                            isGuestSession: targetSessionUser.startsWith('guest_') || targetSessionUser.endsWith('@sweetopiashop.my'),
+                            messages: existingMsgs,
+                            lastMessageAt: newMsg.timestamp,
+                            lastSender: newMsg.sender,
+                            lastUpdated: new Date().toISOString()
+                        }, { merge: true });
+                    } catch (retryErr) {
+                        console.warn("Live chat Firestore sync warning:", retryErr);
+                    }
+                }
+            }
+        }
+
+        async function clearWidgetChat() {
+            let targetUser = (currentUser?.email || '').trim().toLowerCase();
+            if (currentUser && isAdminUser(currentUser.email)) {
+                targetUser = ((activeChatSessionUser || document.getElementById('admin-active-chat-user')?.value) || '').trim().toLowerCase();
+            }
+            if (!targetUser) return;
+
+            userSessionsMap[targetUser] = [];
+            renderActiveChatMessages();
+
+            if (db) {
+                try {
+                    const docKey = targetUser.replace(/[^a-zA-Z0-9]/g, '_');
+                    await db.collection(CHAT_MESSAGES_COLLECTION).doc(docKey).set({
+                        userEmail: targetUser,
+                        messages: [],
+                        lastUpdated: new Date().toISOString()
+                    }, { merge: true });
+                } catch(e) { console.warn(e); }
+            }
+            showToast("Chat Cleared", "Messages cleared.");
+        }
+
         async function adminDeleteSelectedChatSession() {
             const select = document.getElementById('admin-active-chat-user');
             const targetUser = activeChatSessionUser || select?.value;
@@ -8341,13 +9145,13 @@
             if (db) {
                 try {
                     const docKey = targetUser.replace(/[^a-zA-Z0-9]/g, '_');
-                    await db.collection("lumilens_chats").doc(docKey).delete();
+                    await db.collection(CHAT_MESSAGES_COLLECTION).doc(docKey).delete();
                 } catch(e) { console.warn(e); }
             }
             activeChatSessionUser = null;
             updateAdminChatUserDropdown();
             renderActiveChatMessages();
-            showToast("Chat Deleted", `Conversation with ${targetUser} deleted.`);
+            showToast("Chat Deleted", `Conversation with ${getCustomerDisplayName(targetUser)} deleted.`);
         }
 
         function renderActiveChatMessages() {
@@ -8368,14 +9172,14 @@
 
             const msgs = userSessionsMap[targetUser] || [];
             if (msgs.length === 0) {
-                const partnerName = isAdmin ? targetUser : "admin";
+                const partnerName = isAdmin ? escapeHtmlText(getCustomerDisplayName(targetUser)) : "admin";
                 container.innerHTML = `<div class="text-center text-slate-400 py-10"><i class="fa-solid fa-heart text-2xl text-lime-500 mb-2"></i><p class="text-xs">Chatting with <b class="text-slate-700">${partnerName}</b>.<br>Leave a message or sticker to start conversation.</p></div>`;
                 return;
             }
 
             container.innerHTML = msgs.map(m => {
                 const isMe = (m.sender || '').trim().toLowerCase() === (currentUser?.email || '').trim().toLowerCase();
-                const isAdminMsg = m.isAdmin;
+                const isAdminMsg = !!m.isAdmin || isAdminUser(m.sender);
                 const isSticker = m.type === 'sticker';
 
                 let mediaHtml = '';
@@ -8400,7 +9204,7 @@
 
                 const bubbleClass = isSticker
                     ? `max-w-[80%] rounded-2xl px-3.5 py-2 text-xs bg-[transparent] ${isMe ? 'rounded-tr-none text-slate-600 text-right' : 'rounded-tl-none text-slate-600 text-left'}`
-                    : `max-w-[80%] rounded-2xl px-3.5 py-2 text-xs shadow-sm ${isMe ? 'bg-[#65a30d] text-white rounded-tr-none' : (isAdminMsg ? 'bg-amber-100 text-amber-950 border border-amber-200 rounded-tl-none' : 'bg-white text-slate-800 border border-slate-200 rounded-tl-none')}`;
+                    : `max-w-[80%] rounded-2xl px-3.5 py-2 text-xs shadow-sm ${isMe ? 'bg-[#65a30d] text-white rounded-tr-none' : (isAdminMsg ? 'bg-blue-600 text-white border border-blue-700 rounded-tl-none' : 'bg-white text-slate-800 border border-slate-200 rounded-tl-none')}`;
 
                 let avatarBadgeHtml = '';
                 if (isAdmin) {
@@ -8409,18 +9213,22 @@
                     }
                 } else {
                     if (isAdminMsg) {
-                        avatarBadgeHtml = `<div class="w-6 h-6 rounded-full bg-amber-500 text-white flex items-center justify-center border border-amber-600 shrink-0 shadow-xs" title="Admin Support"><i class="fa-solid fa-headset text-[10px]"></i></div>`;
+                        avatarBadgeHtml = `<div class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center border border-blue-700 shrink-0 shadow-xs" title="Admin Support"><i class="fa-solid fa-headset text-[10px]"></i></div>`;
                     }
                 }
 
+                const safeSenderLabel = isAdminMsg
+                    ? 'Admin Support'
+                    : escapeHtmlText(getCustomerDisplayName(m.sender) || m.senderName || 'Customer');
+
                 return `
                     <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
-                        <span class="text-[9px] text-slate-400 mb-0.5 px-1">${m.senderName || m.sender} • ${m.time || ''}</span>
+                        <span class="text-[9px] text-slate-400 mb-0.5 px-1">${safeSenderLabel} • ${m.time || ''}</span>
                         <div class="flex items-end gap-1.5 max-w-full ${isMe ? 'flex-row-reverse' : 'flex-row'}">
                             ${avatarBadgeHtml}
                             <div class="${bubbleClass}">
                                 ${mediaHtml}
-                                ${m.text ? `<p>${m.text}</p>` : ''}
+                                ${m.text ? `<p>${escapeHtmlText(m.text)}</p>` : ''}
                             </div>
                         </div>
                     </div>
@@ -8441,6 +9249,15 @@
             document.getElementById('adm-detail-phone').innerText = order.customerPhone || 'N/A';
             document.getElementById('adm-detail-address').innerText = order.customerAddress || 'N/A';
             document.getElementById('adm-detail-total').innerText = 'RM ' + (order.total || '0.00');
+
+            const viewInvBtn = document.getElementById('adm-detail-btn-view-inv');
+            if (viewInvBtn) viewInvBtn.onclick = () => { closeAdminOrderDetailModal(); openInvoiceModal(order.id); };
+
+            const dlPdfBtn = document.getElementById('adm-detail-btn-dl-pdf');
+            if (dlPdfBtn) dlPdfBtn.onclick = () => { closeAdminOrderDetailModal(); directDownloadInvoicePDF(order.id); };
+
+            const dlPngBtn = document.getElementById('adm-detail-btn-dl-png');
+            if (dlPngBtn) dlPngBtn.onclick = () => { closeAdminOrderDetailModal(); directDownloadInvoice(order.id); };
 
             const itemsContainer = document.getElementById('adm-detail-items-list');
             itemsContainer.innerHTML = (order.items || []).map(i => `
@@ -8490,8 +9307,11 @@
         window.payPendingOrderNow = payPendingOrderNow;
         window.openInvoiceModal = openInvoiceModal;
         window.closeInvoiceModal = closeInvoiceModal;
+        window.downloadInvoiceAsPDF = downloadInvoiceAsPDF;
         window.downloadInvoiceAsPNG = downloadInvoiceAsPNG;
         window.directDownloadInvoice = directDownloadInvoice;
+        window.directDownloadInvoicePDF = directDownloadInvoicePDF;
+        window.printFormattedInvoice = printFormattedInvoice;
         window.openForgotPassword = openForgotPassword;
         window.closeForgotPassword = closeForgotPassword;
         window.submitForgotPassword = submitForgotPassword;
@@ -8583,6 +9403,7 @@
             loadSavedAddresses();
             loadFavourites();
             loadAssignedVouchers();
+            loadUserDisplayNamesLocal();
             loadRegisteredCustomers();
             loadReadNotifications();
             loadCustomerFeedbacks();
@@ -8690,31 +9511,21 @@
 
             if (db) {
                 try {
-                    const snap = await db.collection("lumilens_products").get({ source: 'server' }).catch(() => null);
-                    if (snap && !snap.empty) {
-                        const serverProducts = [];
-                        snap.forEach(docSnap => {
-                            const data = { id: docSnap.id, ...docSnap.data() };
-                            if (data && data.name) {
-                                serverProducts.push(data);
-                                if (data.powerStock) window.productPowerStock[data.id] = data.powerStock;
-                                if (data.powerLocations) window.productPowerLocations[data.id] = data.powerLocations;
+                    const loadedFromServer = await window.forceSyncFirestoreProducts(true);
+                    if (!loadedFromServer) {
+                        const checkLumi = await db.collection("lumilens_products").limit(1).get({ source: 'server' }).catch(() => null);
+                        const checkGeneric = await db.collection("products").limit(1).get({ source: 'server' }).catch(() => null);
+                        const bothCollectionsEmpty = (!checkLumi || checkLumi.empty) && (!checkGeneric || checkGeneric.empty);
+                        if (bothCollectionsEmpty) {
+                            for (const p of products) {
+                                const initialPowerStock = window.productPowerStock[p.id] || {};
+                                powersList.forEach(pw => { if (initialPowerStock[pw] === undefined) initialPowerStock[pw] = true; });
+                                await db.collection("lumilens_products").doc(p.id).set({
+                                    ...p,
+                                    powerStock: initialPowerStock,
+                                    powerLocations: window.productPowerLocations[p.id] || {}
+                                });
                             }
-                        });
-                        if (serverProducts.length > 0) {
-                            products = serverProducts;
-                            ensureProductStockDefaults(products);
-                            saveProductsToLocalBackup();
-                        }
-                    } else if (snap && snap.empty) {
-                        for (const p of products) {
-                            const initialPowerStock = window.productPowerStock[p.id] || {};
-                            powersList.forEach(pw => { if (initialPowerStock[pw] === undefined) initialPowerStock[pw] = true; });
-                            await db.collection("lumilens_products").doc(p.id).set({
-                                ...p,
-                                powerStock: initialPowerStock,
-                                powerLocations: window.productPowerLocations[p.id] || {}
-                            });
                         }
                     }
                 } catch(e) { }
@@ -8746,9 +9557,13 @@
             renderAdminProductsList();
             renderAdminPowerStockCheckboxes();
             renderAdminVoucherProductDropdowns();
+            ensureSeededCustomerOrders();
+            renderAdminOrdersList();
             initLiveVersionListener();
             initFirestoreListeners();
             initChatListeners();
+            syncLivePresenceFromServer();
+            syncLiveChatMessagesFromServer();
             onAdminPowerRangeChange();
             initSlideshow();
             renderCustomerVouchersUI();
@@ -8765,11 +9580,21 @@
                 if (currentUser && currentUser.email) {
                     updatePresence(currentUser.email, true);
                 }
-            }, 20000);
+                syncLivePresenceFromServer();
+                syncLiveChatMessagesFromServer();
+            }, 6000);
+
+            window.addEventListener('beforeunload', () => {
+                if (currentUser && currentUser.email) {
+                    updatePresence(currentUser.email, false);
+                }
+            });
 
             document.addEventListener('visibilitychange', () => {
                 if (document.visibilityState === 'visible' && currentUser && currentUser.email) {
                     updatePresence(currentUser.email, true);
+                    syncLivePresenceFromServer();
+                    syncLiveChatMessagesFromServer();
                     syncAllUsersFromServer();
                 }
             });
