@@ -1429,13 +1429,13 @@
 
                             <div class="flex justify-between items-center mb-3">
                                 <h2 class="text-xl font-black text-gray-900 tracking-tight">Offers near you</h2>
-                                <button type="button" onclick="toggleAllOffers(this)" id="seeAllOffersBtn" class="hidden text-xs font-bold px-3.5 py-1.5 rounded-full hover:bg-sky-200 transition cursor-pointer bg-sky-100 text-sky-900">See all</button>
+                                <button type="button" onclick="toggleAllOffers(this)" id="seeAllOffersBtn" class="hidden text-xs font-bold px-3.5 py-1.5 rounded-full hover:bg-sky-200 transition cursor-pointer bg-sky-100 text-sky-900">See all offer lenses</button>
                             </div>
 
-                            <!-- Dynamic Admin-Managed On Sale Offers Grid -->
+                            <!-- Dynamic Admin-Managed On Sale Offers Grid (First 2 default, then +2 on "See all offer lenses", then +4 on each "Load more") -->
                             <div class="grid grid-cols-2 md:grid-cols-2 gap-3 sm:gap-4" id="offers-container"></div>
 
-                            <!-- Load More Button Container -->
+                            <!-- Load More Button Container (Appears below the newly revealed 2 offer lenses and loads +4 at a time) -->
                             <div id="loadMoreContainer" class="mt-6 flex justify-center hidden">
                                 <button type="button" onclick="loadMoreOffers()" id="loadMoreBtn" class="bg-sky-100 hover:bg-sky-200 text-sky-900 text-xs sm:text-sm font-black px-6 py-2.5 rounded-full border-2 border-black shadow-[0_3px_0_0_#1e1b4b] active:translate-y-0.5 active:shadow-none transition-all cursor-pointer">
                                     Load more
@@ -1443,7 +1443,18 @@
                             </div>
                         </section>
 
-                        <div id="store-product-grid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6"></div>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <h2 class="text-xl font-black text-gray-900 tracking-tight">All lenses</h2>
+                                <span id="all-lenses-count-badge" class="text-xs font-bold text-slate-500"></span>
+                            </div>
+                            <div id="store-product-grid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6"></div>
+                            <div id="allLensesLoadMoreContainer" class="mt-6 flex justify-center hidden">
+                                <button type="button" onclick="loadMoreAllLenses()" id="allLensesLoadMoreBtn" class="bg-sky-100 hover:bg-sky-200 text-sky-900 text-xs sm:text-sm font-black px-6 py-2.5 rounded-full border-2 border-black shadow-[0_3px_0_0_#1e1b4b] active:translate-y-0.5 active:shadow-none transition-all cursor-pointer">
+                                    Load more
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- TAB 2: CART & CHECKOUT FORM -->
@@ -5041,7 +5052,7 @@
             const today = new Date();
             for (const code in activeProductVouchersMap) {
                 const pv = activeProductVouchersMap[code];
-                if (pv && pv.assignedProducts && pv.assignedProducts.includes(productId) && pv.active !== false) {
+                if (pv && pv.assignedProducts && pv.assignedProducts.includes(productId) && pv.active !== false && pv.displaySetting !== 'no_display') {
                     if (!pv.expiry || new Date(pv.expiry) >= today) {
                         return {
                             code: pv.code,
@@ -5053,7 +5064,7 @@
                 }
             }
             for (const preset of activePresetsList) {
-                if (preset.active && preset.type === 'product' && preset.assignedProductIds && preset.assignedProductIds.includes(productId)) {
+                if (preset.active && preset.type === 'product' && preset.assignedProductIds && preset.assignedProductIds.includes(productId) && preset.displaySetting !== 'no_display') {
                     return {
                         code: preset.code,
                         discountType: preset.discountType || 'percentage',
@@ -6245,19 +6256,36 @@
             window.renderCustomerFeedbackWall();
         }
 
-        function renderStoreProducts(list) {
+        function renderStoreProducts(list, resetPagination = true) {
             const grid = document.getElementById('store-product-grid');
+            const loadMoreWrap = document.getElementById('allLensesLoadMoreContainer');
+            const countBadge = document.getElementById('all-lenses-count-badge');
             if (!grid) return;
 
-            if (list.length === 0) {
+            currentFilteredCatalogList = Array.isArray(list) ? list : products;
+            if (resetPagination) {
+                allLensesVisibleCount = ALL_LENSES_BATCH_SIZE;
+            }
+
+            if (currentFilteredCatalogList.length === 0) {
                 grid.innerHTML = `<div class="col-span-full py-16 text-center text-slate-400 bg-slate-50 rounded-3xl border border-dashed border-slate-200">No contact lenses found matching your search.</div>`;
+                if (loadMoreWrap) loadMoreWrap.classList.add('hidden');
+                if (countBadge) countBadge.innerText = '';
+                if (typeof window.renderOffersNearYouSection === 'function') {
+                    window.renderOffersNearYouSection();
+                }
                 return;
             }
 
             const isAdmin = currentUser && isAdminUser(currentUser?.email);
             const isGuest = isGuestUser();
+            const visibleSlice = currentFilteredCatalogList.slice(0, allLensesVisibleCount);
 
-            grid.innerHTML = list.map(p => {
+            if (countBadge) {
+                countBadge.innerText = `Showing ${visibleSlice.length} of ${currentFilteredCatalogList.length}`;
+            }
+
+            grid.innerHTML = visibleSlice.map(p => {
                 const pricing = calculateProductEffectivePrice(p);
                 const hasSale = pricing.hasSale;
                 const locationBadge = getPowerLocationBadgeText(p.id);
@@ -6323,10 +6351,28 @@
                 `;
             }).join('');
 
+            if (loadMoreWrap) {
+                if (visibleSlice.length < currentFilteredCatalogList.length) {
+                    loadMoreWrap.classList.remove('hidden');
+                } else {
+                    loadMoreWrap.classList.add('hidden');
+                }
+            }
+
             if (typeof window.renderOffersNearYouSection === 'function') {
                 window.renderOffersNearYouSection();
             }
         }
+
+        let currentFilteredCatalogList = [];
+        const ALL_LENSES_BATCH_SIZE = 8;
+        let allLensesVisibleCount = ALL_LENSES_BATCH_SIZE;
+
+        window.loadMoreAllLenses = function() {
+            const targetList = currentFilteredCatalogList.length > 0 ? currentFilteredCatalogList : products;
+            allLensesVisibleCount = Math.min(allLensesVisibleCount + ALL_LENSES_BATCH_SIZE, targetList.length);
+            renderStoreProducts(targetList, false);
+        };
 
         let offersExpandedState = false;
         let offersVisibleCount = 2;
@@ -6405,7 +6451,7 @@
 
             const onSaleProducts = getAdminManagedOnSaleProducts();
 
-            // If no sale products exist from Admin, keep section completely blank & hidden
+            // Controlled by Admin Panel: if no sale products exist, keep section completely hidden & blank
             if (onSaleProducts.length === 0) {
                 container.innerHTML = '';
                 section.classList.add('hidden');
@@ -6426,7 +6472,7 @@
                         seeAllBtn.classList.remove('bg-sky-100', 'text-sky-900');
                         seeAllBtn.classList.add('bg-gray-200', 'text-gray-800');
                     } else {
-                        seeAllBtn.innerText = 'See all';
+                        seeAllBtn.innerText = 'See all offer lenses';
                         seeAllBtn.classList.remove('bg-gray-200', 'text-gray-800');
                         seeAllBtn.classList.add('bg-sky-100', 'text-sky-900');
                     }
@@ -6444,6 +6490,7 @@
             const visibleProducts = onSaleProducts.slice(0, countToShow);
             container.innerHTML = visibleProducts.map(p => createOfferNearYouCardHTML(p)).join('');
 
+            // Show "Load more" button whenever expanded and more Admin-managed On Sale products remain
             if (loadMoreContainer) {
                 if (offersExpandedState && countToShow < onSaleProducts.length) {
                     loadMoreContainer.classList.remove('hidden');
@@ -6462,6 +6509,7 @@
                 offersVisibleCount = 2;
             } else {
                 offersExpandedState = true;
+                // Clicking "See all offer lenses" reveals 2 more offer lenses (4 total) and displays "Load more" if more exist
                 offersVisibleCount = Math.min(4, onSaleProducts.length);
             }
             window.renderOffersNearYouSection();
@@ -6469,6 +6517,7 @@
 
         window.loadMoreOffers = function() {
             const onSaleProducts = getAdminManagedOnSaleProducts();
+            // Each click on "Load more" appends 4 more Admin-managed On Sale lenses until all are displayed
             offersVisibleCount = Math.min(offersVisibleCount + OFFERS_BATCH_SIZE, onSaleProducts.length);
             window.renderOffersNearYouSection();
         };
@@ -8363,7 +8412,7 @@
                 assignedItems: ['HAZEL NATURAL (#p1)', 'CRYSTAL CLEAR (#p2)'],
                 assignedProductIds: ['p1', 'p2'],
                 expiryText: 'Sep 15, 2026, 06:00 PM 🎀',
-                active: true,
+                active: false,
                 badgeTheme: 'purple'
             }
         ];
@@ -8510,6 +8559,9 @@
             localStorage.setItem('sweetopia_active_presets', JSON.stringify(activePresetsList));
             renderPresetsTable();
             renderStoreProducts(products);
+            if (typeof window.renderOffersNearYouSection === 'function') {
+                window.renderOffersNearYouSection();
+            }
             showToast("Changes Saved!", "Active voucher presets and status changes saved successfully.");
         };
 
@@ -8762,6 +8814,7 @@
                 assignedTargetType: 'Assigned Products:',
                 assignedItems: [chosenProductName],
                 assignedProductIds: [chosenProductId],
+                displaySetting: displaySetting,
                 expiryText: formattedExpiry,
                 active: true,
                 badgeTheme: 'purple'
@@ -8769,6 +8822,9 @@
 
             renderPresetsTable();
             renderStoreProducts(products);
+            if (typeof window.renderOffersNearYouSection === 'function') {
+                window.renderOffersNearYouSection();
+            }
             showToast("Product Voucher Saved!", `${finalCode} published for ${chosenProductName} & on-sale pricing activated!`);
             resetSection2Form();
         };
