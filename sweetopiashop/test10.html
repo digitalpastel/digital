@@ -5,18 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light">
     <meta name="supported-color-schemes" content="light">
-    <!-- Cache Busting & No-Cache Directives (v=1.0.9) -->
-    <meta name="app-version" content="1.0.9">
+    <!-- Cache Busting & No-Cache Directives (v=1.0.10) -->
+    <meta name="app-version" content="1.0.10">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Sweetopia Shop - Premium Contact Lens Store &amp; FPX Checkout</title>
-    <!-- App Icons & Stylesheet with Cache Busting Version (?v=1.0.9) -->
-    <link rel="stylesheet" href="style.css?v=1.0.9">
-    <link rel="icon" type="image/png" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.9">
-    <link rel="apple-touch-icon" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.9">
-    <link rel="icon" type="image/png" sizes="512x512" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png?v=1.0.9">
-    <link rel="manifest" href="https://digitalpastel.github.io/digital/sweetopiashop/manifest.json?v=1.0.9">
+    <!-- App Icons & Stylesheet with Cache Busting Version (?v=1.0.10) -->
+    <link rel="stylesheet" href="style.css?v=1.0.10">
+    <link rel="icon" type="image/png" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.10">
+    <link rel="apple-touch-icon" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.10">
+    <link rel="icon" type="image/png" sizes="512x512" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png?v=1.0.10">
+    <link rel="manifest" href="https://digitalpastel.github.io/digital/sweetopiashop/manifest.json?v=1.0.10">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&amp;family=Fredoka:wght@600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
     <!-- Retro Pixel Font for 10-Bar Window matching reference image -->
@@ -32,22 +32,41 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script>
-        // Cache Busting Controller: Increment APP_VERSION whenever updating GitHub
-        const APP_VERSION = '1.0.9';
+        // Cache Busting Controller: Hardened version upgrade & stale DOM/storage purge
+        const APP_VERSION = '1.0.10';
+        const STALE_CACHE_KEYS_TO_PURGE = [
+            'sweetopia_managed_products',
+            'sweetopia_active_presets',
+            'sweetopia_assigned_vouchers',
+            'sweetopia_customer_feedbacks'
+        ];
+
+        function purgeStaleVersionStorage(targetVersion) {
+            try {
+                STALE_CACHE_KEYS_TO_PURGE.forEach(k => localStorage.removeItem(k));
+                sessionStorage.removeItem('sweetopia_active_tab');
+                sessionStorage.removeItem('sweetopia_admin_subtab');
+                localStorage.setItem('sweetopia_app_version', targetVersion || APP_VERSION);
+            } catch (e) {}
+        }
+
         (function enforceCacheBustingVersion() {
             try {
                 const storedVersion = localStorage.getItem('sweetopia_app_version');
-                if (storedVersion && storedVersion !== APP_VERSION) {
-                    localStorage.setItem('sweetopia_app_version', APP_VERSION);
+                const url = new URL(window.location.href);
+                const urlVersion = url.searchParams.get('v');
+
+                if ((storedVersion && storedVersion !== APP_VERSION) || (urlVersion && urlVersion !== APP_VERSION)) {
+                    purgeStaleVersionStorage(APP_VERSION);
                     if ('caches' in window) {
                         caches.keys().then(names => names.forEach(name => caches.delete(name))).catch(() => {});
                     }
                     if ('serviceWorker' in navigator) {
                         navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.update())).catch(() => {});
                     }
-                    const url = new URL(window.location.href);
                     if (url.searchParams.get('v') !== APP_VERSION) {
                         url.searchParams.set('v', APP_VERSION);
+                        url.searchParams.set('_cb', Date.now().toString(36));
                         window.location.replace(url.toString());
                     }
                 } else {
@@ -823,7 +842,7 @@
             <div class="truncate">
                 <div class="flex items-center gap-2">
                     <span class="bg-yellow-300 text-slate-950 text-[10px] font-black uppercase px-2 py-0.5 rounded-full shadow-xs">New Update Available</span>
-                    <span id="live-update-version-badge" class="text-xs sm:text-sm font-extrabold tracking-tight truncate">Sweetopia Shop v1.0.10 is Live!</span>
+                    <span id="live-update-version-badge" class="text-xs sm:text-sm font-extrabold tracking-tight truncate">Sweetopia Shop v1.0.11 is Live!</span>
                 </div>
                 <p id="live-update-notes-text" class="text-[11px] text-emerald-50 font-medium truncate mt-0.5">A fresh update has been published. Refresh now to load the latest features &amp; catalog.</p>
             </div>
@@ -1337,7 +1356,7 @@
                                 <button onclick="filterCatalog('Mill Creek', this)" class="cat-btn px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 shrink-0 border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all">Mill Creek</button>
                             </div>
 
-                            <div class="relative w-full md:w-72">
+                            <div class="hidden md:block relative w-full md:w-72">
                                 <div class="relative w-full">
                                     <div class="absolute -top-7 right-12 flex space-x-1.5 pointer-events-none z-10">
                                         <div class="w-3.5 h-8 bg-fuchsia-500 rounded-full transform -rotate-12 border-2 border-white shadow-sm"></div>
@@ -1642,7 +1661,7 @@
                                     <div>
                                         <h2 class="text-base font-bold flex items-center space-x-2">
                                             <span>Live App Version &amp; Force Cache Refresh</span>
-                                            <span id="admin-live-version-pill" class="bg-white text-emerald-800 text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full shadow-xs">Active: v1.0.9</span>
+                                            <span id="admin-live-version-pill" class="bg-white text-emerald-800 text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full shadow-xs">Active: v1.0.10</span>
                                         </h2>
                                         <p class="text-xs text-emerald-100">Publish a new version to Firestore to instantly notify &amp; refresh all open customer sessions</p>
                                     </div>
@@ -1658,7 +1677,7 @@
                                         New Version Tag <span class="text-rose-500">*</span>
                                     </label>
                                     <div class="flex items-center gap-1.5">
-                                        <input type="text" id="admin-new-version-input" placeholder="e.g. 1.0.10" class="block w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm font-mono font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                                        <input type="text" id="admin-new-version-input" placeholder="e.g. 1.0.11" class="block w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm font-mono font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
                                         <button type="button" onclick="bumpNextPatchVersion()" class="px-2.5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold rounded-xl transition shrink-0 cursor-pointer" title="Auto-increment patch version">
                                             +0.0.1
                                         </button>
@@ -2075,12 +2094,12 @@
                             </div>
                         </div>
 
-                        <!-- ADMIN SUB-TAB 2: PRODUCTS -->
+                        <!-- ADMIN SUB-TAB 2: PRODUCTS (DIRECT IMAGE URL ONLY — NO BASE64) -->
                         <div id="adm-sub-section-products" class="hidden space-y-4">
                             <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3 shadow-sm">
                                 <div class="flex items-center justify-between">
                                     <h4 class="text-xs font-bold text-slate-900" id="admin-form-title">Add New Product</h4>
-                                    <button onclick="resetAdminProductForm()" class="text-[11px] text-slate-500 hover:text-slate-900">Clear Form</button>
+                                    <button onclick="resetAdminProductForm()" class="text-[11px] text-slate-500 hover:text-slate-900 cursor-pointer">Clear Form</button>
                                 </div>
                                 <input type="hidden" id="edit-prod-id">
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -2112,19 +2131,24 @@
                                         </select>
                                     </div>
                                     <div class="sm:col-span-2">
-                                        <label class="block text-[10px] font-bold text-slate-600 mb-1">Product Image (Device Upload)</label>
-                                        <input type="file" id="admin-prod-file" accept="image/*" onchange="handleImageFileUpload(event)" class="w-full bg-white border border-slate-300 text-xs text-slate-700 rounded-xl p-2 file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-[#65a30d] file:text-white hover:file:bg-[#4d7c0f] cursor-pointer shadow-sm">
-                                        <input type="hidden" id="admin-prod-img-base64">
+                                        <label for="admin-prod-img-url" class="block text-[10px] font-bold text-slate-600 mb-1">Product Image URL (Direct Link Only — Fast Multi-Device Sync)</label>
+                                        <div class="relative">
+                                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                                                <i class="fa-solid fa-link text-xs"></i>
+                                            </span>
+                                            <input type="url" id="admin-prod-img-url" oninput="handleProductImageUrlInput(this.value)" placeholder="https://digitalpastel.github.io/digital/sweetopiashop/your-lens.webp" class="w-full bg-white border border-slate-300 text-xs text-slate-900 font-mono rounded-xl pl-9 pr-3 py-2.5 focus:outline-none focus:border-[#65a30d] shadow-sm">
+                                        </div>
+                                        <p class="text-[10px] text-slate-500 mt-1">Paste an <code class="font-mono text-slate-700">https://</code> direct image URL (GitHub Pages, WebP, JPG, PNG). Base64 strings are disabled for instant cross-device loading.</p>
                                     </div>
                                 </div>
                                 <div id="admin-image-preview-container" class="hidden items-center space-x-3 pt-2">
-                                    <span class="text-[10px] text-slate-500">Image Preview:</span>
-                                    <img id="admin-image-preview-tag" src="" class="w-12 h-12 object-cover rounded-xl border border-slate-300 shadow-sm">
+                                    <span class="text-[10px] text-slate-500 font-semibold">Live URL Preview:</span>
+                                    <img id="admin-image-preview-tag" src="" onerror="this.src='https://placehold.co/100x100/fee2e2/dc2626?text=Bad+URL'" class="w-12 h-12 object-cover rounded-xl border border-slate-300 shadow-sm">
                                 </div>
                                 <div class="flex space-x-2 pt-2">
-                                    <button onclick="saveAdminProduct()" class="bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center space-x-1.5 shadow-sm">
-                                        <i class="fa-solid fa-plus mr-1.5"></i>
-                                        <span>Save &amp; Publish Live</span>
+                                    <button onclick="saveAdminProduct()" class="bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center space-x-1.5 shadow-sm cursor-pointer">
+                                        <i class="fa-solid fa-floppy-disk mr-1.5"></i>
+                                        <span id="admin-save-prod-btn-label">Edit&amp;Save / Publish Live</span>
                                     </button>
                                 </div>
                             </div>
@@ -2228,7 +2252,7 @@
 
                         <div class="text-center flex justify-center">
                             <p class="text-[11px] text-[#581c87] font-extrabold tracking-wider">
-                                © Brand Works Empire 2026, all rights reserved <span id="footer-app-version-tag" class="opacity-75 font-mono text-[10px]">(v1.0.9)</span>
+                                © Brand Works Empire 2026, all rights reserved <span id="footer-app-version-tag" class="opacity-75 font-mono text-[10px]">(v1.0.10)</span>
                             </p>
                         </div>
 
@@ -2877,23 +2901,72 @@
         </main>
     </div>
 
+    <!-- MOBILE REGISTERED CUSTOMER SEARCH MODAL -->
+    <div id="mobile-search-modal" class="md:hidden fixed inset-0 z-[155] modal-backdrop-clean flex items-start justify-center p-4 pt-16 opacity-0 pointer-events-none transition-opacity duration-200" onclick="closeSearchModal()">
+        <div class="w-full max-w-md bg-white rounded-3xl border-2 border-black shadow-[6px_6px_0_0_#1e1b4b] overflow-hidden p-5 space-y-4 relative" onclick="event.stopPropagation()">
+            <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-xl bg-[#84cc16] border-2 border-black flex items-center justify-center text-slate-950 shadow-[2px_2px_0_0_#1e1b4b]">
+                        <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-slate-900">Search Lenses</h3>
+                        <p class="text-[10px] text-slate-500 font-medium">Find by lens name, brand, or disposable type</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeSearchModal()" class="w-8 h-8 rounded-full bg-rose-500 hover:bg-rose-600 text-white border-2 border-black flex items-center justify-center text-xs font-black shadow-[2px_2px_0_0_#000] cursor-pointer">
+                    ×
+                </button>
+            </div>
+
+            <div class="relative">
+                <input type="text" id="mobile-store-search-input" oninput="handleMobileSearchInput(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault();closeSearchModal();}" placeholder="e.g. Hazel Natural, Molicon, 3 Months..." class="w-full bg-pink-50/50 border-2 border-fuchsia-500 text-xs font-bold text-slate-900 placeholder-fuchsia-300 rounded-2xl pl-4 pr-20 py-3 focus:outline-none focus:ring-2 focus:ring-fuchsia-300">
+                <button type="button" id="mobile-search-clear-btn" onclick="clearMobileSearchInput()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-extrabold text-fuchsia-600 bg-fuchsia-100 hover:bg-fuchsia-200 px-2.5 py-1 rounded-lg border border-fuchsia-300 cursor-pointer">
+                    Clear
+                </button>
+            </div>
+
+            <div class="flex items-center justify-between gap-2 pt-1">
+                <span id="mobile-search-result-count" class="text-[11px] font-bold text-slate-600">Showing all lenses</span>
+                <button type="button" onclick="closeSearchModal()" class="px-5 py-2.5 bg-[#65a30d] hover:bg-[#4d7c0f] text-white text-xs font-extrabold rounded-full border-2 border-black shadow-[0_3px_0_0_#1e1b4b] active:translate-y-0.5 active:shadow-none transition-all cursor-pointer">
+                    View Results
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- MOBILE DEVICE VIEW BOTTOM NAVIGATION BAR -->
     <div id="mobile-bottom-nav" class="md:hidden fixed bottom-0 left-0 right-0 bg-slate-900 border-t border-slate-800 px-6 py-2.5 flex justify-between items-center z-50">
-        <button type="button" onclick="switchTab('catalog', true)" id="mob-nav-catalog" class="mob-nav-btn flex flex-col items-center space-y-1 text-[#84cc16]">
+        <!-- Store Catalog Tab -->
+        <button type="button" onclick="switchTab('catalog', true)" id="mob-nav-catalog" class="mob-nav-btn flex flex-col items-center space-y-1 text-[#84cc16] cursor-pointer">
             <i class="fa-solid fa-house text-sm"></i>
             <span class="text-[10px] font-bold">Store Catalog</span>
         </button>
-        <button type="button" onclick="switchTab('cart', true)" id="mob-nav-cart" class="mob-nav-btn flex flex-col items-center space-y-1 text-slate-400 hover:text-white">
+
+        <!-- Cart Tab -->
+        <button type="button" onclick="switchTab('cart', true)" id="mob-nav-cart" class="mob-nav-btn flex flex-col items-center space-y-1 text-slate-400 hover:text-white cursor-pointer">
             <i class="fa-solid fa-cart-shopping text-sm"></i>
             <span class="text-[10px] font-semibold">Cart (<span id="mob-cart-count">0</span>)</span>
         </button>
-        <button type="button" onclick="handleMobileFavourites()" id="mob-nav-favourites" class="mob-nav-btn flex flex-col items-center space-y-1 text-slate-400 hover:text-white">
+
+        <!-- Floating Center Search Button (Registered Customer Only) -->
+        <button type="button" onclick="openSearchModal()" id="mob-nav-search" class="flex flex-col items-center text-slate-400 hover:text-white transition cursor-pointer group">
+            <div class="w-12 h-12 bg-[#84cc16] rounded-full flex items-center justify-center text-slate-950 shadow-lg -mt-6 border-4 border-slate-900 group-hover:bg-[#a3e635] transition">
+                <i class="fa-solid fa-magnifying-glass text-sm"></i>
+            </div>
+            <span class="text-[10px] font-bold mt-0.5 text-slate-300">Search</span>
+        </button>
+
+        <!-- Favourites Tab -->
+        <button type="button" onclick="handleMobileFavourites()" id="mob-nav-favourites" class="mob-nav-btn flex flex-col items-center space-y-1 text-slate-400 hover:text-white cursor-pointer">
             <i class="fa-regular fa-heart text-sm"></i>
             <span class="text-[10px] font-semibold">Favourites</span>
         </button>
-        <button type="button" onclick="handleMobileDashboardClick()" id="mob-nav-account" class="mob-nav-btn flex flex-col items-center space-y-1 text-slate-400 hover:text-white">
-            <i class="fa-solid fa-shield-halved text-sm" id="mob-nav-account-icon"></i>
-            <span class="text-[10px] font-semibold" id="mob-nav-account-text">Admin Panel</span>
+
+        <!-- Dashboard Tab -->
+        <button type="button" onclick="handleMobileDashboardClick()" id="mob-nav-account" class="mob-nav-btn flex flex-col items-center space-y-1 text-slate-400 hover:text-white cursor-pointer">
+            <i class="fa-regular fa-user text-sm" id="mob-nav-account-icon"></i>
+            <span class="text-[10px] font-semibold" id="mob-nav-account-text">Dashboard</span>
         </button>
     </div>
 
@@ -3038,8 +3111,8 @@
 
         window.applyLiveVersionUpdate = async function(targetVersion = null) {
             const nextVer = (targetVersion || latestPublishedServerVersion || APP_VERSION).replace(/^v/i, '');
+            purgeStaleVersionStorage(nextVer);
             try {
-                localStorage.setItem('sweetopia_app_version', nextVer);
                 if ('caches' in window) {
                     const names = await caches.keys();
                     await Promise.all(names.map(name => caches.delete(name)));
@@ -3053,6 +3126,7 @@
             try {
                 const url = new URL(window.location.href);
                 url.searchParams.set('v', nextVer);
+                url.searchParams.set('_cb', Date.now().toString(36));
                 window.location.replace(url.toString());
             } catch (e) {
                 window.location.reload(true);
@@ -3071,7 +3145,7 @@
 
             const rawVersion = (versionInput?.value || '').trim().replace(/^v/i, '');
             if (!rawVersion || !/^\d+(\.\d+){1,3}$/.test(rawVersion)) {
-                showToast("Invalid Version Format", "Please enter a valid version number such as 1.0.5 or 1.1.0.", true);
+                showToast("Invalid Version Format", "Please enter a valid version number such as 1.0.11 or 1.1.0.", true);
                 versionInput?.focus();
                 return;
             }
@@ -3112,7 +3186,7 @@
                 }
             }
 
-            showToast("New Version Published!", `Live app version v${rawVersion} broadcasted to all connected shoppers!`);
+            showToast("New Version Published!", `Live app version v${rawVersion} broadcasted to all connected devices!`);
         };
 
         function initLiveVersionListener() {
@@ -3146,6 +3220,9 @@
                     new URLSearchParams(window.location.search).get('v') === serverVer;
 
                 if (isNewerOnServer && !alreadyUpdatedToThis) {
+                    purgeStaleVersionStorage(serverVer);
+                    window.forceSyncFirestoreProducts(true).catch(() => {});
+
                     const banner = document.getElementById('live-version-update-banner');
                     const badgeEl = document.getElementById('live-update-version-badge');
                     const notesEl = document.getElementById('live-update-notes-text');
@@ -3166,7 +3243,7 @@
                         showToast("App Update Live!", `Updating Sweetopia Shop to v${serverVer}...`);
                         setTimeout(() => {
                             window.applyLiveVersionUpdate(serverVer);
-                        }, 2400);
+                        }, 1800);
                     }
                 }
             }, () => {});
@@ -3398,9 +3475,36 @@
 
         let products = [...DEFAULT_SEED_PRODUCTS];
         let hasLoadedServerProducts = false;
+        let deletedProductIdsSet = new Set();
+
+        function loadDeletedProductIds() {
+            try {
+                const raw = localStorage.getItem('sweetopia_deleted_product_ids');
+                if (raw) {
+                    const arr = JSON.parse(raw);
+                    if (Array.isArray(arr)) {
+                        deletedProductIdsSet = new Set(arr.map(String));
+                    }
+                }
+            } catch (e) {}
+        }
+
+        function saveDeletedProductIds() {
+            try {
+                localStorage.setItem('sweetopia_deleted_product_ids', JSON.stringify(Array.from(deletedProductIdsSet)));
+            } catch (e) {}
+        }
+
+        function isValidHttpImageUrl(urlStr) {
+            if (!urlStr || typeof urlStr !== 'string') return false;
+            const trimmed = urlStr.trim();
+            if (trimmed.startsWith('data:')) return false;
+            return /^https?:\/\/.+/i.test(trimmed);
+        }
 
         function normalizeFirestoreProductDoc(docId, rawData) {
             if (!rawData || typeof rawData !== 'object') return null;
+            if (rawData.deleted === true || deletedProductIdsSet.has(String(docId))) return null;
             const resolvedName = (rawData.name || rawData.title || rawData.productName || '').toString().trim();
             if (!resolvedName) return null;
 
@@ -3408,8 +3512,10 @@
             const numPrice = parseFloat(String(rawPrice).replace(/[^0-9.]/g, ''));
             const formattedPrice = !isNaN(numPrice) ? numPrice.toFixed(2) : '25.00';
 
-            const resolvedImg = rawData.image || rawData.imageUrl || rawData.img || rawData.photo ||
-                "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500";
+            const candidateImg = (rawData.image || rawData.imageUrl || rawData.img || rawData.photo || '').toString().trim();
+            const resolvedImg = isValidHttpImageUrl(candidateImg)
+                ? candidateImg
+                : "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500";
 
             return {
                 ...rawData,
@@ -3427,6 +3533,7 @@
             try {
                 const serialized = products.map(p => ({
                     ...p,
+                    image: isValidHttpImageUrl(p.image) ? p.image : "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500",
                     powerStock: window.productPowerStock[p.id] || p.powerStock || {},
                     powerLocations: window.productPowerLocations[p.id] || p.powerLocations || {}
                 }));
@@ -3439,18 +3546,17 @@
                 const raw = localStorage.getItem('sweetopia_managed_products');
                 if (!raw) return false;
                 const parsed = JSON.parse(raw);
-                if (Array.isArray(parsed) && parsed.length > 0) {
+                if (Array.isArray(parsed)) {
                     const normalized = parsed
+                        .filter(p => p && !deletedProductIdsSet.has(String(p.id)))
                         .map(p => normalizeFirestoreProductDoc(p.id, p))
                         .filter(Boolean);
-                    if (normalized.length > 0) {
-                        products = normalized;
-                        products.forEach(p => {
-                            if (p.powerStock) window.productPowerStock[p.id] = p.powerStock;
-                            if (p.powerLocations) window.productPowerLocations[p.id] = p.powerLocations;
-                        });
-                        return true;
-                    }
+                    products = normalized;
+                    products.forEach(p => {
+                        if (p.powerStock) window.productPowerStock[p.id] = p.powerStock;
+                        if (p.powerLocations) window.productPowerLocations[p.id] = p.powerLocations;
+                    });
+                    return true;
                 }
             } catch (e) { console.warn("Load products local backup warning:", e); }
             return false;
@@ -3482,15 +3588,22 @@
         window.forceSyncFirestoreProducts = async function(silent = false) {
             if (!db) return false;
             try {
-                const [lumiSnap, genericSnap] = await Promise.all([
+                const [lumiSnap, genericSnap, deletedMetaDoc] = await Promise.all([
                     db.collection("lumilens_products").get({ source: 'server' }).catch(() => db.collection("lumilens_products").get().catch(() => null)),
-                    db.collection("products").get({ source: 'server' }).catch(() => db.collection("products").get().catch(() => null))
+                    db.collection("products").get({ source: 'server' }).catch(() => db.collection("products").get().catch(() => null)),
+                    db.collection("lumilens_config").doc("deleted_products").get({ source: 'server' }).catch(() => null)
                 ]);
+
+                if (deletedMetaDoc && deletedMetaDoc.exists && Array.isArray(deletedMetaDoc.data()?.ids)) {
+                    deletedMetaDoc.data().ids.forEach(id => deletedProductIdsSet.add(String(id)));
+                    saveDeletedProductIds();
+                }
 
                 const mergedMap = new Map();
 
                 if (genericSnap && !genericSnap.empty) {
                     genericSnap.forEach(docSnap => {
+                        if (deletedProductIdsSet.has(String(docSnap.id))) return;
                         const prod = normalizeFirestoreProductDoc(docSnap.id, docSnap.data());
                         if (prod) {
                             mergedMap.set(docSnap.id, prod);
@@ -3502,6 +3615,7 @@
 
                 if (lumiSnap && !lumiSnap.empty) {
                     lumiSnap.forEach(docSnap => {
+                        if (deletedProductIdsSet.has(String(docSnap.id))) return;
                         const prod = normalizeFirestoreProductDoc(docSnap.id, docSnap.data());
                         if (prod) {
                             mergedMap.set(docSnap.id, prod);
@@ -3511,7 +3625,7 @@
                     });
                 }
 
-                if (mergedMap.size > 0) {
+                if (mergedMap.size > 0 || (lumiSnap && !lumiSnap.empty)) {
                     hasLoadedServerProducts = true;
                     products = Array.from(mergedMap.values());
                     ensureProductStockDefaults(products);
@@ -3522,7 +3636,7 @@
                     renderAdminPowerStockCheckboxes();
                     renderAdminVoucherProductDropdowns();
                     if (!silent) {
-                        showToast("Products Synced!", `Loaded ${products.length} real products from Firebase Firestore.`);
+                        showToast("Products Synced!", `Loaded ${products.length} live products from Firebase Firestore.`);
                     }
                     return true;
                 }
@@ -5366,6 +5480,7 @@
         function enforceMobileNavForRole() {
             const mobNav = document.getElementById('mobile-bottom-nav');
             const mobNavCart = document.getElementById('mob-nav-cart');
+            const mobNavSearch = document.getElementById('mob-nav-search');
             const mobNavFav = document.getElementById('mob-nav-favourites');
             const mobNavAccount = document.getElementById('mob-nav-account');
             const mobAccountText = document.getElementById('mob-nav-account-text');
@@ -5377,12 +5492,14 @@
             if (mobNav) {
                 if (isGuest) {
                     if (mobNavCart) mobNavCart.style.setProperty('display', 'none', 'important');
+                    if (mobNavSearch) mobNavSearch.style.removeProperty('display');
                     if (mobNavFav) mobNavFav.style.setProperty('display', 'none', 'important');
                     if (mobNavAccount) mobNavAccount.style.setProperty('display', 'none', 'important');
-                    mobNav.classList.remove('justify-between', 'justify-around');
-                    mobNav.classList.add('justify-center');
+                    mobNav.classList.remove('justify-between', 'justify-center');
+                    mobNav.classList.add('justify-around');
                 } else if (isAdmin) {
                     if (mobNavCart) mobNavCart.style.setProperty('display', 'none', 'important');
+                    if (mobNavSearch) mobNavSearch.style.setProperty('display', 'none', 'important');
                     if (mobNavFav) mobNavFav.style.setProperty('display', 'none', 'important');
                     if (mobNavAccount) mobNavAccount.style.removeProperty('display');
                     mobNav.classList.remove('justify-between', 'justify-center');
@@ -5391,6 +5508,7 @@
                     if (mobAccountIcon) mobAccountIcon.className = "fa-solid fa-shield-halved text-sm";
                 } else {
                     if (mobNavCart) mobNavCart.style.removeProperty('display');
+                    if (mobNavSearch) mobNavSearch.style.removeProperty('display');
                     if (mobNavFav) mobNavFav.style.removeProperty('display');
                     if (mobNavAccount) mobNavAccount.style.removeProperty('display');
                     mobNav.classList.remove('justify-around', 'justify-center');
@@ -5846,7 +5964,7 @@
                     lastPendingVerificationPassword = password;
                     showAuthVerificationBanner(
                         "Not Registered Yet or Different Website Password",
-                        `Firebase could not sign in <b>${email}</b> because either:<br>1) This email hasn't been registered under <b>Customer Sign Up</b> yet, OR<br>2) The password differs from the one you created for this site (note: this is separate from your Gmail login password).<br><button type="button" onclick="quickCreateAndVerifyFromSignIn()" class="mt-2 inline-flex items-center gap-1.5 bg-[#65a30d] hover:bg-[#4d7c0f] text-white text-[11px] font-bold px-3 py-1.5 rounded-xl shadow-xs cursor-pointer"><i class="fa-solid fa-user-plus text-[10px]"></i> Register This Email &amp; Send Verification Now</button>`,
+                        `Firebase could not sign in <b>${email}</b> because either:<br>1) This email hasn't been registered under <b>Customer Sign Up</b> yet, OR<br>2) The password differs from the one you created for this site (note: is separate from your Gmail login password).<br><button type="button" onclick="quickCreateAndVerifyFromSignIn()" class="mt-2 inline-flex items-center gap-1.5 bg-[#65a30d] hover:bg-[#4d7c0f] text-white text-[11px] font-bold px-3 py-1.5 rounded-xl shadow-xs cursor-pointer"><i class="fa-solid fa-user-plus text-[10px]"></i> Register This Email &amp; Send Verification Now</button>`,
                         email
                     );
                     showToast("Check Registration / Password", "Register under 'Customer Sign Up' first or click 'Forgot?' to reset.", true);
@@ -6088,10 +6206,71 @@
         }
 
         function filterStoreProducts() {
-            const query = document.getElementById('store-search').value.toLowerCase();
+            const query = (document.getElementById('store-search')?.value || '').toLowerCase();
             const filtered = products.filter(p => p.name.toLowerCase().includes(query) || p.category.toLowerCase().includes(query) || (p.brand && p.brand.toLowerCase().includes(query)));
             renderStoreProducts(filtered);
+
+            const countEl = document.getElementById('mobile-search-result-count');
+            if (countEl) {
+                countEl.innerText = query
+                    ? `Found ${filtered.length} matching lens${filtered.length === 1 ? '' : 'es'}`
+                    : `Showing all ${products.length} lenses`;
+            }
         }
+
+        window.openSearchModal = function() {
+            if (currentUser && isAdminUser(currentUser.email)) return;
+
+            switchTab('catalog', true);
+
+            const desktopSearch = document.getElementById('store-search');
+            const mobInput = document.getElementById('mobile-store-search-input');
+            const clearBtn = document.getElementById('mobile-search-clear-btn');
+
+            if (mobInput && desktopSearch) {
+                mobInput.value = desktopSearch.value || '';
+                if (clearBtn) {
+                    clearBtn.classList.toggle('hidden', !mobInput.value.trim());
+                }
+            }
+            filterStoreProducts();
+
+            const modal = document.getElementById('mobile-search-modal');
+            if (modal) {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modal.classList.add('opacity-100');
+                setTimeout(() => mobInput?.focus(), 80);
+            }
+        };
+
+        window.closeSearchModal = function() {
+            const modal = document.getElementById('mobile-search-modal');
+            if (modal) {
+                modal.classList.remove('opacity-100');
+                modal.classList.add('opacity-0', 'pointer-events-none');
+            }
+            const grid = document.getElementById('store-product-grid');
+            if (grid) {
+                grid.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        };
+
+        window.handleMobileSearchInput = function(val) {
+            const desktopSearch = document.getElementById('store-search');
+            const clearBtn = document.getElementById('mobile-search-clear-btn');
+            if (desktopSearch) desktopSearch.value = val;
+            if (clearBtn) clearBtn.classList.toggle('hidden', !(val || '').trim());
+            filterStoreProducts();
+        };
+
+        window.clearMobileSearchInput = function() {
+            const mobInput = document.getElementById('mobile-store-search-input');
+            if (mobInput) {
+                mobInput.value = '';
+                mobInput.focus();
+            }
+            window.handleMobileSearchInput('');
+        };
 
         function openProductDetail(productId) {
             const product = products.find(p => p.id === productId);
@@ -6703,50 +6882,61 @@
             showToast("Stock & Locations Updated!", "Prescription power and HQ / Vendor BP10 locations published to Store Catalog.");
         }
 
-        function handleImageFileUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const base64 = e.target.result;
-                document.getElementById('admin-prod-img-base64').value = base64;
-                const previewTag = document.getElementById('admin-image-preview-tag');
-                const container = document.getElementById('admin-image-preview-container');
-                if (previewTag && container) {
-                    previewTag.src = base64;
-                    container.classList.remove('hidden');
-                    container.classList.add('flex');
-                }
-            };
-            reader.readAsDataURL(file);
-        }
+        window.handleProductImageUrlInput = function(urlVal) {
+            const trimmed = (urlVal || '').trim();
+            const previewTag = document.getElementById('admin-image-preview-tag');
+            const container = document.getElementById('admin-image-preview-container');
+            if (!previewTag || !container) return;
+
+            if (isValidHttpImageUrl(trimmed)) {
+                previewTag.src = trimmed;
+                container.classList.remove('hidden');
+                container.classList.add('flex');
+            } else {
+                previewTag.src = '';
+                container.classList.add('hidden');
+                container.classList.remove('flex');
+            }
+        };
 
         function resetAdminProductForm() {
             document.getElementById('edit-prod-id').value = '';
             document.getElementById('admin-prod-name').value = '';
             document.getElementById('admin-prod-price').value = '';
-            document.getElementById('admin-prod-file').value = '';
-            document.getElementById('admin-prod-img-base64').value = '';
+            const urlInput = document.getElementById('admin-prod-img-url');
+            if (urlInput) urlInput.value = '';
             document.getElementById('admin-form-title').innerText = "Add New Product";
-            document.getElementById('admin-image-preview-container').classList.add('hidden');
+            const saveLabel = document.getElementById('admin-save-prod-btn-label');
+            if (saveLabel) saveLabel.innerText = "Edit&Save / Publish Live";
+            const previewContainer = document.getElementById('admin-image-preview-container');
+            if (previewContainer) {
+                previewContainer.classList.add('hidden');
+                previewContainer.classList.remove('flex');
+            }
         }
 
         function renderAdminProductsList() {
             const container = document.getElementById('admin-products-list');
             if (!container) return;
 
+            if (products.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-500 text-center py-4 bg-white rounded-xl border border-dashed border-slate-200">No live products currently listed. Add a new product above.</p>`;
+                return;
+            }
+
             container.innerHTML = products.map(p => `
-                <div class="flex items-center justify-between p-3 bg-white rounded-xl border border-slate-200">
-                    <div class="flex items-center space-x-3">
-                        <img src="${p.image}" class="w-10 h-10 object-cover rounded-lg border border-slate-200">
-                        <div>
-                            <span class="text-xs font-bold text-slate-900 block">${p.name}</span>
-                            <span class="text-[10px] text-slate-500">${p.brand || 'Molicon'} • ${p.category} • RM ${p.price}</span>
+                <div class="flex items-center justify-between p-3 bg-white rounded-xl border border-slate-200 gap-2">
+                    <div class="flex items-center space-x-3 min-w-0">
+                        <img src="${p.image}" class="w-10 h-10 object-cover rounded-lg border border-slate-200 shrink-0" onerror="this.src='https://placehold.co/100x100/f1f5f9/65a30d?text=Lens'">
+                        <div class="min-w-0">
+                            <span class="text-xs font-bold text-slate-900 block truncate">${p.name}</span>
+                            <span class="text-[10px] text-slate-500 block truncate">${p.brand || 'Molicon'} • ${p.category} • RM ${p.price}</span>
+                            <span class="text-[9px] text-slate-400 font-mono block truncate max-w-[260px]" title="${p.image}">${p.image}</span>
                         </div>
                     </div>
-                    <div class="flex items-center space-x-2">
-                        <button onclick="editAdminProduct('${p.id}')" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold">Edit</button>
-                        <button onclick="deleteAdminProduct('${p.id}')" class="px-3 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 text-xs font-semibold">Delete</button>
+                    <div class="flex items-center space-x-2 shrink-0">
+                        <button type="button" onclick="editAdminProduct('${p.id}')" class="px-3 py-1.5 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 text-xs font-bold cursor-pointer transition shadow-2xs">Edit&amp;Save</button>
+                        <button type="button" onclick="deleteAdminProduct('${p.id}')" class="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold cursor-pointer transition shadow-2xs">Delete&amp;Save</button>
                     </div>
                 </div>
             `).join('');
@@ -6837,31 +7027,52 @@
             const brand = document.getElementById('admin-prod-brand').value;
             const price = document.getElementById('admin-prod-price').value.trim();
             const category = document.getElementById('admin-prod-cat').value;
-            const base64Img = document.getElementById('admin-prod-img-base64').value;
+            const rawImgUrl = (document.getElementById('admin-prod-img-url')?.value || '').trim();
 
             if (!name || !price) {
                 showToast("Missing Fields", "Please enter product name and price.", true);
                 return;
             }
 
+            if (rawImgUrl.startsWith('data:')) {
+                showToast("Direct URL Only", "Base64 images are not allowed. Please enter a direct http:// or https:// image URL.", true);
+                return;
+            }
+
             const prodId = idInput || 'p_' + Date.now();
-            let finalImage = base64Img;
+            if (deletedProductIdsSet.has(String(prodId))) {
+                deletedProductIdsSet.delete(String(prodId));
+                saveDeletedProductIds();
+            }
+            let finalImage = rawImgUrl;
+
             if (!finalImage && idInput) {
                 const existing = products.find(p => p.id === idInput);
-                if (existing) finalImage = existing.image;
+                if (existing && isValidHttpImageUrl(existing.image)) {
+                    finalImage = existing.image;
+                }
             }
+
             if (!finalImage) {
                 finalImage = "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500";
+            } else if (!isValidHttpImageUrl(finalImage)) {
+                showToast("Invalid Image URL", "Please enter a valid direct image link starting with https:// or http://", true);
+                return;
             }
+
+            const numPrice = parseFloat(price.replace(/[^0-9.]/g, ''));
+            const cleanPrice = !isNaN(numPrice) ? numPrice.toFixed(2) : price;
 
             const newProd = {
                 id: prodId,
                 name: name,
                 brand: brand,
-                price: price,
+                price: cleanPrice,
                 category: category,
                 image: finalImage,
-                badge: 'In Stock'
+                badge: 'In Stock',
+                deleted: false,
+                updatedAt: new Date().toISOString()
             };
 
             if (!window.productPowerStock[prodId]) {
@@ -6884,6 +7095,7 @@
             if (db) {
                 try {
                     await db.collection("lumilens_products").doc(prodId).set(newProd, { merge: true });
+                    await db.collection("products").doc(prodId).set(newProd, { merge: true }).catch(() => {});
                 } catch(e) { console.warn("Product save error:", e); }
             }
 
@@ -6892,7 +7104,7 @@
             renderAdminProductsList();
             renderAdminPowerStockCheckboxes();
             renderAdminVoucherProductDropdowns();
-            showToast("Product Saved!", `${name} published to store catalog.`);
+            showToast("Edit & Saved Live!", `${name} has been saved & published to the live store.`);
         }
 
         function editAdminProduct(prodId) {
@@ -6904,43 +7116,74 @@
             document.getElementById('admin-prod-brand').value = p.brand || 'Molicon';
             document.getElementById('admin-prod-price').value = p.price;
             document.getElementById('admin-prod-cat').value = p.category;
-            document.getElementById('admin-prod-img-base64').value = p.image;
-            document.getElementById('admin-form-title').innerText = "Edit Product: " + p.name;
+            const safeUrl = isValidHttpImageUrl(p.image) ? p.image : '';
+            const urlInput = document.getElementById('admin-prod-img-url');
+            if (urlInput) urlInput.value = safeUrl;
+            document.getElementById('admin-form-title').innerText = "Edit & Save Product: " + p.name;
+            const saveLabel = document.getElementById('admin-save-prod-btn-label');
+            if (saveLabel) saveLabel.innerText = "Edit&Save Live";
 
-            const previewTag = document.getElementById('admin-image-preview-tag');
-            const container = document.getElementById('admin-image-preview-container');
-            if (previewTag && container && p.image) {
-                previewTag.src = p.image;
-                container.classList.remove('hidden');
-                container.classList.add('flex');
-            }
+            handleProductImageUrlInput(safeUrl);
             switchAdminSubTab('products');
+            document.getElementById('admin-prod-name')?.focus();
         }
 
         async function deleteAdminProduct(prodId) {
+            const targetProd = products.find(p => p.id === prodId);
+            const targetName = targetProd ? targetProd.name : 'Product';
+
+            deletedProductIdsSet.add(String(prodId));
+            saveDeletedProductIds();
+
             products = products.filter(p => p.id !== prodId);
             delete window.productPowerStock[prodId];
             delete window.productPowerLocations[prodId];
             saveProductsToLocalBackup();
-            if (db) {
-                try { await db.collection("lumilens_products").doc(prodId).delete(); } catch(e) { console.warn(e); }
+
+            if (Array.isArray(favouritesList) && favouritesList.includes(prodId)) {
+                favouritesList = favouritesList.filter(id => id !== prodId);
+                localStorage.setItem('sweetopia_favourites', JSON.stringify(favouritesList));
+                updateFavBadges();
             }
+
+            if (document.getElementById('edit-prod-id')?.value === prodId) {
+                resetAdminProductForm();
+            }
+
+            ensureProductStockDefaults(products);
             renderStoreProducts(products);
+            renderFavouritesGrid();
             renderAdminProductsList();
             renderAdminPowerStockCheckboxes();
             renderAdminVoucherProductDropdowns();
-            showToast("Product Deleted", "Item removed from catalog.");
+
+            if (db) {
+                try {
+                    await Promise.all([
+                        db.collection("lumilens_products").doc(prodId).delete().catch(() => {}),
+                        db.collection("products").doc(prodId).delete().catch(() => {}),
+                        db.collection("lumilens_config").doc("deleted_products").set({
+                            ids: firebase.firestore.FieldValue.arrayUnion(String(prodId)),
+                            updatedAt: new Date().toISOString()
+                        }, { merge: true }).catch(() => {})
+                    ]);
+                } catch(e) { console.warn("Delete product Firestore error:", e); }
+            }
+
+            showToast("Deleted & Saved Live!", `${targetName} has been permanently deleted and removed from the live store.`);
         }
 
         window.restoreDefaultLensesToCatalog = async function() {
             let addedCount = 0;
             DEFAULT_SEED_PRODUCTS.forEach(defProd => {
+                deletedProductIdsSet.delete(String(defProd.id));
                 const exists = products.some(p => p.id === defProd.id || p.name.trim().toLowerCase() === defProd.name.trim().toLowerCase());
                 if (!exists) {
                     products.push({ ...defProd });
                     addedCount++;
                 }
             });
+            saveDeletedProductIds();
             ensureProductStockDefaults(products);
             saveProductsToLocalBackup();
 
@@ -8620,16 +8863,33 @@
             if (!db) return;
 
             const applyProductSnapshot = (snapshot, sourceCollectionName) => {
-                if (!snapshot || snapshot.empty) return;
+                if (!snapshot) return;
+                if (snapshot.empty && sourceCollectionName === "lumilens_products") {
+                    hasLoadedServerProducts = true;
+                    products = [];
+                    ensureProductStockDefaults(products);
+                    saveProductsToLocalBackup();
+                    renderStoreProducts(products);
+                    renderFavouritesGrid();
+                    renderAdminProductsList();
+                    renderAdminPowerStockCheckboxes();
+                    renderAdminVoucherProductDropdowns();
+                    return;
+                }
+                if (snapshot.empty) return;
+
                 const serverMap = new Map();
 
                 if (hasLoadedServerProducts && sourceCollectionName === "products") {
                     products.forEach(existing => {
-                        if (existing && existing.id) serverMap.set(existing.id, existing);
+                        if (existing && existing.id && !deletedProductIdsSet.has(String(existing.id))) {
+                            serverMap.set(existing.id, existing);
+                        }
                     });
                 }
 
                 snapshot.forEach(docSnap => {
+                    if (deletedProductIdsSet.has(String(docSnap.id))) return;
                     const prod = normalizeFirestoreProductDoc(docSnap.id, docSnap.data());
                     if (prod) {
                         serverMap.set(docSnap.id, prod);
@@ -8642,12 +8902,10 @@
                     }
                 });
 
-                if (serverMap.size > 0) {
-                    hasLoadedServerProducts = true;
-                    products = Array.from(serverMap.values());
-                    ensureProductStockDefaults(products);
-                    saveProductsToLocalBackup();
-                }
+                hasLoadedServerProducts = true;
+                products = Array.from(serverMap.values());
+                ensureProductStockDefaults(products);
+                saveProductsToLocalBackup();
 
                 renderStoreProducts(products);
                 renderFavouritesGrid();
@@ -8656,18 +8914,28 @@
                 renderAdminVoucherProductDropdowns();
             };
 
-            db.collection("lumilens_products").onSnapshot((snapshot) => {
-                applyProductSnapshot(snapshot, "lumilens_products");
-            }, () => {
-                renderStoreProducts(products);
-                renderFavouritesGrid();
-                renderAdminProductsList();
-                renderAdminPowerStockCheckboxes();
-            });
-
-            db.collection("products").onSnapshot((snapshot) => {
-                if (snapshot && !snapshot.empty) {
-                    applyProductSnapshot(snapshot, "products");
+            db.collection("lumilens_config").doc("deleted_products").onSnapshot((docSnap) => {
+                if (!docSnap || !docSnap.exists) return;
+                const ids = docSnap.data()?.ids;
+                if (!Array.isArray(ids)) return;
+                let changed = false;
+                ids.forEach(id => {
+                    const strId = String(id);
+                    if (!deletedProductIdsSet.has(strId)) {
+                        deletedProductIdsSet.add(strId);
+                        changed = true;
+                    }
+                });
+                if (changed) {
+                    saveDeletedProductIds();
+                    products = products.filter(p => !deletedProductIdsSet.has(String(p.id)));
+                    ensureProductStockDefaults(products);
+                    saveProductsToLocalBackup();
+                    renderStoreProducts(products);
+                    renderFavouritesGrid();
+                    renderAdminProductsList();
+                    renderAdminPowerStockCheckboxes();
+                    renderAdminVoucherProductDropdowns();
                 }
             }, () => {});
 
@@ -9322,7 +9590,6 @@
         window.onAdminPowerRangeChange = onAdminPowerRangeChange;
         window.updatePowerStockFromCheckboxes = updatePowerStockFromCheckboxes;
         window.saveAdminStockSettings = saveAdminStockSettings;
-        window.handleImageFileUpload = handleImageFileUpload;
         window.saveAdminProduct = saveAdminProduct;
         window.editAdminProduct = editAdminProduct;
         window.deleteAdminProduct = deleteAdminProduct;
@@ -9398,6 +9665,7 @@
             });
 
             if (typeof lucide !== 'undefined') { lucide.createIcons(); }
+            loadDeletedProductIds();
             loadProductsFromLocalBackup();
             ensureProductStockDefaults(products);
             loadSavedAddresses();
@@ -9488,7 +9756,7 @@
                         localStorage.setItem('sweetopia_logged_in_email', user.email);
                         saveRegisteredCustomerRecord(user.email, user.uid, true).catch(() => {});
                         loadCustomerCartFromFirestore(user.uid).catch(() => {});
-                        updateUIAfterLogin(user);
+                        updateUIAfterLogin(currentUser);
                         updatePresence(user.email, true);
                     } else {
                         if (!localStorage.getItem('sweetopia_logged_in_email')) {
@@ -9511,8 +9779,13 @@
 
             if (db) {
                 try {
+                    const deletedMetaSnap = await db.collection("lumilens_config").doc("deleted_products").get({ source: 'server' }).catch(() => null);
+                    if (deletedMetaSnap && deletedMetaSnap.exists && Array.isArray(deletedMetaSnap.data()?.ids)) {
+                        deletedMetaSnap.data().ids.forEach(id => deletedProductIdsSet.add(String(id)));
+                        saveDeletedProductIds();
+                    }
                     const loadedFromServer = await window.forceSyncFirestoreProducts(true);
-                    if (!loadedFromServer) {
+                    if (!loadedFromServer && deletedProductIdsSet.size === 0) {
                         const checkLumi = await db.collection("lumilens_products").limit(1).get({ source: 'server' }).catch(() => null);
                         const checkGeneric = await db.collection("products").limit(1).get({ source: 'server' }).catch(() => null);
                         const bothCollectionsEmpty = (!checkLumi || checkLumi.empty) && (!checkGeneric || checkGeneric.empty);
