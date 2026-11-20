@@ -5,18 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light">
     <meta name="supported-color-schemes" content="light">
-    <!-- Cache Busting & No-Cache Directives (v=1.0.9) -->
-    <meta name="app-version" content="1.0.9">
+    <!-- Cache Busting & No-Cache Directives (v=1.0.10) -->
+    <meta name="app-version" content="1.0.10">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Sweetopia Shop - Premium Contact Lens Store &amp; FPX Checkout</title>
-    <!-- App Icons & Stylesheet with Cache Busting Version (?v=1.0.9) -->
-    <link rel="stylesheet" href="style.css?v=1.0.9">
-    <link rel="icon" type="image/png" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.9">
-    <link rel="apple-touch-icon" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.9">
-    <link rel="icon" type="image/png" sizes="512x512" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png?v=1.0.9">
-    <link rel="manifest" href="https://digitalpastel.github.io/digital/sweetopiashop/manifest.json?v=1.0.9">
+    <!-- App Icons & Stylesheet with Cache Busting Version (?v=1.0.10) -->
+    <link rel="stylesheet" href="style.css?v=1.0.10">
+    <link rel="icon" type="image/png" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.10">
+    <link rel="apple-touch-icon" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.10">
+    <link rel="icon" type="image/png" sizes="512x512" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png?v=1.0.10">
+    <link rel="manifest" href="https://digitalpastel.github.io/digital/sweetopiashop/manifest.json?v=1.0.10">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&amp;family=Fredoka:wght@600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
     <!-- Retro Pixel Font for 10-Bar Window matching reference image -->
@@ -32,22 +32,41 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script>
-        // Cache Busting Controller: Increment APP_VERSION whenever updating GitHub
-        const APP_VERSION = '1.0.9';
+        // Cache Busting Controller: Hardened version upgrade & stale DOM/storage purge
+        const APP_VERSION = '1.0.10';
+        const STALE_CACHE_KEYS_TO_PURGE = [
+            'sweetopia_managed_products',
+            'sweetopia_active_presets',
+            'sweetopia_assigned_vouchers',
+            'sweetopia_customer_feedbacks'
+        ];
+
+        function purgeStaleVersionStorage(targetVersion) {
+            try {
+                STALE_CACHE_KEYS_TO_PURGE.forEach(k => localStorage.removeItem(k));
+                sessionStorage.removeItem('sweetopia_active_tab');
+                sessionStorage.removeItem('sweetopia_admin_subtab');
+                localStorage.setItem('sweetopia_app_version', targetVersion || APP_VERSION);
+            } catch (e) {}
+        }
+
         (function enforceCacheBustingVersion() {
             try {
                 const storedVersion = localStorage.getItem('sweetopia_app_version');
-                if (storedVersion && storedVersion !== APP_VERSION) {
-                    localStorage.setItem('sweetopia_app_version', APP_VERSION);
+                const url = new URL(window.location.href);
+                const urlVersion = url.searchParams.get('v');
+
+                if ((storedVersion && storedVersion !== APP_VERSION) || (urlVersion && urlVersion !== APP_VERSION)) {
+                    purgeStaleVersionStorage(APP_VERSION);
                     if ('caches' in window) {
                         caches.keys().then(names => names.forEach(name => caches.delete(name))).catch(() => {});
                     }
                     if ('serviceWorker' in navigator) {
                         navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.update())).catch(() => {});
                     }
-                    const url = new URL(window.location.href);
                     if (url.searchParams.get('v') !== APP_VERSION) {
                         url.searchParams.set('v', APP_VERSION);
+                        url.searchParams.set('_cb', Date.now().toString(36));
                         window.location.replace(url.toString());
                     }
                 } else {
@@ -104,7 +123,8 @@
         .overflow-x-auto,
         .overflow-auto,
         .cute-h-scrollbar,
-        .hide-scrollbar {
+        .hide-scrollbar,
+        .no-scrollbar {
             scroll-behavior: smooth !important;
             -webkit-overflow-scrolling: touch !important;
             overscroll-behavior: contain;
@@ -124,8 +144,10 @@
             contain: content;
         }
 
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .hide-scrollbar::-webkit-scrollbar,
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar,
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
         .cute-h-scrollbar {
             scrollbar-width: thin !important;
@@ -823,7 +845,7 @@
             <div class="truncate">
                 <div class="flex items-center gap-2">
                     <span class="bg-yellow-300 text-slate-950 text-[10px] font-black uppercase px-2 py-0.5 rounded-full shadow-xs">New Update Available</span>
-                    <span id="live-update-version-badge" class="text-xs sm:text-sm font-extrabold tracking-tight truncate">Sweetopia Shop v1.0.10 is Live!</span>
+                    <span id="live-update-version-badge" class="text-xs sm:text-sm font-extrabold tracking-tight truncate">Sweetopia Shop v1.0.11 is Live!</span>
                 </div>
                 <p id="live-update-notes-text" class="text-[11px] text-emerald-50 font-medium truncate mt-0.5">A fresh update has been published. Refresh now to load the latest features &amp; catalog.</p>
             </div>
@@ -1325,30 +1347,114 @@
                 <div class="p-3 sm:p-6 md:p-10 min-h-[550px]">
                     <!-- TAB 1: CATALOG -->
                     <div id="tab-section-catalog" class="space-y-6 tab-panel-animate">
-                        <div class="flex flex-col md:flex-row items-center justify-between gap-4 pb-4 border-b border-slate-200">
-                            <div id="category-scroll-strip" class="flex items-center space-x-3 overflow-x-auto pb-3 w-full md:w-auto cute-h-scrollbar">
-                                <button onclick="filterCatalog('all', this)" id="cat-btn-all" class="cat-btn px-5 py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 text-white shrink-0 border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all">All Lenses</button>
-                                <button onclick="filterCatalog('3 Months Disposable', this)" class="cat-btn px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 shrink-0 border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all">3 Months Disposable</button>
-                                <button onclick="filterCatalog('1 Month Disposable', this)" class="cat-btn px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 shrink-0 border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all">1 Month Disposable</button>
-                                <button onclick="filterCatalog('1 Day Disposable', this)" class="cat-btn px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 shrink-0 border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all">1 Day Disposable</button>
-                                <button onclick="filterCatalog('Molicon', this)" class="cat-btn px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 shrink-0 border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all">Molicon</button>
-                                <button onclick="filterCatalog('Uyaai', this)" class="cat-btn px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 shrink-0 border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all">Uyaai</button>
-                                <button onclick="filterCatalog('Western Eyes', this)" class="cat-btn px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 shrink-0 border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all">Western Eyes</button>
-                                <button onclick="filterCatalog('Mill Creek', this)" class="cat-btn px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 shrink-0 border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all">Mill Creek</button>
+                        <div class="pb-4 border-b border-slate-200">
+                            <div class="flex justify-between items-center mb-3">
+                                <h2 class="text-xl font-black text-gray-900 tracking-tight">Brands you love</h2>
+                                <button type="button" id="reset-brand-filter-btn" onclick="resetBrandCardFilter()" class="hidden text-xs font-extrabold text-pink-600 hover:text-pink-700 bg-pink-50 hover:bg-pink-100 border border-pink-200 px-3 py-1 rounded-full transition cursor-pointer">
+                                    Show All Lenses
+                                </button>
                             </div>
-
-                            <div class="relative w-full md:w-72">
-                                <div class="relative w-full">
-                                    <div class="absolute -top-7 right-12 flex space-x-1.5 pointer-events-none z-10">
-                                        <div class="w-3.5 h-8 bg-fuchsia-500 rounded-full transform -rotate-12 border-2 border-white shadow-sm"></div>
-                                        <div class="w-3.5 h-8 bg-fuchsia-400 rounded-full transform rotate-12 border-2 border-white shadow-sm"></div>
+                            <div class="flex space-x-3 overflow-x-auto no-scrollbar scroll-container pb-2 touch-pan-x" id="categoryScroll">
+                                <!-- Brand 1: Molicon -->
+                                <div ontouchstart="activateCard(this)" onclick="filterCatalogByBrandCard('Molicon', this)" data-brand="Molicon" class="brand-card flex flex-col items-center flex-shrink-0 cursor-pointer group select-none">
+                                    <div class="brand-box w-20 h-20 rounded-2xl bg-rose-50 flex items-center justify-center p-2 shadow-sm group-hover:scale-105 group-[.is-active]:scale-105 transition border border-rose-100 pointer-events-none">
+                                        <div class="relative w-full h-full rounded-xl overflow-hidden">
+                                            <img src="https://digitalpastel.github.io/digital/sweetopiashop/moliconbox2.webp" alt="Molicon" class="w-full h-full object-cover">
+                                            <div class="absolute inset-x-0 bottom-0 bg-pink-500/95 text-white text-[9px] font-bold leading-tight text-center py-0.5 px-1 opacity-0 translate-y-full group-hover:opacity-100 group-hover:translate-y-0 group-[.is-active]:opacity-100 group-[.is-active]:translate-y-0 transition-all duration-200">
+                                                3 months disposable
+                                            </div>
+                                        </div>
                                     </div>
-                                    <input type="text" id="store-search" oninput="filterStoreProducts()" placeholder="Search lenses..." class="w-full bg-white text-xs text-slate-900 placeholder-fuchsia-300 pl-4 pr-10 py-2.5 rounded-full border-2 border-fuchsia-500 focus:outline-none focus:ring-2 focus:ring-fuchsia-300 shadow-sm transition-all">
+                                    <span class="text-xs font-bold text-gray-800 mt-1.5 text-center">Molicon</span>
+                                </div>
+
+                                <!-- Brand 2: Uyaai -->
+                                <div ontouchstart="activateCard(this)" onclick="filterCatalogByBrandCard('Uyaai', this)" data-brand="Uyaai" class="brand-card flex flex-col items-center flex-shrink-0 cursor-pointer group select-none">
+                                    <div class="brand-box w-20 h-20 rounded-2xl bg-amber-50 flex items-center justify-center p-2 shadow-sm group-hover:scale-105 group-[.is-active]:scale-105 transition border border-amber-100 pointer-events-none">
+                                        <div class="relative w-full h-full rounded-xl overflow-hidden">
+                                            <img src="https://digitalpastel.github.io/digital/sweetopiashop/uyaaibox2.webp" alt="Uyaai" class="w-full h-full object-cover">
+                                            <div class="absolute inset-x-0 bottom-0 bg-pink-500/95 text-white text-[9px] font-bold leading-tight text-center py-0.5 px-1 opacity-0 translate-y-full group-hover:opacity-100 group-hover:translate-y-0 group-[.is-active]:opacity-100 group-[.is-active]:translate-y-0 transition-all duration-200">
+                                                1 month disposable
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs font-bold text-gray-800 mt-1.5 text-center">Uyaai</span>
+                                </div>
+
+                                <!-- Brand 3: Western Eyes -->
+                                <div ontouchstart="activateCard(this)" onclick="filterCatalogByBrandCard('Western Eyes', this)" data-brand="Western Eyes" class="brand-card flex flex-col items-center flex-shrink-0 cursor-pointer group select-none">
+                                    <div class="brand-box w-20 h-20 rounded-2xl bg-emerald-50 flex items-center justify-center p-2 shadow-sm group-hover:scale-105 group-[.is-active]:scale-105 transition border border-emerald-100 pointer-events-none">
+                                        <div class="relative w-full h-full rounded-xl overflow-hidden">
+                                            <img src="https://digitalpastel.github.io/digital/sweetopiashop/westerneyes2.webp" alt="Western Eyes" class="w-full h-full object-cover">
+                                            <div class="absolute inset-x-0 bottom-0 bg-pink-500/95 text-white text-[9px] font-bold leading-tight text-center py-0.5 px-1 opacity-0 translate-y-full group-hover:opacity-100 group-hover:translate-y-0 group-[.is-active]:opacity-100 group-[.is-active]:translate-y-0 transition-all duration-200">
+                                                3 months disposable
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs font-bold text-gray-800 mt-1.5 text-center">Western Eyes</span>
+                                </div>
+
+                                <!-- Brand 4: Mill Creek -->
+                                <div ontouchstart="activateCard(this)" onclick="filterCatalogByBrandCard('Mill Creek', this)" data-brand="Mill Creek" class="brand-card flex flex-col items-center flex-shrink-0 cursor-pointer group select-none">
+                                    <div class="brand-box w-20 h-20 rounded-2xl bg-blue-50 flex items-center justify-center p-2 shadow-sm group-hover:scale-105 group-[.is-active]:scale-105 transition border border-blue-100 pointer-events-none">
+                                        <div class="relative w-full h-full rounded-xl overflow-hidden">
+                                            <img src="https://digitalpastel.github.io/digital/sweetopiashop/millcreeklens.webp" alt="Mill Creek" class="w-full h-full object-cover">
+                                            <div class="absolute inset-x-0 bottom-0 bg-pink-500/95 text-white text-[9px] font-bold leading-tight text-center py-0.5 px-1 opacity-0 translate-y-full group-hover:opacity-100 group-hover:translate-y-0 group-[.is-active]:opacity-100 group-[.is-active]:translate-y-0 transition-all duration-200">
+                                                1 day disposable
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs font-bold text-gray-800 mt-1.5 text-center">Mill Creek</span>
+                                </div>
+
+                                <!-- Brand 5: Beauty -->
+                                <div ontouchstart="activateCard(this)" onclick="filterCatalogByBrandCard('Beauty', this)" data-brand="Beauty" class="brand-card flex flex-col items-center flex-shrink-0 cursor-pointer group select-none">
+                                    <div class="brand-box w-20 h-20 rounded-2xl bg-purple-50 flex items-center justify-center p-2 shadow-sm group-hover:scale-105 group-[.is-active]:scale-105 transition border border-purple-100 pointer-events-none">
+                                        <div class="relative w-full h-full rounded-xl overflow-hidden">
+                                            <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=150&amp;auto=format&amp;fit=crop&amp;q=80" alt="Beauty" class="w-full h-full object-cover">
+                                        </div>
+                                    </div>
+                                    <span class="text-xs font-bold text-gray-800 mt-1.5 text-center">Beauty</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div id="store-product-grid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6"></div>
+                        <!-- OFFERS NEAR YOU SECTION (Managed by Admin Sale Vouchers - Blank when no On Sale products exist) -->
+                        <section id="offers-near-you-section" class="hidden pt-2 pb-4 border-b border-slate-200">
+                            <style>
+                                .offers-transition {
+                                    transition: all 0.4s ease-in-out;
+                                }
+                            </style>
+
+                            <div class="flex justify-between items-center mb-3">
+                                <h2 class="text-xl font-black text-gray-900 tracking-tight">Offers near you</h2>
+                                <button type="button" onclick="toggleAllOffers(this)" id="seeAllOffersBtn" class="hidden text-xs font-bold px-3.5 py-1.5 rounded-full hover:bg-sky-200 transition cursor-pointer bg-sky-100 text-sky-900">See all offer lenses</button>
+                            </div>
+
+                            <!-- Dynamic Admin-Managed On Sale Offers Grid (First 2 default, then +2 on "See all offer lenses", then +4 on each "Load more") -->
+                            <div class="grid grid-cols-2 md:grid-cols-2 gap-3 sm:gap-4" id="offers-container"></div>
+
+                            <!-- Load More Button Container (Appears below the newly revealed 2 offer lenses and loads +4 at a time) -->
+                            <div id="loadMoreContainer" class="mt-6 flex justify-center hidden">
+                                <button type="button" onclick="loadMoreOffers()" id="loadMoreBtn" class="bg-sky-100 hover:bg-sky-200 text-sky-900 text-xs sm:text-sm font-black px-6 py-2.5 rounded-full border-2 border-black shadow-[0_3px_0_0_#1e1b4b] active:translate-y-0.5 active:shadow-none transition-all cursor-pointer">
+                                    Load more
+                                </button>
+                            </div>
+                        </section>
+
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <h2 class="text-xl font-black text-gray-900 tracking-tight">All lenses</h2>
+                                <span id="all-lenses-count-badge" class="text-xs font-bold text-slate-500"></span>
+                            </div>
+                            <div id="store-product-grid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6"></div>
+                            <div id="allLensesLoadMoreContainer" class="mt-6 flex justify-center hidden">
+                                <button type="button" onclick="loadMoreAllLenses()" id="allLensesLoadMoreBtn" class="bg-sky-100 hover:bg-sky-200 text-sky-900 text-xs sm:text-sm font-black px-6 py-2.5 rounded-full border-2 border-black shadow-[0_3px_0_0_#1e1b4b] active:translate-y-0.5 active:shadow-none transition-all cursor-pointer">
+                                    Load more
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- TAB 2: CART & CHECKOUT FORM -->
@@ -1642,14 +1748,20 @@
                                     <div>
                                         <h2 class="text-base font-bold flex items-center space-x-2">
                                             <span>Live App Version &amp; Force Cache Refresh</span>
-                                            <span id="admin-live-version-pill" class="bg-white text-emerald-800 text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full shadow-xs">Active: v1.0.9</span>
+                                            <span id="admin-live-version-pill" class="bg-white text-emerald-800 text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full shadow-xs">Active: v1.0.10</span>
                                         </h2>
-                                        <p class="text-xs text-emerald-100">Publish a new version to Firestore to instantly notify &amp; refresh all open customer sessions</p>
+                                        <p class="text-xs text-emerald-100">Publish a new version to Firestore to instantly update footer, HTML source &amp; refresh all open customer sessions</p>
                                     </div>
                                 </div>
-                                <span id="admin-version-sync-status" class="text-[11px] font-semibold bg-white/15 px-3 py-1 rounded-lg border border-white/20">
-                                    <i class="fa-solid fa-circle-check text-yellow-300 mr-1"></i> Listener Active
-                                </span>
+                                <div class="flex items-center gap-2">
+                                    <button type="button" onclick="downloadUpdatedHtmlWithVersion()" class="text-[11px] font-bold bg-white/20 hover:bg-white/30 text-white px-3 py-1 rounded-lg border border-white/30 transition cursor-pointer flex items-center gap-1.5" title="Download updated index.html with current live version stamped into footer & meta tags">
+                                        <i class="fa-solid fa-code text-[10px]"></i>
+                                        <span>Export HTML (v<span id="admin-export-html-ver-label">1.0.10</span>)</span>
+                                    </button>
+                                    <span id="admin-version-sync-status" class="text-[11px] font-semibold bg-white/15 px-3 py-1 rounded-lg border border-white/20">
+                                        <i class="fa-solid fa-circle-check text-yellow-300 mr-1"></i> Listener Active
+                                    </span>
+                                </div>
                             </div>
 
                             <div class="p-5 sm:p-6 bg-emerald-50/30 grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
@@ -1658,7 +1770,7 @@
                                         New Version Tag <span class="text-rose-500">*</span>
                                     </label>
                                     <div class="flex items-center gap-1.5">
-                                        <input type="text" id="admin-new-version-input" placeholder="e.g. 1.0.10" class="block w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm font-mono font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                                        <input type="text" id="admin-new-version-input" placeholder="e.g. 1.0.11" class="block w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm font-mono font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
                                         <button type="button" onclick="bumpNextPatchVersion()" class="px-2.5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold rounded-xl transition shrink-0 cursor-pointer" title="Auto-increment patch version">
                                             +0.0.1
                                         </button>
@@ -2075,12 +2187,12 @@
                             </div>
                         </div>
 
-                        <!-- ADMIN SUB-TAB 2: PRODUCTS -->
+                        <!-- ADMIN SUB-TAB 2: PRODUCTS (DIRECT IMAGE URL ONLY — NO BASE64) -->
                         <div id="adm-sub-section-products" class="hidden space-y-4">
                             <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3 shadow-sm">
                                 <div class="flex items-center justify-between">
                                     <h4 class="text-xs font-bold text-slate-900" id="admin-form-title">Add New Product</h4>
-                                    <button onclick="resetAdminProductForm()" class="text-[11px] text-slate-500 hover:text-slate-900">Clear Form</button>
+                                    <button onclick="resetAdminProductForm()" class="text-[11px] text-slate-500 hover:text-slate-900 cursor-pointer">Clear Form</button>
                                 </div>
                                 <input type="hidden" id="edit-prod-id">
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -2096,6 +2208,7 @@
                                                 <option value="Uyaai">Uyaai</option>
                                                 <option value="Western Eyes">Western Eyes</option>
                                                 <option value="Mill Creek">Mill Creek</option>
+                                                <option value="Beauty">Beauty</option>
                                             </select>
                                         </div>
                                     </div>
@@ -2112,19 +2225,24 @@
                                         </select>
                                     </div>
                                     <div class="sm:col-span-2">
-                                        <label class="block text-[10px] font-bold text-slate-600 mb-1">Product Image (Device Upload)</label>
-                                        <input type="file" id="admin-prod-file" accept="image/*" onchange="handleImageFileUpload(event)" class="w-full bg-white border border-slate-300 text-xs text-slate-700 rounded-xl p-2 file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-[#65a30d] file:text-white hover:file:bg-[#4d7c0f] cursor-pointer shadow-sm">
-                                        <input type="hidden" id="admin-prod-img-base64">
+                                        <label for="admin-prod-img-url" class="block text-[10px] font-bold text-slate-600 mb-1">Product Image URL (Direct Link Only — Fast Multi-Device Sync)</label>
+                                        <div class="relative">
+                                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                                                <i class="fa-solid fa-link text-xs"></i>
+                                            </span>
+                                            <input type="url" id="admin-prod-img-url" oninput="handleProductImageUrlInput(this.value)" placeholder="https://digitalpastel.github.io/digital/sweetopiashop/your-lens.webp" class="w-full bg-white border border-slate-300 text-xs text-slate-900 font-mono rounded-xl pl-9 pr-3 py-2.5 focus:outline-none focus:border-[#65a30d] shadow-sm">
+                                        </div>
+                                        <p class="text-[10px] text-slate-500 mt-1">Paste an <code class="font-mono text-slate-700">https://</code> direct image URL (GitHub Pages, WebP, JPG, PNG). Base64 strings are disabled for instant cross-device loading.</p>
                                     </div>
                                 </div>
                                 <div id="admin-image-preview-container" class="hidden items-center space-x-3 pt-2">
-                                    <span class="text-[10px] text-slate-500">Image Preview:</span>
-                                    <img id="admin-image-preview-tag" src="" class="w-12 h-12 object-cover rounded-xl border border-slate-300 shadow-sm">
+                                    <span class="text-[10px] text-slate-500 font-semibold">Live URL Preview:</span>
+                                    <img id="admin-image-preview-tag" src="" onerror="this.src='https://placehold.co/100x100/fee2e2/dc2626?text=Bad+URL'" class="w-12 h-12 object-cover rounded-xl border border-slate-300 shadow-sm">
                                 </div>
                                 <div class="flex space-x-2 pt-2">
-                                    <button onclick="saveAdminProduct()" class="bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center space-x-1.5 shadow-sm">
-                                        <i class="fa-solid fa-plus mr-1.5"></i>
-                                        <span>Save &amp; Publish Live</span>
+                                    <button onclick="saveAdminProduct()" class="bg-[#65a30d] hover:bg-[#4d7c0f] text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center space-x-1.5 shadow-sm cursor-pointer">
+                                        <i class="fa-solid fa-floppy-disk mr-1.5"></i>
+                                        <span id="admin-save-prod-btn-label">Edit&amp;Save / Publish Live</span>
                                     </button>
                                 </div>
                             </div>
@@ -2228,7 +2346,7 @@
 
                         <div class="text-center flex justify-center">
                             <p class="text-[11px] text-[#581c87] font-extrabold tracking-wider">
-                                © Brand Works Empire 2026, all rights reserved <span id="footer-app-version-tag" class="opacity-75 font-mono text-[10px]">(v1.0.9)</span>
+                                © Brand Works Empire 2026, all rights reserved <span id="footer-app-version-tag" class="opacity-75 font-mono text-[10px]">(v1.0.10)</span>
                             </p>
                         </div>
 
@@ -2877,23 +2995,72 @@
         </main>
     </div>
 
+    <!-- MOBILE REGISTERED CUSTOMER SEARCH MODAL -->
+    <div id="mobile-search-modal" class="md:hidden fixed inset-0 z-[155] modal-backdrop-clean flex items-start justify-center p-4 pt-16 opacity-0 pointer-events-none transition-opacity duration-200" onclick="closeSearchModal()">
+        <div class="w-full max-w-md bg-white rounded-3xl border-2 border-black shadow-[6px_6px_0_0_#1e1b4b] overflow-hidden p-5 space-y-4 relative" onclick="event.stopPropagation()">
+            <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-xl bg-[#84cc16] border-2 border-black flex items-center justify-center text-slate-950 shadow-[2px_2px_0_0_#1e1b4b]">
+                        <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-slate-900">Search Lenses</h3>
+                        <p class="text-[10px] text-slate-500 font-medium">Find by lens name, brand, or disposable type</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeSearchModal()" class="w-8 h-8 rounded-full bg-rose-500 hover:bg-rose-600 text-white border-2 border-black flex items-center justify-center text-xs font-black shadow-[2px_2px_0_0_#000] cursor-pointer">
+                    ×
+                </button>
+            </div>
+
+            <div class="relative">
+                <input type="text" id="mobile-store-search-input" oninput="handleMobileSearchInput(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault();closeSearchModal();}" placeholder="e.g. Hazel Natural, Molicon, 3 Months..." class="w-full bg-pink-50/50 border-2 border-fuchsia-500 text-xs font-bold text-slate-900 placeholder-fuchsia-300 rounded-2xl pl-4 pr-20 py-3 focus:outline-none focus:ring-2 focus:ring-fuchsia-300">
+                <button type="button" id="mobile-search-clear-btn" onclick="clearMobileSearchInput()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-extrabold text-fuchsia-600 bg-fuchsia-100 hover:bg-fuchsia-200 px-2.5 py-1 rounded-lg border border-fuchsia-300 cursor-pointer">
+                    Clear
+                </button>
+            </div>
+
+            <div class="flex items-center justify-between gap-2 pt-1">
+                <span id="mobile-search-result-count" class="text-[11px] font-bold text-slate-600">Showing all lenses</span>
+                <button type="button" onclick="closeSearchModal()" class="px-5 py-2.5 bg-[#65a30d] hover:bg-[#4d7c0f] text-white text-xs font-extrabold rounded-full border-2 border-black shadow-[0_3px_0_0_#1e1b4b] active:translate-y-0.5 active:shadow-none transition-all cursor-pointer">
+                    View Results
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- MOBILE DEVICE VIEW BOTTOM NAVIGATION BAR -->
     <div id="mobile-bottom-nav" class="md:hidden fixed bottom-0 left-0 right-0 bg-slate-900 border-t border-slate-800 px-6 py-2.5 flex justify-between items-center z-50">
-        <button type="button" onclick="switchTab('catalog', true)" id="mob-nav-catalog" class="mob-nav-btn flex flex-col items-center space-y-1 text-[#84cc16]">
+        <!-- Store Catalog Tab -->
+        <button type="button" onclick="switchTab('catalog', true)" id="mob-nav-catalog" class="mob-nav-btn flex flex-col items-center space-y-1 text-[#84cc16] cursor-pointer">
             <i class="fa-solid fa-house text-sm"></i>
             <span class="text-[10px] font-bold">Store Catalog</span>
         </button>
-        <button type="button" onclick="switchTab('cart', true)" id="mob-nav-cart" class="mob-nav-btn flex flex-col items-center space-y-1 text-slate-400 hover:text-white">
+
+        <!-- Cart Tab -->
+        <button type="button" onclick="switchTab('cart', true)" id="mob-nav-cart" class="mob-nav-btn flex flex-col items-center space-y-1 text-slate-400 hover:text-white cursor-pointer">
             <i class="fa-solid fa-cart-shopping text-sm"></i>
             <span class="text-[10px] font-semibold">Cart (<span id="mob-cart-count">0</span>)</span>
         </button>
-        <button type="button" onclick="handleMobileFavourites()" id="mob-nav-favourites" class="mob-nav-btn flex flex-col items-center space-y-1 text-slate-400 hover:text-white">
+
+        <!-- Floating Center Search Button (Registered Customer Only) -->
+        <button type="button" onclick="openSearchModal()" id="mob-nav-search" class="flex flex-col items-center text-slate-400 hover:text-white transition cursor-pointer group">
+            <div class="w-12 h-12 bg-[#84cc16] rounded-full flex items-center justify-center text-slate-950 shadow-lg -mt-6 border-4 border-slate-900 group-hover:bg-[#a3e635] transition">
+                <i class="fa-solid fa-magnifying-glass text-sm"></i>
+            </div>
+            <span class="text-[10px] font-bold mt-0.5 text-slate-300">Search</span>
+        </button>
+
+        <!-- Favourites Tab -->
+        <button type="button" onclick="handleMobileFavourites()" id="mob-nav-favourites" class="mob-nav-btn flex flex-col items-center space-y-1 text-slate-400 hover:text-white cursor-pointer">
             <i class="fa-regular fa-heart text-sm"></i>
             <span class="text-[10px] font-semibold">Favourites</span>
         </button>
-        <button type="button" onclick="handleMobileDashboardClick()" id="mob-nav-account" class="mob-nav-btn flex flex-col items-center space-y-1 text-slate-400 hover:text-white">
-            <i class="fa-solid fa-shield-halved text-sm" id="mob-nav-account-icon"></i>
-            <span class="text-[10px] font-semibold" id="mob-nav-account-text">Admin Panel</span>
+
+        <!-- Dashboard Tab -->
+        <button type="button" onclick="handleMobileDashboardClick()" id="mob-nav-account" class="mob-nav-btn flex flex-col items-center space-y-1 text-slate-400 hover:text-white cursor-pointer">
+            <i class="fa-regular fa-user text-sm" id="mob-nav-account-icon"></i>
+            <span class="text-[10px] font-semibold" id="mob-nav-account-text">Dashboard</span>
         </button>
     </div>
 
@@ -3029,6 +3196,63 @@
             return parts.join('.');
         }
 
+        function syncVersionAcrossDomAndHtml(targetVer) {
+            const cleanVer = String(targetVer || APP_VERSION).trim().replace(/^v/i, '');
+            if (!cleanVer) return;
+
+            const pillEl = document.getElementById('admin-live-version-pill');
+            if (pillEl) pillEl.innerText = `Active: v${cleanVer}`;
+
+            const footerVerEl = document.getElementById('footer-app-version-tag');
+            if (footerVerEl) footerVerEl.innerText = `(v${cleanVer})`;
+
+            const exportLabel = document.getElementById('admin-export-html-ver-label');
+            if (exportLabel) exportLabel.innerText = cleanVer;
+
+            const metaVer = document.querySelector('meta[name="app-version"]');
+            if (metaVer) metaVer.setAttribute('content', cleanVer);
+
+            document.querySelectorAll('link[href*="?v="]').forEach(linkEl => {
+                const href = linkEl.getAttribute('href');
+                if (href) {
+                    linkEl.setAttribute('href', href.replace(/(\?v=)[^&"']+/i, `$1${cleanVer}`));
+                }
+            });
+        }
+
+        window.downloadUpdatedHtmlWithVersion = function(customVersion = null) {
+            const verToStamp = String(customVersion || latestPublishedServerVersion || APP_VERSION).trim().replace(/^v/i, '');
+            syncVersionAcrossDomAndHtml(verToStamp);
+
+            let rawHtml = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+
+            // Update <meta name="app-version" content="...">
+            rawHtml = rawHtml.replace(/(<meta\s+name=["']app-version["']\s+content=["'])[^"']+(["'][^>]*>)/i, `$1${verToStamp}$2`);
+            // Update Cache Busting comments and ?v=... query parameters
+            rawHtml = rawHtml.replace(/\(v=\d+(?:\.\d+){1,3}\)/g, `(v=${verToStamp})`);
+            rawHtml = rawHtml.replace(/(\?v=)\d+(?:\.\d+){1,3}/g, `$1${verToStamp}`);
+            // Update JS const APP_VERSION = '...'
+            rawHtml = rawHtml.replace(/(const\s+APP_VERSION\s*=\s*['"])[^'"]+(['"];)/, `$1${verToStamp}$2`);
+            // Update Admin pill & Footer version tags in HTML source
+            rawHtml = rawHtml.replace(/(id=["']admin-live-version-pill["'][^>]*>)Active:\s*v[^<]+(<\/span>)/i, `$1Active: v${verToStamp}$2`);
+            rawHtml = rawHtml.replace(/(id=["']footer-app-version-tag["'][^>]*>)\(v[^)]+\)(<\/span>)/i, `$1(v${verToStamp})$2`);
+            rawHtml = rawHtml.replace(/(id=["']admin-export-html-ver-label["'][^>]*>)[^<]+(<\/span>)/i, `$1${verToStamp}$2`);
+
+            const blob = new Blob([rawHtml], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `index_v${verToStamp}.html`;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 300);
+
+            showToast("HTML Source Exported!", `Downloaded index_v${verToStamp}.html with updated footer & version tags.`);
+        };
+
         window.bumpNextPatchVersion = function() {
             const input = document.getElementById('admin-new-version-input');
             if (!input) return;
@@ -3038,8 +3262,9 @@
 
         window.applyLiveVersionUpdate = async function(targetVersion = null) {
             const nextVer = (targetVersion || latestPublishedServerVersion || APP_VERSION).replace(/^v/i, '');
+            syncVersionAcrossDomAndHtml(nextVer);
+            purgeStaleVersionStorage(nextVer);
             try {
-                localStorage.setItem('sweetopia_app_version', nextVer);
                 if ('caches' in window) {
                     const names = await caches.keys();
                     await Promise.all(names.map(name => caches.delete(name)));
@@ -3053,6 +3278,7 @@
             try {
                 const url = new URL(window.location.href);
                 url.searchParams.set('v', nextVer);
+                url.searchParams.set('_cb', Date.now().toString(36));
                 window.location.replace(url.toString());
             } catch (e) {
                 window.location.reload(true);
@@ -3071,7 +3297,7 @@
 
             const rawVersion = (versionInput?.value || '').trim().replace(/^v/i, '');
             if (!rawVersion || !/^\d+(\.\d+){1,3}$/.test(rawVersion)) {
-                showToast("Invalid Version Format", "Please enter a valid version number such as 1.0.5 or 1.1.0.", true);
+                showToast("Invalid Version Format", "Please enter a valid version number such as 1.0.11 or 1.1.0.", true);
                 versionInput?.focus();
                 return;
             }
@@ -3085,11 +3311,8 @@
                 localStorage.setItem('sweetopia_app_version', rawVersion);
             } catch (e) {}
 
-            const pillEl = document.getElementById('admin-live-version-pill');
-            if (pillEl) pillEl.innerText = `Active: v${rawVersion}`;
-
-            const footerVerEl = document.getElementById('footer-app-version-tag');
-            if (footerVerEl) footerVerEl.innerText = `(v${rawVersion})`;
+            // Immediately sync DOM footer, meta tag, links, and active version pill
+            syncVersionAcrossDomAndHtml(rawVersion);
 
             if (versionInput) {
                 versionInput.value = computeNextPatchVersion(rawVersion);
@@ -3112,7 +3335,10 @@
                 }
             }
 
-            showToast("New Version Published!", `Live app version v${rawVersion} broadcasted to all connected shoppers!`);
+            // Also auto-download the updated index.html with the new version stamped in the footer & meta tags
+            window.downloadUpdatedHtmlWithVersion(rawVersion);
+
+            showToast("New Version Published!", `Live app version v${rawVersion} updated in footer, HTML file & broadcasted to all devices!`);
         };
 
         function initLiveVersionListener() {
@@ -3131,11 +3357,7 @@
                 const serverVer = String(data.version).trim().replace(/^v/i, '');
                 latestPublishedServerVersion = serverVer;
 
-                const pillEl = document.getElementById('admin-live-version-pill');
-                if (pillEl) pillEl.innerText = `Active: v${serverVer}`;
-
-                const footerVerEl = document.getElementById('footer-app-version-tag');
-                if (footerVerEl) footerVerEl.innerText = `(v${serverVer})`;
+                syncVersionAcrossDomAndHtml(serverVer);
 
                 if (verInput && document.activeElement !== verInput) {
                     verInput.value = computeNextPatchVersion(serverVer);
@@ -3146,6 +3368,9 @@
                     new URLSearchParams(window.location.search).get('v') === serverVer;
 
                 if (isNewerOnServer && !alreadyUpdatedToThis) {
+                    purgeStaleVersionStorage(serverVer);
+                    window.forceSyncFirestoreProducts(true).catch(() => {});
+
                     const banner = document.getElementById('live-version-update-banner');
                     const badgeEl = document.getElementById('live-update-version-badge');
                     const notesEl = document.getElementById('live-update-notes-text');
@@ -3166,7 +3391,7 @@
                         showToast("App Update Live!", `Updating Sweetopia Shop to v${serverVer}...`);
                         setTimeout(() => {
                             window.applyLiveVersionUpdate(serverVer);
-                        }, 2400);
+                        }, 1800);
                     }
                 }
             }, () => {});
@@ -3398,9 +3623,36 @@
 
         let products = [...DEFAULT_SEED_PRODUCTS];
         let hasLoadedServerProducts = false;
+        let deletedProductIdsSet = new Set();
+
+        function loadDeletedProductIds() {
+            try {
+                const raw = localStorage.getItem('sweetopia_deleted_product_ids');
+                if (raw) {
+                    const arr = JSON.parse(raw);
+                    if (Array.isArray(arr)) {
+                        deletedProductIdsSet = new Set(arr.map(String));
+                    }
+                }
+            } catch (e) {}
+        }
+
+        function saveDeletedProductIds() {
+            try {
+                localStorage.setItem('sweetopia_deleted_product_ids', JSON.stringify(Array.from(deletedProductIdsSet)));
+            } catch (e) {}
+        }
+
+        function isValidHttpImageUrl(urlStr) {
+            if (!urlStr || typeof urlStr !== 'string') return false;
+            const trimmed = urlStr.trim();
+            if (trimmed.startsWith('data:')) return false;
+            return /^https?:\/\/.+/i.test(trimmed);
+        }
 
         function normalizeFirestoreProductDoc(docId, rawData) {
             if (!rawData || typeof rawData !== 'object') return null;
+            if (rawData.deleted === true || deletedProductIdsSet.has(String(docId))) return null;
             const resolvedName = (rawData.name || rawData.title || rawData.productName || '').toString().trim();
             if (!resolvedName) return null;
 
@@ -3408,8 +3660,10 @@
             const numPrice = parseFloat(String(rawPrice).replace(/[^0-9.]/g, ''));
             const formattedPrice = !isNaN(numPrice) ? numPrice.toFixed(2) : '25.00';
 
-            const resolvedImg = rawData.image || rawData.imageUrl || rawData.img || rawData.photo ||
-                "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500";
+            const candidateImg = (rawData.image || rawData.imageUrl || rawData.img || rawData.photo || '').toString().trim();
+            const resolvedImg = isValidHttpImageUrl(candidateImg)
+                ? candidateImg
+                : "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500";
 
             return {
                 ...rawData,
@@ -3427,6 +3681,7 @@
             try {
                 const serialized = products.map(p => ({
                     ...p,
+                    image: isValidHttpImageUrl(p.image) ? p.image : "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500",
                     powerStock: window.productPowerStock[p.id] || p.powerStock || {},
                     powerLocations: window.productPowerLocations[p.id] || p.powerLocations || {}
                 }));
@@ -3439,18 +3694,17 @@
                 const raw = localStorage.getItem('sweetopia_managed_products');
                 if (!raw) return false;
                 const parsed = JSON.parse(raw);
-                if (Array.isArray(parsed) && parsed.length > 0) {
+                if (Array.isArray(parsed)) {
                     const normalized = parsed
+                        .filter(p => p && !deletedProductIdsSet.has(String(p.id)))
                         .map(p => normalizeFirestoreProductDoc(p.id, p))
                         .filter(Boolean);
-                    if (normalized.length > 0) {
-                        products = normalized;
-                        products.forEach(p => {
-                            if (p.powerStock) window.productPowerStock[p.id] = p.powerStock;
-                            if (p.powerLocations) window.productPowerLocations[p.id] = p.powerLocations;
-                        });
-                        return true;
-                    }
+                    products = normalized;
+                    products.forEach(p => {
+                        if (p.powerStock) window.productPowerStock[p.id] = p.powerStock;
+                        if (p.powerLocations) window.productPowerLocations[p.id] = p.powerLocations;
+                    });
+                    return true;
                 }
             } catch (e) { console.warn("Load products local backup warning:", e); }
             return false;
@@ -3482,15 +3736,22 @@
         window.forceSyncFirestoreProducts = async function(silent = false) {
             if (!db) return false;
             try {
-                const [lumiSnap, genericSnap] = await Promise.all([
+                const [lumiSnap, genericSnap, deletedMetaDoc] = await Promise.all([
                     db.collection("lumilens_products").get({ source: 'server' }).catch(() => db.collection("lumilens_products").get().catch(() => null)),
-                    db.collection("products").get({ source: 'server' }).catch(() => db.collection("products").get().catch(() => null))
+                    db.collection("products").get({ source: 'server' }).catch(() => db.collection("products").get().catch(() => null)),
+                    db.collection("lumilens_config").doc("deleted_products").get({ source: 'server' }).catch(() => null)
                 ]);
+
+                if (deletedMetaDoc && deletedMetaDoc.exists && Array.isArray(deletedMetaDoc.data()?.ids)) {
+                    deletedMetaDoc.data().ids.forEach(id => deletedProductIdsSet.add(String(id)));
+                    saveDeletedProductIds();
+                }
 
                 const mergedMap = new Map();
 
                 if (genericSnap && !genericSnap.empty) {
                     genericSnap.forEach(docSnap => {
+                        if (deletedProductIdsSet.has(String(docSnap.id))) return;
                         const prod = normalizeFirestoreProductDoc(docSnap.id, docSnap.data());
                         if (prod) {
                             mergedMap.set(docSnap.id, prod);
@@ -3502,6 +3763,7 @@
 
                 if (lumiSnap && !lumiSnap.empty) {
                     lumiSnap.forEach(docSnap => {
+                        if (deletedProductIdsSet.has(String(docSnap.id))) return;
                         const prod = normalizeFirestoreProductDoc(docSnap.id, docSnap.data());
                         if (prod) {
                             mergedMap.set(docSnap.id, prod);
@@ -3511,7 +3773,7 @@
                     });
                 }
 
-                if (mergedMap.size > 0) {
+                if (mergedMap.size > 0 || (lumiSnap && !lumiSnap.empty)) {
                     hasLoadedServerProducts = true;
                     products = Array.from(mergedMap.values());
                     ensureProductStockDefaults(products);
@@ -3522,7 +3784,7 @@
                     renderAdminPowerStockCheckboxes();
                     renderAdminVoucherProductDropdowns();
                     if (!silent) {
-                        showToast("Products Synced!", `Loaded ${products.length} real products from Firebase Firestore.`);
+                        showToast("Products Synced!", `Loaded ${products.length} live products from Firebase Firestore.`);
                     }
                     return true;
                 }
@@ -4790,7 +5052,7 @@
             const today = new Date();
             for (const code in activeProductVouchersMap) {
                 const pv = activeProductVouchersMap[code];
-                if (pv && pv.assignedProducts && pv.assignedProducts.includes(productId) && pv.active !== false) {
+                if (pv && pv.assignedProducts && pv.assignedProducts.includes(productId) && pv.active !== false && pv.displaySetting !== 'no_display') {
                     if (!pv.expiry || new Date(pv.expiry) >= today) {
                         return {
                             code: pv.code,
@@ -4802,7 +5064,7 @@
                 }
             }
             for (const preset of activePresetsList) {
-                if (preset.active && preset.type === 'product' && preset.assignedProductIds && preset.assignedProductIds.includes(productId)) {
+                if (preset.active && preset.type === 'product' && preset.assignedProductIds && preset.assignedProductIds.includes(productId) && preset.displaySetting !== 'no_display') {
                     return {
                         code: preset.code,
                         discountType: preset.discountType || 'percentage',
@@ -5366,6 +5628,7 @@
         function enforceMobileNavForRole() {
             const mobNav = document.getElementById('mobile-bottom-nav');
             const mobNavCart = document.getElementById('mob-nav-cart');
+            const mobNavSearch = document.getElementById('mob-nav-search');
             const mobNavFav = document.getElementById('mob-nav-favourites');
             const mobNavAccount = document.getElementById('mob-nav-account');
             const mobAccountText = document.getElementById('mob-nav-account-text');
@@ -5377,12 +5640,14 @@
             if (mobNav) {
                 if (isGuest) {
                     if (mobNavCart) mobNavCart.style.setProperty('display', 'none', 'important');
+                    if (mobNavSearch) mobNavSearch.style.removeProperty('display');
                     if (mobNavFav) mobNavFav.style.setProperty('display', 'none', 'important');
                     if (mobNavAccount) mobNavAccount.style.setProperty('display', 'none', 'important');
-                    mobNav.classList.remove('justify-between', 'justify-around');
-                    mobNav.classList.add('justify-center');
+                    mobNav.classList.remove('justify-between', 'justify-center');
+                    mobNav.classList.add('justify-around');
                 } else if (isAdmin) {
                     if (mobNavCart) mobNavCart.style.setProperty('display', 'none', 'important');
+                    if (mobNavSearch) mobNavSearch.style.setProperty('display', 'none', 'important');
                     if (mobNavFav) mobNavFav.style.setProperty('display', 'none', 'important');
                     if (mobNavAccount) mobNavAccount.style.removeProperty('display');
                     mobNav.classList.remove('justify-between', 'justify-center');
@@ -5391,6 +5656,7 @@
                     if (mobAccountIcon) mobAccountIcon.className = "fa-solid fa-shield-halved text-sm";
                 } else {
                     if (mobNavCart) mobNavCart.style.removeProperty('display');
+                    if (mobNavSearch) mobNavSearch.style.removeProperty('display');
                     if (mobNavFav) mobNavFav.style.removeProperty('display');
                     if (mobNavAccount) mobNavAccount.style.removeProperty('display');
                     mobNav.classList.remove('justify-around', 'justify-center');
@@ -5846,7 +6112,7 @@
                     lastPendingVerificationPassword = password;
                     showAuthVerificationBanner(
                         "Not Registered Yet or Different Website Password",
-                        `Firebase could not sign in <b>${email}</b> because either:<br>1) This email hasn't been registered under <b>Customer Sign Up</b> yet, OR<br>2) The password differs from the one you created for this site (note: this is separate from your Gmail login password).<br><button type="button" onclick="quickCreateAndVerifyFromSignIn()" class="mt-2 inline-flex items-center gap-1.5 bg-[#65a30d] hover:bg-[#4d7c0f] text-white text-[11px] font-bold px-3 py-1.5 rounded-xl shadow-xs cursor-pointer"><i class="fa-solid fa-user-plus text-[10px]"></i> Register This Email &amp; Send Verification Now</button>`,
+                        `Firebase could not sign in <b>${email}</b> because either:<br>1) This email hasn't been registered under <b>Customer Sign Up</b> yet, OR<br>2) The password differs from the one you created for this site (note: is separate from your Gmail login password).<br><button type="button" onclick="quickCreateAndVerifyFromSignIn()" class="mt-2 inline-flex items-center gap-1.5 bg-[#65a30d] hover:bg-[#4d7c0f] text-white text-[11px] font-bold px-3 py-1.5 rounded-xl shadow-xs cursor-pointer"><i class="fa-solid fa-user-plus text-[10px]"></i> Register This Email &amp; Send Verification Now</button>`,
                         email
                     );
                     showToast("Check Registration / Password", "Register under 'Customer Sign Up' first or click 'Forgot?' to reset.", true);
@@ -5990,19 +6256,36 @@
             window.renderCustomerFeedbackWall();
         }
 
-        function renderStoreProducts(list) {
+        function renderStoreProducts(list, resetPagination = true) {
             const grid = document.getElementById('store-product-grid');
+            const loadMoreWrap = document.getElementById('allLensesLoadMoreContainer');
+            const countBadge = document.getElementById('all-lenses-count-badge');
             if (!grid) return;
 
-            if (list.length === 0) {
+            currentFilteredCatalogList = Array.isArray(list) ? list : products;
+            if (resetPagination) {
+                allLensesVisibleCount = ALL_LENSES_BATCH_SIZE;
+            }
+
+            if (currentFilteredCatalogList.length === 0) {
                 grid.innerHTML = `<div class="col-span-full py-16 text-center text-slate-400 bg-slate-50 rounded-3xl border border-dashed border-slate-200">No contact lenses found matching your search.</div>`;
+                if (loadMoreWrap) loadMoreWrap.classList.add('hidden');
+                if (countBadge) countBadge.innerText = '';
+                if (typeof window.renderOffersNearYouSection === 'function') {
+                    window.renderOffersNearYouSection();
+                }
                 return;
             }
 
             const isAdmin = currentUser && isAdminUser(currentUser?.email);
             const isGuest = isGuestUser();
+            const visibleSlice = currentFilteredCatalogList.slice(0, allLensesVisibleCount);
 
-            grid.innerHTML = list.map(p => {
+            if (countBadge) {
+                countBadge.innerText = `Showing ${visibleSlice.length} of ${currentFilteredCatalogList.length}`;
+            }
+
+            grid.innerHTML = visibleSlice.map(p => {
                 const pricing = calculateProductEffectivePrice(p);
                 const hasSale = pricing.hasSale;
                 const locationBadge = getPowerLocationBadgeText(p.id);
@@ -6067,31 +6350,297 @@
                     </div>
                 `;
             }).join('');
-        }
 
-        function filterCatalog(category, btnElement) {
-            document.querySelectorAll('.cat-btn').forEach(btn => {
-                btn.className = "cat-btn px-5 py-2.5 rounded-full text-xs font-bold bg-white text-slate-800 hover:bg-fuchsia-50 shrink-0 border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all";
-            });
-            if (btnElement) {
-                btnElement.className = "cat-btn px-5 py-2.5 rounded-full text-xs font-bold bg-fuchsia-500 text-white shrink-0 border-2 border-black shadow-[0_4px_0_0_#1e1b4b] active:translate-y-1 active:shadow-[0_0_0_0_#1e1b4b] transition-all";
-                btnElement.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            if (loadMoreWrap) {
+                if (visibleSlice.length < currentFilteredCatalogList.length) {
+                    loadMoreWrap.classList.remove('hidden');
+                } else {
+                    loadMoreWrap.classList.add('hidden');
+                }
             }
 
+            if (typeof window.renderOffersNearYouSection === 'function') {
+                window.renderOffersNearYouSection();
+            }
+        }
+
+        let currentFilteredCatalogList = [];
+        const ALL_LENSES_BATCH_SIZE = 8;
+        let allLensesVisibleCount = ALL_LENSES_BATCH_SIZE;
+
+        window.loadMoreAllLenses = function() {
+            const targetList = currentFilteredCatalogList.length > 0 ? currentFilteredCatalogList : products;
+            allLensesVisibleCount = Math.min(allLensesVisibleCount + ALL_LENSES_BATCH_SIZE, targetList.length);
+            renderStoreProducts(targetList, false);
+        };
+
+        let offersExpandedState = false;
+        let offersVisibleCount = 2;
+        const OFFERS_BATCH_SIZE = 4;
+
+        function createOfferNearYouCardHTML(product) {
+            const pricing = calculateProductEffectivePrice(product);
+            const isAdmin = currentUser && isAdminUser(currentUser?.email);
+            const isGuest = isGuestUser();
+            const isFav = Array.isArray(favouritesList) && favouritesList.includes(product.id);
+            const cardBtnText = isGuest ? 'View Details' : 'Buy On Sale';
+
+            return `
+                <div class="offers-transition bg-white rounded-2xl sm:rounded-[2rem] p-2.5 sm:p-4 border-2 border-black flex flex-col justify-between group hover:border-fuchsia-600 transition-all shadow-[0_4px_0_0_#1e1b4b] sm:shadow-[0_5px_0_0_#1e1b4b] relative mt-2 sm:mt-4">
+                    <div class="absolute -top-3 sm:-top-4 -left-2 sm:-left-3 z-20 pointer-events-none drop-shadow-sm transform -rotate-12">
+                        <svg class="w-6 h-6 sm:w-10 sm:h-10 text-pink-500 fill-current filter drop-shadow" viewBox="0 0 24 24"><path d="M12 2c-2 0-4 1.5-4 3.5 0 1.2.6 2.3 1.5 3-2.5.8-4.5 3-4.5 5.5 0 2.8 2.2 5 5 5 1 0 2-.3 2.8-.8.8.5 1.8.8 2.8.8 2.8 0 5-2.2 5-5 0-2.5-2-4.7-4.5-5.5.9-.7 1.5-1.8 1.5-3C16 3.5 14 2 12 2z"></path></svg>
+                    </div>
+
+                    ${(isAdmin || isGuest) ? '' : `
+                    <button type="button" onclick="event.stopPropagation(); toggleWishlist(this, '${product.id}');" class="absolute top-2 sm:top-4 right-2 sm:right-4 z-20 w-7 h-7 sm:w-8 sm:h-8 bg-slate-900/60 rounded-full flex items-center justify-center text-slate-300 hover:text-red-400 transition-all shadow">
+                        <i class="${isFav ? 'fa-solid fa-heart text-red-500' : 'fa-regular fa-heart'} text-xs"></i>
+                    </button>`}
+
+                    <div>
+                        <div class="relative w-full h-32 sm:h-44 rounded-xl sm:rounded-2xl bg-pink-50 overflow-hidden flex items-center justify-center mb-2 sm:mb-3 border-2 border-black cursor-pointer group/frame" onclick="openImageZoomModal('${product.image}')" title="Click to view fullsize image">
+                            <div class="absolute top-3 left-3 bg-sky-100 text-sky-800 font-bold text-xs px-2.5 py-1 rounded-lg flex items-center space-x-1 shadow-sm z-10">
+                                <i class="fa-solid fa-tag text-[10px]"></i>
+                                <span>On Sale</span>
+                            </div>
+                            <img src="${product.image}" alt="${escapeHtmlText(product.name)}" class="w-24 h-24 sm:w-36 sm:h-36 object-cover group-hover:scale-105 transition-transform" onerror="this.src='https://placehold.co/200x200/f1f5f9/65a30d?text=Lens'">
+                            <div class="absolute bottom-1.5 sm:bottom-2.5 right-1.5 sm:right-2.5 z-20 w-6 h-6 sm:w-7 sm:h-7 bg-white/90 hover:bg-white text-slate-900 rounded-lg border-2 border-black flex items-center justify-center shadow-[0_2px_0_0_#1e1b4b] transition-transform hover:scale-110" title="Expand Fullsize Image">
+                                <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="15 3 21 3 21 9"></polyline>
+                                    <polyline points="9 21 3 21 3 15"></polyline>
+                                    <line x1="21" y1="3" x2="14" y2="10"></line>
+                                    <line x1="3" y1="21" x2="10" y2="14"></line>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="cursor-pointer" onclick="openProductDetail('${product.id}')">
+                            <p class="text-[9px] sm:text-[10px] text-fuchsia-600 uppercase mb-0.5 sm:mb-1 font-black truncate">${escapeHtmlText(product.brand || 'Molicon')} • ${escapeHtmlText(product.category || '')}</p>
+                            <h3 class="text-xs sm:text-sm font-black text-slate-900 mb-1 sm:mb-2 line-clamp-1">${escapeHtmlText(product.name)}</h3>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between pt-2 sm:pt-3 border-t-2 border-slate-100 gap-1.5 sm:gap-0">
+                        <div>
+                            <div class="flex items-baseline gap-1.5">
+                                <span class="text-xs sm:text-sm font-black text-rose-600">RM ${pricing.effectivePrice}</span>
+                                <span class="text-[10px] text-slate-400 line-through">RM ${pricing.basePrice}</span>
+                            </div>
+                            <span class="text-[9px] font-bold text-rose-500 uppercase block tracking-tight">Voucher Discount Applied</span>
+                        </div>
+                        <button type="button" onclick="openProductDetail('${product.id}')" class="text-[9px] sm:text-[10px] bg-rose-500 hover:bg-rose-600 text-white border-2 border-black px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl font-black shadow-[0_2px_0_0_#1e1b4b] sm:shadow-[0_3px_0_0_#1e1b4b] active:translate-y-0.5 active:shadow-none transition-all text-center cursor-pointer">
+                            ${cardBtnText}
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getAdminManagedOnSaleProducts() {
+            return (products || []).filter(p => {
+                const pricing = calculateProductEffectivePrice(p);
+                return pricing && pricing.hasSale === true;
+            });
+        }
+
+        window.renderOffersNearYouSection = function() {
+            const section = document.getElementById('offers-near-you-section');
+            const container = document.getElementById('offers-container');
+            const seeAllBtn = document.getElementById('seeAllOffersBtn');
+            const loadMoreContainer = document.getElementById('loadMoreContainer');
+            if (!section || !container) return;
+
+            const onSaleProducts = getAdminManagedOnSaleProducts();
+
+            // Controlled by Admin Panel: if no sale products exist, keep section completely hidden & blank
+            if (onSaleProducts.length === 0) {
+                container.innerHTML = '';
+                section.classList.add('hidden');
+                if (seeAllBtn) seeAllBtn.classList.add('hidden');
+                if (loadMoreContainer) loadMoreContainer.classList.add('hidden');
+                offersExpandedState = false;
+                offersVisibleCount = 2;
+                return;
+            }
+
+            section.classList.remove('hidden');
+
+            if (onSaleProducts.length > 2) {
+                if (seeAllBtn) {
+                    seeAllBtn.classList.remove('hidden');
+                    if (offersExpandedState) {
+                        seeAllBtn.innerText = 'Show less';
+                        seeAllBtn.classList.remove('bg-sky-100', 'text-sky-900');
+                        seeAllBtn.classList.add('bg-gray-200', 'text-gray-800');
+                    } else {
+                        seeAllBtn.innerText = 'See all offer lenses';
+                        seeAllBtn.classList.remove('bg-gray-200', 'text-gray-800');
+                        seeAllBtn.classList.add('bg-sky-100', 'text-sky-900');
+                    }
+                }
+            } else {
+                if (seeAllBtn) seeAllBtn.classList.add('hidden');
+                offersExpandedState = false;
+                offersVisibleCount = 2;
+            }
+
+            const countToShow = offersExpandedState
+                ? Math.min(offersVisibleCount, onSaleProducts.length)
+                : Math.min(2, onSaleProducts.length);
+
+            const visibleProducts = onSaleProducts.slice(0, countToShow);
+            container.innerHTML = visibleProducts.map(p => createOfferNearYouCardHTML(p)).join('');
+
+            // Show "Load more" button whenever expanded and more Admin-managed On Sale products remain
+            if (loadMoreContainer) {
+                if (offersExpandedState && countToShow < onSaleProducts.length) {
+                    loadMoreContainer.classList.remove('hidden');
+                } else {
+                    loadMoreContainer.classList.add('hidden');
+                }
+            }
+        };
+
+        window.toggleAllOffers = function(btn) {
+            const onSaleProducts = getAdminManagedOnSaleProducts();
+            if (onSaleProducts.length <= 2) return;
+
+            if (offersExpandedState) {
+                offersExpandedState = false;
+                offersVisibleCount = 2;
+            } else {
+                offersExpandedState = true;
+                // Clicking "See all offer lenses" reveals 2 more offer lenses (4 total) and displays "Load more" if more exist
+                offersVisibleCount = Math.min(4, onSaleProducts.length);
+            }
+            window.renderOffersNearYouSection();
+        };
+
+        window.loadMoreOffers = function() {
+            const onSaleProducts = getAdminManagedOnSaleProducts();
+            // Each click on "Load more" appends 4 more Admin-managed On Sale lenses until all are displayed
+            offersVisibleCount = Math.min(offersVisibleCount + OFFERS_BATCH_SIZE, onSaleProducts.length);
+            window.renderOffersNearYouSection();
+        };
+
+        let activeSelectedBrandCard = null;
+        window.activateCard = function(el) {
+            if (!el) return;
+            document.querySelectorAll('.brand-card').forEach(c => c.classList.remove('is-active'));
+            el.classList.add('is-active');
+        };
+
+        window.filterCatalogByBrandCard = function(brandName, cardEl) {
+            const resetBtn = document.getElementById('reset-brand-filter-btn');
+            if (activeSelectedBrandCard && activeSelectedBrandCard.toLowerCase() === brandName.toLowerCase()) {
+                window.resetBrandCardFilter();
+                return;
+            }
+            activeSelectedBrandCard = brandName;
+            document.querySelectorAll('.brand-card').forEach(c => {
+                c.classList.remove('is-active');
+                c.querySelector('.brand-box')?.classList.remove('ring-2', 'ring-pink-500');
+            });
+            if (cardEl) {
+                cardEl.classList.add('is-active');
+                cardEl.querySelector('.brand-box')?.classList.add('ring-2', 'ring-pink-500');
+            }
+            if (resetBtn) resetBtn.classList.remove('hidden');
+
+            const filtered = products.filter(p =>
+                (p.brand || '').toLowerCase() === brandName.toLowerCase() ||
+                (p.category || '').toLowerCase().includes(brandName.toLowerCase())
+            );
+            renderStoreProducts(filtered);
+        };
+
+        window.resetBrandCardFilter = function() {
+            activeSelectedBrandCard = null;
+            document.querySelectorAll('.brand-card').forEach(c => {
+                c.classList.remove('is-active');
+                c.querySelector('.brand-box')?.classList.remove('ring-2', 'ring-pink-500');
+            });
+            const resetBtn = document.getElementById('reset-brand-filter-btn');
+            if (resetBtn) resetBtn.classList.add('hidden');
+            renderStoreProducts(products);
+        };
+
+        function filterCatalog(category, btnElement) {
             if (category === 'all') {
-                renderStoreProducts(products);
-            } else if (['Molicon', 'Uyaai', 'Western Eyes', 'Mill Creek'].includes(category)) {
-                renderStoreProducts(products.filter(p => (p.brand || '').toLowerCase() === category.toLowerCase()));
+                window.resetBrandCardFilter();
+            } else if (['Molicon', 'Uyaai', 'Western Eyes', 'Mill Creek', 'Beauty'].includes(category)) {
+                const matchingCard = document.querySelector(`.brand-card[data-brand="${category}"]`);
+                window.filterCatalogByBrandCard(category, matchingCard);
             } else {
                 renderStoreProducts(products.filter(p => p.category === category));
             }
         }
 
         function filterStoreProducts() {
-            const query = document.getElementById('store-search').value.toLowerCase();
+            const query = (document.getElementById('store-search')?.value || document.getElementById('mobile-store-search-input')?.value || '').toLowerCase();
             const filtered = products.filter(p => p.name.toLowerCase().includes(query) || p.category.toLowerCase().includes(query) || (p.brand && p.brand.toLowerCase().includes(query)));
             renderStoreProducts(filtered);
+
+            const countEl = document.getElementById('mobile-search-result-count');
+            if (countEl) {
+                countEl.innerText = query
+                    ? `Found ${filtered.length} matching lens${filtered.length === 1 ? '' : 'es'}`
+                    : `Showing all ${products.length} lenses`;
+            }
         }
+
+        window.openSearchModal = function() {
+            if (currentUser && isAdminUser(currentUser.email)) return;
+
+            switchTab('catalog', true);
+
+            const desktopSearch = document.getElementById('store-search');
+            const mobInput = document.getElementById('mobile-store-search-input');
+            const clearBtn = document.getElementById('mobile-search-clear-btn');
+
+            if (mobInput && desktopSearch) {
+                mobInput.value = desktopSearch.value || '';
+            }
+            if (mobInput && clearBtn) {
+                clearBtn.classList.toggle('hidden', !mobInput.value.trim());
+            }
+            filterStoreProducts();
+
+            const modal = document.getElementById('mobile-search-modal');
+            if (modal) {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modal.classList.add('opacity-100');
+                setTimeout(() => mobInput?.focus(), 80);
+            }
+        };
+
+        window.closeSearchModal = function() {
+            const modal = document.getElementById('mobile-search-modal');
+            if (modal) {
+                modal.classList.remove('opacity-100');
+                modal.classList.add('opacity-0', 'pointer-events-none');
+            }
+            const grid = document.getElementById('store-product-grid');
+            if (grid) {
+                grid.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        };
+
+        window.handleMobileSearchInput = function(val) {
+            const desktopSearch = document.getElementById('store-search');
+            const clearBtn = document.getElementById('mobile-search-clear-btn');
+            if (desktopSearch) desktopSearch.value = val;
+            if (clearBtn) clearBtn.classList.toggle('hidden', !(val || '').trim());
+            filterStoreProducts();
+        };
+
+        window.clearMobileSearchInput = function() {
+            const mobInput = document.getElementById('mobile-store-search-input');
+            if (mobInput) {
+                mobInput.value = '';
+                mobInput.focus();
+            }
+            window.handleMobileSearchInput('');
+        };
 
         function openProductDetail(productId) {
             const product = products.find(p => p.id === productId);
@@ -6703,50 +7252,61 @@
             showToast("Stock & Locations Updated!", "Prescription power and HQ / Vendor BP10 locations published to Store Catalog.");
         }
 
-        function handleImageFileUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const base64 = e.target.result;
-                document.getElementById('admin-prod-img-base64').value = base64;
-                const previewTag = document.getElementById('admin-image-preview-tag');
-                const container = document.getElementById('admin-image-preview-container');
-                if (previewTag && container) {
-                    previewTag.src = base64;
-                    container.classList.remove('hidden');
-                    container.classList.add('flex');
-                }
-            };
-            reader.readAsDataURL(file);
-        }
+        window.handleProductImageUrlInput = function(urlVal) {
+            const trimmed = (urlVal || '').trim();
+            const previewTag = document.getElementById('admin-image-preview-tag');
+            const container = document.getElementById('admin-image-preview-container');
+            if (!previewTag || !container) return;
+
+            if (isValidHttpImageUrl(trimmed)) {
+                previewTag.src = trimmed;
+                container.classList.remove('hidden');
+                container.classList.add('flex');
+            } else {
+                previewTag.src = '';
+                container.classList.add('hidden');
+                container.classList.remove('flex');
+            }
+        };
 
         function resetAdminProductForm() {
             document.getElementById('edit-prod-id').value = '';
             document.getElementById('admin-prod-name').value = '';
             document.getElementById('admin-prod-price').value = '';
-            document.getElementById('admin-prod-file').value = '';
-            document.getElementById('admin-prod-img-base64').value = '';
+            const urlInput = document.getElementById('admin-prod-img-url');
+            if (urlInput) urlInput.value = '';
             document.getElementById('admin-form-title').innerText = "Add New Product";
-            document.getElementById('admin-image-preview-container').classList.add('hidden');
+            const saveLabel = document.getElementById('admin-save-prod-btn-label');
+            if (saveLabel) saveLabel.innerText = "Edit&Save / Publish Live";
+            const previewContainer = document.getElementById('admin-image-preview-container');
+            if (previewContainer) {
+                previewContainer.classList.add('hidden');
+                previewContainer.classList.remove('flex');
+            }
         }
 
         function renderAdminProductsList() {
             const container = document.getElementById('admin-products-list');
             if (!container) return;
 
+            if (products.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-500 text-center py-4 bg-white rounded-xl border border-dashed border-slate-200">No live products currently listed. Add a new product above.</p>`;
+                return;
+            }
+
             container.innerHTML = products.map(p => `
-                <div class="flex items-center justify-between p-3 bg-white rounded-xl border border-slate-200">
-                    <div class="flex items-center space-x-3">
-                        <img src="${p.image}" class="w-10 h-10 object-cover rounded-lg border border-slate-200">
-                        <div>
-                            <span class="text-xs font-bold text-slate-900 block">${p.name}</span>
-                            <span class="text-[10px] text-slate-500">${p.brand || 'Molicon'} • ${p.category} • RM ${p.price}</span>
+                <div class="flex items-center justify-between p-3 bg-white rounded-xl border border-slate-200 gap-2">
+                    <div class="flex items-center space-x-3 min-w-0">
+                        <img src="${p.image}" class="w-10 h-10 object-cover rounded-lg border border-slate-200 shrink-0" onerror="this.src='https://placehold.co/100x100/f1f5f9/65a30d?text=Lens'">
+                        <div class="min-w-0">
+                            <span class="text-xs font-bold text-slate-900 block truncate">${p.name}</span>
+                            <span class="text-[10px] text-slate-500 block truncate">${p.brand || 'Molicon'} • ${p.category} • RM ${p.price}</span>
+                            <span class="text-[9px] text-slate-400 font-mono block truncate max-w-[260px]" title="${p.image}">${p.image}</span>
                         </div>
                     </div>
-                    <div class="flex items-center space-x-2">
-                        <button onclick="editAdminProduct('${p.id}')" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold">Edit</button>
-                        <button onclick="deleteAdminProduct('${p.id}')" class="px-3 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 text-xs font-semibold">Delete</button>
+                    <div class="flex items-center space-x-2 shrink-0">
+                        <button type="button" onclick="editAdminProduct('${p.id}')" class="px-3 py-1.5 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 text-xs font-bold cursor-pointer transition shadow-2xs">Edit&amp;Save</button>
+                        <button type="button" onclick="deleteAdminProduct('${p.id}')" class="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold cursor-pointer transition shadow-2xs">Delete&amp;Save</button>
                     </div>
                 </div>
             `).join('');
@@ -6837,31 +7397,52 @@
             const brand = document.getElementById('admin-prod-brand').value;
             const price = document.getElementById('admin-prod-price').value.trim();
             const category = document.getElementById('admin-prod-cat').value;
-            const base64Img = document.getElementById('admin-prod-img-base64').value;
+            const rawImgUrl = (document.getElementById('admin-prod-img-url')?.value || '').trim();
 
             if (!name || !price) {
                 showToast("Missing Fields", "Please enter product name and price.", true);
                 return;
             }
 
+            if (rawImgUrl.startsWith('data:')) {
+                showToast("Direct URL Only", "Base64 images are not allowed. Please enter a direct http:// or https:// image URL.", true);
+                return;
+            }
+
             const prodId = idInput || 'p_' + Date.now();
-            let finalImage = base64Img;
+            if (deletedProductIdsSet.has(String(prodId))) {
+                deletedProductIdsSet.delete(String(prodId));
+                saveDeletedProductIds();
+            }
+            let finalImage = rawImgUrl;
+
             if (!finalImage && idInput) {
                 const existing = products.find(p => p.id === idInput);
-                if (existing) finalImage = existing.image;
+                if (existing && isValidHttpImageUrl(existing.image)) {
+                    finalImage = existing.image;
+                }
             }
+
             if (!finalImage) {
                 finalImage = "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500";
+            } else if (!isValidHttpImageUrl(finalImage)) {
+                showToast("Invalid Image URL", "Please enter a valid direct image link starting with https:// or http://", true);
+                return;
             }
+
+            const numPrice = parseFloat(price.replace(/[^0-9.]/g, ''));
+            const cleanPrice = !isNaN(numPrice) ? numPrice.toFixed(2) : price;
 
             const newProd = {
                 id: prodId,
                 name: name,
                 brand: brand,
-                price: price,
+                price: cleanPrice,
                 category: category,
                 image: finalImage,
-                badge: 'In Stock'
+                badge: 'In Stock',
+                deleted: false,
+                updatedAt: new Date().toISOString()
             };
 
             if (!window.productPowerStock[prodId]) {
@@ -6884,6 +7465,7 @@
             if (db) {
                 try {
                     await db.collection("lumilens_products").doc(prodId).set(newProd, { merge: true });
+                    await db.collection("products").doc(prodId).set(newProd, { merge: true }).catch(() => {});
                 } catch(e) { console.warn("Product save error:", e); }
             }
 
@@ -6892,7 +7474,7 @@
             renderAdminProductsList();
             renderAdminPowerStockCheckboxes();
             renderAdminVoucherProductDropdowns();
-            showToast("Product Saved!", `${name} published to store catalog.`);
+            showToast("Edit & Saved Live!", `${name} has been saved & published to the live store.`);
         }
 
         function editAdminProduct(prodId) {
@@ -6904,43 +7486,74 @@
             document.getElementById('admin-prod-brand').value = p.brand || 'Molicon';
             document.getElementById('admin-prod-price').value = p.price;
             document.getElementById('admin-prod-cat').value = p.category;
-            document.getElementById('admin-prod-img-base64').value = p.image;
-            document.getElementById('admin-form-title').innerText = "Edit Product: " + p.name;
+            const safeUrl = isValidHttpImageUrl(p.image) ? p.image : '';
+            const urlInput = document.getElementById('admin-prod-img-url');
+            if (urlInput) urlInput.value = safeUrl;
+            document.getElementById('admin-form-title').innerText = "Edit & Save Product: " + p.name;
+            const saveLabel = document.getElementById('admin-save-prod-btn-label');
+            if (saveLabel) saveLabel.innerText = "Edit&Save Live";
 
-            const previewTag = document.getElementById('admin-image-preview-tag');
-            const container = document.getElementById('admin-image-preview-container');
-            if (previewTag && container && p.image) {
-                previewTag.src = p.image;
-                container.classList.remove('hidden');
-                container.classList.add('flex');
-            }
+            handleProductImageUrlInput(safeUrl);
             switchAdminSubTab('products');
+            document.getElementById('admin-prod-name')?.focus();
         }
 
         async function deleteAdminProduct(prodId) {
+            const targetProd = products.find(p => p.id === prodId);
+            const targetName = targetProd ? targetProd.name : 'Product';
+
+            deletedProductIdsSet.add(String(prodId));
+            saveDeletedProductIds();
+
             products = products.filter(p => p.id !== prodId);
             delete window.productPowerStock[prodId];
             delete window.productPowerLocations[prodId];
             saveProductsToLocalBackup();
-            if (db) {
-                try { await db.collection("lumilens_products").doc(prodId).delete(); } catch(e) { console.warn(e); }
+
+            if (Array.isArray(favouritesList) && favouritesList.includes(prodId)) {
+                favouritesList = favouritesList.filter(id => id !== prodId);
+                localStorage.setItem('sweetopia_favourites', JSON.stringify(favouritesList));
+                updateFavBadges();
             }
+
+            if (document.getElementById('edit-prod-id')?.value === prodId) {
+                resetAdminProductForm();
+            }
+
+            ensureProductStockDefaults(products);
             renderStoreProducts(products);
+            renderFavouritesGrid();
             renderAdminProductsList();
             renderAdminPowerStockCheckboxes();
             renderAdminVoucherProductDropdowns();
-            showToast("Product Deleted", "Item removed from catalog.");
+
+            if (db) {
+                try {
+                    await Promise.all([
+                        db.collection("lumilens_products").doc(prodId).delete().catch(() => {}),
+                        db.collection("products").doc(prodId).delete().catch(() => {}),
+                        db.collection("lumilens_config").doc("deleted_products").set({
+                            ids: firebase.firestore.FieldValue.arrayUnion(String(prodId)),
+                            updatedAt: new Date().toISOString()
+                        }, { merge: true }).catch(() => {})
+                    ]);
+                } catch(e) { console.warn("Delete product Firestore error:", e); }
+            }
+
+            showToast("Deleted & Saved Live!", `${targetName} has been permanently deleted and removed from the live store.`);
         }
 
         window.restoreDefaultLensesToCatalog = async function() {
             let addedCount = 0;
             DEFAULT_SEED_PRODUCTS.forEach(defProd => {
+                deletedProductIdsSet.delete(String(defProd.id));
                 const exists = products.some(p => p.id === defProd.id || p.name.trim().toLowerCase() === defProd.name.trim().toLowerCase());
                 if (!exists) {
                     products.push({ ...defProd });
                     addedCount++;
                 }
             });
+            saveDeletedProductIds();
             ensureProductStockDefaults(products);
             saveProductsToLocalBackup();
 
@@ -7799,7 +8412,7 @@
                 assignedItems: ['HAZEL NATURAL (#p1)', 'CRYSTAL CLEAR (#p2)'],
                 assignedProductIds: ['p1', 'p2'],
                 expiryText: 'Sep 15, 2026, 06:00 PM 🎀',
-                active: true,
+                active: false,
                 badgeTheme: 'purple'
             }
         ];
@@ -7946,6 +8559,9 @@
             localStorage.setItem('sweetopia_active_presets', JSON.stringify(activePresetsList));
             renderPresetsTable();
             renderStoreProducts(products);
+            if (typeof window.renderOffersNearYouSection === 'function') {
+                window.renderOffersNearYouSection();
+            }
             showToast("Changes Saved!", "Active voucher presets and status changes saved successfully.");
         };
 
@@ -8198,6 +8814,7 @@
                 assignedTargetType: 'Assigned Products:',
                 assignedItems: [chosenProductName],
                 assignedProductIds: [chosenProductId],
+                displaySetting: displaySetting,
                 expiryText: formattedExpiry,
                 active: true,
                 badgeTheme: 'purple'
@@ -8205,6 +8822,9 @@
 
             renderPresetsTable();
             renderStoreProducts(products);
+            if (typeof window.renderOffersNearYouSection === 'function') {
+                window.renderOffersNearYouSection();
+            }
             showToast("Product Voucher Saved!", `${finalCode} published for ${chosenProductName} & on-sale pricing activated!`);
             resetSection2Form();
         };
@@ -8620,16 +9240,33 @@
             if (!db) return;
 
             const applyProductSnapshot = (snapshot, sourceCollectionName) => {
-                if (!snapshot || snapshot.empty) return;
+                if (!snapshot) return;
+                if (snapshot.empty && sourceCollectionName === "lumilens_products") {
+                    hasLoadedServerProducts = true;
+                    products = [];
+                    ensureProductStockDefaults(products);
+                    saveProductsToLocalBackup();
+                    renderStoreProducts(products);
+                    renderFavouritesGrid();
+                    renderAdminProductsList();
+                    renderAdminPowerStockCheckboxes();
+                    renderAdminVoucherProductDropdowns();
+                    return;
+                }
+                if (snapshot.empty) return;
+
                 const serverMap = new Map();
 
                 if (hasLoadedServerProducts && sourceCollectionName === "products") {
                     products.forEach(existing => {
-                        if (existing && existing.id) serverMap.set(existing.id, existing);
+                        if (existing && existing.id && !deletedProductIdsSet.has(String(existing.id))) {
+                            serverMap.set(existing.id, existing);
+                        }
                     });
                 }
 
                 snapshot.forEach(docSnap => {
+                    if (deletedProductIdsSet.has(String(docSnap.id))) return;
                     const prod = normalizeFirestoreProductDoc(docSnap.id, docSnap.data());
                     if (prod) {
                         serverMap.set(docSnap.id, prod);
@@ -8642,12 +9279,10 @@
                     }
                 });
 
-                if (serverMap.size > 0) {
-                    hasLoadedServerProducts = true;
-                    products = Array.from(serverMap.values());
-                    ensureProductStockDefaults(products);
-                    saveProductsToLocalBackup();
-                }
+                hasLoadedServerProducts = true;
+                products = Array.from(serverMap.values());
+                ensureProductStockDefaults(products);
+                saveProductsToLocalBackup();
 
                 renderStoreProducts(products);
                 renderFavouritesGrid();
@@ -8656,18 +9291,28 @@
                 renderAdminVoucherProductDropdowns();
             };
 
-            db.collection("lumilens_products").onSnapshot((snapshot) => {
-                applyProductSnapshot(snapshot, "lumilens_products");
-            }, () => {
-                renderStoreProducts(products);
-                renderFavouritesGrid();
-                renderAdminProductsList();
-                renderAdminPowerStockCheckboxes();
-            });
-
-            db.collection("products").onSnapshot((snapshot) => {
-                if (snapshot && !snapshot.empty) {
-                    applyProductSnapshot(snapshot, "products");
+            db.collection("lumilens_config").doc("deleted_products").onSnapshot((docSnap) => {
+                if (!docSnap || !docSnap.exists) return;
+                const ids = docSnap.data()?.ids;
+                if (!Array.isArray(ids)) return;
+                let changed = false;
+                ids.forEach(id => {
+                    const strId = String(id);
+                    if (!deletedProductIdsSet.has(strId)) {
+                        deletedProductIdsSet.add(strId);
+                        changed = true;
+                    }
+                });
+                if (changed) {
+                    saveDeletedProductIds();
+                    products = products.filter(p => !deletedProductIdsSet.has(String(p.id)));
+                    ensureProductStockDefaults(products);
+                    saveProductsToLocalBackup();
+                    renderStoreProducts(products);
+                    renderFavouritesGrid();
+                    renderAdminProductsList();
+                    renderAdminPowerStockCheckboxes();
+                    renderAdminVoucherProductDropdowns();
                 }
             }, () => {});
 
@@ -9322,7 +9967,6 @@
         window.onAdminPowerRangeChange = onAdminPowerRangeChange;
         window.updatePowerStockFromCheckboxes = updatePowerStockFromCheckboxes;
         window.saveAdminStockSettings = saveAdminStockSettings;
-        window.handleImageFileUpload = handleImageFileUpload;
         window.saveAdminProduct = saveAdminProduct;
         window.editAdminProduct = editAdminProduct;
         window.deleteAdminProduct = deleteAdminProduct;
@@ -9370,7 +10014,7 @@
             preloadStickerImages();
             renderStickerSlotsGrid(true);
 
-            const catStrip = document.getElementById('category-scroll-strip');
+            const catStrip = document.getElementById('categoryScroll');
             if (catStrip) {
                 catStrip.addEventListener('wheel', (e) => {
                     if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
@@ -9398,6 +10042,7 @@
             });
 
             if (typeof lucide !== 'undefined') { lucide.createIcons(); }
+            loadDeletedProductIds();
             loadProductsFromLocalBackup();
             ensureProductStockDefaults(products);
             loadSavedAddresses();
@@ -9488,7 +10133,7 @@
                         localStorage.setItem('sweetopia_logged_in_email', user.email);
                         saveRegisteredCustomerRecord(user.email, user.uid, true).catch(() => {});
                         loadCustomerCartFromFirestore(user.uid).catch(() => {});
-                        updateUIAfterLogin(user);
+                        updateUIAfterLogin(currentUser);
                         updatePresence(user.email, true);
                     } else {
                         if (!localStorage.getItem('sweetopia_logged_in_email')) {
@@ -9511,8 +10156,13 @@
 
             if (db) {
                 try {
+                    const deletedMetaSnap = await db.collection("lumilens_config").doc("deleted_products").get({ source: 'server' }).catch(() => null);
+                    if (deletedMetaSnap && deletedMetaSnap.exists && Array.isArray(deletedMetaSnap.data()?.ids)) {
+                        deletedMetaSnap.data().ids.forEach(id => deletedProductIdsSet.add(String(id)));
+                        saveDeletedProductIds();
+                    }
                     const loadedFromServer = await window.forceSyncFirestoreProducts(true);
-                    if (!loadedFromServer) {
+                    if (!loadedFromServer && deletedProductIdsSet.size === 0) {
                         const checkLumi = await db.collection("lumilens_products").limit(1).get({ source: 'server' }).catch(() => null);
                         const checkGeneric = await db.collection("products").limit(1).get({ source: 'server' }).catch(() => null);
                         const bothCollectionsEmpty = (!checkLumi || checkLumi.empty) && (!checkGeneric || checkGeneric.empty);
