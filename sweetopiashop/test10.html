@@ -5,18 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light">
     <meta name="supported-color-schemes" content="light">
-    <!-- Cache Busting & No-Cache Directives (v=1.0.12) -->
-    <meta name="app-version" content="1.0.12">
+    <!-- Cache Busting & No-Cache Directives (v=1.0.14) -->
+    <meta name="app-version" content="1.0.14">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Sweetopia Shop - Premium Contact Lens Store &amp; FPX Checkout</title>
-    <!-- App Icons & Stylesheet with Cache Busting Version (?v=1.0.12) -->
-    <link rel="stylesheet" href="style.css?v=1.0.12">
-    <link rel="icon" type="image/png" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.12">
-    <link rel="apple-touch-icon" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.12">
-    <link rel="icon" type="image/png" sizes="512x512" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png?v=1.0.12">
-    <link rel="manifest" href="https://digitalpastel.github.io/digital/sweetopiashop/manifest.json?v=1.0.12">
+    <!-- App Icons & Stylesheet with Cache Busting Version (?v=1.0.14) -->
+    <link rel="stylesheet" href="style.css?v=1.0.14">
+    <link rel="icon" type="image/png" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.14">
+    <link rel="apple-touch-icon" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.14">
+    <link rel="icon" type="image/png" sizes="512x512" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png?v=1.0.14">
+    <link rel="manifest" href="https://digitalpastel.github.io/digital/sweetopiashop/manifest.json?v=1.0.14">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&amp;family=Fredoka:wght@600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
     <!-- Retro Pixel Font for 10-Bar Window matching reference image -->
@@ -33,13 +33,18 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script>
         // Cache Busting Controller: Hardened version upgrade & stale DOM/storage purge
-        const APP_VERSION = '1.0.12';
+        const APP_VERSION = '1.0.14';
+        const PRODUCTION_SHOP_URL = 'https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashop.html';
         const STALE_CACHE_KEYS_TO_PURGE = [
-            'sweetopia_managed_products',
             'sweetopia_active_presets',
             'sweetopia_assigned_vouchers',
             'sweetopia_customer_feedbacks'
         ];
+
+        function buildVersionedShopUrl(targetVersion) {
+            const cleanVer = String(targetVersion || APP_VERSION).trim().replace(/^v=/i, '').replace(/^v/i, '');
+            return `${PRODUCTION_SHOP_URL}?v=${encodeURIComponent(cleanVer)}`;
+        }
 
         function purgeStaleVersionStorage(targetVersion) {
             try {
@@ -65,9 +70,7 @@
                         navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.update())).catch(() => {});
                     }
                     if (url.searchParams.get('v') !== APP_VERSION) {
-                        url.searchParams.set('v', APP_VERSION);
-                        url.searchParams.set('_cb', Date.now().toString(36));
-                        window.location.replace(url.toString());
+                        window.location.replace(buildVersionedShopUrl(APP_VERSION));
                     }
                 } else {
                     localStorage.setItem('sweetopia_app_version', APP_VERSION);
@@ -836,7 +839,7 @@
 
 <body class="min-h-screen flex flex-col items-center justify-start p-3 sm:p-4 md:p-6 text-slate-800">
 
-    <!-- LIVE NEW VERSION UPDATE BANNER (Appears for ALL users when Admin pushes a new version) -->
+    <!-- LIVE NEW VERSION UPDATE BANNER (Appears for ALL users, guests & admins when Admin pushes a new live version) -->
     <div id="live-version-update-banner" class="w-full max-w-[1280px] mb-3 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 text-white px-4 py-3 rounded-2xl hidden items-center justify-between border-2 border-emerald-300 shadow-lg transition-all">
         <div class="flex items-center space-x-3 overflow-hidden">
             <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center text-yellow-300 text-lg shrink-0 border border-white/30 animate-bounce">
@@ -844,10 +847,10 @@
             </div>
             <div class="truncate">
                 <div class="flex items-center gap-2">
-                    <span class="bg-yellow-300 text-slate-950 text-[10px] font-black uppercase px-2 py-0.5 rounded-full shadow-xs">New Version</span>
-                    <span id="live-update-version-badge" class="text-xs sm:text-sm font-extrabold tracking-tight truncate">Sweetopia Shop v1.0.12 is Live!</span>
+                    <span id="live-update-tag-pill" class="bg-yellow-300 text-slate-950 text-[10px] font-black uppercase px-2 py-0.5 rounded-full shadow-xs">New Version (v=1.0.14)</span>
+                    <span id="live-update-version-badge" class="text-xs sm:text-sm font-extrabold tracking-tight truncate">Sweetopia Shop v=1.0.14 is Live!</span>
                 </div>
-                <p id="live-update-notes-text" class="text-[11px] text-emerald-50 font-medium truncate mt-0.5">Tap the refresh icon to clear cache and load the latest version.</p>
+                <p id="live-update-notes-text" class="text-[11px] text-emerald-50 font-medium truncate mt-0.5">Tap Refresh to clear cache and open sweetopiashop.html?v=1.0.14</p>
             </div>
         </div>
         <div class="flex items-center space-x-2 shrink-0 ml-3">
@@ -1748,15 +1751,15 @@
                                     <div>
                                         <h2 class="text-base font-bold flex items-center space-x-2">
                                             <span>Live App Version &amp; Force Cache Refresh</span>
-                                            <span id="admin-live-version-pill" class="bg-white text-emerald-800 text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full shadow-xs">Active: v1.0.12</span>
+                                            <span id="admin-live-version-pill" class="bg-white text-emerald-800 text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full shadow-xs">Active: v=1.0.14</span>
                                         </h2>
-                                        <p class="text-xs text-emerald-100">Publish a new version to Firestore to display the 'New Version' banner with refresh icon for all users</p>
+                                        <p class="text-xs text-emerald-100">Publish a new live version to Firestore to show the 'v=1.0.14' banner with refresh icon for all users, guests &amp; admins</p>
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-2">
-                                    <button type="button" onclick="downloadUpdatedHtmlWithVersion()" class="text-[11px] font-bold bg-white/20 hover:bg-white/30 text-white px-3 py-1 rounded-lg border border-white/30 transition cursor-pointer flex items-center gap-1.5" title="Download updated index.html with current live version stamped into footer & meta tags">
+                                    <button type="button" onclick="downloadUpdatedHtmlWithVersion()" class="text-[11px] font-bold bg-white/20 hover:bg-white/30 text-white px-3 py-1 rounded-lg border border-white/30 transition cursor-pointer flex items-center gap-1.5" title="Download updated sweetopiashop.html with current live version stamped into footer & meta tags">
                                         <i class="fa-solid fa-code text-[10px]"></i>
-                                        <span>Export HTML (v<span id="admin-export-html-ver-label">1.0.12</span>)</span>
+                                        <span>Export HTML (v=<span id="admin-export-html-ver-label">1.0.14</span>)</span>
                                     </button>
                                     <span id="admin-version-sync-status" class="text-[11px] font-semibold bg-white/15 px-3 py-1 rounded-lg border border-white/20">
                                         <i class="fa-solid fa-circle-check text-yellow-300 mr-1"></i> Listener Active
@@ -1770,7 +1773,7 @@
                                         New Version Tag <span class="text-rose-500">*</span>
                                     </label>
                                     <div class="flex items-center gap-1.5">
-                                        <input type="text" id="admin-new-version-input" placeholder="e.g. 1.0.13" class="block w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm font-mono font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                                        <input type="text" id="admin-new-version-input" placeholder="e.g. 1.0.14" class="block w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm font-mono font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
                                         <button type="button" onclick="bumpNextPatchVersion()" class="px-2.5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold rounded-xl transition shrink-0 cursor-pointer" title="Auto-increment patch version">
                                             +0.0.1
                                         </button>
@@ -1781,17 +1784,17 @@
                                     <label for="admin-version-notes-input" class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                                         Release Notes / Banner Message
                                     </label>
-                                    <input type="text" id="admin-version-notes-input" placeholder="e.g. New lenses added &amp; checkout improvements!" class="block w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                                    <input type="text" id="admin-version-notes-input" placeholder="e.g. New lenses added &amp; HQ/Vendor stock updated!" class="block w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
                                 </div>
 
                                 <div class="md:col-span-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
-                                    <label class="inline-flex items-center space-x-2 text-xs font-semibold text-slate-700 bg-white px-3 py-2.5 rounded-xl border border-slate-200 cursor-pointer select-none shrink-0" title="Show New Version banner with refresh icon on all user devices">
+                                    <label class="inline-flex items-center space-x-2 text-xs font-semibold text-slate-700 bg-white px-3 py-2.5 rounded-xl border border-slate-200 cursor-pointer select-none shrink-0" title="Show New Version banner with refresh icon on all user, guest & admin screens">
                                         <input type="checkbox" id="admin-force-auto-reload" checked class="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500">
                                         <span>Notify all users</span>
                                     </label>
                                     <button type="button" onclick="publishNewAppVersion()" class="flex-1 px-4 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 active:scale-95 text-white font-bold text-xs sm:text-sm rounded-xl shadow-md shadow-emerald-200 transition flex items-center justify-center space-x-2 cursor-pointer">
                                         <i class="fa-solid fa-paper-plane text-xs"></i>
-                                        <span>Publish New Version</span>
+                                        <span>Publish New Live Version</span>
                                     </button>
                                 </div>
                             </div>
@@ -2346,7 +2349,7 @@
 
                         <div class="text-center flex justify-center">
                             <p class="text-[11px] text-[#581c87] font-extrabold tracking-wider">
-                                © Brand Works Empire 2026, all rights reserved <span id="footer-app-version-tag" class="opacity-75 font-mono text-[10px]">(v1.0.12)</span>
+                                © Brand Works Empire 2026, all rights reserved <span id="footer-app-version-tag" class="opacity-75 font-mono text-[10px]">(v=1.0.14)</span>
                             </p>
                         </div>
 
@@ -3178,8 +3181,8 @@
         let isSavingAdminStockNow = false;
 
         function compareSemanticVersions(vA, vB) {
-            const cleanA = String(vA || '0.0.0').replace(/^v/i, '').split('.').map(n => parseInt(n, 10) || 0);
-            const cleanB = String(vB || '0.0.0').replace(/^v/i, '').split('.').map(n => parseInt(n, 10) || 0);
+            const cleanA = String(vA || '0.0.0').replace(/^v=/i, '').replace(/^v/i, '').split('.').map(n => parseInt(n, 10) || 0);
+            const cleanB = String(vB || '0.0.0').replace(/^v=/i, '').replace(/^v/i, '').split('.').map(n => parseInt(n, 10) || 0);
             const len = Math.max(cleanA.length, cleanB.length);
             for (let i = 0; i < len; i++) {
                 const a = cleanA[i] || 0;
@@ -3191,21 +3194,21 @@
         }
 
         function computeNextPatchVersion(baseVersion) {
-            const parts = String(baseVersion || APP_VERSION).replace(/^v/i, '').split('.').map(n => parseInt(n, 10) || 0);
+            const parts = String(baseVersion || APP_VERSION).replace(/^v=/i, '').replace(/^v/i, '').split('.').map(n => parseInt(n, 10) || 0);
             while (parts.length < 3) parts.push(0);
             parts[2] = (parts[2] || 0) + 1;
             return parts.join('.');
         }
 
         function syncVersionAcrossDomAndHtml(targetVer) {
-            const cleanVer = String(targetVer || APP_VERSION).trim().replace(/^v/i, '');
+            const cleanVer = String(targetVer || APP_VERSION).trim().replace(/^v=/i, '').replace(/^v/i, '');
             if (!cleanVer) return;
 
             const pillEl = document.getElementById('admin-live-version-pill');
-            if (pillEl) pillEl.innerText = `Active: v${cleanVer}`;
+            if (pillEl) pillEl.innerText = `Active: v=${cleanVer}`;
 
             const footerVerEl = document.getElementById('footer-app-version-tag');
-            if (footerVerEl) footerVerEl.innerText = `(v${cleanVer})`;
+            if (footerVerEl) footerVerEl.innerText = `(v=${cleanVer})`;
 
             const exportLabel = document.getElementById('admin-export-html-ver-label');
             if (exportLabel) exportLabel.innerText = cleanVer;
@@ -3222,7 +3225,7 @@
         }
 
         window.downloadUpdatedHtmlWithVersion = function(customVersion = null) {
-            const verToStamp = String(customVersion || latestPublishedServerVersion || APP_VERSION).trim().replace(/^v/i, '');
+            const verToStamp = String(customVersion || latestPublishedServerVersion || APP_VERSION).trim().replace(/^v=/i, '').replace(/^v/i, '');
             syncVersionAcrossDomAndHtml(verToStamp);
 
             let rawHtml = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
@@ -3231,15 +3234,15 @@
             rawHtml = rawHtml.replace(/\(v=\d+(?:\.\d+){1,3}\)/g, `(v=${verToStamp})`);
             rawHtml = rawHtml.replace(/(\?v=)\d+(?:\.\d+){1,3}/g, `$1${verToStamp}`);
             rawHtml = rawHtml.replace(/(const\s+APP_VERSION\s*=\s*['"])[^'"]+(['"];)/, `$1${verToStamp}$2`);
-            rawHtml = rawHtml.replace(/(id=["']admin-live-version-pill["'][^>]*>)Active:\s*v[^<]+(<\/span>)/i, `$1Active: v${verToStamp}$2`);
-            rawHtml = rawHtml.replace(/(id=["']footer-app-version-tag["'][^>]*>)\(v[^)]+\)(<\/span>)/i, `$1(v${verToStamp})$2`);
+            rawHtml = rawHtml.replace(/(id=["']admin-live-version-pill["'][^>]*>)Active:\s*v=?[^<]+(<\/span>)/i, `$1Active: v=${verToStamp}$2`);
+            rawHtml = rawHtml.replace(/(id=["']footer-app-version-tag["'][^>]*>)\(v=?[^)]+\)(<\/span>)/i, `$1(v=${verToStamp})$2`);
             rawHtml = rawHtml.replace(/(id=["']admin-export-html-ver-label["'][^>]*>)[^<]+(<\/span>)/i, `$1${verToStamp}$2`);
 
             const blob = new Blob([rawHtml], { type: 'text/html;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `index_v${verToStamp}.html`;
+            a.download = `sweetopiashop_v${verToStamp}.html`;
             document.body.appendChild(a);
             a.click();
             setTimeout(() => {
@@ -3247,20 +3250,27 @@
                 URL.revokeObjectURL(url);
             }, 300);
 
-            showToast("HTML Source Exported!", `Downloaded index_v${verToStamp}.html with updated footer & version tags.`);
+            showToast("HTML Source Exported!", `Downloaded sweetopiashop_v${verToStamp}.html with updated footer & version tags.`);
         };
 
         window.bumpNextPatchVersion = function() {
             const input = document.getElementById('admin-new-version-input');
             if (!input) return;
-            const currentVal = (input.value || latestPublishedServerVersion || APP_VERSION).trim();
+            const currentVal = (input.value || latestPublishedServerVersion || APP_VERSION).trim().replace(/^v=/i, '').replace(/^v/i, '');
             input.value = computeNextPatchVersion(currentVal);
         };
 
         window.applyLiveVersionUpdate = async function(targetVersion = null) {
-            const nextVer = (targetVersion || latestPublishedServerVersion || APP_VERSION).replace(/^v/i, '');
+            const nextVer = String(targetVersion || latestPublishedServerVersion || APP_VERSION).trim().replace(/^v=/i, '').replace(/^v/i, '');
             syncVersionAcrossDomAndHtml(nextVer);
             purgeStaleVersionStorage(nextVer);
+
+            const banner = document.getElementById('live-version-update-banner');
+            if (banner) {
+                banner.classList.add('hidden');
+                banner.classList.remove('flex');
+            }
+
             try {
                 if ('caches' in window) {
                     const names = await caches.keys();
@@ -3268,19 +3278,33 @@
                 }
                 if ('serviceWorker' in navigator) {
                     const regs = await navigator.serviceWorker.getRegistrations();
-                    await Promise.all(regs.map(r => r.update()));
+                    await Promise.all(regs.map(r => r.unregister()));
                 }
             } catch (e) {}
 
-            try {
-                const url = new URL(window.location.href);
-                url.searchParams.set('v', nextVer);
-                url.searchParams.set('_cb', Date.now().toString(36));
-                window.location.replace(url.toString());
-            } catch (e) {
-                window.location.reload(true);
-            }
+            // Automatically redirect to https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashop.html?v=1.0.14
+            const targetUrl = buildVersionedShopUrl(nextVer);
+            window.location.replace(targetUrl);
         };
+
+        function showVersionBannerForAllUsers(versionTag, releaseNotes) {
+            const cleanVer = String(versionTag || APP_VERSION).trim().replace(/^v=/i, '').replace(/^v/i, '');
+            const banner = document.getElementById('live-version-update-banner');
+            const tagPillEl = document.getElementById('live-update-tag-pill');
+            const badgeEl = document.getElementById('live-update-version-badge');
+            const notesEl = document.getElementById('live-update-notes-text');
+
+            if (tagPillEl) tagPillEl.innerText = `New Version (v=${cleanVer})`;
+            if (badgeEl) badgeEl.innerText = `Sweetopia Shop v=${cleanVer} is Live!`;
+            if (notesEl) {
+                notesEl.innerText = releaseNotes || `Tap Refresh to clear cache and open sweetopiashop.html?v=${cleanVer}`;
+            }
+
+            if (banner) {
+                banner.classList.remove('hidden');
+                banner.classList.add('flex');
+            }
+        }
 
         window.publishNewAppVersion = async function() {
             if (!currentUser || !isAdminUser(currentUser.email)) {
@@ -3292,14 +3316,14 @@
             const notesInput = document.getElementById('admin-version-notes-input');
             const autoReloadChk = document.getElementById('admin-force-auto-reload');
 
-            const rawVersion = (versionInput?.value || '').trim().replace(/^v/i, '');
+            const rawVersion = (versionInput?.value || '').trim().replace(/^v=/i, '').replace(/^v/i, '');
             if (!rawVersion || !/^\d+(\.\d+){1,3}$/.test(rawVersion)) {
-                showToast("Invalid Version Format", "Please enter a valid version number such as 1.0.12 or 1.1.0.", true);
+                showToast("Invalid Version Format", "Please enter a valid version number such as 1.0.14 or 1.1.0.", true);
                 versionInput?.focus();
                 return;
             }
 
-            const releaseNotes = (notesInput?.value || '').trim() || `Sweetopia Shop v${rawVersion} is now live! Tap Refresh to clear cache.`;
+            const releaseNotes = (notesInput?.value || '').trim() || `Sweetopia Shop v=${rawVersion} is now live! Tap Refresh to clear cache & load ?v=${rawVersion}`;
             const forceAutoReload = autoReloadChk ? autoReloadChk.checked : true;
             const publishedAt = new Date().toISOString();
 
@@ -3310,6 +3334,14 @@
 
             syncVersionAcrossDomAndHtml(rawVersion);
 
+            // Update browser URL cleanly to ?v=1.0.13 without discarding unsaved memory state
+            try {
+                const updatedUrl = buildVersionedShopUrl(rawVersion);
+                if (updatedUrl.startsWith(window.location.origin)) {
+                    window.history.replaceState({}, document.title, updatedUrl);
+                }
+            } catch (e) {}
+
             if (versionInput) {
                 versionInput.value = computeNextPatchVersion(rawVersion);
             }
@@ -3318,6 +3350,8 @@
                 try {
                     await db.collection("lumilens_config").doc("app_version").set({
                         version: rawVersion,
+                        versionParam: `v=${rawVersion}`,
+                        targetUrl: `${PRODUCTION_SHOP_URL}?v=${rawVersion}`,
                         releaseNotes: releaseNotes,
                         forceAutoReload: forceAutoReload,
                         publishedBy: currentUser.email,
@@ -3331,24 +3365,16 @@
                 }
             }
 
-            // Show the 'New Version' banner with refresh icon immediately on all user screens
-            const banner = document.getElementById('live-version-update-banner');
-            const badgeEl = document.getElementById('live-update-version-badge');
-            const notesEl = document.getElementById('live-update-notes-text');
-            if (badgeEl) badgeEl.innerText = `Sweetopia Shop v${rawVersion} is Live!`;
-            if (notesEl) notesEl.innerText = releaseNotes;
-            if (banner) {
-                banner.classList.remove('hidden');
-                banner.classList.add('flex');
-            }
+            // Show the 'New Version (v=1.0.13)' banner with refresh icon immediately for all users, guests & admins
+            showVersionBannerForAllUsers(rawVersion, releaseNotes);
 
-            showToast("New Version Published!", `New Version v${rawVersion} banner is now visible to all users! Click Refresh to clear cache.`);
+            showToast("New Live Version Published!", `New Version v=${rawVersion} banner is live for all users, guests & admins!`);
         };
 
         function initLiveVersionListener() {
             const verInput = document.getElementById('admin-new-version-input');
             if (verInput && !verInput.value) {
-                verInput.value = computeNextPatchVersion(APP_VERSION);
+                verInput.value = APP_VERSION;
             }
 
             if (!db) return;
@@ -3358,7 +3384,7 @@
                 const data = docSnap.data();
                 if (!data || !data.version) return;
 
-                const serverVer = String(data.version).trim().replace(/^v/i, '');
+                const serverVer = String(data.version).trim().replace(/^v=/i, '').replace(/^v/i, '');
                 latestPublishedServerVersion = serverVer;
 
                 syncVersionAcrossDomAndHtml(serverVer);
@@ -3367,24 +3393,15 @@
                     verInput.value = computeNextPatchVersion(serverVer);
                 }
 
+                const urlVer = new URLSearchParams(window.location.search).get('v');
                 const isNewerOnServer = compareSemanticVersions(serverVer, APP_VERSION) > 0;
-                const alreadyUpdatedToThis = localStorage.getItem('sweetopia_app_version') === serverVer &&
-                    new URLSearchParams(window.location.search).get('v') === serverVer;
+                const needsUrlOrCacheRefresh = isNewerOnServer || (urlVer !== serverVer && data.nonce);
 
-                if (isNewerOnServer && !alreadyUpdatedToThis) {
-                    const banner = document.getElementById('live-version-update-banner');
-                    const badgeEl = document.getElementById('live-update-version-badge');
-                    const notesEl = document.getElementById('live-update-notes-text');
-
-                    if (badgeEl) badgeEl.innerText = `Sweetopia Shop v${serverVer} is Live!`;
-                    if (notesEl) {
-                        notesEl.innerText = data.releaseNotes || `New version v${serverVer} is available! Tap Refresh to auto clear cache.`;
-                    }
-
-                    if (banner) {
-                        banner.classList.remove('hidden');
-                        banner.classList.add('flex');
-                    }
+                if (needsUrlOrCacheRefresh) {
+                    showVersionBannerForAllUsers(
+                        serverVer,
+                        data.releaseNotes || `New version v=${serverVer} is live! Tap Refresh to auto clear cache & load ?v=${serverVer}`
+                    );
                 }
             }, () => {});
         }
@@ -3705,24 +3722,49 @@
         function ensureProductStockDefaults(prodList) {
             (prodList || products).forEach(p => {
                 if (!window.productPowerStock[p.id]) {
-                    window.productPowerStock[p.id] = p.powerStock || {};
-                    powersList.forEach(pw => {
-                        if (window.productPowerStock[p.id][pw] === undefined) {
-                            window.productPowerStock[p.id][pw] = true;
-                        }
-                    });
+                    window.productPowerStock[p.id] = p.powerStock ? { ...p.powerStock } : {};
                 }
+                powersList.forEach(pw => {
+                    if (window.productPowerStock[p.id][pw] === undefined) {
+                        window.productPowerStock[p.id][pw] = true;
+                    }
+                });
+
                 if (!window.productPowerLocations[p.id]) {
-                    window.productPowerLocations[p.id] = p.powerLocations || {};
-                    powersList.forEach(pw => {
-                        if (!window.productPowerLocations[p.id][pw]) {
-                            window.productPowerLocations[p.id][pw] = { warehouse: true, vendor: false };
-                        }
-                    });
+                    window.productPowerLocations[p.id] = p.powerLocations ? JSON.parse(JSON.stringify(p.powerLocations)) : {};
                 }
+                powersList.forEach(pw => {
+                    if (!window.productPowerLocations[p.id][pw] || typeof window.productPowerLocations[p.id][pw] !== 'object') {
+                        window.productPowerLocations[p.id][pw] = { warehouse: true, vendor: false };
+                    }
+                });
             });
             const countBadge = document.getElementById('admin-live-product-count');
             if (countBadge) countBadge.innerText = String((prodList || products).length);
+        }
+
+        function mergeIncomingProductStock(prod, protectLocalEdits) {
+            if (!prod || !prod.id || protectLocalEdits) return;
+            if (prod.powerStock && typeof prod.powerStock === 'object') {
+                window.productPowerStock[prod.id] = {
+                    ...(window.productPowerStock[prod.id] || {}),
+                    ...prod.powerStock
+                };
+            }
+            if (prod.powerLocations && typeof prod.powerLocations === 'object') {
+                const existingLocs = window.productPowerLocations[prod.id] || {};
+                const mergedLocs = { ...existingLocs };
+                Object.keys(prod.powerLocations).forEach(pwKey => {
+                    const incomingLoc = prod.powerLocations[pwKey];
+                    if (incomingLoc && typeof incomingLoc === 'object') {
+                        mergedLocs[pwKey] = {
+                            warehouse: !!incomingLoc.warehouse,
+                            vendor: !!incomingLoc.vendor
+                        };
+                    }
+                });
+                window.productPowerLocations[prod.id] = mergedLocs;
+            }
         }
 
         window.forceSyncFirestoreProducts = async function(silent = false) {
@@ -3748,10 +3790,7 @@
                         const prod = normalizeFirestoreProductDoc(docSnap.id, docSnap.data());
                         if (prod) {
                             mergedMap.set(docSnap.id, prod);
-                            if (!protectLocalEdits) {
-                                if (prod.powerStock) window.productPowerStock[prod.id] = prod.powerStock;
-                                if (prod.powerLocations) window.productPowerLocations[prod.id] = prod.powerLocations;
-                            }
+                            mergeIncomingProductStock(prod, protectLocalEdits);
                         }
                     });
                 }
@@ -3762,10 +3801,7 @@
                         const prod = normalizeFirestoreProductDoc(docSnap.id, docSnap.data());
                         if (prod) {
                             mergedMap.set(docSnap.id, prod);
-                            if (!protectLocalEdits) {
-                                if (prod.powerStock) window.productPowerStock[prod.id] = prod.powerStock;
-                                if (prod.powerLocations) window.productPowerLocations[prod.id] = prod.powerLocations;
-                            }
+                            mergeIncomingProductStock(prod, protectLocalEdits);
                         }
                     });
                 }
@@ -7193,8 +7229,11 @@
 
             document.querySelectorAll('.admin-stock-checkbox').forEach(chk => {
                 const prodId = chk.getAttribute('data-prod-id');
-                const pwrMap = window.productPowerStock[prodId] || {};
-                const locMap = (window.productPowerLocations[prodId] && window.productPowerLocations[prodId][pwr]) || { warehouse: true, vendor: false };
+                if (!window.productPowerStock[prodId]) window.productPowerStock[prodId] = {};
+                if (!window.productPowerLocations[prodId]) window.productPowerLocations[prodId] = {};
+
+                const pwrMap = window.productPowerStock[prodId];
+                const locMap = window.productPowerLocations[prodId][pwr] || { warehouse: true, vendor: false };
                 const isAvail = pwrMap[pwr] !== false;
 
                 chk.checked = isAvail;
@@ -7222,38 +7261,64 @@
                 const isWh = whChk ? whChk.checked : false;
                 const isVn = vnChk ? vnChk.checked : false;
 
-                window.productPowerStock[prodId][pwr] = chk.checked && (isWh || isVn);
+                const isAvailableForPower = Boolean(chk.checked && (isWh || isVn));
+                window.productPowerStock[prodId][pwr] = isAvailableForPower;
                 window.productPowerLocations[prodId][pwr] = {
-                    warehouse: isWh,
-                    vendor: isVn
+                    warehouse: isAvailableForPower ? isWh : false,
+                    vendor: isAvailableForPower ? isVn : false
                 };
+
+                const prodObj = products.find(item => item.id === prodId);
+                if (prodObj) {
+                    prodObj.powerStock = { ...window.productPowerStock[prodId] };
+                    prodObj.powerLocations = JSON.parse(JSON.stringify(window.productPowerLocations[prodId]));
+                }
             });
         }
 
         async function saveAdminStockSettings() {
             isSavingAdminStockNow = true;
             updatePowerStockFromCheckboxes();
+            ensureProductStockDefaults(products);
+
+            products.forEach(p => {
+                p.powerStock = { ...(window.productPowerStock[p.id] || {}) };
+                p.powerLocations = JSON.parse(JSON.stringify(window.productPowerLocations[p.id] || {}));
+            });
+
             saveProductsToLocalBackup();
+
             if (db) {
                 try {
+                    const nowIso = new Date().toISOString();
                     for (const p of products) {
                         const stockPayload = {
-                            powerStock: window.productPowerStock[p.id] || {},
-                            powerLocations: window.productPowerLocations[p.id] || {},
-                            updatedAt: new Date().toISOString()
+                            powerStock: p.powerStock,
+                            powerLocations: p.powerLocations,
+                            updatedAt: nowIso
                         };
                         await Promise.all([
-                            db.collection("lumilens_products").doc(p.id).set(stockPayload, { merge: true }).catch(() => {}),
+                            db.collection("lumilens_products").doc(p.id).set(stockPayload, { merge: true }),
                             db.collection("products").doc(p.id).set(stockPayload, { merge: true }).catch(() => {})
                         ]);
                     }
-                } catch(e) { console.warn("Stock save error:", e); }
+                } catch(e) {
+                    console.warn("Stock save error:", e);
+                    isSavingAdminStockNow = false;
+                    showToast("Save Error", "Could not sync stock settings to server. Please try again.", true);
+                    return;
+                }
             }
+
             hasUnsavedAdminStockEdits = false;
-            isSavingAdminStockNow = false;
+            setTimeout(() => {
+                isSavingAdminStockNow = false;
+            }, 1500);
+
+            onAdminPowerRangeChange();
             renderStoreProducts(products);
             renderFavouritesGrid();
-            showToast("Stock & Locations Updated!", "Prescription power and HQ / Vendor BP10 locations published to Store Catalog.");
+            showToast("Stock & Locations Saved!", "0.00 / Prescription power and HQ / Vendor BP10 locations saved & published!");
         }
 
         window.handleProductImageUrlInput = function(urlVal) {
@@ -9226,6 +9291,7 @@
             if (newlyArrivedForMe > 0 && !isChatOpen) {
                 unreadChatCount += newlyArrivedForMe;
                 updateWidgetUnreadBadge();
+                showToast("New Live Chat Message", amIAdmin ? "A customer sent a message in Live Support!" : "Admin Support replied to your chat!");
             }
         }
 
@@ -9276,14 +9342,7 @@
                     const prod = normalizeFirestoreProductDoc(docSnap.id, docSnap.data());
                     if (prod) {
                         serverMap.set(docSnap.id, prod);
-                        if (!protectLocalEdits) {
-                            if (prod.powerStock) {
-                                window.productPowerStock[prod.id] = prod.powerStock;
-                            }
-                            if (prod.powerLocations) {
-                                window.productPowerLocations[prod.id] = prod.powerLocations;
-                            }
-                        }
+                        mergeIncomingProductStock(prod, protectLocalEdits);
                     }
                 });
 
