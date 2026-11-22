@@ -5,18 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light">
     <meta name="supported-color-schemes" content="light">
-    <!-- Cache Busting & No-Cache Directives (v=1.0.10) -->
-    <meta name="app-version" content="1.0.10">
+    <!-- Cache Busting & No-Cache Directives (v=1.0.12) -->
+    <meta name="app-version" content="1.0.12">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Sweetopia Shop - Premium Contact Lens Store &amp; FPX Checkout</title>
-    <!-- App Icons & Stylesheet with Cache Busting Version (?v=1.0.10) -->
-    <link rel="stylesheet" href="style.css?v=1.0.10">
-    <link rel="icon" type="image/png" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.10">
-    <link rel="apple-touch-icon" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.10">
-    <link rel="icon" type="image/png" sizes="512x512" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png?v=1.0.10">
-    <link rel="manifest" href="https://digitalpastel.github.io/digital/sweetopiashop/manifest.json?v=1.0.10">
+    <!-- App Icons & Stylesheet with Cache Busting Version (?v=1.0.12) -->
+    <link rel="stylesheet" href="style.css?v=1.0.12">
+    <link rel="icon" type="image/png" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.12">
+    <link rel="apple-touch-icon" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.12">
+    <link rel="icon" type="image/png" sizes="512x512" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png?v=1.0.12">
+    <link rel="manifest" href="https://digitalpastel.github.io/digital/sweetopiashop/manifest.json?v=1.0.12">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&amp;family=Fredoka:wght@600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
     <!-- Retro Pixel Font for 10-Bar Window matching reference image -->
@@ -33,7 +33,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script>
         // Cache Busting Controller: Hardened version upgrade & stale DOM/storage purge
-        const APP_VERSION = '1.0.10';
+        const APP_VERSION = '1.0.12';
         const STALE_CACHE_KEYS_TO_PURGE = [
             'sweetopia_managed_products',
             'sweetopia_active_presets',
@@ -836,7 +836,7 @@
 
 <body class="min-h-screen flex flex-col items-center justify-start p-3 sm:p-4 md:p-6 text-slate-800">
 
-    <!-- LIVE NEW VERSION UPDATE BANNER (Appears when Admin publishes a newer version via Firestore) -->
+    <!-- LIVE NEW VERSION UPDATE BANNER (Appears for ALL users when Admin pushes a new version) -->
     <div id="live-version-update-banner" class="w-full max-w-[1280px] mb-3 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 text-white px-4 py-3 rounded-2xl hidden items-center justify-between border-2 border-emerald-300 shadow-lg transition-all">
         <div class="flex items-center space-x-3 overflow-hidden">
             <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center text-yellow-300 text-lg shrink-0 border border-white/30 animate-bounce">
@@ -844,16 +844,16 @@
             </div>
             <div class="truncate">
                 <div class="flex items-center gap-2">
-                    <span class="bg-yellow-300 text-slate-950 text-[10px] font-black uppercase px-2 py-0.5 rounded-full shadow-xs">New Update Available</span>
-                    <span id="live-update-version-badge" class="text-xs sm:text-sm font-extrabold tracking-tight truncate">Sweetopia Shop v1.0.11 is Live!</span>
+                    <span class="bg-yellow-300 text-slate-950 text-[10px] font-black uppercase px-2 py-0.5 rounded-full shadow-xs">New Version</span>
+                    <span id="live-update-version-badge" class="text-xs sm:text-sm font-extrabold tracking-tight truncate">Sweetopia Shop v1.0.12 is Live!</span>
                 </div>
-                <p id="live-update-notes-text" class="text-[11px] text-emerald-50 font-medium truncate mt-0.5">A fresh update has been published. Refresh now to load the latest features &amp; catalog.</p>
+                <p id="live-update-notes-text" class="text-[11px] text-emerald-50 font-medium truncate mt-0.5">Tap the refresh icon to clear cache and load the latest version.</p>
             </div>
         </div>
         <div class="flex items-center space-x-2 shrink-0 ml-3">
-            <button type="button" onclick="applyLiveVersionUpdate()" class="bg-white hover:bg-yellow-100 text-emerald-800 active:scale-95 text-xs font-black px-4 py-2 rounded-xl shadow-md transition flex items-center gap-1.5 border border-emerald-200 cursor-pointer">
-                <i class="fa-solid fa-arrows-rotate text-xs text-emerald-600"></i>
-                <span>Update Now</span>
+            <button type="button" onclick="applyLiveVersionUpdate()" class="bg-white hover:bg-yellow-100 text-emerald-800 active:scale-95 text-xs font-black px-3.5 py-2 rounded-xl shadow-md transition flex items-center gap-1.5 border border-emerald-200 cursor-pointer" title="Refresh & Clear Cache">
+                <i class="fa-solid fa-arrows-rotate text-sm text-emerald-600"></i>
+                <span>Refresh</span>
             </button>
         </div>
     </div>
@@ -1398,7 +1398,7 @@
                                 <div ontouchstart="activateCard(this)" onclick="filterCatalogByBrandCard('Mill Creek', this)" data-brand="Mill Creek" class="brand-card flex flex-col items-center flex-shrink-0 cursor-pointer group select-none">
                                     <div class="brand-box w-20 h-20 rounded-2xl bg-blue-50 flex items-center justify-center p-2 shadow-sm group-hover:scale-105 group-[.is-active]:scale-105 transition border border-blue-100 pointer-events-none">
                                         <div class="relative w-full h-full rounded-xl overflow-hidden">
-                                            <img src="https://digitalpastel.github.io/digital/sweetopiashop/millcreeklens2.webp" alt="Mill Creek" class="w-full h-full object-cover">
+                                            <img src="https://digitalpastel.github.io/digital/sweetopiashop/millcreeklens.webp" alt="Mill Creek" class="w-full h-full object-cover">
                                             <div class="absolute inset-x-0 bottom-0 bg-pink-500/95 text-white text-[9px] font-bold leading-tight text-center py-0.5 px-1 opacity-0 translate-y-full group-hover:opacity-100 group-hover:translate-y-0 group-[.is-active]:opacity-100 group-[.is-active]:translate-y-0 transition-all duration-200">
                                                 1 day disposable
                                             </div>
@@ -1748,15 +1748,15 @@
                                     <div>
                                         <h2 class="text-base font-bold flex items-center space-x-2">
                                             <span>Live App Version &amp; Force Cache Refresh</span>
-                                            <span id="admin-live-version-pill" class="bg-white text-emerald-800 text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full shadow-xs">Active: v1.0.10</span>
+                                            <span id="admin-live-version-pill" class="bg-white text-emerald-800 text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full shadow-xs">Active: v1.0.12</span>
                                         </h2>
-                                        <p class="text-xs text-emerald-100">Publish a new version to Firestore to instantly update footer, HTML source &amp; refresh all open customer sessions</p>
+                                        <p class="text-xs text-emerald-100">Publish a new version to Firestore to display the 'New Version' banner with refresh icon for all users</p>
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <button type="button" onclick="downloadUpdatedHtmlWithVersion()" class="text-[11px] font-bold bg-white/20 hover:bg-white/30 text-white px-3 py-1 rounded-lg border border-white/30 transition cursor-pointer flex items-center gap-1.5" title="Download updated index.html with current live version stamped into footer & meta tags">
                                         <i class="fa-solid fa-code text-[10px]"></i>
-                                        <span>Export HTML (v<span id="admin-export-html-ver-label">1.0.10</span>)</span>
+                                        <span>Export HTML (v<span id="admin-export-html-ver-label">1.0.12</span>)</span>
                                     </button>
                                     <span id="admin-version-sync-status" class="text-[11px] font-semibold bg-white/15 px-3 py-1 rounded-lg border border-white/20">
                                         <i class="fa-solid fa-circle-check text-yellow-300 mr-1"></i> Listener Active
@@ -1770,7 +1770,7 @@
                                         New Version Tag <span class="text-rose-500">*</span>
                                     </label>
                                     <div class="flex items-center gap-1.5">
-                                        <input type="text" id="admin-new-version-input" placeholder="e.g. 1.0.11" class="block w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm font-mono font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                                        <input type="text" id="admin-new-version-input" placeholder="e.g. 1.0.13" class="block w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm font-mono font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
                                         <button type="button" onclick="bumpNextPatchVersion()" class="px-2.5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold rounded-xl transition shrink-0 cursor-pointer" title="Auto-increment patch version">
                                             +0.0.1
                                         </button>
@@ -1785,9 +1785,9 @@
                                 </div>
 
                                 <div class="md:col-span-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
-                                    <label class="inline-flex items-center space-x-2 text-xs font-semibold text-slate-700 bg-white px-3 py-2.5 rounded-xl border border-slate-200 cursor-pointer select-none shrink-0">
+                                    <label class="inline-flex items-center space-x-2 text-xs font-semibold text-slate-700 bg-white px-3 py-2.5 rounded-xl border border-slate-200 cursor-pointer select-none shrink-0" title="Show New Version banner with refresh icon on all user devices">
                                         <input type="checkbox" id="admin-force-auto-reload" checked class="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500">
-                                        <span>Auto-reload clients</span>
+                                        <span>Notify all users</span>
                                     </label>
                                     <button type="button" onclick="publishNewAppVersion()" class="flex-1 px-4 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 active:scale-95 text-white font-bold text-xs sm:text-sm rounded-xl shadow-md shadow-emerald-200 transition flex items-center justify-center space-x-2 cursor-pointer">
                                         <i class="fa-solid fa-paper-plane text-xs"></i>
@@ -2346,7 +2346,7 @@
 
                         <div class="text-center flex justify-center">
                             <p class="text-[11px] text-[#581c87] font-extrabold tracking-wider">
-                                © Brand Works Empire 2026, all rights reserved <span id="footer-app-version-tag" class="opacity-75 font-mono text-[10px]">(v1.0.10)</span>
+                                © Brand Works Empire 2026, all rights reserved <span id="footer-app-version-tag" class="opacity-75 font-mono text-[10px]">(v1.0.12)</span>
                             </p>
                         </div>
 
@@ -3174,7 +3174,8 @@
            FIRESTORE LIVE VERSION LISTENER & ADMIN "PUBLISH NEW VERSION" CONTROLLER
            ========================================================================= */
         let latestPublishedServerVersion = APP_VERSION;
-        let versionUpdateReloadScheduled = false;
+        let hasUnsavedAdminStockEdits = false;
+        let isSavingAdminStockNow = false;
 
         function compareSemanticVersions(vA, vB) {
             const cleanA = String(vA || '0.0.0').replace(/^v/i, '').split('.').map(n => parseInt(n, 10) || 0);
@@ -3226,14 +3227,10 @@
 
             let rawHtml = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
 
-            // Update <meta name="app-version" content="...">
             rawHtml = rawHtml.replace(/(<meta\s+name=["']app-version["']\s+content=["'])[^"']+(["'][^>]*>)/i, `$1${verToStamp}$2`);
-            // Update Cache Busting comments and ?v=... query parameters
             rawHtml = rawHtml.replace(/\(v=\d+(?:\.\d+){1,3}\)/g, `(v=${verToStamp})`);
             rawHtml = rawHtml.replace(/(\?v=)\d+(?:\.\d+){1,3}/g, `$1${verToStamp}`);
-            // Update JS const APP_VERSION = '...'
             rawHtml = rawHtml.replace(/(const\s+APP_VERSION\s*=\s*['"])[^'"]+(['"];)/, `$1${verToStamp}$2`);
-            // Update Admin pill & Footer version tags in HTML source
             rawHtml = rawHtml.replace(/(id=["']admin-live-version-pill["'][^>]*>)Active:\s*v[^<]+(<\/span>)/i, `$1Active: v${verToStamp}$2`);
             rawHtml = rawHtml.replace(/(id=["']footer-app-version-tag["'][^>]*>)\(v[^)]+\)(<\/span>)/i, `$1(v${verToStamp})$2`);
             rawHtml = rawHtml.replace(/(id=["']admin-export-html-ver-label["'][^>]*>)[^<]+(<\/span>)/i, `$1${verToStamp}$2`);
@@ -3297,12 +3294,12 @@
 
             const rawVersion = (versionInput?.value || '').trim().replace(/^v/i, '');
             if (!rawVersion || !/^\d+(\.\d+){1,3}$/.test(rawVersion)) {
-                showToast("Invalid Version Format", "Please enter a valid version number such as 1.0.11 or 1.1.0.", true);
+                showToast("Invalid Version Format", "Please enter a valid version number such as 1.0.12 or 1.1.0.", true);
                 versionInput?.focus();
                 return;
             }
 
-            const releaseNotes = (notesInput?.value || '').trim() || `Sweetopia Shop v${rawVersion} is now live with fresh updates!`;
+            const releaseNotes = (notesInput?.value || '').trim() || `Sweetopia Shop v${rawVersion} is now live! Tap Refresh to clear cache.`;
             const forceAutoReload = autoReloadChk ? autoReloadChk.checked : true;
             const publishedAt = new Date().toISOString();
 
@@ -3311,7 +3308,6 @@
                 localStorage.setItem('sweetopia_app_version', rawVersion);
             } catch (e) {}
 
-            // Immediately sync DOM footer, meta tag, links, and active version pill
             syncVersionAcrossDomAndHtml(rawVersion);
 
             if (versionInput) {
@@ -3335,10 +3331,18 @@
                 }
             }
 
-            // Also auto-download the updated index.html with the new version stamped in the footer & meta tags
-            window.downloadUpdatedHtmlWithVersion(rawVersion);
+            // Show the 'New Version' banner with refresh icon immediately on all user screens
+            const banner = document.getElementById('live-version-update-banner');
+            const badgeEl = document.getElementById('live-update-version-badge');
+            const notesEl = document.getElementById('live-update-notes-text');
+            if (badgeEl) badgeEl.innerText = `Sweetopia Shop v${rawVersion} is Live!`;
+            if (notesEl) notesEl.innerText = releaseNotes;
+            if (banner) {
+                banner.classList.remove('hidden');
+                banner.classList.add('flex');
+            }
 
-            showToast("New Version Published!", `Live app version v${rawVersion} updated in footer, HTML file & broadcasted to all devices!`);
+            showToast("New Version Published!", `New Version v${rawVersion} banner is now visible to all users! Click Refresh to clear cache.`);
         };
 
         function initLiveVersionListener() {
@@ -3368,30 +3372,18 @@
                     new URLSearchParams(window.location.search).get('v') === serverVer;
 
                 if (isNewerOnServer && !alreadyUpdatedToThis) {
-                    purgeStaleVersionStorage(serverVer);
-                    window.forceSyncFirestoreProducts(true).catch(() => {});
-
                     const banner = document.getElementById('live-version-update-banner');
                     const badgeEl = document.getElementById('live-update-version-badge');
                     const notesEl = document.getElementById('live-update-notes-text');
 
                     if (badgeEl) badgeEl.innerText = `Sweetopia Shop v${serverVer} is Live!`;
                     if (notesEl) {
-                        notesEl.innerText = data.releaseNotes || `New update v${serverVer} published by Admin. Refreshing to latest version...`;
+                        notesEl.innerText = data.releaseNotes || `New version v${serverVer} is available! Tap Refresh to auto clear cache.`;
                     }
 
                     if (banner) {
                         banner.classList.remove('hidden');
                         banner.classList.add('flex');
-                    }
-
-                    const isCurrentAdmin = currentUser && isAdminUser(currentUser.email);
-                    if (data.forceAutoReload && !isCurrentAdmin && !versionUpdateReloadScheduled) {
-                        versionUpdateReloadScheduled = true;
-                        showToast("App Update Live!", `Updating Sweetopia Shop to v${serverVer}...`);
-                        setTimeout(() => {
-                            window.applyLiveVersionUpdate(serverVer);
-                        }, 1800);
                     }
                 }
             }, () => {});
@@ -3748,6 +3740,7 @@
                 }
 
                 const mergedMap = new Map();
+                const protectLocalEdits = hasUnsavedAdminStockEdits || isSavingAdminStockNow;
 
                 if (genericSnap && !genericSnap.empty) {
                     genericSnap.forEach(docSnap => {
@@ -3755,8 +3748,10 @@
                         const prod = normalizeFirestoreProductDoc(docSnap.id, docSnap.data());
                         if (prod) {
                             mergedMap.set(docSnap.id, prod);
-                            if (prod.powerStock) window.productPowerStock[prod.id] = prod.powerStock;
-                            if (prod.powerLocations) window.productPowerLocations[prod.id] = prod.powerLocations;
+                            if (!protectLocalEdits) {
+                                if (prod.powerStock) window.productPowerStock[prod.id] = prod.powerStock;
+                                if (prod.powerLocations) window.productPowerLocations[prod.id] = prod.powerLocations;
+                            }
                         }
                     });
                 }
@@ -3767,8 +3762,10 @@
                         const prod = normalizeFirestoreProductDoc(docSnap.id, docSnap.data());
                         if (prod) {
                             mergedMap.set(docSnap.id, prod);
-                            if (prod.powerStock) window.productPowerStock[prod.id] = prod.powerStock;
-                            if (prod.powerLocations) window.productPowerLocations[prod.id] = prod.powerLocations;
+                            if (!protectLocalEdits) {
+                                if (prod.powerStock) window.productPowerStock[prod.id] = prod.powerStock;
+                                if (prod.powerLocations) window.productPowerLocations[prod.id] = prod.powerLocations;
+                            }
                         }
                     });
                 }
@@ -3781,7 +3778,9 @@
                     renderStoreProducts(products);
                     renderFavouritesGrid();
                     renderAdminProductsList();
-                    renderAdminPowerStockCheckboxes();
+                    if (!protectLocalEdits) {
+                        renderAdminPowerStockCheckboxes();
+                    }
                     renderAdminVoucherProductDropdowns();
                     if (!silent) {
                         showToast("Products Synced!", `Loaded ${products.length} live products from Firebase Firestore.`);
@@ -6365,7 +6364,7 @@
         }
 
         let currentFilteredCatalogList = [];
-        const ALL_LENSES_BATCH_SIZE = 8;
+        const ALL_LENSES_BATCH_SIZE = 2;
         let allLensesVisibleCount = ALL_LENSES_BATCH_SIZE;
 
         window.loadMoreAllLenses = function() {
@@ -6451,7 +6450,6 @@
 
             const onSaleProducts = getAdminManagedOnSaleProducts();
 
-            // Controlled by Admin Panel: if no sale products exist, keep section completely hidden & blank
             if (onSaleProducts.length === 0) {
                 container.innerHTML = '';
                 section.classList.add('hidden');
@@ -6490,7 +6488,6 @@
             const visibleProducts = onSaleProducts.slice(0, countToShow);
             container.innerHTML = visibleProducts.map(p => createOfferNearYouCardHTML(p)).join('');
 
-            // Show "Load more" button whenever expanded and more Admin-managed On Sale products remain
             if (loadMoreContainer) {
                 if (offersExpandedState && countToShow < onSaleProducts.length) {
                     loadMoreContainer.classList.remove('hidden');
@@ -6509,7 +6506,6 @@
                 offersVisibleCount = 2;
             } else {
                 offersExpandedState = true;
-                // Clicking "See all offer lenses" reveals 2 more offer lenses (4 total) and displays "Load more" if more exist
                 offersVisibleCount = Math.min(4, onSaleProducts.length);
             }
             window.renderOffersNearYouSection();
@@ -6517,7 +6513,6 @@
 
         window.loadMoreOffers = function() {
             const onSaleProducts = getAdminManagedOnSaleProducts();
-            // Each click on "Load more" appends 4 more Admin-managed On Sale lenses until all are displayed
             offersVisibleCount = Math.min(offersVisibleCount + OFFERS_BATCH_SIZE, onSaleProducts.length);
             window.renderOffersNearYouSection();
         };
@@ -7215,6 +7210,7 @@
             const select = document.getElementById('admin-global-power-select');
             if (!select) return;
             const pwr = select.value;
+            hasUnsavedAdminStockEdits = true;
 
             document.querySelectorAll('.admin-stock-checkbox').forEach(chk => {
                 const prodId = chk.getAttribute('data-prod-id');
@@ -7235,18 +7231,26 @@
         }
 
         async function saveAdminStockSettings() {
+            isSavingAdminStockNow = true;
             updatePowerStockFromCheckboxes();
             saveProductsToLocalBackup();
             if (db) {
                 try {
                     for (const p of products) {
-                        await db.collection("lumilens_products").doc(p.id).set({
+                        const stockPayload = {
                             powerStock: window.productPowerStock[p.id] || {},
-                            powerLocations: window.productPowerLocations[p.id] || {}
-                        }, { merge: true });
+                            powerLocations: window.productPowerLocations[p.id] || {},
+                            updatedAt: new Date().toISOString()
+                        };
+                        await Promise.all([
+                            db.collection("lumilens_products").doc(p.id).set(stockPayload, { merge: true }).catch(() => {}),
+                            db.collection("products").doc(p.id).set(stockPayload, { merge: true }).catch(() => {})
+                        ]);
                     }
                 } catch(e) { console.warn("Stock save error:", e); }
             }
+            hasUnsavedAdminStockEdits = false;
+            isSavingAdminStockNow = false;
             renderStoreProducts(products);
             renderFavouritesGrid();
             showToast("Stock & Locations Updated!", "Prescription power and HQ / Vendor BP10 locations published to Store Catalog.");
@@ -9222,7 +9226,6 @@
             if (newlyArrivedForMe > 0 && !isChatOpen) {
                 unreadChatCount += newlyArrivedForMe;
                 updateWidgetUnreadBadge();
-                showToast("New Live Chat Message", amIAdmin ? "A customer sent a message in Live Support!" : "Admin Support replied to your chat!");
             }
         }
 
@@ -9241,6 +9244,7 @@
 
             const applyProductSnapshot = (snapshot, sourceCollectionName) => {
                 if (!snapshot) return;
+                const protectLocalEdits = hasUnsavedAdminStockEdits || isSavingAdminStockNow;
                 if (snapshot.empty && sourceCollectionName === "lumilens_products") {
                     hasLoadedServerProducts = true;
                     products = [];
@@ -9249,7 +9253,9 @@
                     renderStoreProducts(products);
                     renderFavouritesGrid();
                     renderAdminProductsList();
-                    renderAdminPowerStockCheckboxes();
+                    if (!protectLocalEdits) {
+                        renderAdminPowerStockCheckboxes();
+                    }
                     renderAdminVoucherProductDropdowns();
                     return;
                 }
@@ -9270,11 +9276,13 @@
                     const prod = normalizeFirestoreProductDoc(docSnap.id, docSnap.data());
                     if (prod) {
                         serverMap.set(docSnap.id, prod);
-                        if (prod.powerStock) {
-                            window.productPowerStock[prod.id] = prod.powerStock;
-                        }
-                        if (prod.powerLocations) {
-                            window.productPowerLocations[prod.id] = prod.powerLocations;
+                        if (!protectLocalEdits) {
+                            if (prod.powerStock) {
+                                window.productPowerStock[prod.id] = prod.powerStock;
+                            }
+                            if (prod.powerLocations) {
+                                window.productPowerLocations[prod.id] = prod.powerLocations;
+                            }
                         }
                     }
                 });
@@ -9287,7 +9295,9 @@
                 renderStoreProducts(products);
                 renderFavouritesGrid();
                 renderAdminProductsList();
-                renderAdminPowerStockCheckboxes();
+                if (!protectLocalEdits) {
+                    renderAdminPowerStockCheckboxes();
+                }
                 renderAdminVoucherProductDropdowns();
             };
 
@@ -9314,6 +9324,14 @@
                     renderAdminPowerStockCheckboxes();
                     renderAdminVoucherProductDropdowns();
                 }
+            }, () => {});
+
+            db.collection("lumilens_products").onSnapshot((snapshot) => {
+                applyProductSnapshot(snapshot, "lumilens_products");
+            }, () => {});
+
+            db.collection("products").onSnapshot((snapshot) => {
+                applyProductSnapshot(snapshot, "products");
             }, () => {});
 
             db.collection("lumilens_orders").onSnapshot((snapshot) => {
