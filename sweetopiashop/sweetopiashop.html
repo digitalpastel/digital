@@ -5,18 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light">
     <meta name="supported-color-schemes" content="light">
-    <!-- Cache Busting & No-Cache Directives (v=1.0.12) -->
-    <meta name="app-version" content="1.0.12">
+    <!-- Cache Busting & No-Cache Directives (v=1.0.13) -->
+    <meta name="app-version" content="1.0.13">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Sweetopia Shop - Premium Contact Lens Store &amp; FPX Checkout</title>
-    <!-- App Icons & Stylesheet with Cache Busting Version (?v=1.0.12) -->
-    <link rel="stylesheet" href="style.css?v=1.0.12">
-    <link rel="icon" type="image/png" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.12">
-    <link rel="apple-touch-icon" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.12">
-    <link rel="icon" type="image/png" sizes="512x512" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png?v=1.0.12">
-    <link rel="manifest" href="https://digitalpastel.github.io/digital/sweetopiashop/manifest.json?v=1.0.12">
+    <!-- App Icons & Stylesheet with Cache Busting Version (?v=1.0.13) -->
+    <link rel="stylesheet" href="style.css?v=1.0.13">
+    <link rel="icon" type="image/png" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.13">
+    <link rel="apple-touch-icon" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.13">
+    <link rel="icon" type="image/png" sizes="512x512" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png?v=1.0.13">
+    <link rel="manifest" href="https://digitalpastel.github.io/digital/sweetopiashop/manifest.json?v=1.0.13">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&amp;family=Fredoka:wght@600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
     <!-- Retro Pixel Font for 10-Bar Window matching reference image -->
@@ -33,7 +33,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script>
         // Cache Busting Controller: Hardened version upgrade & stale DOM/storage purge
-        const APP_VERSION = '1.0.12';
+        const APP_VERSION = '1.0.13';
         const PRODUCTION_SHOP_URL = 'https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashop.html';
         const STALE_CACHE_KEYS_TO_PURGE = [
             'sweetopia_active_presets',
@@ -847,10 +847,10 @@
             </div>
             <div class="truncate">
                 <div class="flex items-center gap-2">
-                    <span id="live-update-tag-pill" class="bg-yellow-300 text-slate-950 text-[10px] font-black uppercase px-2 py-0.5 rounded-full shadow-xs">New Version (v=1.0.12)</span>
-                    <span id="live-update-version-badge" class="text-xs sm:text-sm font-extrabold tracking-tight truncate">Sweetopia Shop v=1.0.12 is Live!</span>
+                    <span id="live-update-tag-pill" class="bg-yellow-300 text-slate-950 text-[10px] font-black uppercase px-2 py-0.5 rounded-full shadow-xs">New Version (v=1.0.13)</span>
+                    <span id="live-update-version-badge" class="text-xs sm:text-sm font-extrabold tracking-tight truncate">Sweetopia Shop v=1.0.13 is Live!</span>
                 </div>
-                <p id="live-update-notes-text" class="text-[11px] text-emerald-50 font-medium truncate mt-0.5">Tap Refresh to clear cache and open sweetopiashop.html?v=1.0.12</p>
+                <p id="live-update-notes-text" class="text-[11px] text-emerald-50 font-medium truncate mt-0.5">Tap Refresh to clear cache and open sweetopiashop.html?v=1.0.13</p>
             </div>
         </div>
         <div class="flex items-center space-x-2 shrink-0 ml-3">
@@ -1751,15 +1751,15 @@
                                     <div>
                                         <h2 class="text-base font-bold flex items-center space-x-2">
                                             <span>Live App Version &amp; Force Cache Refresh</span>
-                                            <span id="admin-live-version-pill" class="bg-white text-emerald-800 text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full shadow-xs">Active: v=1.0.12</span>
+                                            <span id="admin-live-version-pill" class="bg-white text-emerald-800 text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full shadow-xs">Active: v=1.0.13</span>
                                         </h2>
-                                        <p class="text-xs text-emerald-100">Publish a new live version to Firestore to show the 'v=1.0.12' banner with refresh icon for all users, guests &amp; admins</p>
+                                        <p class="text-xs text-emerald-100">Publish a new live version to Firestore to show the 'v=1.0.13' banner with refresh icon for all users, guests &amp; admins</p>
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <button type="button" onclick="downloadUpdatedHtmlWithVersion()" class="text-[11px] font-bold bg-white/20 hover:bg-white/30 text-white px-3 py-1 rounded-lg border border-white/30 transition cursor-pointer flex items-center gap-1.5" title="Download updated sweetopiashop.html with current live version stamped into footer & meta tags">
                                         <i class="fa-solid fa-code text-[10px]"></i>
-                                        <span>Export HTML (v=<span id="admin-export-html-ver-label">1.0.12</span>)</span>
+                                        <span>Export HTML (v=<span id="admin-export-html-ver-label">1.0.13</span>)</span>
                                     </button>
                                     <span id="admin-version-sync-status" class="text-[11px] font-semibold bg-white/15 px-3 py-1 rounded-lg border border-white/20">
                                         <i class="fa-solid fa-circle-check text-yellow-300 mr-1"></i> Listener Active
@@ -2349,7 +2349,7 @@
 
                         <div class="text-center flex justify-center">
                             <p class="text-[11px] text-[#581c87] font-extrabold tracking-wider">
-                                © Brand Works Empire 2026, all rights reserved <span id="footer-app-version-tag" class="opacity-75 font-mono text-[10px]">(v=1.0.12)</span>
+                                © Brand Works Empire 2026, all rights reserved <span id="footer-app-version-tag" class="opacity-75 font-mono text-[10px]">(v=1.0.13)</span>
                             </p>
                         </div>
 
@@ -3738,6 +3738,10 @@
                         window.productPowerLocations[p.id][pw] = { warehouse: true, vendor: false };
                     }
                 });
+
+                // Keep product object fields synced with authoritative in-memory stock/locations
+                p.powerStock = { ...window.productPowerStock[p.id] };
+                p.powerLocations = JSON.parse(JSON.stringify(window.productPowerLocations[p.id]));
             });
             const countBadge = document.getElementById('admin-live-product-count');
             if (countBadge) countBadge.innerText = String((prodList || products).length);
@@ -3745,6 +3749,18 @@
 
         function mergeIncomingProductStock(prod, protectLocalEdits) {
             if (!prod || !prod.id || protectLocalEdits) return;
+
+            const existingUpdatedAt = productStockUpdatedAtMap[prod.id] || 0;
+            const incomingUpdatedAt = prod.updatedAt ? new Date(prod.updatedAt).getTime() : 0;
+
+            // Ignore stale snapshot documents if we already loaded a newer timestamp for this product
+            if (existingUpdatedAt > 0 && incomingUpdatedAt > 0 && incomingUpdatedAt < existingUpdatedAt) {
+                return;
+            }
+            if (incomingUpdatedAt > existingUpdatedAt) {
+                productStockUpdatedAtMap[prod.id] = incomingUpdatedAt;
+            }
+
             if (prod.powerStock && typeof prod.powerStock === 'object') {
                 window.productPowerStock[prod.id] = {
                     ...(window.productPowerStock[prod.id] || {}),
@@ -3876,6 +3892,7 @@
 
         window.productPowerStock = {};
         window.productPowerLocations = {};
+        let productStockUpdatedAtMap = {};
         products.forEach(p => {
             window.productPowerStock[p.id] = {};
             window.productPowerLocations[p.id] = {};
@@ -7284,7 +7301,12 @@
             updatePowerStockFromCheckboxes();
             ensureProductStockDefaults(products);
 
+            const nowMs = Date.now();
+            const nowIso = new Date(nowMs).toISOString();
+
             products.forEach(p => {
+                productStockUpdatedAtMap[p.id] = nowMs;
+                p.updatedAt = nowIso;
                 p.powerStock = { ...(window.productPowerStock[p.id] || {}) };
                 p.powerLocations = JSON.parse(JSON.stringify(window.productPowerLocations[p.id] || {}));
             });
@@ -7293,7 +7315,6 @@
 
             if (db) {
                 try {
-                    const nowIso = new Date().toISOString();
                     for (const p of products) {
                         const stockPayload = {
                             powerStock: p.powerStock,
@@ -7301,7 +7322,7 @@
                             updatedAt: nowIso
                         };
                         await db.collection("lumilens_products").doc(p.id).set(stockPayload, { merge: true });
-                        await db.collection("products").doc(p.id).set(stockPayload, { merge: true }).catch(() => {});
+                        await db.collection("products").doc(p.id).set(stockPayload, { merge: true });
                     }
                 } catch(e) {
                     console.error("Firestore stock save failed:", e);
@@ -7314,7 +7335,7 @@
             hasUnsavedAdminStockEdits = false;
             setTimeout(() => {
                 isSavingAdminStockNow = false;
-            }, 1500);
+            }, 2500);
 
             onAdminPowerRangeChange();
             renderStoreProducts(products);
@@ -9311,6 +9332,9 @@
 
             const applyProductSnapshot = (snapshot, sourceCollectionName) => {
                 if (!snapshot) return;
+                // Ignore local cache-only snapshots so stale IndexedDB cache never flips HQ & Vendor BP10 back to HQ only
+                if (snapshot.metadata && snapshot.metadata.fromCache) return;
+
                 const protectLocalEdits = hasUnsavedAdminStockEdits || isSavingAdminStockNow;
                 if (snapshot.empty && sourceCollectionName === "lumilens_products") {
                     hasLoadedServerProducts = true;
@@ -9330,7 +9354,7 @@
 
                 const serverMap = new Map();
 
-                if (hasLoadedServerProducts && sourceCollectionName === "products") {
+                if (hasLoadedServerProducts) {
                     products.forEach(existing => {
                         if (existing && existing.id && !deletedProductIdsSet.has(String(existing.id))) {
                             serverMap.set(existing.id, existing);
@@ -9342,7 +9366,14 @@
                     if (deletedProductIdsSet.has(String(docSnap.id))) return;
                     const prod = normalizeFirestoreProductDoc(docSnap.id, docSnap.data());
                     if (prod) {
-                        serverMap.set(docSnap.id, prod);
+                        // Only let lumilens_products (primary) or newer timestamps overwrite product records
+                        const existingProd = serverMap.get(docSnap.id);
+                        const existingTs = existingProd?.updatedAt ? new Date(existingProd.updatedAt).getTime() : 0;
+                        const incomingTs = prod.updatedAt ? new Date(prod.updatedAt).getTime() : 0;
+
+                        if (!existingProd || sourceCollectionName === "lumilens_products" || incomingTs >= existingTs) {
+                            serverMap.set(docSnap.id, prod);
+                        }
                         mergeIncomingProductStock(prod, protectLocalEdits);
                     }
                 });
