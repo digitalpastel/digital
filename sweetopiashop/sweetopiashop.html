@@ -1493,7 +1493,7 @@
                                 </div>
                                 <div class="flex items-center gap-2 text-[11px] font-bold text-slate-600">
                                     <span id="sp-period-range-label" class="bg-white px-2.5 py-1 rounded-lg border border-orange-200 text-orange-800">Today (Real-time)</span>
-                                    <button type="button" onclick="refreshShopPerformanceAnalytics()" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-[11px] font-bold cursor-pointer flex items-center gap-1">
+                                    <button type="button" onclick="refreshShopPerformanceAnalytics(true)" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-[11px] font-bold cursor-pointer flex items-center gap-1">
                                         <i class="fa-solid fa-rotate text-[10px]"></i>
                                         <span>Refresh</span>
                                     </button>
@@ -1656,9 +1656,9 @@
                                                 <span class="active-indicator absolute bottom-0 left-0 right-0 h-[2.5px] bg-pink-500 rounded-t-full hidden"></span>
                                             </button>
 
-                                            <!-- Page Views Tab (Active Default) -->
+                                            <!-- Product View Tab (Active Default) -->
                                             <button type="button" id="sp-rank-views-btn" data-metric="views" onclick="switchProductRankingTab('views')" class="ranking-metric-tab group relative flex items-center justify-center gap-1.5 py-3.5 text-sm sm:text-base hover:text-pink-600 hover:bg-pink-50/80 active:bg-pink-100/70 rounded-t-lg transition-colors focus:outline-none text-pink-600 font-medium bg-pink-50/50 cursor-pointer">
-                                                <span>Page Views</span>
+                                                <span id="sp-rank-views-label">Product View</span>
                                                 <span class="sort-icon inline-flex items-center group-hover:text-pink-600 transition-colors text-pink-600">
                                                     <svg class="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
                                                         <path d="M8 2.5V13.5"></path>
@@ -3853,6 +3853,9 @@
 
         window.switchProductRankingTab = function(metricKey) {
             shopProductRankingMetric = metricKey;
+            const viewsTabLabel = document.getElementById('sp-rank-views-label');
+            if (viewsTabLabel) viewsTabLabel.innerText = 'Product View';
+
             const inactiveTabClass = "ranking-metric-tab group relative flex items-center justify-center gap-1.5 py-3.5 text-sm sm:text-base hover:text-pink-600 hover:bg-pink-50/60 active:bg-pink-100/70 rounded-t-lg transition-colors focus:outline-none text-gray-500 font-normal cursor-pointer";
             const activeTabClass = "ranking-metric-tab group relative flex items-center justify-center gap-1.5 py-3.5 text-sm sm:text-base hover:text-pink-600 hover:bg-pink-50/80 active:bg-pink-100/70 rounded-t-lg transition-colors focus:outline-none text-pink-600 font-medium bg-pink-50/50 cursor-pointer";
 
@@ -3882,7 +3885,10 @@
             window.refreshShopPerformanceAnalytics();
         };
 
-        window.refreshShopPerformanceAnalytics = function() {
+        window.refreshShopPerformanceAnalytics = function(isManualRefresh = false) {
+            const viewsTabLabel = document.getElementById('sp-rank-views-label');
+            if (viewsTabLabel) viewsTabLabel.innerText = 'Product View';
+
             const windowRange = getPeriodDateWindow(shopPerformancePeriod);
             const labelEl = document.getElementById('sp-period-range-label');
             if (labelEl) labelEl.innerText = windowRange.label;
@@ -3968,8 +3974,11 @@
             setTxt('sp-pm-visitors', productVisitorsCount);
             setTxt('sp-pm-atc-visitors', atcVisitorsCount);
             setTxt('sp-pm-atc-rate', `${atcRate === 0 ? '0' : atcRate.toFixed(2)}%`);
+            setTxt('sp-pm-confirmed-buyers', confirmedBuyersCount);
+            setTxt('sp-pm-confirmed-units', confirmedUnitsCount);
+            setTxt('sp-pm-confirmed-conv-rate', `${confirmedConvRate === 0 ? '0' : confirmedConvRate.toFixed(2)}%`);
 
-            // Build Product Ranking Card List
+            // Build Product Ranking Card List (Product View = guest + registered customer views/clicks)
             const rankingMap = new Map();
             (products || []).forEach(p => {
                 rankingMap.set(p.id, {
@@ -3980,7 +3989,9 @@
                     image: p.image,
                     sales: 0,
                     units: 0,
-                    views: 0
+                    views: 0,
+                    guestViews: 0,
+                    customerViews: 0
                 });
             });
 
@@ -3995,7 +4006,9 @@
                         image: item.image || existingProd?.image || '',
                         sales: 0,
                         units: 0,
-                        views: 0
+                        views: 0,
+                        guestViews: 0,
+                        customerViews: 0
                     };
                     const qty = parseInt(item.qty, 10) || 1;
                     entry.units += qty;
@@ -4010,6 +4023,11 @@
                     const entry = rankingMap.get(ev.productId);
                     if (entry) {
                         entry.views += 1;
+                        if (ev.visitorType === 'customer') {
+                            entry.customerViews += 1;
+                        } else {
+                            entry.guestViews += 1;
+                        }
                     }
                 }
             });
