@@ -18,7 +18,7 @@
     <link rel="icon" type="image/png" sizes="512x512" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png?v=1.0.15">
     <link rel="manifest" href="https://digitalpastel.github.io/digital/sweetopiashop/manifest.json?v=1.0.15">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&amp;family=Fredoka:wght@600;700&amp;family=Playfair+Display:wght@700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&amp;family=Fredoka:wght@600;700&amp;family=Inter:wght@400;500;600;700;800&amp;family=Playfair+Display:wght@700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
     <!-- Retro Pixel Font for 10-Bar Window -->
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -469,6 +469,33 @@
         }
         .tab-panel-animate {
             animation: smoothFadeSlide 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        /* =========================================================================
+           MINIMALIST SOCIAL PROOF LIVE VISITOR COUNTER STYLES
+           ========================================================================= */
+        .social-proof-widget {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        .proof-card {
+            box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.06), 0 4px 12px -2px rgba(15, 23, 42, 0.03);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        @keyframes pulse-live {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5);
+            }
+            50% {
+                transform: scale(1.08);
+                box-shadow: 0 0 0 5px rgba(16, 185, 129, 0);
+            }
+        }
+
+        .animate-live-dot {
+            animation: pulse-live 2s infinite ease-in-out;
         }
     </style>
 </head>
@@ -1052,39 +1079,47 @@
                         </div>
 
                         <!-- =========================================================================
-                             Y2K KAWAII 24-HOUR DAILY CUMULATIVE VISITOR COUNTER (PAGE 2 — ABOVE FEEDBACK)
+                             MINIMALIST LIVE VISITOR COUNTER (PAGE 2 — ABOVE CUSTOMERS FEEDBACK)
                              ========================================================================= -->
-                        <div class="w-full flex justify-center pt-4">
-                            <div class="y2k-kawaii-visitor-counter w-full max-w-md bg-[#ffe4f2] border-[3px] border-black rounded-2xl shadow-[5px_5px_0_0_#1e1b4b] overflow-hidden select-none">
-                                <div class="bg-gradient-to-r from-[#ff4da6] via-[#f43f5e] to-[#c026d3] px-3.5 py-2 border-b-[3px] border-black flex items-center justify-between text-white">
-                                    <div class="flex items-center gap-1.5">
-                                        <span class="text-yellow-300 text-xs">★</span>
-                                        <span class="font-pixel text-[9px] sm:text-[10px] tracking-wider uppercase drop-shadow-[1px_1px_0_#000]">visitor_counter.exe</span>
+                        <section aria-label="Live Visitor Counter" class="w-full flex justify-center pt-4">
+                            <div class="social-proof-widget proof-card bg-white rounded-2xl p-4 sm:p-5 w-full max-w-[540px] flex flex-col transition-all duration-300">
+                                <!-- Top Row: Circle Badge & Headline -->
+                                <div class="flex items-center gap-4 sm:gap-6">
+                                    <!-- Left Soft Blue Circle Counter -->
+                                    <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-[#e8effd] flex flex-col items-center justify-center shrink-0 select-none">
+                                        <span class="sp-today-visitors-count text-[#1a82f8] text-3xl sm:text-[38px] font-extrabold leading-none tracking-tight">1</span>
+                                        <span class="sp-visitors-label text-[#1a82f8] text-sm sm:text-[15px] font-medium mt-1">visitor</span>
                                     </div>
-                                    <div class="flex items-center gap-1">
-                                        <span class="w-3.5 h-3.5 rounded-full bg-[#fef08a] border-2 border-black inline-block"></span>
-                                        <span class="w-3.5 h-3.5 rounded-full bg-[#bbf7d0] border-2 border-black inline-block"></span>
-                                        <span class="w-3.5 h-3.5 rounded-full bg-[#f472b6] border-2 border-black inline-block"></span>
+
+                                    <!-- Right Text Content -->
+                                    <div class="flex flex-col justify-center min-w-0">
+                                        <!-- Main Headline -->
+                                        <p class="text-[#111827] text-lg sm:text-[22px] font-normal leading-snug tracking-tight">
+                                            viewed this page <span class="text-[#1a82f8] font-bold whitespace-nowrap">today</span>
+                                        </p>
+
+                                        <!-- Live Online Visitor Status Line -->
+                                        <div class="flex items-center gap-2 mt-2 sm:mt-2.5">
+                                            <span class="sp-live-status-dot w-2.5 h-2.5 rounded-full bg-[#10b981] shrink-0 animate-live-dot" title="Live online status"></span>
+                                            <span class="sp-live-status-text text-[#1a82f8] text-xs sm:text-[13.5px] font-medium truncate">
+                                                <strong class="font-semibold">1</strong> live online visitor now
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="p-4 bg-[#fff5fa] flex flex-col items-center text-center space-y-2.5">
-                                    <div class="inline-flex items-center gap-1.5 bg-[#fef08a] border-2 border-black px-3 py-0.5 rounded-full text-[10px] font-black text-[#713f12] uppercase shadow-[2px_2px_0_0_#000]">
-                                        <span>🎀 24-Hour Daily Visitors 🎀</span>
+
+                                <!-- Bottom Section: Today's 24h Window (12:00 a.m. to 11:59 p.m.) & Status -->
+                                <div class="flex flex-wrap items-center justify-between gap-2 pt-3 mt-4 border-t border-slate-100 text-xs text-slate-600">
+                                    <div class="flex items-center gap-2">
+                                        <span class="font-semibold text-slate-800">Today's 24h Window:</span>
+                                        <span class="sp-cycle-countdown font-mono bg-slate-100 px-2 py-0.5 rounded text-slate-700">--:--:-- until next day</span>
                                     </div>
-                                    <div class="bg-slate-950 border-[3px] border-black rounded-xl px-4 py-2.5 shadow-[inset_0_2px_8px_rgba(0,0,0,0.85)] flex items-center justify-center gap-1.5">
-                                        <span class="y2k-daily-visitor-digits font-pixel text-lg sm:text-xl text-[#4ade80] tracking-[0.2em] drop-shadow-[0_0_6px_rgba(74,222,128,0.65)]">000001</span>
-                                    </div>
-                                    <div class="flex flex-wrap items-center justify-center gap-2 text-[11px] font-extrabold text-slate-800">
-                                        <span class="bg-white border-2 border-black px-2.5 py-1 rounded-xl shadow-[2px_2px_0_0_#1e1b4b] inline-flex items-center gap-1.5">
-                                            <i class="fa-solid fa-hourglass-half text-pink-600"></i>
-                                            <span>Resets in:</span>
-                                            <span class="y2k-daily-countdown font-mono font-black text-fuchsia-700">23:59:59</span>
-                                        </span>
-                                        <span class="text-[10px] text-pink-700 font-bold">Preserved all day • Auto-resets at 24h</span>
-                                    </div>
+                                    <span class="sp-connection-badge px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-medium">
+                                        Real-Time Active
+                                    </span>
                                 </div>
                             </div>
-                        </div>
+                        </section>
 
                         <!-- =========================================================================
                              COMPACT SHOPEE-STYLE PRODUCT RATINGS / CUSTOMER FEEDBACK SECTION
@@ -1659,7 +1694,7 @@
                                             <span>Live App Version &amp; Force Cache Refresh</span>
                                             <span id="admin-live-version-pill" class="bg-white text-emerald-800 text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full shadow-xs">Current: v=1.0.15 • Live: v=1.0.16</span>
                                         </h2>
-                                        <p class="text-xs text-emerald-100">Publish a new live version (e.g. v=1.0.16) with clickable link &amp; refresh button for all users, guests &amp; admins</p>
+                                        <p class="text-xs text-emerald-100">Publish a new live version (e.g. v=1.0.16) to automatically update HTML code &amp; notify all users</p>
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-2">
@@ -1691,37 +1726,6 @@
                                         Release Notes / Banner Message
                                     </label>
                                     <input type="text" id="admin-version-notes-input" placeholder="e.g. click this link if cannot refresh to a new version 1.0.16" class="block w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                                </div>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <button type="button" onclick="downloadUpdatedHtmlWithVersion()" class="text-[11px] font-bold bg-white/20 hover:bg-white/30 text-white px-3 py-1 rounded-lg border border-white/30 transition cursor-pointer flex items-center gap-1.5" title="Download updated sweetopiashop.html with current live version stamped into footer & meta tags">
-                                        <i class="fa-solid fa-code text-[10px]"></i>
-                                        <span>Export HTML (v=<span id="admin-export-html-ver-label">1.0.15</span>)</span>
-                                    </button>
-                                    <span id="admin-version-sync-status" class="text-[11px] font-semibold bg-white/15 px-3 py-1 rounded-lg border border-white/20">
-                                        <i class="fa-solid fa-circle-check text-yellow-300 mr-1"></i> Listener Active
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div class="p-5 sm:p-6 bg-emerald-50/30 grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
-                                <div class="md:col-span-3 space-y-1.5">
-                                    <label for="admin-new-version-input" class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
-                                        New Version Tag <span class="text-rose-500">*</span>
-                                    </label>
-                                    <div class="flex items-center gap-1.5">
-                                        <input type="text" id="admin-new-version-input" value="1.0.15" placeholder="e.g. 1.0.15" class="block w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm font-mono font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                                        <button type="button" onclick="bumpNextPatchVersion()" class="px-2.5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold rounded-xl transition shrink-0 cursor-pointer" title="Auto-increment patch version">
-                                            +0.0.1
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div class="md:col-span-5 space-y-1.5">
-                                    <label for="admin-version-notes-input" class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
-                                        Release Notes / Banner Message
-                                    </label>
-                                    <input type="text" id="admin-version-notes-input" placeholder="e.g. click this link if cannot refresh to a new version 1.0.15" class="block w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
                                 </div>
 
                                 <div class="md:col-span-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
@@ -2953,39 +2957,47 @@
         </main>
 
         <!-- =========================================================================
-             Y2K KAWAII 24-HOUR DAILY CUMULATIVE VISITOR COUNTER (PAGE 1 — AUTH SCREEN)
+             MINIMALIST LIVE VISITOR COUNTER (PAGE 1 — AUTH SCREEN)
              ========================================================================= -->
-        <div id="page1-kawaii-visitor-counter-wrapper" class="w-full max-w-[1280px] mx-auto mt-5 flex justify-center">
-            <div class="y2k-kawaii-visitor-counter w-full max-w-md bg-[#ffe4f2] border-[3px] border-black rounded-2xl shadow-[5px_5px_0_0_#1e1b4b] overflow-hidden select-none">
-                <div class="bg-gradient-to-r from-[#ff4da6] via-[#f43f5e] to-[#c026d3] px-3.5 py-2 border-b-[3px] border-black flex items-center justify-between text-white">
-                    <div class="flex items-center gap-1.5">
-                        <span class="text-yellow-300 text-xs">★</span>
-                        <span class="font-pixel text-[9px] sm:text-[10px] tracking-wider uppercase drop-shadow-[1px_1px_0_#000]">visitor_counter.exe</span>
+        <section id="page1-kawaii-visitor-counter-wrapper" aria-label="Live Visitor Counter" class="w-full max-w-[1280px] mx-auto mt-5 flex justify-center">
+            <div id="social-proof-widget" class="social-proof-widget proof-card bg-white rounded-2xl p-4 sm:p-5 w-full max-w-[540px] flex flex-col transition-all duration-300">
+                <!-- Top Row: Circle Badge & Headline -->
+                <div class="flex items-center gap-4 sm:gap-6">
+                    <!-- Left Soft Blue Circle Counter -->
+                    <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-[#e8effd] flex flex-col items-center justify-center shrink-0 select-none">
+                        <span id="today-visitors-count" class="sp-today-visitors-count text-[#1a82f8] text-3xl sm:text-[38px] font-extrabold leading-none tracking-tight">1</span>
+                        <span id="visitors-label" class="sp-visitors-label text-[#1a82f8] text-sm sm:text-[15px] font-medium mt-1">visitor</span>
                     </div>
-                    <div class="flex items-center gap-1">
-                        <span class="w-3.5 h-3.5 rounded-full bg-[#fef08a] border-2 border-black inline-block"></span>
-                        <span class="w-3.5 h-3.5 rounded-full bg-[#bbf7d0] border-2 border-black inline-block"></span>
-                        <span class="w-3.5 h-3.5 rounded-full bg-[#f472b6] border-2 border-black inline-block"></span>
+
+                    <!-- Right Text Content -->
+                    <div class="flex flex-col justify-center min-w-0">
+                        <!-- Main Headline -->
+                        <p class="text-[#111827] text-lg sm:text-[22px] font-normal leading-snug tracking-tight">
+                            viewed this page <span class="text-[#1a82f8] font-bold whitespace-nowrap">today</span>
+                        </p>
+
+                        <!-- Live Online Visitor Status Line -->
+                        <div class="flex items-center gap-2 mt-2 sm:mt-2.5">
+                            <span id="live-status-dot" class="sp-live-status-dot w-2.5 h-2.5 rounded-full bg-[#10b981] shrink-0 animate-live-dot" title="Live online status"></span>
+                            <span id="live-status-text" class="sp-live-status-text text-[#1a82f8] text-xs sm:text-[13.5px] font-medium truncate">
+                                <strong class="font-semibold">1</strong> live online visitor now
+                            </span>
+                        </div>
                     </div>
                 </div>
-                <div class="p-4 bg-[#fff5fa] flex flex-col items-center text-center space-y-2.5">
-                    <div class="inline-flex items-center gap-1.5 bg-[#fef08a] border-2 border-black px-3 py-0.5 rounded-full text-[10px] font-black text-[#713f12] uppercase shadow-[2px_2px_0_0_#000]">
-                        <span>🎀 24-Hour Daily Visitors 🎀</span>
+
+                <!-- Bottom Section: Today's 24h Window (12:00 a.m. to 11:59 p.m.) & Status -->
+                <div class="flex flex-wrap items-center justify-between gap-2 pt-3 mt-4 border-t border-slate-100 text-xs text-slate-600">
+                    <div class="flex items-center gap-2">
+                        <span class="font-semibold text-slate-800">Today's 24h Window:</span>
+                        <span id="cycle-countdown" class="sp-cycle-countdown font-mono bg-slate-100 px-2 py-0.5 rounded text-slate-700">--:--:-- until next day</span>
                     </div>
-                    <div class="bg-slate-950 border-[3px] border-black rounded-xl px-4 py-2.5 shadow-[inset_0_2px_8px_rgba(0,0,0,0.85)] flex items-center justify-center gap-1.5">
-                        <span class="y2k-daily-visitor-digits font-pixel text-lg sm:text-xl text-[#4ade80] tracking-[0.2em] drop-shadow-[0_0_6px_rgba(74,222,128,0.65)]">000001</span>
-                    </div>
-                    <div class="flex flex-wrap items-center justify-center gap-2 text-[11px] font-extrabold text-slate-800">
-                        <span class="bg-white border-2 border-black px-2.5 py-1 rounded-xl shadow-[2px_2px_0_0_#1e1b4b] inline-flex items-center gap-1.5">
-                            <i class="fa-solid fa-hourglass-half text-pink-600"></i>
-                            <span>Resets in:</span>
-                            <span class="y2k-daily-countdown font-mono font-black text-fuchsia-700">23:59:59</span>
-                        </span>
-                        <span class="text-[10px] text-pink-700 font-bold">Preserved all day • Auto-resets at 24h</span>
-                    </div>
+                    <span id="connection-badge" class="sp-connection-badge px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-medium">
+                        Real-Time Active
+                    </span>
                 </div>
             </div>
-        </div>
+        </section>
     </div>
 
     <!-- MOBILE DEVICE VIEW BOTTOM NAVIGATION BAR -->
@@ -3152,19 +3164,39 @@
         function syncVersionAcrossDomAndHtml(targetVer) {
             const cleanVer = String(targetVer || APP_VERSION).trim().replace(/^v=/i, '').replace(/^v/i, '');
             if (!cleanVer) return;
+            const nextAfterTarget = computeNextPatchVersion(cleanVer);
+
+            // 1. Update live DOM meta tags, asset links, and footer version tag
+            const metaAppVer = document.querySelector('meta[name="app-version"]');
+            if (metaAppVer) metaAppVer.setAttribute('content', cleanVer);
+
+            document.querySelectorAll('link[href*="?v="]').forEach(linkEl => {
+                const href = linkEl.getAttribute('href');
+                if (href) {
+                    linkEl.setAttribute('href', href.replace(/(\?v=)\d+(?:\.\d+){1,3}/g, `$1${cleanVer}`));
+                }
+            });
 
             const pillEl = document.getElementById('admin-live-version-pill');
-            if (pillEl) pillEl.innerText = `Current: v=${APP_VERSION} • Live: v=${cleanVer}`;
+            if (pillEl) pillEl.innerText = `Current: v=${cleanVer} • Next: v=${nextAfterTarget}`;
 
             const footerVerEl = document.getElementById('footer-app-version-tag');
-            if (footerVerEl) footerVerEl.innerText = `(v=${APP_VERSION})`;
+            if (footerVerEl) footerVerEl.innerText = `(v=${cleanVer})`;
 
             const exportLabel = document.getElementById('admin-export-html-ver-label');
             if (exportLabel) exportLabel.innerText = cleanVer;
+
+            try {
+                localStorage.setItem('sweetopia_app_version', cleanVer);
+            } catch (e) {}
         }
 
-        window.downloadUpdatedHtmlWithVersion = function(customVersion = null) {
-            const verToStamp = String(customVersion || latestPublishedServerVersion || DEFAULT_TARGET_UPGRADE_VERSION).trim().replace(/^v=/i, '').replace(/^v/i, '');
+        function buildStampedHtmlString(targetVer) {
+            const verToStamp = String(targetVer || latestPublishedServerVersion || DEFAULT_TARGET_UPGRADE_VERSION).trim().replace(/^v=/i, '').replace(/^v/i, '');
+            const nextUpgradeVer = computeNextPatchVersion(verToStamp);
+
+            // Sync live DOM attributes first so serialized outerHTML reflects the new version
+            syncVersionAcrossDomAndHtml(verToStamp);
 
             let rawHtml = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
 
@@ -3172,14 +3204,22 @@
             rawHtml = rawHtml.replace(/\(v=\d+(?:\.\d+){1,3}\)/g, `(v=${verToStamp})`);
             rawHtml = rawHtml.replace(/(\?v=)\d+(?:\.\d+){1,3}/g, `$1${verToStamp}`);
             rawHtml = rawHtml.replace(/(const\s+APP_VERSION\s*=\s*['"])[^'"]+(['"];)/, `$1${verToStamp}$2`);
+            rawHtml = rawHtml.replace(/(const\s+DEFAULT_TARGET_UPGRADE_VERSION\s*=\s*['"])[^'"]+(['"];)/, `$1${nextUpgradeVer}$2`);
             rawHtml = rawHtml.replace(/(id=["']footer-app-version-tag["'][^>]*>)\(v=?[^)]+\)(<\/span>)/i, `$1(v=${verToStamp})$2`);
             rawHtml = rawHtml.replace(/(id=["']admin-export-html-ver-label["'][^>]*>)[^<]+(<\/span>)/i, `$1${verToStamp}$2`);
+            rawHtml = rawHtml.replace(/(id=["']admin-new-version-input["'][^>]*\bvalue=["'])[^"']*(["'])/i, `$1${nextUpgradeVer}$2`);
+
+            return { rawHtml, verToStamp, nextUpgradeVer };
+        }
+
+        window.downloadUpdatedHtmlWithVersion = function(customVersion = null) {
+            const { rawHtml, verToStamp } = buildStampedHtmlString(customVersion);
 
             const blob = new Blob([rawHtml], { type: 'text/html;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `sweetopiashop_v${verToStamp}.html`;
+            a.download = `sweetopiashop.html`;
             document.body.appendChild(a);
             a.click();
             setTimeout(() => {
@@ -3187,7 +3227,7 @@
                 URL.revokeObjectURL(url);
             }, 300);
 
-            showToast("HTML Source Exported!", `Downloaded sweetopiashop_v${verToStamp}.html with updated footer & version tags.`);
+            showToast("HTML Source Updated!", `Downloaded sweetopiashop.html automatically updated to v=${verToStamp}.`);
         };
 
         window.bumpNextPatchVersion = function() {
@@ -3259,7 +3299,7 @@
 
             const rawVersion = (versionInput?.value || '').trim().replace(/^v=/i, '').replace(/^v/i, '');
             if (!rawVersion || !/^\d+(\.\d+){1,3}$/.test(rawVersion)) {
-                showToast("Invalid Version Format", "Please enter a valid version number such as 1.0.15 or 1.1.0.", true);
+                showToast("Invalid Version Format", "Please enter a valid version number such as 1.0.16 or 1.1.0.", true);
                 versionInput?.focus();
                 return;
             }
@@ -3292,8 +3332,11 @@
                 }
             }
 
+            // Automatically generate & download the updated sweetopiashop.html stamped with v=1.0.16
+            window.downloadUpdatedHtmlWithVersion(rawVersion);
+
             showVersionBannerForAllUsers(rawVersion, releaseNotes);
-            showToast("New Live Version Published!", `New Version v=${rawVersion} banner is live for all users, guests & admins!`);
+            showToast("Published & HTML Updated!", `Version v=${rawVersion} is now live & sweetopiashop.html has been updated to v=${rawVersion}!`);
         };
 
         function initLiveVersionListener() {
@@ -11263,198 +11306,269 @@
         });
 
         /* =========================================================================
-           Y2K KAWAII 24-HOUR DAILY CUMULATIVE VISITOR COUNTER ENGINE
-           - Every arriving visitor increments the 24-hour daily total (1, 2, 3...)
-           - Preserved in Firestore & localStorage even after closing browser/tab
-           - Live HH:MM:SS countdown timer; auto-resets to 0 when 24h cycle expires
+           MINIMALIST SOCIAL PROOF 24-HOUR VISITOR & LIVE ONLINE COUNTER ENGINE
+           - Strict 12:00 a.m. - 11:59:59 p.m. local calendar day window
+           - Preserves daily count across sessions & resets to 0 after 11:59 p.m.
+           - Real-time live online visitor presence with heartbeat & cleanup
            ========================================================================= */
-        const VISITOR_24H_STORAGE_KEY = 'sweetopia_24h_visitor_counter_v1';
-        const VISITOR_24H_SESSION_FLAG = 'sweetopia_24h_counted_cycle_start';
-        const TWENTY_FOUR_HOURS_MS = 24 * 60 * 60 * 1000;
-        let dailyVisitorState = {
-            cycleStartMs: Date.now(),
-            count: 0
-        };
-        let visitorCountdownTimer = null;
+        const SP_WIDGET_APP_ID = 'sweetopiashop-social-proof';
+        const SP_HEARTBEAT_INTERVAL_MS = 15000;
+        const SP_ONLINE_TIMEOUT_MS = 35000;
 
-        function getTodayMidnightCycleStartMs() {
+        function getSpTodayKey() {
             const now = new Date();
-            return new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0).getTime();
+            const y = now.getFullYear();
+            const m = String(now.getMonth() + 1).padStart(2, '0');
+            const d = String(now.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
         }
 
-        function formatOdometerDigits(num) {
-            const safeVal = Math.max(0, parseInt(num, 10) || 0);
-            return String(safeVal).padStart(6, '0');
+        function getSpMsUntilMidnight() {
+            const now = new Date();
+            const midnight = new Date(now);
+            midnight.setHours(24, 0, 0, 0);
+            return Math.max(0, midnight.getTime() - now.getTime());
         }
 
-        function formatRemainingHHMMSS(msRemaining) {
-            const totalSecs = Math.max(0, Math.floor(msRemaining / 1000));
-            const hrs = Math.floor(totalSecs / 3600);
-            const mins = Math.floor((totalSecs % 3600) / 60);
-            const secs = totalSecs % 60;
-            const pad = (n) => String(n).padStart(2, '0');
-            return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
+        function formatSpDuration(ms) {
+            const totalSeconds = Math.floor(ms / 1000);
+            const hrs = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+            const mins = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+            const secs = String(totalSeconds % 60).padStart(2, '0');
+            return `${hrs}:${mins}:${secs} until next day`;
         }
 
-        function renderDailyVisitorCounterDOM() {
-            const digitsStr = formatOdometerDigits(dailyVisitorState.count);
-            document.querySelectorAll('.y2k-daily-visitor-digits').forEach(el => {
-                el.innerText = digitsStr;
+        function renderSpTodayVisitors(count) {
+            const safeCount = Math.max(0, Number(count) || 0);
+            document.querySelectorAll('.sp-today-visitors-count').forEach(el => {
+                el.textContent = safeCount.toLocaleString();
+            });
+            document.querySelectorAll('.sp-visitors-label').forEach(el => {
+                el.textContent = safeCount === 1 ? 'visitor' : 'visitors';
+            });
+        }
+
+        function renderSpLiveVisitors(liveCount) {
+            const count = Math.max(0, Number(liveCount) || 0);
+            const label = count === 1 ? 'live online visitor now' : 'live online visitors now';
+
+            document.querySelectorAll('.sp-live-status-text').forEach(el => {
+                el.innerHTML = `<strong class="font-semibold">${count.toLocaleString()}</strong> ${label}`;
             });
 
-            const elapsed = Date.now() - dailyVisitorState.cycleStartMs;
-            const remaining = Math.max(0, TWENTY_FOUR_HOURS_MS - elapsed);
-            const timerStr = formatRemainingHHMMSS(remaining);
-            document.querySelectorAll('.y2k-daily-countdown').forEach(el => {
-                el.innerText = timerStr;
-            });
-        }
-
-        function loadLocalDailyVisitorState() {
-            try {
-                const raw = localStorage.getItem(VISITOR_24H_STORAGE_KEY);
-                if (raw) {
-                    const parsed = JSON.parse(raw);
-                    if (parsed && typeof parsed.cycleStartMs === 'number') {
-                        dailyVisitorState = {
-                            cycleStartMs: parsed.cycleStartMs,
-                            count: Math.max(0, parseInt(parsed.count, 10) || 0)
-                        };
-                        return;
-                    }
+            document.querySelectorAll('.sp-live-status-dot').forEach(dotEl => {
+                if (count > 0) {
+                    dotEl.classList.remove('bg-[#ef4444]');
+                    dotEl.classList.add('bg-[#10b981]', 'animate-live-dot');
+                } else {
+                    dotEl.classList.remove('bg-[#10b981]', 'animate-live-dot');
+                    dotEl.classList.add('bg-[#ef4444]');
                 }
-            } catch (e) {}
-            dailyVisitorState = {
-                cycleStartMs: getTodayMidnightCycleStartMs(),
-                count: 0
-            };
+            });
         }
 
-        function saveLocalDailyVisitorState() {
+        function updateSpCountdownUI() {
+            const formatted = formatSpDuration(getSpMsUntilMidnight());
+            document.querySelectorAll('.sp-cycle-countdown').forEach(el => {
+                el.textContent = formatted;
+            });
+        }
+
+        function updateSpConnectionBadge(text) {
+            document.querySelectorAll('.sp-connection-badge').forEach(el => {
+                el.textContent = text;
+            });
+        }
+
+        const spSessionId = (() => {
             try {
-                localStorage.setItem(VISITOR_24H_STORAGE_KEY, JSON.stringify(dailyVisitorState));
+                const existing = sessionStorage.getItem('sp_tab_session_id');
+                if (existing) return existing;
+                const created = `sess_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+                sessionStorage.setItem('sp_tab_session_id', created);
+                return created;
+            } catch (e) {
+                return `sess_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+            }
+        })();
+
+        let spCurrentDayKey = getSpTodayKey();
+        let spUnsubDaily = null;
+        let spUnsubPresence = null;
+        let spHeartbeatTimer = null;
+        let spCountdownTimer = null;
+
+        async function recordSpTodayVisitIfNeeded(dayKey) {
+            const storageKey = `sp_counted_${SP_WIDGET_APP_ID}_${dayKey}`;
+            const localFallbackCountKey = `sp_local_daily_count_${dayKey}`;
+            let alreadyCounted = false;
+            try {
+                alreadyCounted = localStorage.getItem(storageKey) === '1';
             } catch (e) {}
-        }
 
-        async function checkAndResetExpired24hCycle() {
-            const now = Date.now();
-            if (now - dailyVisitorState.cycleStartMs >= TWENTY_FOUR_HOURS_MS) {
-                const newCycleStart = getTodayMidnightCycleStartMs();
-                dailyVisitorState = {
-                    cycleStartMs: newCycleStart,
-                    count: 0
-                };
-                saveLocalDailyVisitorState();
-                try {
-                    sessionStorage.removeItem(VISITOR_24H_SESSION_FLAG);
-                } catch (e) {}
-
-                if (db) {
+            if (!db) {
+                let localCount = parseInt(localStorage.getItem(localFallbackCountKey) || '0', 10) || 0;
+                if (!alreadyCounted) {
+                    localCount += 1;
                     try {
-                        await db.collection("lumilens_config").doc("daily_visitor_counter_24h").set({
-                            cycleStartMs: newCycleStart,
-                            count: 0,
-                            updatedAt: new Date().toISOString()
-                        }, { merge: true });
+                        localStorage.setItem(storageKey, '1');
+                        localStorage.setItem(localFallbackCountKey, String(localCount));
                     } catch (e) {}
                 }
-                renderDailyVisitorCounterDOM();
-            }
-        }
-
-        async function recordArrivingVisitor24h() {
-            await checkAndResetExpired24hCycle();
-
-            const cycleKey = String(dailyVisitorState.cycleStartMs);
-            let alreadyCountedThisVisit = false;
-            try {
-                alreadyCountedThisVisit = sessionStorage.getItem(VISITOR_24H_SESSION_FLAG) === cycleKey;
-            } catch (e) {}
-
-            if (alreadyCountedThisVisit) {
-                renderDailyVisitorCounterDOM();
+                renderSpTodayVisitors(Math.max(1, localCount));
                 return;
             }
 
-            try {
-                sessionStorage.setItem(VISITOR_24H_SESSION_FLAG, cycleKey);
-            } catch (e) {}
+            if (alreadyCounted) return;
 
-            if (db && typeof firebase !== 'undefined' && firebase.firestore) {
-                const docRef = db.collection("lumilens_config").doc("daily_visitor_counter_24h");
-                try {
-                    await db.runTransaction(async (tx) => {
-                        const snap = await tx.get(docRef);
-                        const now = Date.now();
-                        if (!snap.exists) {
-                            const initCycle = dailyVisitorState.cycleStartMs || getTodayMidnightCycleStartMs();
-                            dailyVisitorState = { cycleStartMs: initCycle, count: 1 };
-                            tx.set(docRef, {
-                                cycleStartMs: initCycle,
-                                count: 1,
-                                updatedAt: new Date().toISOString()
-                            });
-                            return;
-                        }
+            const dailyRef = db.collection('lumilens_config').doc('social_proof_daily_counter');
+
+            try {
+                await db.runTransaction(async (tx) => {
+                    const snap = await tx.get(dailyRef);
+                    if (!snap.exists) {
+                        tx.set(dailyRef, {
+                            dayKey,
+                            count: 1,
+                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                    } else {
                         const data = snap.data() || {};
-                        const serverCycleStart = typeof data.cycleStartMs === 'number' ? data.cycleStartMs : getTodayMidnightCycleStartMs();
-                        if (now - serverCycleStart >= TWENTY_FOUR_HOURS_MS) {
-                            const freshCycle = getTodayMidnightCycleStartMs();
-                            dailyVisitorState = { cycleStartMs: freshCycle, count: 1 };
-                            tx.set(docRef, {
-                                cycleStartMs: freshCycle,
+                        if (data.dayKey !== dayKey) {
+                            tx.set(dailyRef, {
+                                dayKey,
                                 count: 1,
-                                updatedAt: new Date().toISOString()
+                                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                             });
                         } else {
-                            const nextCount = (parseInt(data.count, 10) || 0) + 1;
-                            dailyVisitorState = { cycleStartMs: serverCycleStart, count: nextCount };
-                            tx.update(docRef, {
-                                count: nextCount,
-                                updatedAt: new Date().toISOString()
+                            tx.update(dailyRef, {
+                                count: (Number(data.count) || 0) + 1,
+                                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                             });
                         }
-                    });
-                    saveLocalDailyVisitorState();
-                    renderDailyVisitorCounterDOM();
+                    }
+                });
+                try {
+                    localStorage.setItem(storageKey, '1');
+                } catch (e) {}
+            } catch (err) {
+                let localCount = (parseInt(localStorage.getItem(localFallbackCountKey) || '0', 10) || 0) + 1;
+                try {
+                    localStorage.setItem(storageKey, '1');
+                    localStorage.setItem(localFallbackCountKey, String(localCount));
+                } catch (e) {}
+                renderSpTodayVisitors(localCount);
+            }
+        }
+
+        function listenToSpDailyCounter() {
+            if (!db) return;
+            if (spUnsubDaily) spUnsubDaily();
+            const dailyRef = db.collection('lumilens_config').doc('social_proof_daily_counter');
+
+            spUnsubDaily = dailyRef.onSnapshot(async (snap) => {
+                const activeDay = getSpTodayKey();
+                if (!snap.exists) {
+                    renderSpTodayVisitors(1);
                     return;
-                } catch (err) {
-                    console.warn("Firestore 24h visitor transaction fallback:", err);
                 }
+
+                const data = snap.data() || {};
+                if (data.dayKey !== activeDay) {
+                    renderSpTodayVisitors(0);
+                    try {
+                        await dailyRef.set({
+                            dayKey: activeDay,
+                            count: 0,
+                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                    } catch (e) {}
+                } else {
+                    renderSpTodayVisitors(data.count || 0);
+                }
+            }, () => {
+                updateSpConnectionBadge('Offline Mode');
+            });
+        }
+
+        function startSpLivePresence() {
+            if (!db) {
+                renderSpLiveVisitors(1);
+                return;
             }
 
-            // Local fallback increment if offline
-            dailyVisitorState.count = (parseInt(dailyVisitorState.count, 10) || 0) + 1;
-            saveLocalDailyVisitorState();
-            renderDailyVisitorCounterDOM();
+            const presenceCol = db.collection('lumilens_social_proof_presence');
+            const myPresenceRef = presenceCol.doc(spSessionId);
+
+            const sendHeartbeat = async () => {
+                if (document.visibilityState === 'hidden') return;
+                try {
+                    await myPresenceRef.set({
+                        lastSeen: Date.now(),
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    }, { merge: true });
+                } catch (err) {}
+            };
+
+            const removePresence = () => {
+                myPresenceRef.delete().catch(() => {});
+            };
+
+            sendHeartbeat();
+            if (spHeartbeatTimer) clearInterval(spHeartbeatTimer);
+            spHeartbeatTimer = setInterval(sendHeartbeat, SP_HEARTBEAT_INTERVAL_MS);
+
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible') {
+                    sendHeartbeat();
+                } else {
+                    removePresence();
+                }
+            });
+            window.addEventListener('pagehide', removePresence);
+            window.addEventListener('beforeunload', removePresence);
+
+            if (spUnsubPresence) spUnsubPresence();
+            spUnsubPresence = presenceCol.onSnapshot((snapshot) => {
+                const now = Date.now();
+                let activeCount = 0;
+
+                snapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    if (data && typeof data.lastSeen === 'number' && (now - data.lastSeen) <= SP_ONLINE_TIMEOUT_MS) {
+                        activeCount++;
+                    }
+                });
+
+                renderSpLiveVisitors(Math.max(1, activeCount));
+            });
         }
 
         async function initDailyKawaiiVisitorCounter() {
-            loadLocalDailyVisitorState();
-            renderDailyVisitorCounterDOM();
+            updateSpCountdownUI();
 
-            if (db) {
-                db.collection("lumilens_config").doc("daily_visitor_counter_24h").onSnapshot((docSnap) => {
-                    if (!docSnap || !docSnap.exists) return;
-                    const data = docSnap.data();
-                    if (!data || typeof data.cycleStartMs !== 'number') return;
+            if (spCountdownTimer) clearInterval(spCountdownTimer);
+            spCountdownTimer = setInterval(() => {
+                updateSpCountdownUI();
+                const latestDayKey = getSpTodayKey();
+                if (latestDayKey !== spCurrentDayKey) {
+                    spCurrentDayKey = latestDayKey;
+                    renderSpTodayVisitors(0);
+                    recordSpTodayVisitIfNeeded(spCurrentDayKey);
+                }
+            }, 1000);
 
-                    if (Date.now() - data.cycleStartMs < TWENTY_FOUR_HOURS_MS) {
-                        dailyVisitorState.cycleStartMs = data.cycleStartMs;
-                        dailyVisitorState.count = Math.max(0, parseInt(data.count, 10) || 0);
-                        saveLocalDailyVisitorState();
-                        renderDailyVisitorCounterDOM();
-                    }
-                }, () => {});
+            if (!db) {
+                updateSpConnectionBadge('Offline Mode');
+                await recordSpTodayVisitIfNeeded(getSpTodayKey());
+                renderSpLiveVisitors(1);
+                return;
             }
 
-            await recordArrivingVisitor24h();
-
-            if (visitorCountdownTimer) clearInterval(visitorCountdownTimer);
-            visitorCountdownTimer = setInterval(async () => {
-                await checkAndResetExpired24hCycle();
-                renderDailyVisitorCounterDOM();
-            }, 1000);
+            updateSpConnectionBadge('Real-Time Active');
+            listenToSpDailyCounter();
+            await recordSpTodayVisitIfNeeded(getSpTodayKey());
+            startSpLivePresence();
         }
     </script>
 </body>
