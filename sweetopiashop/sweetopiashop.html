@@ -5,18 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light">
     <meta name="supported-color-schemes" content="light">
-    <!-- Cache Busting & No-Cache Directives (Current v=1.0.14, Next Target v=1.0.15) -->
-    <meta name="app-version" content="1.0.14">
+    <!-- Cache Busting & No-Cache Directives (Current v=1.0.15, Next Target v=1.0.16) -->
+    <meta name="app-version" content="1.0.15">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Sweetopia Shop - Premium Contact Lens Store &amp; FPX Checkout</title>
-    <!-- App Icons & Stylesheet with Cache Busting Version (?v=1.0.14) -->
-    <link rel="stylesheet" href="style.css?v=1.0.14">
-    <link rel="icon" type="image/png" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.14">
-    <link rel="apple-touch-icon" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.14">
-    <link rel="icon" type="image/png" sizes="512x512" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png?v=1.0.14">
-    <link rel="manifest" href="https://digitalpastel.github.io/digital/sweetopiashop/manifest.json?v=1.0.14">
+    <!-- App Icons & Stylesheet with Cache Busting Version (?v=1.0.15) -->
+    <link rel="stylesheet" href="style.css?v=1.0.15">
+    <link rel="icon" type="image/png" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.15">
+    <link rel="apple-touch-icon" sizes="192x192" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashopappicon192.png?v=1.0.15">
+    <link rel="icon" type="image/png" sizes="512x512" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiaappicon512.png?v=1.0.15">
+    <link rel="manifest" href="https://digitalpastel.github.io/digital/sweetopiashop/manifest.json?v=1.0.15">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&amp;family=Fredoka:wght@600;700&amp;family=Playfair+Display:wght@700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
     <!-- Retro Pixel Font for 10-Bar Window -->
@@ -32,9 +32,9 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script>
-        // Cache Busting Controller: Current version v=1.0.14, target upgrade v=1.0.15
-        const APP_VERSION = '1.0.14';
-        const DEFAULT_TARGET_UPGRADE_VERSION = '1.0.15';
+        // Cache Busting Controller: Current version v=1.0.15, target upgrade v=1.0.16
+        const APP_VERSION = '1.0.15';
+        const DEFAULT_TARGET_UPGRADE_VERSION = '1.0.16';
         const PRODUCTION_SHOP_URL = 'https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashop.html';
         const STALE_CACHE_KEYS_TO_PURGE = [
             'sweetopia_active_presets',
@@ -475,7 +475,7 @@
 
 <body class="min-h-screen flex flex-col items-center justify-start p-3 sm:p-4 md:p-6 text-slate-800">
 
-    <!-- LIVE NEW VERSION UPDATE BANNER (Visible for ALL users, guests & admins with direct link to ?v=1.0.15 & dismiss 'x' toggle) -->
+    <!-- LIVE NEW VERSION UPDATE BANNER (Visible for ALL users, guests & admins with direct link to ?v=1.0.16 & dismiss 'x' toggle) -->
     <div id="live-version-update-banner" class="w-full max-w-[1280px] mb-3 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 text-white px-4 py-3 rounded-2xl flex items-center justify-between border-2 border-emerald-300 shadow-lg transition-all">
         <div class="flex items-center space-x-3 overflow-hidden flex-1 min-w-0">
             <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center text-yellow-300 text-lg shrink-0 border border-white/30 animate-bounce">
@@ -483,18 +483,18 @@
             </div>
             <div class="min-w-0 flex-1">
                 <div class="flex flex-wrap items-center gap-2">
-                    <span id="live-update-tag-pill" class="bg-yellow-300 text-slate-950 text-[10px] font-black uppercase px-2 py-0.5 rounded-full shadow-xs shrink-0">New Version (v=1.0.15)</span>
-                    <span id="live-update-version-badge" class="text-xs sm:text-sm font-extrabold tracking-tight truncate">Sweetopia Shop v=1.0.15 is Available!</span>
+                    <span id="live-update-tag-pill" class="bg-yellow-300 text-slate-950 text-[10px] font-black uppercase px-2 py-0.5 rounded-full shadow-xs shrink-0">New Version (v=1.0.16)</span>
+                    <span id="live-update-version-badge" class="text-xs sm:text-sm font-extrabold tracking-tight truncate">Sweetopia Shop v=1.0.16 is Available!</span>
                 </div>
                 <p id="live-update-notes-text" class="text-[11px] text-emerald-50 font-medium mt-0.5 leading-snug">
-                    <a id="live-update-direct-link" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashop.html?v=1.0.15" target="_top" onclick="applyLiveVersionUpdate('1.0.15'); return false;" class="underline font-extrabold text-yellow-200 hover:text-white transition">
-                        click this link if cannot refresh to a new version 1.0.15
+                    <a id="live-update-direct-link" href="https://digitalpastel.github.io/digital/sweetopiashop/sweetopiashop.html?v=1.0.16" target="_top" onclick="applyLiveVersionUpdate('1.0.16'); return false;" class="underline font-extrabold text-yellow-200 hover:text-white transition">
+                        click this link if cannot refresh to a new version 1.0.16
                     </a>
                 </p>
             </div>
         </div>
         <div class="flex items-center space-x-2 shrink-0 ml-3">
-            <button type="button" onclick="applyLiveVersionUpdate('1.0.15')" class="bg-white hover:bg-yellow-100 text-emerald-800 active:scale-95 text-xs font-black px-3.5 py-2 rounded-xl shadow-md transition flex items-center gap-1.5 border border-emerald-200 cursor-pointer" title="Refresh & Clear Cache">
+            <button type="button" onclick="applyLiveVersionUpdate('1.0.16')" class="bg-white hover:bg-yellow-100 text-emerald-800 active:scale-95 text-xs font-black px-3.5 py-2 rounded-xl shadow-md transition flex items-center gap-1.5 border border-emerald-200 cursor-pointer" title="Refresh & Clear Cache">
                 <i class="fa-solid fa-arrows-rotate text-sm text-emerald-600"></i>
                 <span>Refresh</span>
             </button>
@@ -1050,6 +1050,51 @@
                                 </button>
                             </div>
                         </div>
+
+                        <!-- =========================================================================
+                             COMPACT SHOPEE-STYLE PRODUCT RATINGS / CUSTOMER FEEDBACK SECTION
+                             (Hidden on First Page / Sign-In screen; only shown inside Store Catalog)
+                             ========================================================================= -->
+                        <section id="feedback-wall-section" class="w-full bg-gray-100 rounded-2xl py-6 px-3 sm:px-6 border border-pink-100 flex justify-center mt-6">
+                            <div class="w-full max-w-md bg-white rounded-2xl shadow-sm border border-pink-100 overflow-hidden self-start">
+
+                                <!-- Compact Shopee-style Header Bar -->
+                                <div class="px-4 py-3 bg-white border-b border-gray-100 flex items-center justify-between">
+                                    <div>
+                                        <div class="flex items-center gap-1.5">
+                                            <h2 class="text-sm font-bold text-gray-900">Product Ratings</h2>
+                                            <span class="text-[11px] font-semibold text-pink-600 bg-pink-50 px-2 py-0.5 rounded-full">5.0 / 5</span>
+                                        </div>
+                                        <p class="text-[11px] text-gray-500 mt-0.5">
+                                            Showing <span id="shownCount" class="font-semibold text-pink-600">2</span> customer feedbacks
+                                        </p>
+                                    </div>
+
+                                    <!-- Compact Star Summary Pill -->
+                                    <div class="flex items-center gap-1 text-xs font-semibold text-pink-600 bg-pink-50/80 border border-pink-100 px-2.5 py-1 rounded-lg">
+                                        <svg class="w-3.5 h-3.5 text-amber-400 fill-current" viewBox="0 0 20 20">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                        </svg>
+                                        <span id="feedbackTotalBadgeText">2 Reviews</span>
+                                    </div>
+                                </div>
+
+                                <!-- Reviews List Container (Alyssa & Sarah + verified customer feedbacks) -->
+                                <div id="reviewsContainer" class="p-3 space-y-3 bg-gray-50/60">
+                                </div>
+
+                                <!-- Footer Section -->
+                                <div id="feedbackLoadMoreFooter" class="p-3 bg-white border-t border-gray-100 flex flex-col items-center gap-1.5">
+                                    <button id="loadMoreFeedbacksBtn" type="button" onclick="loadMoreCustomerFeedbacks()" class="hidden w-full py-2.5 px-4 rounded-xl bg-pink-50 hover:bg-pink-100 active:bg-pink-200 text-pink-600 font-semibold text-xs sm:text-sm border border-pink-200/80 transition-colors flex items-center justify-center gap-1.5 cursor-pointer select-none">
+                                        <span>Load More Reviews</span>
+                                        <svg class="w-4 h-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M5 8l5 5 5-5"></path>
+                                        </svg>
+                                    </button>
+                                    <span class="text-[10px] text-gray-400">Verified buyer feedbacks from Sweetopia Shop</span>
+                                </div>
+                            </div>
+                        </section>
                     </div>
 
                     <!-- TAB 2: CART & CHECKOUT FORM -->
@@ -1426,32 +1471,32 @@
                                         <div class="p-4 rounded-2xl border-2 border-orange-200 bg-orange-50/40 space-y-1">
                                             <span class="text-[11px] font-bold text-slate-500 block">Sales (RM)</span>
                                             <p id="sp-km-sales" class="text-base sm:text-lg font-black text-orange-600">RM 0.00</p>
-                                            <span class="text-[10px] text-slate-400 block">Paid &amp; active value</span>
+                                            <span class="text-[10px] text-slate-400 block"></span>
                                         </div>
                                         <div class="p-4 rounded-2xl border border-slate-200 bg-white space-y-1">
                                             <span class="text-[11px] font-bold text-slate-500 block">Orders</span>
                                             <p id="sp-km-orders" class="text-base sm:text-lg font-black text-slate-900">0</p>
-                                            <span class="text-[10px] text-slate-400 block">Total orders placed</span>
+                                            <span class="text-[10px] text-slate-400 block"></span>
                                         </div>
                                         <div class="p-4 rounded-2xl border border-slate-200 bg-white space-y-1">
                                             <span class="text-[11px] font-bold text-slate-500 block">Sales per Order</span>
                                             <p id="sp-km-sales-per-order" class="text-base sm:text-lg font-black text-slate-900">RM 0.00</p>
-                                            <span class="text-[10px] text-slate-400 block">Average order value</span>
+                                            <span class="text-[10px] text-slate-400 block"></span>
                                         </div>
                                         <div class="p-4 rounded-2xl border border-slate-200 bg-white space-y-1">
                                             <span class="text-[11px] font-bold text-slate-500 block">Buyers</span>
                                             <p id="sp-km-buyers" class="text-base sm:text-lg font-black text-slate-900">0</p>
-                                            <span class="text-[10px] text-slate-400 block">Unique ordering buyers</span>
+                                            <span class="text-[10px] text-slate-400 block"></span>
                                         </div>
                                         <div class="p-4 rounded-2xl border border-slate-200 bg-white space-y-1">
                                             <span class="text-[11px] font-bold text-slate-500 block">Sales per Buyer</span>
                                             <p id="sp-km-sales-per-buyer" class="text-base sm:text-lg font-black text-slate-900">RM 0.00</p>
-                                            <span class="text-[10px] text-slate-400 block">Avg spend per buyer</span>
+                                            <span class="text-[10px] text-slate-400 block"></span>
                                         </div>
                                         <div class="p-4 rounded-2xl border border-emerald-200 bg-emerald-50/40 space-y-1">
                                             <span class="text-[11px] font-bold text-slate-600 block">Order Conversion Rate</span>
-                                            <p id="sp-km-order-conv-rate" class="text-base sm:text-lg font-black text-emerald-700">0.00%</p>
-                                            <span class="text-[10px] text-slate-400 block">Orders / Visitors</span>
+                                            <p id="sp-km-order-conv-rate" class="text-base sm:text-lg font-black text-emerald-700">0%</p>
+                                            <span class="text-[10px] text-slate-400 block"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -1460,41 +1505,26 @@
                                 <div id="sp-metrics-product-panel" class="hidden space-y-3">
                                     <div class="flex items-center justify-between">
                                         <h3 class="text-sm font-black text-slate-900 flex items-center gap-2">
-                                            <span class="w-2 h-4 bg-rose-500 rounded-full inline-block"></span>
+                                            <span class="w-2 h-4 bg-orange-500 rounded-full inline-block"></span>
                                             <span>Key Metrics — Product</span>
                                         </h3>
-                                        <span class="text-[11px] text-slate-400 font-medium">Product funnel &amp; confirmed order conversion</span>
+                                        <span class="text-[11px] text-slate-400 font-medium">Visitors recorded store</span>
                                     </div>
                                     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-                                        <div class="p-4 rounded-2xl border-2 border-rose-200 bg-rose-50/40 space-y-1">
+                                        <div class="p-4 rounded-2xl border-2 border-orange-200 bg-orange-50/40 space-y-1">
                                             <span class="text-[11px] font-bold text-slate-500 block">Visitors</span>
-                                            <p id="sp-pm-visitors" class="text-base sm:text-lg font-black text-rose-600">0</p>
-                                            <span class="text-[10px] text-slate-400 block">Product page visitors</span>
+                                            <p id="sp-pm-visitors" class="text-base sm:text-lg font-black text-orange-600">0</p>
+                                            <span class="text-[10px] text-slate-400 block"></span>
                                         </div>
                                         <div class="p-4 rounded-2xl border border-slate-200 bg-white space-y-1">
                                             <span class="text-[11px] font-bold text-slate-500 block">Add-to-Cart Visitors</span>
                                             <p id="sp-pm-atc-visitors" class="text-base sm:text-lg font-black text-slate-900">0</p>
-                                            <span class="text-[10px] text-slate-400 block">Users who added items</span>
+                                            <span class="text-[10px] text-slate-400 block"></span>
                                         </div>
                                         <div class="p-4 rounded-2xl border border-slate-200 bg-white space-y-1">
                                             <span class="text-[11px] font-bold text-slate-500 block">Add-to-Cart Rate</span>
-                                            <p id="sp-pm-atc-rate" class="text-base sm:text-lg font-black text-indigo-600">0.00%</p>
-                                            <span class="text-[10px] text-slate-400 block">ATC Visitors / Visitors</span>
-                                        </div>
-                                        <div class="p-4 rounded-2xl border border-slate-200 bg-white space-y-1">
-                                            <span class="text-[11px] font-bold text-slate-500 block">Confirmed Buyers</span>
-                                            <p id="sp-pm-confirmed-buyers" class="text-base sm:text-lg font-black text-slate-900">0</p>
-                                            <span class="text-[10px] text-slate-400 block">Paid / confirmed buyers</span>
-                                        </div>
-                                        <div class="p-4 rounded-2xl border border-slate-200 bg-white space-y-1">
-                                            <span class="text-[11px] font-bold text-slate-500 block">Units in Confirmed Orders</span>
-                                            <p id="sp-pm-confirmed-units" class="text-base sm:text-lg font-black text-slate-900">0</p>
-                                            <span class="text-[10px] text-slate-400 block">Total lens boxes sold</span>
-                                        </div>
-                                        <div class="p-4 rounded-2xl border border-emerald-200 bg-emerald-50/40 space-y-1">
-                                            <span class="text-[11px] font-bold text-slate-600 block">Conversion Rate (Confirmed)</span>
-                                            <p id="sp-pm-confirmed-conv-rate" class="text-base sm:text-lg font-black text-emerald-700">0.00%</p>
-                                            <span class="text-[10px] text-slate-400 block">Confirmed Buyers / Visitors</span>
+                                            <p id="sp-pm-atc-rate" class="text-base sm:text-lg font-black text-slate-900">0%</p>
+                                            <span class="text-[10px] text-slate-400 block"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -1592,10 +1622,41 @@
                                     <div>
                                         <h2 class="text-base font-bold flex items-center space-x-2">
                                             <span>Live App Version &amp; Force Cache Refresh</span>
-                                            <span id="admin-live-version-pill" class="bg-white text-emerald-800 text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full shadow-xs">Current: v=1.0.14 • Live: v=1.0.15</span>
+                                            <span id="admin-live-version-pill" class="bg-white text-emerald-800 text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full shadow-xs">Current: v=1.0.15 • Live: v=1.0.16</span>
                                         </h2>
-                                        <p class="text-xs text-emerald-100">Publish a new live version (e.g. v=1.0.15) with clickable link &amp; refresh button for all users, guests &amp; admins</p>
+                                        <p class="text-xs text-emerald-100">Publish a new live version (e.g. v=1.0.16) with clickable link &amp; refresh button for all users, guests &amp; admins</p>
                                     </div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button type="button" onclick="downloadUpdatedHtmlWithVersion()" class="text-[11px] font-bold bg-white/20 hover:bg-white/30 text-white px-3 py-1 rounded-lg border border-white/30 transition cursor-pointer flex items-center gap-1.5" title="Download updated sweetopiashop.html with current live version stamped into footer & meta tags">
+                                        <i class="fa-solid fa-code text-[10px]"></i>
+                                        <span>Export HTML (v=<span id="admin-export-html-ver-label">1.0.16</span>)</span>
+                                    </button>
+                                    <span id="admin-version-sync-status" class="text-[11px] font-semibold bg-white/15 px-3 py-1 rounded-lg border border-white/20">
+                                        <i class="fa-solid fa-circle-check text-yellow-300 mr-1"></i> Listener Active
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="p-5 sm:p-6 bg-emerald-50/30 grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+                                <div class="md:col-span-3 space-y-1.5">
+                                    <label for="admin-new-version-input" class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                                        New Version Tag <span class="text-rose-500">*</span>
+                                    </label>
+                                    <div class="flex items-center gap-1.5">
+                                        <input type="text" id="admin-new-version-input" value="1.0.16" placeholder="e.g. 1.0.16" class="block w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm font-mono font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                                        <button type="button" onclick="bumpNextPatchVersion()" class="px-2.5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold rounded-xl transition shrink-0 cursor-pointer" title="Auto-increment patch version">
+                                            +0.0.1
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="md:col-span-5 space-y-1.5">
+                                    <label for="admin-version-notes-input" class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                                        Release Notes / Banner Message
+                                    </label>
+                                    <input type="text" id="admin-version-notes-input" placeholder="e.g. click this link if cannot refresh to a new version 1.0.16" class="block w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                                </div>
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <button type="button" onclick="downloadUpdatedHtmlWithVersion()" class="text-[11px] font-bold bg-white/20 hover:bg-white/30 text-white px-3 py-1 rounded-lg border border-white/30 transition cursor-pointer flex items-center gap-1.5" title="Download updated sweetopiashop.html with current live version stamped into footer & meta tags">
@@ -2175,53 +2236,8 @@
                     </div>
                 </div>
 
-                <!-- =========================================================================
-                     NEW COMPACT SHOPEE-STYLE PRODUCT RATINGS / CUSTOMER FEEDBACK SECTION
-                     (Shows Alyssa and Sarah + customer submissions; Admin can delete any)
-                     ========================================================================= -->
-                <section id="feedback-wall-section" class="w-full bg-gray-100 py-8 px-3 sm:px-6 border-t border-pink-100 flex justify-center">
-                    <div class="w-full max-w-md bg-white rounded-2xl shadow-sm border border-pink-100 overflow-hidden self-start">
-
-                        <!-- Compact Shopee-style Header Bar -->
-                        <div class="px-4 py-3 bg-white border-b border-gray-100 flex items-center justify-between">
-                            <div>
-                                <div class="flex items-center gap-1.5">
-                                    <h2 class="text-sm font-bold text-gray-900">Product Ratings</h2>
-                                    <span class="text-[11px] font-semibold text-pink-600 bg-pink-50 px-2 py-0.5 rounded-full">5.0 / 5</span>
-                                </div>
-                                <p class="text-[11px] text-gray-500 mt-0.5">
-                                    Showing <span id="shownCount" class="font-semibold text-pink-600">2</span> customer feedbacks
-                                </p>
-                            </div>
-
-                            <!-- Compact Star Summary Pill -->
-                            <div class="flex items-center gap-1 text-xs font-semibold text-pink-600 bg-pink-50/80 border border-pink-100 px-2.5 py-1 rounded-lg">
-                                <svg class="w-3.5 h-3.5 text-amber-400 fill-current" viewBox="0 0 20 20">
-                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                </svg>
-                                <span id="feedbackTotalBadgeText">2 Reviews</span>
-                            </div>
-                        </div>
-
-                        <!-- Reviews List Container (Alyssa & Sarah + verified customer feedbacks) -->
-                        <div id="reviewsContainer" class="p-3 space-y-3 bg-gray-50/60">
-                        </div>
-
-                        <!-- Footer Section -->
-                        <div id="feedbackLoadMoreFooter" class="p-3 bg-white border-t border-gray-100 flex flex-col items-center gap-1.5">
-                            <button id="loadMoreFeedbacksBtn" type="button" onclick="loadMoreCustomerFeedbacks()" class="hidden w-full py-2.5 px-4 rounded-xl bg-pink-50 hover:bg-pink-100 active:bg-pink-200 text-pink-600 font-semibold text-xs sm:text-sm border border-pink-200/80 transition-colors flex items-center justify-center gap-1.5 cursor-pointer select-none">
-                                <span>Load More Reviews</span>
-                                <svg class="w-4 h-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M5 8l5 5 5-5"></path>
-                                </svg>
-                            </button>
-                            <span class="text-[10px] text-gray-400">Verified buyer feedbacks from Sweetopia Shop</span>
-                        </div>
-                    </div>
-                </section>
-
                 <!-- PAGE 2 FOOTER -->
-                <footer class="w-full bg-[#d8b4fe] border-t-4 border-[#7c3aed] py-6 px-6 shadow-[0_-4px_0_0_#4c1d95] mt-auto">
+                <footer id="page2-footer" class="w-full bg-[#d8b4fe] border-t-4 border-[#7c3aed] py-6 px-6 shadow-[0_-4px_0_0_#4c1d95] mt-auto">
                     <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 items-center gap-4">
                         <div class="flex items-center justify-center md:justify-start space-x-3">
                             <a href="https://www.facebook.com/share/1C455cr2u5/" target="_blank" rel="noopener noreferrer" class="w-9 h-9 bg-[#f472b6] hover:bg-[#ec4899] text-white rounded-full border-2 border-black flex items-center justify-center shadow-[2px_2px_0_0_#000] active:translate-y-0.5 active:shadow-[0_0_0_0_#000] transition-all">
@@ -2237,7 +2253,7 @@
 
                         <div class="text-center flex justify-center">
                             <p class="text-[11px] text-[#581c87] font-extrabold tracking-wider">
-                                © Brand Works Empire 2026, all rights reserved <span id="footer-app-version-tag" class="opacity-75 font-mono text-[10px]">(v=1.0.14)</span>
+                                © Brand Works Empire 2026, all rights reserved <span id="footer-app-version-tag" class="opacity-75 font-mono text-[10px]">(v=1.0.15)</span>
                             </p>
                         </div>
 
@@ -3868,14 +3884,11 @@
             setTxt('sp-km-sales-per-order', `RM ${salesPerOrder.toFixed(2)}`);
             setTxt('sp-km-buyers', buyersCount);
             setTxt('sp-km-sales-per-buyer', `RM ${salesPerBuyer.toFixed(2)}`);
-            setTxt('sp-km-order-conv-rate', `${orderConvRate.toFixed(2)}%`);
+            setTxt('sp-km-order-conv-rate', `${orderConvRate === 0 ? '0' : orderConvRate.toFixed(2)}%`);
 
             setTxt('sp-pm-visitors', productVisitorsCount);
             setTxt('sp-pm-atc-visitors', atcVisitorsCount);
-            setTxt('sp-pm-atc-rate', `${atcRate.toFixed(2)}%`);
-            setTxt('sp-pm-confirmed-buyers', confirmedBuyersCount);
-            setTxt('sp-pm-confirmed-units', confirmedUnitsCount);
-            setTxt('sp-pm-confirmed-conv-rate', `${confirmedConvRate.toFixed(2)}%`);
+            setTxt('sp-pm-atc-rate', `${atcRate === 0 ? '0' : atcRate.toFixed(2)}%`);
 
             // Build Product Ranking Card List
             const rankingMap = new Map();
@@ -6529,17 +6542,20 @@
             const pageAuth = document.getElementById('page-auth');
             const pageDashboard = document.getElementById('page-dashboard');
             const mobileBottomNav = document.getElementById('mobile-bottom-nav');
+            const page2Footer = document.getElementById('page2-footer');
 
             if (pageName === 'auth') {
                 pageAuth?.classList.remove('hidden');
                 pageDashboard?.classList.add('hidden');
                 if (mobileBottomNav) mobileBottomNav.classList.add('hidden');
+                if (page2Footer) page2Footer.classList.add('hidden');
                 renderChosenCustomerPromoBanner();
                 window.renderCustomerNotifications();
             } else {
                 pageAuth?.classList.add('hidden');
                 pageDashboard?.classList.remove('hidden');
                 if (mobileBottomNav) mobileBottomNav.classList.remove('hidden');
+                if (page2Footer) page2Footer.classList.remove('hidden');
                 renderChosenCustomerPromoBanner();
                 window.renderCustomerNotifications();
 
