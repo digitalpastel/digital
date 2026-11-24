@@ -1,0 +1,1637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Storybook Shelf 2026 & Free E-Book Hub</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Fraunces (Display Serif for magical book titles) & Plus Jakarta Sans (Clean UI) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --wood-dark: #2a1810;
+            --wood-mid: #4a2c18;
+            --wood-light: #6e4226;
+            --paper-cream: #fcf8f2;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #140f0c;
+            color: #f5efe6;
+            overflow-x: hidden;
+            overscroll-behavior-y: none;
+        }
+
+        .font-serif-display {
+            font-family: 'Fraunces', serif;
+        }
+
+        /* Custom Nighttime Library Room Backdrop */
+        .library-backdrop {
+            background: linear-gradient(180deg, #070d19 0%, #0f1c2e 45%, #1a0f08 100%);
+            position: relative;
+        }
+
+        /* Realistic 3D Warm Mahogany Wooden Table Surface */
+        .wooden-shelf-ledge {
+            background: 
+                repeating-linear-gradient(90deg, rgba(45, 18, 6, 0.22) 0px, rgba(45, 18, 6, 0.22) 70px, transparent 70px, transparent 155px),
+                linear-gradient(180deg, #9c582c 0%, #733b18 35%, #4d240c 82%, #2c1305 100%);
+            box-shadow: 
+                0 -12px 35px rgba(0, 0, 0, 0.75),
+                0 20px 40px -5px rgba(0, 0, 0, 0.95),
+                inset 0 2px 3px rgba(255, 200, 150, 0.35),
+                inset 0 -8px 14px rgba(20, 8, 2, 0.85);
+            border-top: 2px solid #b86f3e;
+        }
+
+        /* Book Spine Styling */
+        .book-spine {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            transition: all 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: 
+                -4px 0 10px rgba(0, 0, 0, 0.5),
+                inset 2px 0 4px rgba(255, 255, 255, 0.25),
+                inset -3px 0 6px rgba(0, 0, 0, 0.4);
+            cursor: pointer;
+            position: relative;
+            user-select: none;
+            -webkit-user-drag: none;
+            touch-action: manipulation;
+        }
+
+        .book-spine::before {
+            content: '';
+            position: absolute;
+            top: 12px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .book-spine::after {
+            content: '';
+            position: absolute;
+            bottom: 12px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .book-spine:hover {
+            transform: scaleX(1.06);
+            z-index: 20;
+            box-shadow: 
+                0 10px 20px rgba(0, 0, 0, 0.7),
+                inset 2px 0 6px rgba(255, 255, 255, 0.4);
+        }
+
+        /* 3D Flip-Out Cover Animation when Cursor Moves onto a Book (Grounded firmly on the table) */
+        @keyframes flipBookCover {
+            0% {
+                opacity: 0.4;
+                transform: perspective(900px) rotateY(-68deg);
+            }
+            60% {
+                opacity: 1;
+                transform: perspective(900px) rotateY(8deg);
+            }
+            100% {
+                opacity: 1;
+                transform: perspective(900px) rotateY(0deg);
+            }
+        }
+
+        .featured-cover-card {
+            animation: flipBookCover 0.48s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            transform-origin: bottom center;
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
+            box-shadow: 
+                0 12px 24px -6px rgba(0, 0, 0, 0.85),
+                0 0 22px rgba(255, 215, 130, 0.16),
+                inset 2px 0 5px rgba(255, 255, 255, 0.4);
+            transform-style: preserve-3d;
+            user-select: none;
+            -webkit-user-drag: none;
+            touch-action: manipulation;
+        }
+
+        .featured-cover-card:hover {
+            transform: rotateY(-4deg);
+            box-shadow: 
+                0 16px 28px -6px rgba(0, 0, 0, 0.9),
+                0 0 30px rgba(255, 215, 130, 0.25);
+        }
+
+        /* Book Page Spread Animation */
+        @keyframes pageOpen {
+            from {
+                opacity: 0;
+                transform: scale(0.92) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .animate-book-open {
+            animation: pageOpen 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Normal Manual Cover Peel Open Effect when User Clicks to Open */
+        @keyframes manualCoverPeel {
+            0% {
+                opacity: 1;
+                transform: perspective(1400px) rotateY(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: perspective(1400px) rotateY(-135deg);
+            }
+        }
+
+        .animate-manual-peel {
+            transform-origin: left center;
+            animation: manualCoverPeel 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        /* Realistic Book Center Crease */
+        .book-crease {
+            background: linear-gradient(90deg, 
+                rgba(0,0,0,0.02) 0%, 
+                rgba(0,0,0,0.08) 46%, 
+                rgba(0,0,0,0.22) 50%, 
+                rgba(0,0,0,0.08) 54%, 
+                rgba(0,0,0,0.02) 100%);
+        }
+
+        /* Hide scrollbars cleanly where needed */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-amber-500/30 selection:text-amber-200">
+
+    <!-- Top Navigation Bar -->
+    <nav class="sticky top-0 z-40 backdrop-blur-md bg-[#16110e]/85 border-b border-amber-900/30 px-4 sm:px-8 py-3.5">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+            <!-- Brand Identity -->
+            <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('shelf')">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/20 text-stone-950 font-bold">
+                    <i data-lucide="book-open" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <span class="font-serif-display font-bold text-lg sm:text-xl tracking-tight text-amber-50 block leading-none">WonderShelf</span>
+                    <span class="text-[11px] uppercase tracking-widest text-amber-400/80 font-semibold">Free Shelf & Bookstore</span>
+                </div>
+            </div>
+
+            <!-- Main View Switcher (Storybook Shelf vs Bookstore) -->
+            <div class="flex items-center bg-stone-900/90 p-1.5 rounded-2xl border border-stone-800 shadow-inner">
+                <button id="nav-shelf-btn" onclick="switchView('shelf')" class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-amber-500 text-stone-950 shadow-md">
+                    <i data-lucide="library" class="w-4 h-4"></i>
+                    <span>Storybook Shelf</span>
+                    <span id="shelf-count-badge" class="ml-1 px-1.5 py-0.5 text-xs rounded-full bg-stone-950/20 font-bold">8</span>
+                </button>
+                <button id="nav-store-btn" onclick="switchView('store')" class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all text-stone-300 hover:text-white">
+                    <i data-lucide="shopping-bag" class="w-4 h-4 text-amber-400"></i>
+                    <span>Full Bookstore</span>
+                </button>
+            </div>
+
+            <!-- Shopping Cart & Edition Badge -->
+            <div class="flex items-center gap-3">
+                <button onclick="toggleCartDrawer(true)" class="relative flex items-center gap-2 px-3.5 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 border border-amber-500/30 text-amber-200 text-xs font-bold transition shadow-md">
+                    <i data-lucide="shopping-cart" class="w-4 h-4 text-amber-400"></i>
+                    <span>Cart</span>
+                    <span id="cart-count-badge" class="px-1.5 py-0.5 text-[11px] rounded-full bg-amber-500 text-stone-950 font-extrabold">0</span>
+                </button>
+                <div class="hidden lg:flex items-center gap-2 text-xs font-medium text-stone-400 bg-stone-900/60 px-3.5 py-2 rounded-full border border-stone-800">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>Kids & Teens Edition</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- =====================================================================
+         VIEW 1: INTERACTIVE 3D STORYBOOK SHELF ("MY BOOKSHELF")
+    ====================================================================== -->
+    <main id="view-shelf" class="h-[calc(100vh-69px)] min-h-[580px] flex flex-col justify-between library-backdrop relative overflow-hidden">
+        
+        <!-- Nighttime Library Backdrop: Moonlit Window in Center + Left & Right Full Bookshelves -->
+        <div class="pointer-events-none absolute inset-0 flex justify-center overflow-hidden">
+            <svg viewBox="0 0 1920 960" preserveAspectRatio="xMidYMax slice" class="w-full h-full">
+                <defs>
+                    <!-- Night Sky Gradient -->
+                    <linearGradient id="night-sky-grad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#050a14"/>
+                        <stop offset="50%" stop-color="#0c1b33"/>
+                        <stop offset="100%" stop-color="#152a4a"/>
+                    </linearGradient>
+                    <!-- Moon Glow -->
+                    <radialGradient id="moon-glow" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
+                        <stop offset="30%" stop-color="#dbeafe" stop-opacity="0.45"/>
+                        <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
+                    </radialGradient>
+                    <!-- Dark Mahogany Wood Gradients -->
+                    <linearGradient id="mahogany-vert" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stop-color="#1c0d06"/>
+                        <stop offset="45%" stop-color="#3d1e10"/>
+                        <stop offset="100%" stop-color="#140904"/>
+                    </linearGradient>
+                    <linearGradient id="mahogany-shelf" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#5c3019"/>
+                        <stop offset="45%" stop-color="#381b0c"/>
+                        <stop offset="100%" stop-color="#190b04"/>
+                    </linearGradient>
+                    <linearGradient id="vintage-book-shade" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stop-color="#ffffff" stop-opacity="0.18"/>
+                        <stop offset="25%" stop-color="#ffffff" stop-opacity="0"/>
+                        <stop offset="80%" stop-color="#000000" stop-opacity="0.25"/>
+                        <stop offset="100%" stop-color="#000000" stop-opacity="0.55"/>
+                    </linearGradient>
+                </defs>
+
+                <!-- Dark Library Room Background -->
+                <rect width="1920" height="960" fill="#120905"/>
+
+                <!-- CENTER LARGE PANED NIGHT WINDOW -->
+                <g transform="translate(520, 35)">
+                    <rect x="0" y="0" width="880" height="860" fill="url(#night-sky-grad)"/>
+                    
+                    <!-- Twinkling Night Stars -->
+                    <g fill="#e0f2fe" opacity="0.75">
+                        <circle cx="110" cy="95" r="2"/><circle cx="240" cy="65" r="1.5"/>
+                        <circle cx="380" cy="120" r="2"/><circle cx="510" cy="70" r="1.5"/>
+                        <circle cx="760" cy="85" r="2"/><circle cx="160" cy="210" r="1.5"/>
+                        <circle cx="310" cy="195" r="2"/><circle cx="460" cy="230" r="1.5"/>
+                        <circle cx="790" cy="220" r="2"/><circle cx="130" cy="340" r="1.5"/>
+                    </g>
+
+                    <!-- Full Moon & Moonlight Halo (Right-Center Pane like the reference video) -->
+                    <circle cx="620" cy="295" r="135" fill="url(#moon-glow)"/>
+                    <circle cx="620" cy="295" r="34" fill="#f8fafc"/>
+                    <circle cx="610" cy="287" r="7" fill="#cbd5e1" opacity="0.5"/>
+                    <circle cx="630" cy="304" r="5" fill="#cbd5e1" opacity="0.4"/>
+
+                    <!-- Nighttime Pine Tree Silhouettes Outside Window -->
+                    <g fill="#060d18">
+                        <polygon points="80,850 145,420 210,850"/>
+                        <polygon points="40,850 110,510 180,850"/>
+                        <polygon points="180,850 250,480 320,850"/>
+                        <polygon points="560,850 635,440 710,850"/>
+                        <polygon points="660,850 745,390 830,850"/>
+                        <polygon points="750,850 825,470 900,850"/>
+                    </g>
+
+                    <!-- Subtle Window Glass Sheen -->
+                    <polygon points="20,160 410,20 460,20 20,210" fill="#93c5fd" opacity="0.06"/>
+                    <polygon points="450,420 860,250 860,300 450,470" fill="#93c5fd" opacity="0.06"/>
+
+                    <!-- Window Wooden Mullions (3x3 Grid) -->
+                    <rect x="285" y="0" width="18" height="860" fill="#211008"/>
+                    <rect x="577" y="0" width="18" height="860" fill="#211008"/>
+                    <rect x="0" y="265" width="880" height="18" fill="#211008"/>
+                    <rect x="0" y="545" width="880" height="18" fill="#211008"/>
+                    <!-- Outer Window Frame -->
+                    <rect x="0" y="0" width="880" height="860" fill="none" stroke="#2c150a" stroke-width="26"/>
+                </g>
+
+                <!-- LEFT BUILT-IN 3D WOODEN BOOKCASE (Full of Classic Decorative Books) -->
+                <g>
+                    <rect x="40" y="20" width="465" height="880" fill="#180b05"/>
+                    <!-- 3D Inner Depth Side -->
+                    <polygon points="66,40 92,55 92,880 66,880" fill="#0e0603"/>
+                    <!-- Shelves -->
+                    <rect x="40" y="20" width="465" height="24" fill="url(#mahogany-shelf)"/>
+                    <rect x="40" y="240" width="465" height="22" fill="url(#mahogany-shelf)"/>
+                    <rect x="40" y="460" width="465" height="22" fill="url(#mahogany-shelf)"/>
+                    <rect x="40" y="680" width="465" height="22" fill="url(#mahogany-shelf)"/>
+                    <!-- Pillars -->
+                    <rect x="40" y="20" width="26" height="880" fill="url(#mahogany-vert)"/>
+                    <rect x="479" y="20" width="26" height="880" fill="url(#mahogany-vert)"/>
+
+                    <!-- Left Shelf Row 1 (Top Decorative Books) -->
+                    <g transform="translate(88, 65)">
+                        <rect x="0" y="15" width="32" height="160" rx="3" fill="#7c2d12"/><rect x="35" y="5" width="38" height="170" rx="3" fill="#991b1b"/>
+                        <rect x="76" y="20" width="28" height="155" rx="3" fill="#1e3a8a"/><rect x="107" y="10" width="36" height="165" rx="3" fill="#065f46"/>
+                        <rect x="146" y="18" width="30" height="157" rx="3" fill="#92400e"/><rect x="179" y="8" width="34" height="167" rx="3" fill="#3f6212"/>
+                        <rect x="216" y="22" width="28" height="153" rx="3" fill="#581c87"/><rect x="247" y="12" width="38" height="163" rx="3" fill="#7f1d1d"/>
+                        <rect x="288" y="16" width="32" height="159" rx="3" fill="#1e40af"/><rect x="323" y="8" width="36" height="167" rx="3" fill="#78350f"/>
+                        <!-- Gold Spine Bands -->
+                        <rect x="0" y="38" width="360" height="4" fill="#fbbf24" opacity="0.35"/>
+                        <rect x="0" y="145" width="360" height="4" fill="#fbbf24" opacity="0.35"/>
+                        <rect x="0" y="0" width="365" height="175" fill="url(#vintage-book-shade)"/>
+                    </g>
+
+                    <!-- Left Shelf Row 2 (Middle Decorative Books) -->
+                    <g transform="translate(88, 285)">
+                        <rect x="0" y="10" width="38" height="165" rx="3" fill="#14532d"/><rect x="41" y="20" width="30" height="155" rx="3" fill="#9a3412"/>
+                        <rect x="74" y="8" width="36" height="167" rx="3" fill="#7f1d1d"/><rect x="113" y="16" width="32" height="159" rx="3" fill="#1e3a8a"/>
+                        <rect x="148" y="12" width="36" height="163" rx="3" fill="#854d0e"/><rect x="187" y="22" width="28" height="153" rx="3" fill="#3730a3"/>
+                        <rect x="218" y="6" width="40" height="169" rx="3" fill="#7c2d12"/><rect x="261" y="18" width="32" height="157" rx="3" fill="#064e3b"/>
+                        <rect x="296" y="14" width="34" height="161" rx="3" fill="#991b1b"/><rect x="333" y="10" width="32" height="165" rx="3" fill="#713f12"/>
+                        <rect x="0" y="36" width="365" height="4" fill="#fbbf24" opacity="0.35"/>
+                        <rect x="0" y="146" width="365" height="4" fill="#fbbf24" opacity="0.35"/>
+                        <rect x="0" y="0" width="365" height="175" fill="url(#vintage-book-shade)"/>
+                    </g>
+
+                    <!-- Left Shelf Row 3 (Lower Decorative Books) -->
+                    <g transform="translate(88, 505)">
+                        <rect x="0" y="14" width="34" height="161" rx="3" fill="#78350f"/><rect x="37" y="8" width="40" height="167" rx="3" fill="#1e3a8a"/>
+                        <rect x="80" y="20" width="30" height="155" rx="3" fill="#7f1d1d"/><rect x="113" y="10" width="36" height="165" rx="3" fill="#14532d"/>
+                        <rect x="152" y="16" width="34" height="159" rx="3" fill="#9a3412"/><rect x="189" y="8" width="38" height="167" rx="3" fill="#4c1d95"/>
+                        <rect x="230" y="18" width="32" height="157" rx="3" fill="#854d0e"/><rect x="265" y="12" width="36" height="163" rx="3" fill="#991b1b"/>
+                        <rect x="304" y="16" width="30" height="159" rx="3" fill="#065f46"/><rect x="337" y="10" width="28" height="165" rx="3" fill="#7c2d12"/>
+                        <rect x="0" y="38" width="365" height="4" fill="#fbbf24" opacity="0.35"/>
+                        <rect x="0" y="148" width="365" height="4" fill="#fbbf24" opacity="0.35"/>
+                        <rect x="0" y="0" width="365" height="175" fill="url(#vintage-book-shade)"/>
+                    </g>
+                </g>
+
+                <!-- RIGHT BUILT-IN 3D WOODEN BOOKCASE (Full of Classic Decorative Books) -->
+                <g>
+                    <rect x="1415" y="20" width="465" height="880" fill="#180b05"/>
+                    <!-- 3D Inner Depth Side -->
+                    <polygon points="1854,40 1828,55 1828,880 1854,880" fill="#0e0603"/>
+                    <!-- Shelves -->
+                    <rect x="1415" y="20" width="465" height="24" fill="url(#mahogany-shelf)"/>
+                    <rect x="1415" y="240" width="465" height="22" fill="url(#mahogany-shelf)"/>
+                    <rect x="1415" y="460" width="465" height="22" fill="url(#mahogany-shelf)"/>
+                    <rect x="1415" y="680" width="465" height="22" fill="url(#mahogany-shelf)"/>
+                    <!-- Pillars -->
+                    <rect x="1415" y="20" width="26" height="880" fill="url(#mahogany-vert)"/>
+                    <rect x="1854" y="20" width="26" height="880" fill="url(#mahogany-vert)"/>
+
+                    <!-- Right Shelf Row 1 (Top Decorative Books) -->
+                    <g transform="translate(1465, 65)">
+                        <rect x="0" y="12" width="36" height="163" rx="3" fill="#1e3a8a"/><rect x="39" y="18" width="32" height="157" rx="3" fill="#7f1d1d"/>
+                        <rect x="74" y="8" width="38" height="167" rx="3" fill="#065f46"/><rect x="115" y="20" width="30" height="155" rx="3" fill="#92400e"/>
+                        <rect x="148" y="10" width="36" height="165" rx="3" fill="#7c2d12"/><rect x="187" y="16" width="32" height="159" rx="3" fill="#3730a3"/>
+                        <rect x="222" y="8" width="38" height="167" rx="3" fill="#991b1b"/><rect x="263" y="20" width="30" height="155" rx="3" fill="#3f6212"/>
+                        <rect x="296" y="12" width="34" height="163" rx="3" fill="#78350f"/><rect x="333" y="16" width="32" height="159" rx="3" fill="#1e40af"/>
+                        <rect x="0" y="38" width="365" height="4" fill="#fbbf24" opacity="0.35"/>
+                        <rect x="0" y="145" width="365" height="4" fill="#fbbf24" opacity="0.35"/>
+                        <rect x="0" y="0" width="365" height="175" fill="url(#vintage-book-shade)"/>
+                    </g>
+
+                    <!-- Right Shelf Row 2 (Middle Decorative Books) -->
+                    <g transform="translate(1465, 285)">
+                        <rect x="0" y="16" width="34" height="159" rx="3" fill="#9a3412"/><rect x="37" y="8" width="38" height="167" rx="3" fill="#14532d"/>
+                        <rect x="78" y="18" width="32" height="157" rx="3" fill="#581c87"/><rect x="113" y="10" width="36" height="165" rx="3" fill="#854d0e"/>
+                        <rect x="152" y="20" width="30" height="155" rx="3" fill="#991b1b"/><rect x="185" y="8" width="40" height="167" rx="3" fill="#1e3a8a"/>
+                        <rect x="228" y="14" width="34" height="161" rx="3" fill="#7c2d12"/><rect x="265" y="10" width="36" height="165" rx="3" fill="#064e3b"/>
+                        <rect x="304" y="18" width="30" height="157" rx="3" fill="#7f1d1d"/><rect x="337" y="12" width="28" height="163" rx="3" fill="#713f12"/>
+                        <rect x="0" y="36" width="365" height="4" fill="#fbbf24" opacity="0.35"/>
+                        <rect x="0" y="146" width="365" height="4" fill="#fbbf24" opacity="0.35"/>
+                        <rect x="0" y="0" width="365" height="175" fill="url(#vintage-book-shade)"/>
+                    </g>
+
+                    <!-- Right Shelf Row 3 (Lower Decorative Books) -->
+                    <g transform="translate(1465, 505)">
+                        <rect x="0" y="10" width="38" height="165" rx="3" fill="#7f1d1d"/><rect x="41" y="18" width="32" height="157" rx="3" fill="#065f46"/>
+                        <rect x="76" y="12" width="36" height="163" rx="3" fill="#78350f"/><rect x="115" y="20" width="30" height="155" rx="3" fill="#1e40af"/>
+                        <rect x="148" y="8" width="38" height="167" rx="3" fill="#9a3412"/><rect x="189" y="16" width="34" height="159" rx="3" fill="#14532d"/>
+                        <rect x="226" y="10" width="36" height="165" rx="3" fill="#991b1b"/><rect x="265" y="18" width="32" height="157" rx="3" fill="#4c1d95"/>
+                        <rect x="300" y="12" width="34" height="163" rx="3" fill="#854d0e"/><rect x="337" y="16" width="28" height="159" rx="3" fill="#7c2d12"/>
+                        <rect x="0" y="38" width="365" height="4" fill="#fbbf24" opacity="0.35"/>
+                        <rect x="0" y="148" width="365" height="4" fill="#fbbf24" opacity="0.35"/>
+                        <rect x="0" y="0" width="365" height="175" fill="url(#vintage-book-shade)"/>
+                    </g>
+                </g>
+            </svg>
+        </div>
+
+        <!-- Interactive 3D Bookshelf Stage with Clean Centered Title Right Above the Books -->
+        <section class="relative z-10 flex-1 flex flex-col justify-end pt-4 pb-4">
+            
+            <!-- Clean Centered Title Directly Above the Books -->
+            <header class="text-center px-4 max-w-4xl mx-auto mb-5 sm:mb-7">
+                <h1 class="font-serif-display text-3xl sm:text-5xl md:text-[54px] font-normal text-white tracking-tight leading-[1.08] drop-shadow-[0_6px_18px_rgba(0,0,0,0.95)]">
+                    Your Storybook<br>Shelf of 2026
+                </h1>
+            </header>
+
+            <!-- The 7 Books Row scaled cleanly to show wide window & left/right bookshelves -->
+            <div id="bookshelf-stage" ondragstart="return false;" class="max-w-5xl mx-auto w-full px-4 sm:px-8 flex items-end justify-center gap-2 sm:gap-3.5 h-[225px] sm:h-[265px] overflow-x-auto overflow-y-hidden no-scrollbar pt-2 pb-0 select-none relative z-30 -mb-[2px]">
+                <!-- Books dynamically injected here by JS -->
+            </div>
+
+            <!-- Realistic Warm Mahogany Wooden Table Plank -->
+            <div class="w-full h-14 sm:h-16 wooden-shelf-ledge relative z-20 shrink-0">
+                <div class="max-w-7xl mx-auto h-full flex items-center justify-between px-8 text-[11px] uppercase tracking-widest text-amber-200/80 font-bold">
+                    <span>WonderShelf Night Library</span>
+                    <span class="hidden sm:inline">Pages 1 &amp; 2 Free Preview • Buy Full Books</span>
+                    <button onclick="switchView('store')" class="underline hover:text-white pointer-events-auto">Browse Full Bookstore →</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- =====================================================================
+         VIEW 2: PAID BOOKSTORE ("BOOKSTORE" PAGE)
+    ====================================================================== -->
+    <main id="view-store" class="hidden flex-1 bg-[#16110e] text-stone-100 pb-20">
+        
+        <!-- Bookstore Hero Banner -->
+        <div class="bg-gradient-to-r from-[#261710] via-[#321e14] to-[#1e1624] border-b border-amber-900/30 py-10 px-4 sm:px-8">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
+                <div class="max-w-2xl">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-400/30 text-amber-300 text-xs font-bold uppercase tracking-wider mb-3">
+                        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                        <span>Official Kids & Teens Bookstore</span>
+                    </div>
+                    <h2 class="font-serif-display text-3xl sm:text-5xl font-bold text-amber-50 leading-tight">
+                        Shop New Adventures & Stories
+                    </h2>
+                    <p class="mt-3 text-stone-300 text-sm sm:text-base">
+                        Browse illustrated nature guides for curious kids and thrilling sci-fi, fantasy, and mystery editions for teenagers. Buy any title to unlock it on your bookshelf!
+                    </p>
+                </div>
+
+                <!-- Search & Age Filter Box -->
+                <div class="w-full md:w-96 bg-stone-900/90 p-4 rounded-2xl border border-stone-800 shadow-xl space-y-3">
+                    <div class="relative">
+                        <i data-lucide="search" class="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                        <input type="text" id="store-search-input" oninput="renderBookstore()" placeholder="Search titles, authors, topics..." class="w-full bg-stone-950 border border-stone-700 focus:border-amber-400 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-stone-500 outline-none transition">
+                    </div>
+                    <div class="grid grid-cols-3 gap-1.5">
+                        <button onclick="setStoreFilter('all')" id="store-tab-all" class="store-tab py-2 rounded-lg text-xs font-bold bg-amber-500 text-stone-950 transition">All Ages</button>
+                        <button onclick="setStoreFilter('kids')" id="store-tab-kids" class="store-tab py-2 rounded-lg text-xs font-semibold bg-stone-800 text-stone-300 hover:bg-stone-700 transition">Kids (5–11)</button>
+                        <button onclick="setStoreFilter('teens')" id="store-tab-teens" class="store-tab py-2 rounded-lg text-xs font-semibold bg-stone-800 text-stone-300 hover:bg-stone-700 transition">Teens (12–18)</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Chips -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-8 pt-6 pb-2 flex items-center gap-2 overflow-x-auto no-scrollbar">
+            <span class="text-xs font-semibold text-stone-400 mr-2 shrink-0">Genres:</span>
+            <button onclick="setStoreGenre('All')" class="genre-chip px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-400/20 text-amber-300 border border-amber-400/40 shrink-0">All Genres</button>
+            <button onclick="setStoreGenre('Nature & Science')" class="genre-chip px-3.5 py-1.5 rounded-full text-xs font-medium bg-stone-900 text-stone-300 border border-stone-800 hover:border-stone-600 shrink-0">🌿 Nature & Science</button>
+            <button onclick="setStoreGenre('Fantasy & Magic')" class="genre-chip px-3.5 py-1.5 rounded-full text-xs font-medium bg-stone-900 text-stone-300 border border-stone-800 hover:border-stone-600 shrink-0">✨ Fantasy & Magic</button>
+            <button onclick="setStoreGenre('Sci-Fi & Cyber')" class="genre-chip px-3.5 py-1.5 rounded-full text-xs font-medium bg-stone-900 text-stone-300 border border-stone-800 hover:border-stone-600 shrink-0">🤖 Sci-Fi & Cyber</button>
+            <button onclick="setStoreGenre('Mystery & Adventure')" class="genre-chip px-3.5 py-1.5 rounded-full text-xs font-medium bg-stone-900 text-stone-300 border border-stone-800 hover:border-stone-600 shrink-0">🔍 Mystery & Adventure</button>
+        </div>
+
+        <!-- Bookstore Grid -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-8 pt-6">
+            <div id="bookstore-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Store cards injected dynamically -->
+            </div>
+        </div>
+    </main>
+
+    <!-- =====================================================================
+         INTERACTIVE OPEN-BOOK READER & GLASS INFO CARD (Wide Game Camera View!)
+    ====================================================================== -->
+    <div id="reader-modal" class="fixed inset-0 z-50 hidden bg-black/25 flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+        <div class="relative w-full max-w-4xl animate-book-open my-auto">
+            
+            <!-- Main Content Split: Left = Open Physical Book (Left & Right Pages) | Right = Frosted Glass Info Card -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
+                
+                <!-- LEFT (7 cols): Realistic Open Physical Book on Wide Game View -->
+                <div class="lg:col-span-7 flex flex-col">
+                    <!-- Hardcover Outer Binding Frame -->
+                    <div class="relative bg-[#3b1d0e] p-2 sm:p-2.5 rounded-xl shadow-[0_28px_60px_rgba(0,0,0,0.9)] border border-amber-900/60">
+                        <!-- Stacked Paper Edge Effect (Setiap halaman menggunakan nisbah portrait 3:4 seperti gambar cover) -->
+                        <div class="relative bg-[#fcf8f2] text-stone-900 rounded-lg shadow-inner border-x-4 border-b-4 border-stone-300 overflow-hidden grid grid-cols-2">
+                            
+                            <!-- Front Cover Overlay (Nisbah 3:4 portrait sama seperti saiz gambar cover anda) -->
+                            <div id="magic-cover-flap" onclick="flipCoverOpen()" class="hidden cursor-pointer absolute inset-0 z-30 flex items-center justify-center bg-[#261208]/95 backdrop-blur-sm rounded-lg shadow-2xl p-2"></div>
+
+                            <!-- Center Book Spine Crease Shadow -->
+                            <div class="absolute inset-y-0 left-1/2 -translate-x-1/2 w-7 book-crease pointer-events-none z-10"></div>
+
+                            <!-- Left Page (Halaman Kiri - Nisbah 3:4 Portrait) -->
+                            <div id="spread-left-page" class="aspect-[3/4] w-full flex flex-col justify-between bg-[#faf4ea] border-r border-stone-300/80 relative overflow-hidden">
+                                <!-- Page 1 Content Injected Here -->
+                            </div>
+
+                            <!-- Right Page (Halaman Kanan - Nisbah 3:4 Portrait) -->
+                            <div id="spread-right-page" class="aspect-[3/4] w-full flex flex-col justify-between bg-[#fcf8f2] relative overflow-hidden">
+                                <!-- Page 2 Content Injected Here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Page Navigation & Lock Status Bar -->
+                    <div class="mt-2.5 flex items-center justify-between px-3.5 py-2 rounded-xl bg-stone-950/85 border border-stone-800/90 backdrop-blur-md shadow-lg">
+                        <button id="prev-page-btn" onclick="turnPage(-1)" class="flex items-center gap-1 text-[11px] font-bold text-stone-300 hover:text-amber-300 disabled:opacity-30 transition">
+                            <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> <span id="prev-page-label">Cover</span>
+                        </button>
+                        <span id="spread-page-counter" class="text-[11px] font-semibold text-amber-300/95">
+                            Front Cover (Click Book to Open)
+                        </span>
+                        <button id="next-page-btn" onclick="turnPage(1)" class="flex items-center gap-1 text-[11px] font-bold text-amber-300 hover:text-amber-200 transition">
+                            <span id="next-page-label">Open Page 1–2</span>
+                            <i id="next-page-icon" data-lucide="book-open" class="w-3 h-3"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- RIGHT (5 cols): Compact Frosted Dark Glass Card matching the uploaded screenshot -->
+                <div class="lg:col-span-5 bg-stone-950/80 backdrop-blur-xl border border-white/15 rounded-2xl p-5 sm:p-6 flex flex-col justify-between space-y-4 shadow-[0_25px_50px_rgba(0,0,0,0.85)] relative">
+                    
+                    <!-- Top Close 'X' Circle Button -->
+                    <button onclick="closeReaderModal()" aria-label="Close preview" class="absolute top-4 right-4 w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 text-stone-300 hover:text-white flex items-center justify-center transition">
+                        <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                    </button>
+
+                    <!-- Title & Author -->
+                    <div class="pr-7">
+                        <h3 id="modal-book-title" class="font-serif-display text-2xl sm:text-3xl font-bold text-white leading-tight tracking-tight">Clever Cacti</h3>
+                        <p id="modal-book-author" class="text-xs text-stone-400 mt-1 font-medium">by Susie Williams</p>
+                    </div>
+
+                    <!-- Two-Column Metadata Grid -->
+                    <div class="grid grid-cols-2 gap-3 py-3 border-y border-white/10">
+                        <div>
+                            <span class="text-stone-400 uppercase tracking-widest text-[9px] font-bold block">Little Readers</span>
+                            <span id="modal-readers" class="text-white font-semibold text-xs sm:text-sm mt-0.5 block">Ages 4 to 7</span>
+                        </div>
+                        <div>
+                            <span class="text-stone-400 uppercase tracking-widest text-[9px] font-bold block">Reading Together</span>
+                            <span id="modal-read-time" class="text-white font-semibold text-xs sm:text-sm mt-0.5 block">~ 5 min</span>
+                        </div>
+                    </div>
+
+                    <!-- "A LITTLE REASON TO LOVE IT" Description -->
+                    <div>
+                        <span class="text-stone-400 uppercase tracking-widest text-[9px] font-bold block mb-1.5">A Little Reason to Love It</span>
+                        <p id="modal-description" class="text-xs sm:text-sm text-stone-200 leading-relaxed font-normal">
+                            Unusual shapes, bright flowers, and desert creatures make these clever plants fun to investigate.
+                        </p>
+                    </div>
+
+                    <!-- Crisp White Pill CTA Button ("Get this book ->") -->
+                    <div class="pt-1 space-y-2">
+                        <button id="modal-shelf-toggle-btn" onclick="handleModalPrimaryAction()" class="w-full py-3 px-5 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition shadow-xl bg-white hover:bg-amber-50 text-stone-950 active:scale-[0.99]">
+                            <span>Get this book</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                        <button id="modal-download-btn" onclick="downloadFreeEbookText()" class="hidden w-full py-2 px-4 rounded-xl font-semibold text-[11px] flex items-center justify-center gap-1.5 bg-white/10 hover:bg-white/15 text-emerald-300 border border-emerald-400/30 transition">
+                            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                            <span>Download Full Purchased Book (.TXT)</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- =====================================================================
+         SHOPPING CART SLIDE-OVER DRAWER
+    ====================================================================== -->
+    <div id="cart-drawer" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm flex justify-end">
+        <div class="w-full max-w-md bg-[#18120e] border-l border-amber-900/40 h-full flex flex-col justify-between p-6 shadow-2xl">
+            <div>
+                <div class="flex items-center justify-between pb-4 border-b border-stone-800">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="shopping-bag" class="w-5 h-5 text-amber-400"></i>
+                        <h3 class="font-serif-display text-xl font-bold text-amber-50">Bookstore Cart</h3>
+                    </div>
+                    <button onclick="toggleCartDrawer(false)" class="p-2 rounded-full bg-stone-800 hover:bg-stone-700 text-stone-300 transition">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <div id="cart-items-container" class="mt-4 space-y-3 max-h-[60vh] overflow-y-auto pr-1">
+                    <!-- Cart items injected here -->
+                </div>
+            </div>
+
+            <div class="pt-4 border-t border-stone-800 space-y-4">
+                <div class="flex items-center justify-between text-sm">
+                    <span class="text-stone-400">Total Amount</span>
+                    <span id="cart-total-price" class="font-serif-display text-2xl font-bold text-amber-400">RM0</span>
+                </div>
+                <button id="checkout-btn" onclick="checkoutCart()" class="w-full py-3.5 px-5 rounded-xl bg-amber-500 hover:bg-amber-400 disabled:opacity-40 text-stone-950 font-bold text-sm flex items-center justify-center gap-2 shadow-lg transition">
+                    <i data-lucide="credit-card" class="w-4 h-4"></i>
+                    <span>Complete Purchase & Unlock Books</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Banner -->
+    <div id="toast-notification" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 bg-stone-900 border border-amber-500/40 text-amber-50 px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 text-sm font-medium">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+        <span id="toast-message">Book added to your shelf!</span>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // =========================================================================
+        // 1. CURATED E-BOOK DATABASE (Sedia untuk Gambar Sendiri di GitHub: folder /images/)
+        // =========================================================================
+        // Panduan Muat Naik ke GitHub:
+        // Letakkan fail gambar anda ke dalam folder "images/" mengikut nama fail di bawah
+        // (contoh: images/pip-cover.jpg, images/pip-page1.jpg, images/pip-page2.jpg, dsb.)
+        const ALL_BOOKS = [
+            {
+                id: 'pip-tanglung-ajaib',
+                title: 'Pip & Tanglung Ajaib',
+                author: 'Pip & Oli',
+                audience: 'kids',
+                ageLabel: 'Kids • Ages 5–9',
+                genre: 'Fantasy & Magic',
+                readTime: '~ 6 mins',
+                price: 10,
+                spineColor: 'from-amber-500 via-orange-600 to-teal-900',
+                coverBg: 'from-[#07192b] via-[#0d3346] to-[#133d28]',
+                coverImg: 'images/pip-cover.jpg',
+                accentColor: '#fde047',
+                inShelf: true,
+                purchased: false,
+                description: 'Pengembaraan di Lembah Cahaya Bintang: Ikuti Pip si musang kecil bersama burung hantu Oli meneroka hutan malam bercahaya dengan tanglung emas ajaibnya.',
+                pages: [
+                    {
+                        pageImg: 'images/pip-page1.jpg',
+                        heading: 'Pengembaraan di Lembah Cahaya Bintang',
+                        text: 'Pada suatu malam yang tenang di Lembah Cahaya Bintang, Pip si musang kecil mengangkat tanglung emas ajaibnya. Cahaya hangat tanglung itu menerangi denai hutan dan memanggil kelip-kelip menari di udara.'
+                    },
+                    {
+                        pageImg: 'images/pip-page2.jpg',
+                        heading: 'Petunjuk Burung Hantu Oli',
+                        text: 'Di atas dahan pokok oak tua, sahabat baiknya Oli si burung hantu mengerdipkan mata bulatnya. "Ikut cahaya bintang paling terang di hujung lembah, Pip! Rahsia hutan sedang menanti kita."'
+                    },
+                    {
+                        pageImg: 'images/pip-page3.jpg',
+                        heading: 'Taman Cendawan Bercahaya',
+                        text: 'Setiap langkah Pip menyalakan cendawan merah dan ungu di sepanjang akar pokok, membuka jalan menuju air terjun kristal yang menyimpan lagu malam hutan.'
+                    },
+                    {
+                        pageImg: 'images/pip-page4.jpg',
+                        heading: 'Jambatan Kelip-Kelip Emas',
+                        text: 'Beratus-ratus ekor kelip-kelip berbaris membentuk jambatan bercahaya di atas sungai jernih supaya Pip dan Oli dapat menyeberang dengan selamat.'
+                    },
+                    {
+                        pageImg: 'images/pip-page5.jpg',
+                        heading: 'Bisikan Angin Lembah',
+                        text: 'Angin malam membawa bisikan merdu dari puncak bukit. Tanglung ajaib di tangan Pip berkelip tiga kali menandakan mereka semakin hampir ke destinasi.'
+                    },
+                    {
+                        pageImg: 'images/pip-page6.jpg',
+                        heading: 'Tasik Cermin Bulan',
+                        text: 'Di tengah lembah terbentang Tasik Cermin Bulan yang memantulkan ribuan bintang. Di dasar airnya kelihatan kilauan kunci kristal.'
+                    },
+                    {
+                        pageImg: 'images/pip-page7.jpg',
+                        heading: 'Nyanyian Penjaga Rimba',
+                        text: 'Seekor rusa putih bertanduk perak muncul dari balik kabus lembut, tersenyum melihat keberanian Pip menjaga cahaya tanglung sepanjang malam.'
+                    },
+                    {
+                        pageImg: 'images/pip-page8.jpg',
+                        heading: 'Pintu Rahsia Pokok Purba',
+                        text: 'Apabila cahaya tanglung Pip menyentuh batang pokok purba, pintu kayu berukir bintang terbuka perlahan memperlihatkan perpustakaan rahsia hutan.'
+                    },
+                    {
+                        pageImg: 'images/pip-page9.jpg',
+                        heading: 'Pesta Cahaya Bintang',
+                        text: 'Semua penghuni Lembah Cahaya Bintang berkumpul meraikan kejayaan Pip dan Oli dengan tarian cahaya serta buah beri manis.'
+                    },
+                    {
+                        pageImg: 'images/pip-page10.jpg',
+                        heading: 'Pulang Dengan Hati Gembira',
+                        text: 'Menjelang fajar menyingsing, Pip dan Oli pulang ke sarang mereka dengan kenangan indah—mengetahui cahaya persahabatan sentiasa menerangi malam.'
+                    }
+                ]
+            },
+            {
+                id: 'clever-cacti',
+                title: 'Clever Cacti',
+                author: 'RHS Botanical Press',
+                audience: 'kids',
+                ageLabel: 'Kids • Ages 6–11',
+                genre: 'Nature & Science',
+                readTime: '~ 7 mins',
+                price: 10,
+                spineColor: 'from-lime-500 to-emerald-700',
+                coverBg: 'from-lime-100 via-emerald-100 to-amber-100',
+                coverImg: 'images/clever-cacti-cover.jpg',
+                lightCover: true,
+                accentColor: '#15803d',
+                inShelf: true,
+                purchased: false,
+                description: 'Unusual shapes, bright flowers, and desert creatures make these clever plants fun to investigate.',
+                pages: [
+                    {
+                        pageImg: 'images/clever-cacti-page1.jpg',
+                        heading: 'Desert Water Tanks',
+                        text: 'Cacti are nature’s cleverest water tanks! Instead of wide leaves that lose moisture in the heat, they have thick green stems that expand after rare desert rainstorms.'
+                    },
+                    {
+                        pageImg: 'images/clever-cacti-page2.jpg',
+                        heading: 'Why Spines Matter',
+                        text: 'Their sharp spines do two amazing jobs: they protect the juicy stem from thirsty desert animals and cast tiny shadows that cool the plant down.'
+                    },
+                    {
+                        pageImg: 'images/clever-cacti-page3.jpg',
+                        heading: 'Midnight Blossoms',
+                        text: 'Some cacti wait until cool starry nights to open giant glowing flowers, inviting desert bats and moths to sip sweet nectar.'
+                    }
+                ]
+            },
+            {
+                id: 'neon-nebula',
+                title: 'Chronicles of Neon Nebula',
+                author: 'Kaelen Vance',
+                audience: 'teens',
+                ageLabel: 'Teens • Ages 13–18',
+                genre: 'Sci-Fi & Cyber',
+                readTime: '~ 14 mins',
+                price: 10,
+                spineColor: 'from-indigo-600 to-purple-900',
+                coverBg: 'from-slate-900 via-indigo-950 to-fuchsia-950',
+                coverImg: 'images/neon-nebula-cover.jpg',
+                accentColor: '#38bdf8',
+                inShelf: true,
+                purchased: false,
+                description: 'In 2184, a teenage star-mapper intercepts a rogue signal coming from a moon that officially vanished fifty years ago.',
+                pages: [
+                    {
+                        pageImg: 'images/neon-nebula-page1.jpg',
+                        heading: 'Signal on Frequency 9',
+                        text: 'Maya adjusted her headset as static crackled across the orbital deck. Nobody transmitted on Frequency 9 anymore—especially not from the abandoned Sector 7 crater.'
+                    },
+                    {
+                        pageImg: 'images/neon-nebula-page2.jpg',
+                        heading: 'The Ghost Coordinates',
+                        text: 'When she decoded the pulse, it wasn’t random noise. It was a prime-number sequence paired with a holographic star map leading straight into the Neon Nebula.'
+                    },
+                    {
+                        pageImg: 'images/neon-nebula-page3.jpg',
+                        heading: 'Launch Window',
+                        text: 'With only six hours before the solar flare hit, Maya and her co-pilot Leo fired up the ion thrusters of their courier skiff, ready to uncover the truth.'
+                    }
+                ]
+            },
+            {
+                id: 'tremendous-trees',
+                title: 'Tremendous Trees',
+                author: 'Susie Williams',
+                audience: 'kids',
+                ageLabel: 'Kids • Ages 5–10',
+                genre: 'Nature & Science',
+                readTime: '~ 6 mins',
+                price: 10,
+                spineColor: 'from-emerald-500 to-green-800',
+                coverBg: 'from-amber-50 via-lime-100 to-emerald-200',
+                coverImg: 'images/tremendous-trees-cover.jpg',
+                lightCover: true,
+                accentColor: '#166534',
+                inShelf: true,
+                purchased: false,
+                description: 'Explore towering redwoods and secret underground root networks where trees whisper and share nutrients with their neighbors.',
+                pages: [
+                    {
+                        pageImg: 'images/tremendous-trees-page1.jpg',
+                        heading: 'Giants of the Earth',
+                        text: 'Some trees grow taller than thirty-story skyscrapers and live for over two thousand years, watching centuries pass beneath their branches.'
+                    },
+                    {
+                        pageImg: 'images/tremendous-trees-page2.jpg',
+                        heading: 'The Wood Wide Web',
+                        text: 'Underneath the soil, tree roots connect with friendly fungi to send warning signals about insects and share sugar with younger saplings.'
+                    }
+                ]
+            },
+            {
+                id: 'shadow-academy',
+                title: 'The Clockwork Cipher',
+                author: 'Elena Sterling',
+                audience: 'teens',
+                ageLabel: 'Teens • Ages 12–17',
+                genre: 'Mystery & Adventure',
+                readTime: '~ 12 mins',
+                price: 10,
+                spineColor: 'from-rose-600 to-red-900',
+                coverBg: 'from-stone-900 via-rose-950 to-amber-950',
+                coverImg: 'images/clockwork-cipher-cover.jpg',
+                accentColor: '#fb7185',
+                inShelf: true,
+                purchased: false,
+                description: 'Four high-school puzzle solvers inherit keys to a hidden library beneath London where every book unlocks a real-world riddle.',
+                pages: [
+                    {
+                        pageImg: 'images/clockwork-cipher-page1.jpg',
+                        heading: 'The Brass Envelope',
+                        text: 'Inside the antique brass envelope lay a single silver gear and a note: "Meet at the Observatory clock when the thirteenth chime rings."'
+                    },
+                    {
+                        pageImg: 'images/clockwork-cipher-page2.jpg',
+                        heading: 'Behind the Bookcase',
+                        text: 'Turning the third volume of Astronomy to the left triggered a soft click, revealing a spiral staircase lit by warm amber lanterns.'
+                    }
+                ]
+            },
+            {
+                id: 'animals-undergrowth',
+                title: 'Animals in the Undergrowth',
+                author: 'Susie Williams',
+                audience: 'kids',
+                ageLabel: 'Kids • Ages 4–8',
+                genre: 'Nature & Science',
+                readTime: '~ 5 mins',
+                price: 10,
+                spineColor: 'from-teal-500 to-cyan-800',
+                coverBg: 'from-teal-900 via-emerald-900 to-stone-950',
+                coverImg: 'images/animals-undergrowth-cover.jpg',
+                accentColor: '#2dd4bf',
+                inShelf: true,
+                purchased: false,
+                description: 'Spotting hidden hedgehogs, stoats, and beetles turns every woodland walk into an exciting nature treasure hunt.',
+                pages: [
+                    {
+                        pageImg: 'images/animals-undergrowth-page1.jpg',
+                        heading: 'Rustles in the Leaves',
+                        text: 'Beneath the ferns and fallen oak leaves lives a bustling miniature city of hedgehogs, badgers, and shiny emerald beetles.'
+                    },
+                    {
+                        pageImg: 'images/animals-undergrowth-page2.jpg',
+                        heading: 'Winter Coats',
+                        text: 'When snow blankets the forest floor, the clever stoat changes its brown summer fur into pure snowy white so it can vanish into the winter drift.'
+                    }
+                ]
+            },
+            {
+                id: 'pixel-dragons',
+                title: 'Glitch & The Sky Citadel',
+                author: 'Marcus Chen',
+                audience: 'teens',
+                ageLabel: 'Teens • Ages 12–16',
+                genre: 'Fantasy & Magic',
+                readTime: '~ 15 mins',
+                price: 10,
+                spineColor: 'from-sky-500 to-blue-800',
+                coverBg: 'from-sky-950 via-blue-900 to-indigo-950',
+                coverImg: 'images/pixel-dragons-cover.jpg',
+                accentColor: '#38bdf8',
+                inShelf: true,
+                purchased: false,
+                description: 'When a young coder accidentally compiles an ancient spellbook into his VR game, mythical sky-dragons soar over his hometown.',
+                pages: [
+                    {
+                        pageImg: 'images/pixel-dragons-page1.jpg',
+                        heading: 'Syntax Error: Magic',
+                        text: 'Devon stared at his monitor. Line 404 wasn’t JavaScript anymore—glowing golden runes were scrolling across his terminal faster than he could hit Escape.'
+                    },
+                    {
+                        pageImg: 'images/pixel-dragons-page2.jpg',
+                        heading: 'Wings Above the Roof',
+                        text: 'A sudden gust rattled his bedroom window. Outside, a dragon woven from shimmering blue pixels perched on the neighborhood water tower.'
+                    }
+                ]
+            },
+            {
+                id: 'insects-flowers',
+                title: 'Insects in the Flowers',
+                author: 'Susie Williams',
+                audience: 'kids',
+                ageLabel: 'Kids • Ages 4–8',
+                genre: 'Nature & Science',
+                readTime: '~ 5 mins',
+                price: 10,
+                spineColor: 'from-fuchsia-500 to-purple-800',
+                coverBg: 'from-pink-100 via-rose-100 to-amber-100',
+                coverImg: 'images/insects-flowers-cover.jpg',
+                lightCover: true,
+                accentColor: '#be185d',
+                inShelf: false,
+                purchased: false,
+                description: 'Zoom into a colorful meadow where fuzzy bumblebees and painted lady butterflies help gardens bloom.',
+                pages: [
+                    {
+                        pageImg: 'images/insects-flowers-page1.jpg',
+                        heading: 'Busy Meadow Pilots',
+                        text: 'With a cheerful buzz, fuzzy bumblebees land on bright pink petals to drink sweet nectar and carry golden pollen from blossom to blossom.'
+                    }
+                ]
+            },
+            // Bookstore Paid E-Books users can purchase to unlock on their shelf!
+            {
+                id: 'starlight-skate',
+                title: 'Solar Skaters of Titan',
+                author: 'Zara Lin',
+                audience: 'teens',
+                ageLabel: 'Teens • Ages 13–18',
+                genre: 'Sci-Fi & Cyber',
+                readTime: '~ 11 mins',
+                price: 10,
+                spineColor: 'from-amber-500 to-yellow-700',
+                coverBg: 'from-amber-950 via-orange-950 to-stone-950',
+                coverImg: 'images/solar-skaters-cover.jpg',
+                accentColor: '#fbbf24',
+                inShelf: false,
+                purchased: false,
+                description: 'Zero-gravity hoverboard racers compete across Saturn’s icy methane lakes to save their floating colony from shutdown.',
+                pages: [
+                    {
+                        pageImg: 'images/solar-skaters-page1.jpg',
+                        heading: 'Ice-Ring Qualifier',
+                        text: 'Sparks of blue plasma trailed behind Nova’s magnetic board as she banked sharply around the frozen canyon wall.'
+                    }
+                ]
+            },
+            {
+                id: 'ocean-glow',
+                title: 'Bioluminescent Deep',
+                author: 'Dr. Aris Thorne',
+                audience: 'kids',
+                ageLabel: 'Kids • Ages 7–11',
+                genre: 'Nature & Science',
+                readTime: '~ 8 mins',
+                price: 10,
+                spineColor: 'from-cyan-500 to-blue-700',
+                coverBg: 'from-cyan-950 via-teal-950 to-slate-950',
+                coverImg: 'images/bioluminescent-deep-cover.jpg',
+                accentColor: '#22d3ee',
+                inShelf: false,
+                purchased: false,
+                description: 'Dive deep into the midnight ocean where jellyfish, anglerfish, and plankton glow like underwater constellations.',
+                pages: [
+                    {
+                        pageImg: 'images/bioluminescent-deep-page1.jpg',
+                        heading: 'Living Nightlights',
+                        text: 'Far below where sunlight reaches, deep-sea creatures mix special natural chemicals inside their bodies to glow electric blue and neon green.'
+                    }
+                ]
+            },
+            {
+                id: 'potion-bakery',
+                title: 'The Midnight Macaron Guild',
+                author: 'Clara Bellweather',
+                audience: 'teens',
+                ageLabel: 'Teens • Ages 12–17',
+                genre: 'Fantasy & Magic',
+                readTime: '~ 13 mins',
+                price: 10,
+                spineColor: 'from-violet-500 to-fuchsia-800',
+                coverBg: 'from-purple-950 via-fuchsia-950 to-stone-950',
+                coverImg: 'images/macaron-guild-cover.jpg',
+                accentColor: '#e879f9',
+                inShelf: false,
+                purchased: false,
+                description: 'By day it’s a cozy Paris pastry shop; by night, apprentice bakers whip up levitation soufflés and courage croissants.',
+                pages: [
+                    {
+                        pageImg: 'images/macaron-guild-page1.jpg',
+                        heading: 'A Pinch of Stardust',
+                        text: 'Rule number one in the guild kitchen: never sneeze near the powdered moon-sugar unless you want the sourdough loaves floating near the chandelier.'
+                    }
+                ]
+            },
+            {
+                id: 'jungle-detectives',
+                title: 'The Compass of Lost Islands',
+                author: 'Leo & Maya',
+                audience: 'kids',
+                ageLabel: 'Kids • Ages 7–11',
+                genre: 'Mystery & Adventure',
+                readTime: '~ 9 mins',
+                price: 10,
+                spineColor: 'from-orange-500 to-amber-700',
+                coverBg: 'from-amber-100 via-orange-100 to-yellow-200',
+                coverImg: 'images/lost-islands-cover.jpg',
+                lightCover: true,
+                accentColor: '#c2410c',
+                inShelf: false,
+                purchased: false,
+                description: 'Follow two siblings and their talking parrot as they decode ancient map clues across tropical islands.',
+                pages: [
+                    {
+                        pageImg: 'images/lost-islands-page1.jpg',
+                        heading: 'The Spinning Needle',
+                        text: 'Instead of pointing North, Grandpa’s brass compass always pointed toward the nearest unsolved secret!'
+                    }
+                ]
+            }
+        ];
+
+        // Pembantu imej fallback supaya paparan tetap cantik sebelum anda muat naik fail ke GitHub
+        function getFallbackImgUrl(label, bgHex = '1c1917', textHex = 'fde68a') {
+            return `https://placehold.co/600x800/${bgHex}/${textHex}?text=${encodeURIComponent(label)}`;
+        }
+
+        // =========================================================================
+        // 2. APPLICATION STATE
+        // =========================================================================
+        let currentView = 'shelf'; // 'shelf' | 'store'
+        let shelfAudienceFilter = 'all'; // 'all' | 'kids' | 'teens'
+        let featuredBookId = null; // Permulaan: semua buku berdiri tegak tunjuk bahagian tepi (spine) sahaja
+        let storeAudienceFilter = 'all';
+        let storeGenreFilter = 'All';
+        let cartIds = [];
+        let activeModalBookId = null;
+        let isBookCoverOpen = false; // False = menunjukkan kulit hadapan buku; True = terbuka ke Halaman 1 & 2
+        let currentSpreadIndex = 0; // 0 = Pages 1 & 2 (Free Preview), 1+ = Full Book
+
+        // =========================================================================
+        // 3. HELPER & NAVIGATION FUNCTIONS
+        // =========================================================================
+        function getShelfBooks() {
+            return ALL_BOOKS.filter(b => b.inShelf);
+        }
+
+        function switchView(view) {
+            currentView = view;
+            const shelfEl = document.getElementById('view-shelf');
+            const storeEl = document.getElementById('view-store');
+            const shelfBtn = document.getElementById('nav-shelf-btn');
+            const storeBtn = document.getElementById('nav-store-btn');
+
+            if (view === 'shelf') {
+                shelfEl.classList.remove('hidden');
+                storeEl.classList.add('hidden');
+                shelfBtn.className = 'flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-amber-500 text-stone-950 shadow-md';
+                storeBtn.className = 'flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all text-stone-300 hover:text-white';
+                renderBookshelf();
+            } else {
+                shelfEl.classList.add('hidden');
+                storeEl.classList.remove('hidden');
+                storeBtn.className = 'flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-amber-500 text-stone-950 shadow-md';
+                shelfBtn.className = 'flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all text-stone-300 hover:text-white';
+                renderBookstore();
+            }
+            lucide.createIcons();
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast-notification');
+            const msgEl = document.getElementById('toast-message');
+            if (!toast || !msgEl) return;
+            msgEl.textContent = msg;
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3000);
+        }
+
+        // =========================================================================
+        // 4. INTERACTIVE 3D BOOKSHELF RENDERING
+        // =========================================================================
+        function hoverBook(id) {
+            if (featuredBookId === id) return;
+            featuredBookId = id;
+            renderBookshelf();
+        }
+
+        function resetShelfHover() {
+            if (featuredBookId === null) return;
+            featuredBookId = null;
+            renderBookshelf();
+        }
+
+        function renderBookshelf() {
+            const stage = document.getElementById('bookshelf-stage');
+            if (!stage) return;
+
+            const books = getShelfBooks();
+            const badge = document.getElementById('shelf-count-badge');
+            if (badge) badge.textContent = books.length;
+
+            if (!books.some(b => b.id === featuredBookId)) {
+                featuredBookId = null;
+            }
+
+            stage.innerHTML = books.map(book => {
+                const isFeatured = book.id === featuredBookId;
+
+                if (isFeatured) {
+                    const fallbackCover = getFallbackImgUrl(book.title, '1e293b', 'fef08a');
+
+                    return `
+                        <div data-book-id="${book.id}"
+                             onclick="openReaderModal('${book.id}', event)"
+                             ondragstart="return false;"
+                             class="featured-cover-card relative aspect-[3/4] h-[215px] sm:h-[250px] rounded-r-xl rounded-l-sm bg-gradient-to-br ${book.coverBg} overflow-hidden cursor-pointer shrink-0 border-l-4 border-stone-950/50">
+                            <img src="${book.coverImg}"
+                                 alt="${book.title}"
+                                 onerror="this.onerror=null;this.src='${fallbackCover}';"
+                                 class="w-full h-full object-cover pointer-events-none select-none" />
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/25 flex flex-col justify-between p-2.5">
+                                <div class="flex items-center justify-between text-[9px] font-bold uppercase tracking-wider text-white">
+                                    <span class="px-1.5 py-0.5 rounded bg-black/50 backdrop-blur-sm">${book.audience === 'kids' ? 'Kids' : 'Teens'}</span>
+                                    <span class="px-1.5 py-0.5 rounded bg-amber-500 text-stone-950 font-extrabold">RM${book.price}</span>
+                                </div>
+                                <div class="text-center">
+                                    <span class="inline-block px-2.5 py-0.5 rounded-full text-[9px] font-bold bg-white/95 text-stone-950 shadow">
+                                        Click to Open
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                return `
+                    <div data-book-id="${book.id}"
+                         onmouseenter="hoverBook('${book.id}')"
+                         onclick="openReaderModal('${book.id}', event)"
+                         ondragstart="return false;"
+                         class="book-spine w-9 sm:w-11 h-[200px] sm:h-[235px] rounded-t-md rounded-b-[2px] bg-gradient-to-b ${book.spineColor} flex items-center justify-center py-4 px-1 shrink-0 border-x border-white/10">
+                        <span class="font-serif-display font-bold text-xs sm:text-sm tracking-wide text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.85)] truncate max-h-[175px]">
+                            ${book.title}
+                        </span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // =========================================================================
+        // 5. SLOW-MOTION MAGIC FLYING BOOK & OPEN READER MODAL
+        // =========================================================================
+        function openReaderModal(bookId, event) {
+            const book = ALL_BOOKS.find(b => b.id === bookId);
+            if (!book) return;
+
+            activeModalBookId = bookId;
+            isBookCoverOpen = false; // Kekal tutup pada kulit hadapan buku terlebih dahulu
+            currentSpreadIndex = 0;
+
+            const modal = document.getElementById('reader-modal');
+            const cardContainer = modal.firstElementChild;
+
+            // Populate Glass Info Card
+            document.getElementById('modal-book-title').textContent = book.title;
+            document.getElementById('modal-book-author').textContent = `by ${book.author}`;
+            document.getElementById('modal-readers').textContent = book.ageLabel.replace(/^.*?•\s*/, '');
+            document.getElementById('modal-read-time').textContent = book.readTime;
+            document.getElementById('modal-description').textContent = book.description;
+
+            const actionBtn = document.getElementById('modal-shelf-toggle-btn');
+            const downloadBtn = document.getElementById('modal-download-btn');
+
+            if (book.purchased) {
+                actionBtn.innerHTML = `<span>Purchased • Read Full Book</span> <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>`;
+                downloadBtn.classList.remove('hidden');
+            } else {
+                actionBtn.innerHTML = `<span>Get this book • RM${book.price}</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>`;
+                downloadBtn.classList.add('hidden');
+            }
+
+            renderModalSpread();
+
+            // Show Modal with Slow-Motion Magical Lift from the Table
+            modal.classList.remove('hidden');
+
+            const sourceEl = event?.currentTarget || document.querySelector(`[data-book-id="${bookId}"]`);
+            if (sourceEl && cardContainer) {
+                const rect = sourceEl.getBoundingClientRect();
+                const startX = rect.left + rect.width / 2 - window.innerWidth / 2;
+                const startY = rect.top + rect.height / 2 - window.innerHeight / 2;
+
+                cardContainer.style.transition = 'none';
+                cardContainer.style.transform = `translate(${startX}px, ${startY}px) scale(0.32) rotateY(-15deg)`;
+                cardContainer.style.opacity = '0.9';
+
+                requestAnimationFrame(() => {
+                    cardContainer.style.transition = 'transform 1.05s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.65s ease';
+                    cardContainer.style.transform = 'translate(0px, 0px) scale(1) rotateY(0deg)';
+                    cardContainer.style.opacity = '1';
+                });
+            }
+
+            // Show Front Cover closed first using <img> with exact 3:4 portrait aspect ratio — do NOT auto-flip to Page 1
+            const flap = document.getElementById('magic-cover-flap');
+            if (flap) {
+                const fallbackCover = getFallbackImgUrl(book.title, '0f172a', 'fef08a');
+                flap.className = `cursor-pointer absolute inset-0 z-30 flex items-center justify-center rounded-lg overflow-hidden shadow-2xl bg-[#1a0d06] p-2 sm:p-3 transition-transform duration-300 hover:brightness-105`;
+                flap.innerHTML = `
+                    <div class="relative h-full aspect-[3/4] rounded-r-lg rounded-l-sm overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.85)] border-l-4 border-stone-950/60 bg-gradient-to-br ${book.coverBg}">
+                        <img src="${book.coverImg}"
+                             alt="${book.title} Cover"
+                             onerror="this.onerror=null;this.src='${fallbackCover}';"
+                             class="w-full h-full object-cover pointer-events-none select-none" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/20 flex flex-col items-center justify-end p-3">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold bg-white/95 text-stone-950 shadow-lg">
+                                <i data-lucide="book-open" class="w-3.5 h-3.5 text-amber-600"></i>
+                                <span>Selak Buku</span>
+                            </span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            lucide.createIcons();
+        }
+
+        function flipCoverOpen() {
+            if (isBookCoverOpen) return;
+            isBookCoverOpen = true;
+
+            const flap = document.getElementById('magic-cover-flap');
+            if (flap) {
+                flap.classList.remove('cursor-pointer', 'hover:brightness-105');
+                flap.classList.add('pointer-events-none', 'animate-manual-peel');
+                setTimeout(() => {
+                    flap.classList.add('hidden');
+                }, 850);
+            }
+            renderModalSpread();
+        }
+
+        function closeBookCover() {
+            const book = ALL_BOOKS.find(b => b.id === activeModalBookId);
+            if (!book) return;
+            isBookCoverOpen = false;
+            currentSpreadIndex = 0;
+
+            const flap = document.getElementById('magic-cover-flap');
+            if (flap) {
+                flap.className = `cursor-pointer absolute inset-0 z-30 flex items-center justify-center rounded-lg overflow-hidden shadow-2xl bg-[#1a0d06] p-2 sm:p-3 transition-transform duration-300 hover:brightness-105`;
+            }
+            renderModalSpread();
+        }
+        function renderModalSpread() {
+            const book = ALL_BOOKS.find(b => b.id === activeModalBookId);
+            if (!book) return;
+
+            const leftEl = document.getElementById('spread-left-page');
+            const rightEl = document.getElementById('spread-right-page');
+            const counterEl = document.getElementById('spread-page-counter');
+            const prevBtn = document.getElementById('prev-page-btn');
+            const prevLabel = document.getElementById('prev-page-label');
+            const nextLabel = document.getElementById('next-page-label');
+            const nextIcon = document.getElementById('next-page-icon');
+
+            const leftPageIndex = currentSpreadIndex * 2;
+            const rightPageIndex = leftPageIndex + 1;
+
+            const p1 = book.pages[leftPageIndex] || {
+                pageImg: `images/${book.id}-page${leftPageIndex + 1}.jpg`,
+                heading: book.title,
+                text: book.description
+            };
+            const p2 = book.pages[rightPageIndex] || {
+                pageImg: `images/${book.id}-page${rightPageIndex + 1}.jpg`,
+                heading: 'Continue the Adventure',
+                text: `Unlock the complete edition of "${book.title}" for RM${book.price} to read every chapter and illustration!`
+            };
+
+            const fallbackP1 = getFallbackImgUrl(`${book.title} - Page ${leftPageIndex + 1}`, 'faf4ea', '44403c');
+            const fallbackP2 = getFallbackImgUrl(`${book.title} - Page ${rightPageIndex + 1}`, 'fcf8f2', '44403c');
+
+            // Setiap halaman menggunakan nisbah ukuran portrait 3:4 yang sama seperti saiz gambar cover anda
+            leftEl.className = 'relative aspect-[3/4] w-full bg-[#faf4ea] border-r border-stone-300/80 overflow-hidden flex flex-col justify-between';
+            leftEl.innerHTML = `
+                <img src="${p1.pageImg || `images/${book.id}-page${leftPageIndex + 1}.jpg`}"
+                     alt="${book.title} Page ${leftPageIndex + 1}"
+                     onerror="this.onerror=null;this.src='${fallbackP1}';"
+                     class="w-full h-full object-cover select-none" />
+                <span class="absolute bottom-2 left-2.5 px-2 py-0.5 rounded bg-black/55 text-white text-[10px] font-bold backdrop-blur-sm">
+                    Page ${leftPageIndex + 1}
+                </span>
+            `;
+
+            rightEl.className = 'relative aspect-[3/4] w-full bg-[#fcf8f2] overflow-hidden flex flex-col justify-between';
+            rightEl.innerHTML = `
+                <img src="${p2.pageImg || `images/${book.id}-page${rightPageIndex + 1}.jpg`}"
+                     alt="${book.title} Page ${rightPageIndex + 1}"
+                     onerror="this.onerror=null;this.src='${fallbackP2}';"
+                     class="w-full h-full object-cover select-none" />
+                <span class="absolute bottom-2 right-2.5 px-2 py-0.5 rounded bg-black/55 text-white text-[10px] font-bold backdrop-blur-sm">
+                    Page ${rightPageIndex + 1}
+                </span>
+            `;
+
+            if (!isBookCoverOpen) {
+                prevBtn.disabled = true;
+                if (prevLabel) prevLabel.textContent = 'Front Cover';
+                counterEl.textContent = 'Kulit Buku (Klik untuk Selak)';
+                nextLabel.textContent = 'Selak Halaman 1–2';
+                nextIcon.setAttribute('data-lucide', 'book-open');
+            } else {
+                prevBtn.disabled = false;
+                if (prevLabel) prevLabel.textContent = currentSpreadIndex === 0 ? 'Tutup Cover' : 'Halaman Sebelum';
+                if (book.purchased) {
+                    counterEl.textContent = `Halaman ${leftPageIndex + 1}–${Math.min(rightPageIndex + 1, book.pages.length)} daripada ${book.pages.length} (Dibuka)`;
+                    nextLabel.textContent = rightPageIndex + 1 >= book.pages.length ? 'Halaman Akhir' : 'Halaman Seterusnya';
+                    nextIcon.setAttribute('data-lucide', 'arrow-right');
+                } else {
+                    counterEl.textContent = `Halaman 1–2 (Pratonton Percuma • ${book.pages.length} Halaman Penuh)`;
+                    nextLabel.textContent = `Baca Halaman 3–${book.pages.length} (RM${book.price})`;
+                    nextIcon.setAttribute('data-lucide', 'lock');
+                }
+            }
+            lucide.createIcons();
+        }
+
+        function turnPage(delta) {
+            const book = ALL_BOOKS.find(b => b.id === activeModalBookId);
+            if (!book) return;
+
+            // Jika buku masih tertutup pada kulit hadapan, selak buka ke Halaman 1–2
+            if (!isBookCoverOpen && delta > 0) {
+                flipCoverOpen();
+                return;
+            }
+
+            // Jika di Halaman 1–2 dan tekan ke belakang, tutup semula ke kulit hadapan
+            if (isBookCoverOpen && currentSpreadIndex === 0 && delta < 0) {
+                closeBookCover();
+                return;
+            }
+
+            if (delta > 0 && !book.purchased) {
+                showToast(`Unlock "${book.title}" for RM${book.price} to read Page 3 and beyond!`);
+                addToCart(book.id);
+                closeReaderModal();
+                toggleCartDrawer(true);
+                return;
+            }
+
+            const maxSpread = Math.max(0, Math.ceil(book.pages.length / 2) - 1);
+            currentSpreadIndex = Math.min(maxSpread, Math.max(0, currentSpreadIndex + delta));
+            renderModalSpread();
+        }
+
+        function closeReaderModal() {
+            const modal = document.getElementById('reader-modal');
+            if (!modal || modal.classList.contains('hidden')) return;
+
+            const cardContainer = modal.firstElementChild;
+            const bookId = activeModalBookId;
+            const targetEl = document.querySelector(`[data-book-id="${bookId}"]`);
+
+            // Tutup semula kulit buku sebelum melayang turun kembali ke tempat asal
+            const flap = document.getElementById('magic-cover-flap');
+            if (flap) {
+                flap.classList.remove('hidden', 'animate-manual-peel', 'pointer-events-none');
+            }
+
+            if (targetEl && cardContainer) {
+                const rect = targetEl.getBoundingClientRect();
+                const endX = rect.left + rect.width / 2 - window.innerWidth / 2;
+                const endY = rect.top + rect.height / 2 - window.innerHeight / 2;
+
+                cardContainer.style.transition = 'transform 0.95s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.55s ease 0.35s';
+                cardContainer.style.transform = `translate(${endX}px, ${endY}px) scale(0.26) rotateY(75deg)`;
+                cardContainer.style.opacity = '0';
+
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    cardContainer.style.transition = 'none';
+                    cardContainer.style.transform = '';
+                    cardContainer.style.opacity = '';
+                    activeModalBookId = null;
+                    isBookCoverOpen = false;
+                    // Kembalikan buku berdiri tegak pada bahagian tepi (spine)
+                    featuredBookId = null;
+                    renderBookshelf();
+                }, 920);
+            } else {
+                modal.classList.add('hidden');
+                activeModalBookId = null;
+                isBookCoverOpen = false;
+                featuredBookId = null;
+                renderBookshelf();
+            }
+        }
+
+        function handleModalPrimaryAction() {
+            const book = ALL_BOOKS.find(b => b.id === activeModalBookId);
+            if (!book) return;
+
+            if (book.purchased) {
+                if (!isBookCoverOpen) {
+                    flipCoverOpen();
+                } else {
+                    turnPage(1);
+                }
+            } else {
+                addToCart(book.id);
+                closeReaderModal();
+                toggleCartDrawer(true);
+            }
+        }
+
+        function downloadFreeEbookText() {
+            const book = ALL_BOOKS.find(b => b.id === activeModalBookId);
+            if (!book) return;
+
+            const content = `${book.title}\nby ${book.author}\n\n` +
+                book.pages.map((p, i) => `--- Page ${i + 1}: ${p.heading} ---\n${p.text}`).join('\n\n');
+
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${book.id}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast(`Downloaded "${book.title}"!`);
+        }
+
+        // =========================================================================
+        // 6. FULL BOOKSTORE & SHOPPING CART LOGIC
+        // =========================================================================
+        function setStoreFilter(filter) {
+            storeAudienceFilter = filter;
+            document.querySelectorAll('.store-tab').forEach(btn => {
+                btn.className = 'store-tab py-2 rounded-lg text-xs font-semibold bg-stone-800 text-stone-300 hover:bg-stone-700 transition';
+            });
+            const activeTab = document.getElementById(`store-tab-${filter}`);
+            if (activeTab) {
+                activeTab.className = 'store-tab py-2 rounded-lg text-xs font-bold bg-amber-500 text-stone-950 transition';
+            }
+            renderBookstore();
+        }
+
+        function setStoreGenre(genre) {
+            storeGenreFilter = genre;
+            document.querySelectorAll('.genre-chip').forEach(chip => {
+                const isMatch = chip.textContent.includes(genre) || (genre === 'All' && chip.textContent.includes('All Genres'));
+                chip.className = isMatch
+                    ? 'genre-chip px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-400/20 text-amber-300 border border-amber-400/40 shrink-0'
+                    : 'genre-chip px-3.5 py-1.5 rounded-full text-xs font-medium bg-stone-900 text-stone-300 border border-stone-800 hover:border-stone-600 shrink-0';
+            });
+            renderBookstore();
+        }
+
+        function renderBookstore() {
+            const grid = document.getElementById('bookstore-grid');
+            if (!grid) return;
+
+            const query = (document.getElementById('store-search-input')?.value || '').toLowerCase().trim();
+
+            const filtered = ALL_BOOKS.filter(book => {
+                const matchesAudience = storeAudienceFilter === 'all' || book.audience === storeAudienceFilter;
+                const matchesGenre = storeGenreFilter === 'All' || book.genre === storeGenreFilter;
+                const matchesQuery = !query ||
+                    book.title.toLowerCase().includes(query) ||
+                    book.author.toLowerCase().includes(query) ||
+                    book.genre.toLowerCase().includes(query);
+                return matchesAudience && matchesGenre && matchesQuery;
+            });
+
+            grid.innerHTML = filtered.map(book => {
+                const inCart = cartIds.includes(book.id);
+                const fallbackCover = getFallbackImgUrl(book.title, '1e293b', 'fef08a');
+                return `
+                    <div class="bg-stone-900/90 border border-stone-800 hover:border-amber-500/40 rounded-2xl overflow-hidden flex flex-col justify-between transition shadow-lg">
+                        <div>
+                            <div onclick="openReaderModal('${book.id}')" class="aspect-[3/4] w-full bg-gradient-to-br ${book.coverBg} relative cursor-pointer group overflow-hidden">
+                                <img src="${book.coverImg}"
+                                     alt="${book.title} Cover"
+                                     onerror="this.onerror=null;this.src='${fallbackCover}';"
+                                     class="w-full h-full object-cover transform group-hover:scale-105 transition duration-300" />
+                                <span class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-bold bg-black/60 text-amber-200 backdrop-blur-sm">
+                                    ${book.ageLabel}
+                                </span>
+                                <span class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-extrabold bg-amber-500 text-stone-950 shadow">
+                                    RM${book.price}
+                                </span>
+                            </div>
+                            <div class="p-4">
+                                <span class="text-[11px] font-semibold text-amber-400/90">${book.genre}</span>
+                                <h3 class="font-serif-display text-lg font-bold text-white mt-0.5">${book.title}</h3>
+                                <p class="text-xs text-stone-400">by ${book.author}</p>
+                                <p class="text-xs text-stone-300 mt-2 line-clamp-2 leading-relaxed">${book.description}</p>
+                            </div>
+                        </div>
+                        <div class="p-4 pt-0 flex items-center gap-2">
+                            <button onclick="openReaderModal('${book.id}')" class="flex-1 py-2.5 px-3 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-semibold transition">
+                                Preview P.1–2
+                            </button>
+                            ${book.purchased ? `
+                                <button onclick="openReaderModal('${book.id}')" class="flex-1 py-2.5 px-3 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-bold">
+                                    Owned ✓
+                                </button>
+                            ` : `
+                                <button onclick="addToCart('${book.id}')" class="flex-1 py-2.5 px-3 rounded-xl ${inCart ? 'bg-amber-600 text-white' : 'bg-amber-500 hover:bg-amber-400 text-stone-950'} text-xs font-bold transition">
+                                    ${inCart ? 'In Cart ✓' : `Buy RM${book.price}`}
+                                </button>
+                            `}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function addToCart(bookId) {
+            const book = ALL_BOOKS.find(b => b.id === bookId);
+            if (!book || book.purchased) return;
+            if (!cartIds.includes(bookId)) {
+                cartIds.push(bookId);
+                showToast(`Added "${book.title}" (RM${book.price}) to cart!`);
+            }
+            updateCartUI();
+            renderBookstore();
+        }
+
+        function removeFromCart(bookId) {
+            cartIds = cartIds.filter(id => id !== bookId);
+            updateCartUI();
+            renderBookstore();
+        }
+
+        function toggleCartDrawer(open) {
+            const drawer = document.getElementById('cart-drawer');
+            if (!drawer) return;
+            if (open) {
+                updateCartUI();
+                drawer.classList.remove('hidden');
+            } else {
+                drawer.classList.add('hidden');
+            }
+        }
+
+        function updateCartUI() {
+            const badge = document.getElementById('cart-count-badge');
+            const container = document.getElementById('cart-items-container');
+            const totalEl = document.getElementById('cart-total-price');
+            const checkoutBtn = document.getElementById('checkout-btn');
+
+            if (badge) badge.textContent = cartIds.length;
+
+            const cartBooks = cartIds.map(id => ALL_BOOKS.find(b => b.id === id)).filter(Boolean);
+            const total = cartBooks.reduce((sum, b) => sum + b.price, 0);
+
+            if (totalEl) totalEl.textContent = `RM${total}`;
+            if (checkoutBtn) checkoutBtn.disabled = cartBooks.length === 0;
+
+            if (!container) return;
+            if (cartBooks.length === 0) {
+                container.innerHTML = `<p class="text-sm text-stone-400 text-center py-10">Your cart is empty. Click any book on the shelf or bookstore to add it!</p>`;
+                return;
+            }
+
+            container.innerHTML = cartBooks.map(book => `
+                <div class="flex items-center justify-between gap-3 p-3 rounded-xl bg-stone-900 border border-stone-800">
+                    <div>
+                        <h4 class="font-serif-display font-bold text-sm text-white">${book.title}</h4>
+                        <p class="text-xs text-stone-400">${book.author} • Full E-Book</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="font-bold text-sm text-amber-400">RM${book.price}</span>
+                        <button onclick="removeFromCart('${book.id}')" class="p-1.5 rounded-lg bg-stone-800 hover:bg-rose-950 text-stone-400 hover:text-rose-300 transition">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function checkoutCart() {
+            if (cartIds.length === 0) return;
+            cartIds.forEach(id => {
+                const book = ALL_BOOKS.find(b => b.id === id);
+                if (book) {
+                    book.purchased = true;
+                    book.inShelf = true;
+                }
+            });
+            const count = cartIds.length;
+            cartIds = [];
+            updateCartUI();
+            toggleCartDrawer(false);
+            renderBookshelf();
+            renderBookstore();
+            showToast(`Purchased ${count} book(s)! Full pages unlocked on your shelf.`);
+        }
+
+        // Close modal on Escape key or backdrop click
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape' && activeModalBookId) {
+                closeReaderModal();
+            }
+        });
+
+        document.getElementById('reader-modal')?.addEventListener('click', e => {
+            if (e.target.id === 'reader-modal') {
+                closeReaderModal();
+            }
+        });
+
+        // Initialize app on load
+        window.addEventListener('DOMContentLoaded', () => {
+            renderBookshelf();
+            renderBookstore();
+            updateCartUI();
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
